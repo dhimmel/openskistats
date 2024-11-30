@@ -1,0 +1,16 @@
+[
+  {
+    "objectID": "ski-areas.html",
+    "href": "ski-areas.html",
+    "title": "OpenSkiStats Ski Area Browser",
+    "section": "",
+    "text": "Explore statistics on all named ski areas in the world with at least 3 runs and 50 meters of cumulative vertical drop across their runs. The underlying data is provided by OpenSkiMap and OpenStreetMap with statistics computed by https://github.com/dhimmel/openskistats.\n\n\n\n\n\n\nWarning\n\n\n\nThis project is currently under heavy development and is not yet ready for public consumption.\n\n\n\n\n    \n    \n\n    \n    \n\n    \n    \n    \n    \n    \n\n\n\nTable usage\nNumeric columns support the filtering filters:\n\n15 for value ≥ 15\n-20 for value ≤ 20\n[10, 20] for 10 ≤ value ≤ 20\n(10, 20) for 10 &lt; value &lt; 20\n(, 5] for value ≤ 5\n80 (not 0.8) for a percent value ≥ 80%.\n\n\n\nSource data\n\n\nOpenSkiMap data is from 2024-11-30."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "About",
+    "section": "",
+    "text": "OpenSkiStats is an open resource for geospatial metrics about downhill ski areas. The data comes from OpenSkiMap, which refines OpenStreetMap to create an amazing interactive visualization of the world and all its ski trails. Thousands of OpenStreetMap contributors have worked for decades to annotate ski areas and their trails. This is an ongoing effort, and we can expect the underlying data to continue to improve over time.\nNow we bring the data behind these ski areas to life with summary statistics. The founding application of this project is to explore the orientation (compass bearings) of all the runs that comprise a ski area or grouping of ski areas."
+  }
+]
