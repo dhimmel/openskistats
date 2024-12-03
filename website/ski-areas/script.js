@@ -245,4 +245,9 @@ function donutChart(value, color = '#a100bf') {
       </div>
     `
 }
-  
+
+// Delegate tooltip creation because Reactable mounts after DOMContentLoaded.
+// Quarto loads Tippy before this script runs.
+tippy.delegate(document.body, {
+  target: '[data-tippy-content]',
+});
