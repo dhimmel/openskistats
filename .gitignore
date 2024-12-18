@@ -1,0 +1,40 @@
+/data
+
+# Python
+.mypy_cache/
+.ruff_cache/
+__pycache__/
+*.egg-info/
+pip-wheel-metadata/
+.ipynb_checkpoints
+.cache
+.pytest_cache/
+build/
+dist/
+
+# pyenv
+.python-version
+
+# System specific files
+
+## Linux
+*~
+.Trash-*
+
+## macOS
+.DS_Store
+._*
+.Trashes
+
+## Windows
+Thumbs.db
+[Dd]esktop.ini
+
+## Text Editors
+.vscode
+.idea/
+
+/.quarto/
+website/
+.github/
+openskistats/
