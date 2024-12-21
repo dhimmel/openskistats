@@ -47,7 +47,7 @@ which refines [OpenStreetMap](https://www.openstreetmap.org/) to create an ama
 :::
 
 Thousands of OpenStreetMap contributors have worked for decades to annotate ski areas and their trails.<br><br>
-In the New Hampshire/Vermont region, ...
+In the Upper Valley region of Vermont and New Hampshire, ...
 @cr-openskimap
 
 
@@ -58,7 +58,7 @@ Here is a [local favorite](https://www.youtube.com/watch?v=1VbO4ZXTM4o "Mountain
 [@cr-openskimap]{scale-by="3" pan-to="-90%, -85%"}
 
 
-Analyzing this data, we could see how much *north-facing* each ski area is by looking at its "ski rose".
+Analyzing this data, we can see how *north-facing* each ski area is by looking at its "ski rose".
 @cr-openskimap
 
 Take, for example, the Dartmouth Skiway in Lyme, NH.
@@ -154,7 +154,7 @@ Do most of them look north-facing to you?
 ![](../images/all_roses.png)
 :::
 
-Our analysis of the orientation of *all* ski areas across the globe revealed a clear [poleward]{style="color: #36B37E;"} and slight [eastward]{style="color: #FFC857;"} preference.<br><br>
+Our analysis of the orientation of *all* ski areas across the globe revealed a strong [poleward]{style="color: #36B37E;"} and moderate [eastward]{style="color: #FFC857;"} preference.<br><br>
 In other words, the majority of runs in the [northern]{style="color: #36B37E;"} hemisphere are oriented toward the [north]{style="color: #36B37E;"} and [east]{style="color: #FFC857;"},
 while those in the [southern]{style="color: #36B37E;"} hemisphere are oriented toward the [south]{style="color: #36B37E;"}.
 [@cr-hemisphere]{scale-by="0.8"}
@@ -170,7 +170,7 @@ This trend reflects which aspects maximize [snow retention]{style="color: #36B37
 
 
 ::::{.cr-section layout="overlay-center"}
-In addition to trail bearings, we have published data on other key metrics of a ski area like [**total verts**]{style="color: #FFC857;"}, [**number of lifts**]{style="color: #36B37E;"}, and [**peak elevations**]{style="color: #FF8C42;"} for ski areas across the world.
+In addition to trail bearings, we have published data on other key metrics of a ski area like [**total vert**]{style="color: #FFC857;"}, [**number of lifts**]{style="color: #36B37E;"}, and [**peak elevation**]{style="color: #FF8C42;"} for ski areas across the world.
 <br><br>
 In the table below, you can search for your favorite ski area and explore all of its summary statistics.
 @cr-empty
