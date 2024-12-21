@@ -8,6 +8,10 @@ editor:
     wrap: sentence
 ---
 
+::: {.callout-warning}
+This manuscript is a work in progress and is not yet ready for public consumption.
+:::
+
 ## Abstract
 
 We present OpenSkiStats, the first open, global, and continuously updating resource of downhill skiing summary statistics.

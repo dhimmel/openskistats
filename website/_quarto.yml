@@ -11,6 +11,8 @@ website:
         text: Ski Areas
       - href: skirolly/
         text: Story
+      - href: manuscript/
+        text: Manuscript
     right:
       - icon: github
         href: https://github.com/dhimmel/openskistats
