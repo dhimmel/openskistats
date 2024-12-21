@@ -17,25 +17,29 @@ format:
 title-block-banner: false
 ---
 
-:::{.cr-section}
+::::{.cr-section}
 
-Skiers and riders, you’ve all seen these trail maps—they're essential for navigating the mountain, finding the fastest lift, or planning your next epic run.
+Skiers and riders, you’ve all seen these trail maps —
+they're essential for navigating the mountain, finding the fastest lift, or planning your next epic run.
 @cr-southface
 
-In particular, this map, beautifully painted by the legendary [James Niehues](https://en.wikipedia.org/wiki/James_Niehues), is of the [**South Face**]{style="color: #FF8C42;"} of Big Sky, Montana.
+In particular, this map,
+beautifully painted by the legendary [James Niehues](https://en.wikipedia.org/wiki/James_Niehues),
+is of the [**South Face**]{style="color: #FF8C42;"} of Big Sky, Montana.
 
 But have you ever wondered how common south-facing slopes are?
-In other words, do most ski trails in this hemisphere favor [**southern**]{style="color: #FF8C42;"} aspects, or are they more often found on the [**north**]{style="color: #36B37E;"} side of the mountain?
+In other words, do most ski trails in this hemisphere favor [**southern**]{style="color: #FF8C42;"} aspects,
+or are they more often found on the [**north**]{style="color: #36B37E;"} side of the mountain?
 @cr-southface
 
 :::{#cr-southface}
 ![](https://www.myskimaps.com/Ski-Maps/USA/Big-Sky-South-Face-Ski-Trail-Map-2019.jpg)
 :::
-:::
+::::
 
 ::::{.cr-section layout="overlay-center"}
-We began our journey to answer this question by gathering data from [OpenSkiMap](https://openskimap.org/), which refines [OpenStreetMap](https://www.openstreetmap.org/) 
-to create an amazing interactive visualization of the world and all its ski trails. 
+We began our journey to answer this question by gathering data from [OpenSkiMap](https://openskimap.org/),
+which refines [OpenStreetMap](https://www.openstreetmap.org/) to create an amazing interactive visualization of the world and all its ski trails.
 @cr-openskimap
 
 :::{#cr-openskimap}
@@ -93,12 +97,13 @@ If we:
 
 we can summarize them in a ...
 :::
-
 ::::
-<div style="--cr-narrative-sidebar-width: 3fr;">
+
+:::::{style="--cr-narrative-sidebar-width: 3fr;"}
 ::::{.cr-section}
 ... [**ski rose**]{style="color: #f07178;"}!<br><br>
-Similar to how [wind roses](https://en.wikipedia.org/wiki/Wind_rose) chart wind speed and direction at a location, ski roses characterize the directions of all trail segments at a ski area. 
+Similar to how [wind roses](https://en.wikipedia.org/wiki/Wind_rose) chart wind speed and direction at a location,
+ski roses characterize the directions of all trail segments at a ski area. 
 @cr-dartmouth-rose
 
 
@@ -106,7 +111,8 @@ Similar to how [wind roses](https://en.wikipedia.org/wiki/Wind_rose) chart wind 
 ![](../images/dartmouth_rose.png)
 :::
 
-Each *spoke* of the circular chart represents a compass direction, with its length proportional to the [**total length**]{style="color: #FFC857;"} and [**vertical drop**]{style="color: #36B37E;"} of trail segments in that direction.<br><br>
+Each *spoke* of the circular chart represents a compass direction,
+with its length proportional to the [**total length**]{style="color: #FFC857;"} and [**vertical drop**]{style="color: #36B37E;"} of trail segments in that direction.<br><br>
 Highlighted is the [**Northwest by West**]{style="color: #f07178;"} spoke...
 @cr-rose-nwbw
 
@@ -135,8 +141,7 @@ We can do this for other ski areas too!
 :::
 
 ::::
-</div>
-
+:::::
 
 ::::{.cr-section}
 
