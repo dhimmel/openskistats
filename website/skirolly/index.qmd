@@ -20,12 +20,12 @@ title-block-banner: false
 ::::{.cr-section}
 
 Skiers and riders, you’ve all seen these trail maps —
-they're essential for navigating the mountain, finding the fastest lift, or planning your next epic run.
+they're essential for navigating the mountain, finding the fastest lift, or planning your next run.
 @cr-southface
 
-In particular, this map,
-beautifully painted by the legendary [James Niehues](https://en.wikipedia.org/wiki/James_Niehues),
-is of the [**South Face**]{style="color: #FF8C42;"} of Big Sky, Montana.
+This map,
+painted by the legendary [James Niehues](https://en.wikipedia.org/wiki/James_Niehues),
+shows the [**South Face**]{style="color: #FF8C42;"} of Big Sky, Montana, 🇺🇸.
 
 But have you ever wondered how common south-facing slopes are?
 In other words, do most ski trails in this hemisphere favor [**southern**]{style="color: #FF8C42;"} aspects,
@@ -47,21 +47,21 @@ which refines [OpenStreetMap](https://www.openstreetmap.org/) to create an ama
 :::
 
 Thousands of OpenStreetMap contributors have worked for decades to annotate ski areas and their trails.<br><br>
-In this New Hampshire/Vermont region, ...
+In the New Hampshire/Vermont region, ...
 @cr-openskimap
 
 
 ... you can see the iconic Killington and its neighbor Pico. 
 [@cr-openskimap]{scale-by="3" pan-to="97%, -57%"}
 
-Here is a local favorite, Whaleback Mountain.
+Here is a [local favorite](https://www.youtube.com/watch?v=1VbO4ZXTM4o "Mountains Not for Profit: short documentary by Teton Gravity Research in collaboration with the Indy Pass on four non-profit ski areas: Shames Mountain, Whaleback, Black Mountain of Maine, and Antelope Butte."), Whaleback Mountain.
 [@cr-openskimap]{scale-by="3" pan-to="-90%, -85%"}
 
 
 Analyzing this data, we could see how much *north-facing* each ski area is by looking at its "ski rose".
 @cr-openskimap
 
-Take, for example, Dartmouth Skiway in Lyme, NH.
+Take, for example, the Dartmouth Skiway in Lyme, NH.
 [@cr-openskimap]{scale-by="5" pan-to="-200%, 140%"}
 
 ::::
@@ -75,8 +75,8 @@ These are the two signature sides of the Skiway, [**Holt's Ledge**]{style="color
 ![](../images/dots_overlay.png)
 :::
 
-On powder days, from [**Winslow**]{style="color: #36B37E;"},
-you can ski across the road and glide right to the bottom of [**Holt's**]{style="color: #FF8C42;"} Ledge Double.
+On powder days,
+you can ski from from [**Winslow**]{style="color: #36B37E;"} across the Grafton Turnpike and glide right to the bottom of [**Holt's**]{style="color: #FF8C42;"} Ledge Double.
 [@cr-dots-only]
 
 :::{#cr-dots-only}
@@ -90,10 +90,10 @@ you can ski across the road and glide right to the bottom of [**Holt's**]{style=
 :::{focus-on="cr-segments"}
 If we:
 
-- gather the coordinates for all trail segments,
-- connect the dots,
-- treat each of these segments as a [vector]{style="color: #f07178;"},
-- scale the vectors by their [vertical drops]{style="color: #FFC857;"},
+- gather the coordinates for all trail segments
+- connect the dots
+- treat each of these segments as a [vector]{style="color: #f07178;"}
+- scale the vectors by their [vertical drops]{style="color: #FFC857;"}
 
 we can summarize them in a ...
 :::
@@ -102,7 +102,7 @@ we can summarize them in a ...
 :::::{style="--cr-narrative-sidebar-width: 3fr;"}
 ::::{.cr-section}
 ... [**ski rose**]{style="color: #f07178;"}!<br><br>
-Similar to how [wind roses](https://en.wikipedia.org/wiki/Wind_rose) chart wind speed and direction at a location,
+Similar to how [wind roses](https://en.wikipedia.org/wiki/Wind_rose) chart wind direction for location,
 ski roses characterize the directions of all trail segments at a ski area. 
 @cr-dartmouth-rose
 
@@ -112,7 +112,7 @@ ski roses characterize the directions of all trail segments at a ski area.
 :::
 
 Each *spoke* of the circular chart represents a compass direction,
-with its length proportional to the [**total length**]{style="color: #FFC857;"} and [**vertical drop**]{style="color: #36B37E;"} of trail segments in that direction.<br><br>
+with its radius proportional to the [**combined vertical**]{style="color: #36B37E;"} of trail segments in that direction.<br><br>
 Highlighted is the [**Northwest by West**]{style="color: #f07178;"} spoke...
 @cr-rose-nwbw
 
@@ -128,7 +128,7 @@ Highlighted is the [**Northwest by West**]{style="color: #f07178;"} spoke...
 
 :::{focus-on="cr-rose-nne"}
 And here's the [**North North East**]{style="color: #f07178;"} spoke.<br><br>
-While these NNE segments may seem small, their verticals contribute to a significantly larger spoke in the rose compared to others.
+While these NNE segments appear similar in horizontal distance to the NWbW segments above, their greater steepness results in greater vertical drop, and hence the largest spoke of the rose.
 ![](../images/segments_highlight_nne.png)
 :::
 
@@ -154,12 +154,12 @@ Do most of them look north-facing to you?
 ![](../images/all_roses.png)
 :::
 
-Our analysis of the slopes of *all* ski areas across the globe revealed a clear [poleward]{style="color: #36B37E;"} and slight [eastward]{style="color: #FFC857;"} bias.<br><br>
-In other words, the majority of slopes in the [northern]{style="color: #36B37E;"} hemisphere oriented toward the [north]{style="color: #36B37E;"} and [east]{style="color: #FFC857;"},
-while those in the [southern]{style="color: #36B37E;"} hemisphere are oriented toward the [south]{style="color: #36B37E;"} and [east]{style="color: #FFC857;"}.
+Our analysis of the orientation of *all* ski areas across the globe revealed a clear [poleward]{style="color: #36B37E;"} and slight [eastward]{style="color: #FFC857;"} preference.<br><br>
+In other words, the majority of runs in the [northern]{style="color: #36B37E;"} hemisphere are oriented toward the [north]{style="color: #36B37E;"} and [east]{style="color: #FFC857;"},
+while those in the [southern]{style="color: #36B37E;"} hemisphere are oriented toward the [south]{style="color: #36B37E;"}.
 [@cr-hemisphere]{scale-by="0.8"}
 
-This trend likely reflects the desire to maximize [snow retention]{style="color: #36B37E;"} and minimize [sun exposure]{style="color: #FFC857;"}, ensuring better skiing conditions and longer seasons.
+This trend reflects which aspects maximize [snow retention]{style="color: #36B37E;"} by minimizing [sun exposure]{style="color: #FFC857;"} and preferring morning sun --- when temperatures are lower --- to afternoon sun.
 [@cr-hemisphere]{scale-by="0.8"}
 
 :::{#cr-hemisphere}
