@@ -6,7 +6,7 @@ import polars as pl
 from osmnx.bearing import calculate_bearing
 from osmnx.distance import great_circle
 
-from openskistats.models import BearingStatsModel
+from openskistats.models import BearingStatsModel, SkiAreaBearingDistributionModel
 
 
 def add_spatial_metric_columns(
@@ -161,6 +161,17 @@ def cut_bearing_breakpoints_pl(
     ]
 
 
+def get_cut_bearing_bins_df(num_bins: int) -> pl.DataFrame:
+    """
+    Get a DataFrame with bearing bin indexes and breakpoints.
+    Useful since data grouped by bin_index might not have all bins represented.
+    """
+    return pl.DataFrame(
+        data={"bin_index": [x + 1 for x in range(num_bins)]},
+        schema={"bin_index": pl.Int16},
+    ).with_columns(*cut_bearing_breakpoints_pl(num_bins=num_bins))
+
+
 def get_bearing_histograms(
     bearings: npt.NDArray[np.float64],
     weights: npt.NDArray[np.float64],
@@ -195,32 +206,19 @@ def get_bearing_histogram(
     will represent 10 degrees around the compass, with the first bin
     representing 355 degrees to 5 degrees.
     """
-    # Split bins in half to prevent bin-edge effects around common values.
-    # Bins will be merged in pairs after the histogram is computed. The last
-    # bin edge is the same as the first (i.e., 0 degrees = 360 degrees).
-    num_split_bins = num_bins * 2
-    split_bin_edges = np.arange(num_split_bins + 1) * 360 / num_split_bins
-
-    split_bin_counts, split_bin_edges = np.histogram(
-        bearings,
-        bins=split_bin_edges,
-        weights=weights,
-    )
-
-    # Move last bin to front, so eg 0.01 degrees and 359.99 degrees will be
-    # binned together. Then combine counts from pairs of split bins.
-    split_bin_counts = np.roll(split_bin_counts, 1)
-    bin_counts = split_bin_counts[::2] + split_bin_counts[1::2]
-
-    # Every other edge of the split bins is the center of a merged bin.
-    bin_centers = split_bin_edges[range(0, num_split_bins - 1, 2)]
     return (
-        pl.DataFrame(
-            {
-                "bin_center": bin_centers,
-                "bin_count": bin_counts,
-            }
+        pl.DataFrame(data={"bearing": bearings, "weight": weights})
+        .with_columns(cut_bearings_pl(num_bins=num_bins))
+        .group_by("bin_index")
+        .agg(
+            bin_count=pl.sum("weight"),
         )
+        .join(
+            get_cut_bearing_bins_df(num_bins=num_bins),
+            on="bin_index",
+            how="right",
+        )
+        .with_columns(bin_count=pl.coalesce("bin_count", 0.0))
         .with_columns(bin_count_total=pl.sum("bin_count").over(pl.lit(True)))
         # nan values are not helpful here when bin_count_total is 0
         # Instead, set bin_proportion to 0, although setting to null could also make sense
@@ -236,7 +234,7 @@ def get_bearing_histogram(
             .replace_strict(bearing_labels, default=None)
             .alias("bin_label")
         )
-        .with_row_index(name="bin_index", offset=1)
+        .select(*SkiAreaBearingDistributionModel.model_fields)
     )
 
 

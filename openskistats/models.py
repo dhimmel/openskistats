@@ -98,7 +98,7 @@ class SkiAreaBearingDistributionModel(Model):  # type: ignore [misc]
         # multi-column primary key / uniqueness constraint
         # https://github.com/JakobGM/patito/issues/14
         # constraints=[pl.struct("num_bins", "bin_index").is_unique()],
-        ge=0,
+        ge=1,
     )
     bin_index: int = Field(
         description="Index of the bearing bin starting at 1.",
