@@ -232,7 +232,9 @@ def get_bearing_by_latitude_bin_mesh_grids() -> BearingByLatitudeBinMeshGrid:
         .drop("latitude_abs_bin_lower")
     )
     latitude_grid, bearing_grid = np.meshgrid(
-        rlbh.latitude_abs_breaks, rlbh.bearing_breaks
+        rlbh.latitude_abs_breaks,
+        rlbh.bearing_breaks,
+        indexing="ij",
     )
     return BearingByLatitudeBinMeshGrid(
         latitude_grid=latitude_grid,
@@ -248,8 +250,8 @@ def plot_bearing_by_latitude_bin() -> plt.Figure:
     grids = get_bearing_by_latitude_bin_mesh_grids()
     fig, ax = plt.subplots(subplot_kw={"projection": "polar"})
     quad_mesh = ax.pcolormesh(
-        (np.deg2rad(grids.bearing_grid)).transpose(),
-        grids.latitude_grid.transpose(),
+        np.deg2rad(grids.bearing_grid),
+        grids.latitude_grid,
         grids.color_grid.clip(min=0, max=2.5),
         shading="flat",
         cmap="coolwarm",
