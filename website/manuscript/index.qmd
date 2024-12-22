@@ -1,5 +1,5 @@
 ---
-title: "OpenSkiStats Manuscript"
+title: "OpenSkiStats: a global webapp of geospatial ski area metrics reveals the orientation of alpine skiing"
 bibliography:
   - references.yml
 csl: https://github.com/manubot/rootstock/raw/main/build/assets/style.csl
@@ -82,12 +82,21 @@ Since OpenStreetMap does not include granular elevation data,
 OpenSkiMap incorporates the USGS Shuttle Radar Topography Mission [digital elevation data](https://www.usgs.gov/centers/eros/science/usgs-eros-archive-digital-elevation-shuttle-radar-topography-mission-srtm-1).
 <!-- TODO: cite specific SRTM identifier for the dataset used, perhaps https://doi.org/10.5066/F7PR7TFT -->
 
+The founding motivation of this study was to examine trends in ski trail orientations.
+The orientation of a ski trail is a major influencer of sunlight exposure.
+On a local level, orientation affects weather patterns and climate, although in less generalizable ways than it does sunlight.
+We were unable to find a systematic analysis of or database containing ski trial orientations.
+In 2006, Alpine Zone Forum user Jonni [compiled](https://forums.alpinezone.com/threads/mountain-slopes-facing-side.11630/#post-126389 "Mountain Slopes-Facing Side. Alpine Zone Forum post by Jonni on 2006-12-03") a manual and qualitative list of the primary orientation for 37 ski areas in Vermont, Maine, and New Hampshire.
+Hence, we set out to create a global, continuously updating, open, and accessible resource for browsing ski areas and their orientations.
 
-Orientation Into:
-Analyses of city street orientation [@osmnx; @osmnx-joss; @street-orientation].
-Compass roses are an ancient visualization steeped in tradition and symbolism.
-32-wind compass rose Ski Rose [@compass-rose; @compass-rose-symbolism; @wind-rose-bias]
-
+A second motivation was Geoff Boeing's analysis --- first by [blog](https://geoffboeing.com/2018/07/comparing-city-street-orientations/ "Comparing US City Street Orientations") and later publication [@street-orientation] --- of city street orientations from OpenStreetMap.
+Boeing tabulated street segments by their orientation into polar histograms (i.e. roses) to show whether a city's roads were neatly arranged into a grid like Manhattan or a spaghetti mess like Boston.
+Boeing released the modular code underlying his analysis in the osmnx Python package [@osmnx; @osmnx-joss],
+which we use sometimes directly and other times as a reference.
+Boeing's street roses take inspiration from wind roses, which summarize the direction of wind [@wind-rose-bias].
+Wind roses themselves take inspiration from the compass rose,
+an ancient visualization steeped in tradition and symbolism [@compass-rose; @compass-rose-symbolism].
+<!-- 32-wind compass rose -->
 
 ## Main text
 
@@ -176,6 +185,10 @@ Downhill skiing is the art of descent.
 On flat terrain, the is no terrain shading based on topography
 
 Topographic shadowing versus vegetative shadowing
+
+From https://www.bromley.com/about/:
+
+> Bromley is the only major ski area in New England with a southern exposure, giving our guests sun-drenched smiles!
 
 ## Discussion
 
