@@ -257,7 +257,9 @@ def plot_bearing_by_latitude_bin() -> plt.Figure:
         cmap="coolwarm",
         norm=TwoSlopeNorm(vmin=0, vcenter=1, vmax=2.5),
     )
-    plt.colorbar(quad_mesh, ax=ax)
+    colorbar = plt.colorbar(quad_mesh, ax=ax, location="left", aspect=35, pad=0.053)
+    colorbar.outline.set_visible(False)
+    colorbar.ax.tick_params(labelsize=8)
     ax.set_theta_zero_location("N")
     ax.set_theta_direction("clockwise")
     ax.grid(visible=False)
