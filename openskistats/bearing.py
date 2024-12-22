@@ -113,6 +113,54 @@ bearing_labels = {
 """Bearing labels for 32-wind compass rose."""
 
 
+def cut_bearings_pl(num_bins: int, bearing_col: str = "bearing") -> pl.Expr:
+    """
+    Get a Polars expression to bin bearings into `num_bins` bins.
+    Returns bin index (1-indexed) as an integer.
+
+    Prevents bin-edge effects around common values like 0 degrees and 90 degrees
+    by centering the first bin due north (0 degrees) rather than starting the first bin at 0 degrees.
+    For example, if `num_bins=36` is provided,
+    then each bin will represent 10 degrees around the compass,
+    with the first bin representing 355 degrees to 5 degrees.
+    """
+    assert num_bins > 0
+    bin_centers = [i * 360 / num_bins for i in range(num_bins)]
+    return (
+        pl.col(bearing_col)
+        # add a half bin width
+        .add(180 / num_bins)
+        .mod(360)
+        .cut(
+            breaks=bin_centers,
+            # NOTE: in polars.Expr.cut labels must be one longer than breaks.
+            # At ToW the 0000 bin never gets assigned,
+            # although it's not clear why the extra label is for the first bin and not the last.
+            labels=[f"{i:04d}" for i in range(num_bins + 1)],
+            # left_closed for parity with np.histogram and osmnx.bearing._bearings_distribution
+            # <https://github.com/gboeing/osmnx/blob/v2.0.0/osmnx/bearing.py#L240-L296>
+            left_closed=True,
+        )
+        .cast(pl.Int16)
+        .alias("bin_index")
+    )
+
+
+def cut_bearing_breakpoints_pl(
+    num_bins: int, bin_index_col: str = "bin_index"
+) -> list[pl.Expr]:
+    """
+    Get Polars expressions to calculate bearing bin breakpoints (bin_lower, bin_center, bin_upper)
+    for the given number of bins based on the bin index in `bin_index_col`.
+    """
+    bin_center_expr = pl.col(bin_index_col).sub(1).mul(360 / num_bins)
+    return [
+        bin_center_expr.sub(180 / num_bins).mod(360).alias("bin_lower"),
+        bin_center_expr.alias("bin_center"),
+        bin_center_expr.add(180 / num_bins).alias("bin_upper"),
+    ]
+
+
 def get_bearing_histograms(
     bearings: npt.NDArray[np.float64],
     weights: npt.NDArray[np.float64],
@@ -138,7 +186,7 @@ def get_bearing_histogram(
 ) -> pl.DataFrame:
     """
     Modified from osmnx.bearing._bearings_distribution to accept non-graph input.
-    Source at https://github.com/gboeing/osmnx/blob/v2.0.0rc2/osmnx/bearing.py#L240-L296.
+    Source at https://github.com/gboeing/osmnx/blob/v2.0.0/osmnx/bearing.py#L240-L296.
     Compute distribution of bearings across evenly spaced bins.
 
     Prevents bin-edge effects around common values like 0 degrees and 90

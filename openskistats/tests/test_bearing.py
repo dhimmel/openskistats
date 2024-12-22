@@ -10,9 +10,41 @@ from openskistats.analyze import (
     analyze_all_ski_areas_polars,
     load_runs_pl,
 )
-from openskistats.bearing import get_bearing_summary_stats
+from openskistats.bearing import (
+    cut_bearing_breakpoints_pl,
+    cut_bearings_pl,
+    get_bearing_summary_stats,
+)
 from openskistats.openskimap_utils import get_ski_area_to_runs
 from openskistats.osmnx_utils import create_networkx_with_metadata
+
+
+def test_cut_bearings_pl__num_bins_4() -> None:
+    bearings = [0, 45, 90, 180, 270, 315]
+    cuts = (
+        pl.DataFrame({"bearing": bearings})
+        .with_columns(cut_bearings_pl(num_bins=4))
+        .with_columns(*cut_bearing_breakpoints_pl(num_bins=4))
+        .to_dict(as_series=False)
+    )
+    assert cuts["bin_index"] == [1, 2, 2, 3, 4, 1]
+    assert cuts["bin_lower"] == [315.0, 45.0, 45.0, 135.0, 225.0, 315.0]
+    assert cuts["bin_center"] == [0.0, 90.0, 90.0, 180.0, 270.0, 0.0]
+    assert cuts["bin_upper"] == [45.0, 135.0, 135.0, 225.0, 315.0, 45.0]
+
+
+def test_cut_bearings_pl__num_bins_1() -> None:
+    bearings = [0, 180]
+    cuts = (
+        pl.DataFrame({"bearing": bearings})
+        .with_columns(cut_bearings_pl(num_bins=1))
+        .with_columns(*cut_bearing_breakpoints_pl(num_bins=1))
+        .to_dict(as_series=False)
+    )
+    assert cuts["bin_index"] == [1, 1]
+    assert cuts["bin_lower"] == [180.0, 180.0]
+    assert cuts["bin_center"] == [0.0, 0.0]
+    assert cuts["bin_upper"] == [180.0, 180.0]
 
 
 @dataclass
