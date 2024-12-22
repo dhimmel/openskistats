@@ -38,17 +38,33 @@ https://www.bea.gov/sites/default/files/2024-11/orsa1124-national_0.xlsx
 See also https://recreationroundtable.org/news/new-data-shows-outdoor-recreation-is-a-1-2-trillion-economic-engine-supporting-5-million-american-jobs/
 -->
 
+Existing scholarly literature related to downhill skiing is limited and primarily focuses on economics, health impacts, environmental sustainability [@ski-resort-sustainability; @apennines-winter], the threat from climate change [@climate-change-europe; @climate-change-alps; @climate-change-usnf], or ski trail routing algorithms [@skivis; @osm-ski-routing].
+We present one of the first scholarly accounts of the spatial metrics of ski areas on a global scale.
 
+An open and global database and analysis of ski areas will help inform skiers, while providing insights to industry stakeholders.
+There are a variety of existing resources that compile information of ski areas.
+Both [OnTheSnow](https://www.onthesnow.com/) and [OpenSnow](https://opensnow.com/) contain a global database of ski areas and metrics,
+with a focus on snow and weather conditions.
+However, neither makes their source code or data openly available.
+Stuart Winchester maintains several manually curated tables of ski areas,
+which are discussed in articles on the [Storm Skiing Journal and Podcast](https://www.stormskiing.com/).
+Laurent Vanat reports on aggregate ski areas metrics in his annual [_International Report on Snow & Mountain Tourism_](https://www.vanat.ch/ski-resorts-english).
+Other resources focus on specific regions including
+[New England Ski History](https://www.newenglandskihistory.com/),
+Wikipedia's [Comparison of North American ski resorts](https://en.wikipedia.org/wiki/Comparison_of_North_American_ski_resorts),
+and [Vertical Feet](https://verticalfeet.com/).
+Other resources focus primarily on ski lifts,
+including [Liftie](https://liftie.info/) ([open source](https://github.com/pirxpilot/liftie)) and [Lift Blog](https://liftblog.com/).
+[Skimap.org](https://skimap.org/) compiles official trial maps produced by ski areas.
+
+Here we base our analysis on OpenStreetMap and OpenSkiMap
+
+
+Orientation Into:
 Analyses of city street orientation [@osmnx; @osmnx-joss; @street-orientation].
-
 Compass roses are an ancient visualization steeped in tradition and symbolism.
 32-wind compass rose Ski Rose [@compass-rose; @compass-rose-symbolism; @wind-rose-bias]
 
-Climate change [@climate-change-europe; @climate-change-alps; @climate-change-usnf]
-
-Routing [@skivis; @osm-ski-routing]
-
-Other [@ski-resort-sustainability; @apennines-winter]
 
 ## Main text
 
@@ -137,6 +153,16 @@ Downhill skiing is the art of descent.
 On flat terrain, the is no terrain shading based on topography
 
 Topographic shadowing versus vegetative shadowing
+
+## Discussion
+
+Warren Miller once said, "The best place in the world to ski is where you're skiing that day."
+Miller's quote is a useful reprise against decision paralysis or a fear of missing out
+by stressing that getting out and skiing somewhere along with a positive attitude are the necessary ingredients to a positive experience.
+Yet, it is undeniable that conditions and logistics make a big impact on the experience.
+Furthermore, each day skiing represents a large investment in terms of time and the cost of lift tickets, gear, and travel.
+Accordingly, OpenSkiStats serves the large contingent of savvy skiers who seek exhaustive metrics into ski areas.
+Such skiers meld observations on their own experiences with the data-driven insights provided by OpenSkiStats to create mental models on what factors of a ski area matter most to them and how these factors interact with conditions in search of the ultimate experience.
 
 ## References
 
