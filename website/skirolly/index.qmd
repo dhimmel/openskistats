@@ -147,7 +147,7 @@ We can do this for other ski areas too!
 
 ::::{.cr-section}
 
-Here are 48 more roses in the US (randomly selected among other short-named ones).
+Here are 48 more roses in the US (randomly selected from all short-named ski areas).<br><br>
 Have you been to any of these?
 Did you remember facing north while skiing down?
 [@cr-all-roses]
@@ -156,7 +156,7 @@ Did you remember facing north while skiing down?
 ![](../images/all_roses.png)
 :::
 
-And here are the [ski roses]{style="color: #f07178;"} for 37 US states with at least one ski area.
+And here are the [ski roses]{style="color: #f07178;"} for 37 US states with at least one ski area.<br><br>
 Can you guess which state has the most combined vertical?
 And do most states look north-facing to you?
 [@cr-us-roses]
