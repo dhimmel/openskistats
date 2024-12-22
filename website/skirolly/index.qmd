@@ -55,8 +55,10 @@ In the Upper Valley region of Vermont and New Hampshire, ...
 [@cr-openskimap]{scale-by="3" pan-to="97%, -57%"}
 
 Here is a [local favorite](https://www.youtube.com/watch?v=1VbO4ZXTM4o "Mountains Not for Profit: short documentary by Teton Gravity Research in collaboration with the Indy Pass on four non-profit ski areas: Shames Mountain, Whaleback, Black Mountain of Maine, and Antelope Butte."), Whaleback Mountain.
-[@cr-openskimap]{scale-by="3" pan-to="-90%, -85%"}
+[@cr-openskimap]{scale-by="3" pan-to="-90%, -90%"}
 
+And just north of it is Storrs Hill, where you can [ski for free](https://www.powder.com/news/free-skiing-new-hampshire-ski-area "Lift Tix Are Now Free All Season Long at New Hampshire Ski Area") this season!
+[@cr-openskimap]{scale-by="3" pan-to="-80%, -65%"}
 
 Analyzing this data, we can see how *north-facing* each ski area is by looking at its "ski rose".
 @cr-openskimap
@@ -155,8 +157,8 @@ Did you remember facing north while skiing down?
 :::
 
 And here are the [ski roses]{style="color: #f07178;"} for 37 US states with at least one ski area.
-What do you think?
-Do most of them look north-facing to you?
+Can you guess which state has the most combined vertical?
+And do most states look north-facing to you?
 [@cr-us-roses]
 
 :::{#cr-us-roses}
@@ -182,6 +184,19 @@ In addition to trail bearings, we have published data on other key metrics of a 
 In [OpenSkiStats.org/ski-areas](/ski-areas), you can search for your favorite ski area and explore all of its summary statistics.
 <br><br>
 We hope this data will be used to guide winter adventures, assess the climate resilience of distant ski mountains, or to just give you a minute to stop and "smell" the [roses]{style="color: #f07178;"}.
+
+::::{style="font-family: 'Source Sans 3'; font-size: 45%; color: #002B36"}
+::: {.column-screen}
+```{python}
+#| echo: false
+#| output: asis
+from openskistats.display import embed_reactable_html, get_ski_area_reactable
+
+embed_reactable_html()
+get_ski_area_reactable()
+```
+:::
+::::
 
 Curious to learn more?
 Read our [manuscript](/manuscript) to explore the approach we took and dive deeper into our findings.
