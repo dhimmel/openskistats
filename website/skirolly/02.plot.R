@@ -8,10 +8,11 @@ library(cowplot)
 img_data_dir <- "../images/data"
 img_dir <- "../images"
 colors <- c("#f07178", "#004B59", "#FFC857", "#36B37E", "#FF8C42", "#F4F1E9", "#8A9393", "#2A2D34")
+my_font <- "Helvetica"
 
 ## Plot functions ------------------------------------------------
 bg_transparent <- function() {
-  theme_minimal() +
+  theme_minimal(base_family = my_font) +
     theme(
       panel.background = element_rect(fill = "transparent", colour = NA),
       plot.background = element_rect(fill = "transparent", colour = NA),
@@ -64,7 +65,7 @@ plot_rose <- function(dat, ski_area_name, size_title = 24, size_x = 20, highligh
           alpha = 0.5,
           fill = "#002B36",
           size = size_title,
-          family = "Futura",
+          family = my_font,
           color = "#EBEBEB"
         ) +
         theme(
@@ -105,7 +106,7 @@ rose_empty <- function(a, size_label) {
       alpha = 0.5,
       fill = "#002B36",
       size = size_label,
-      family = "Futura",
+      family = my_font,
       color = "#EBEBEB"
     ) +
     bg_transparent() +
@@ -315,7 +316,7 @@ ggsave(
 
 ## Region -----------------------------------------------------------
 ngroups_us <- 16
-my_font <- "Futura"
+
 max_thickness <- 6
 min_thickness <- 0.2
 size_label <- 12
