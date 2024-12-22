@@ -8,6 +8,10 @@ import polars as pl
 from matplotlib.colors import TwoSlopeNorm
 
 from openskistats.analyze import load_runs_pl
+from openskistats.bearing import (
+    cut_bearings_pl,
+    get_cut_bearing_bins_df,
+)
 from openskistats.utils import pl_flip_bearing, pl_hemisphere
 
 
@@ -23,7 +27,10 @@ class RunLatitudeBearingHistogram:
 
     @property
     def bearing_breaks(self) -> npt.NDArray[np.float64]:
-        return np.linspace(0, 360, self.num_bearing_bins + 1)
+        bearing_bin_df = get_cut_bearing_bins_df(num_bins=self.num_bearing_bins)
+        return np.array(
+            [*bearing_bin_df["bin_lower"], bearing_bin_df["bin_upper"].last()]
+        )
 
     def get_latitude_bins_df(self, include_hemisphere: bool = False) -> pl.DataFrame:
         latitude_bins = pl.DataFrame(
@@ -46,23 +53,13 @@ class RunLatitudeBearingHistogram:
         return latitude_bins
 
     def get_grid_bins_df(self) -> pl.DataFrame:
-        return (
-            self.get_latitude_bins_df()
-            .join(
-                pl.DataFrame(
-                    {
-                        "bearing_bin_lower": self.bearing_breaks[:-1],
-                        "bearing_bin_upper": self.bearing_breaks[1:],
-                    }
-                ),
-                how="cross",
-            )
-            .with_columns(
-                bearing_bin_center=pl.mean_horizontal(
-                    "bearing_bin_lower", "bearing_bin_upper"
-                )
-            )
+        bearing_bins = get_cut_bearing_bins_df(num_bins=self.num_bearing_bins).select(
+            pl.col("bin_index").alias("bearing_bin_index"),
+            pl.col("bin_lower").alias("bearing_bin_lower"),
+            pl.col("bin_upper").alias("bearing_bin_upper"),
+            pl.col("bin_center").alias("bearing_bin_center"),
         )
+        return self.get_latitude_bins_df().join(bearing_bins, how="cross")
 
     def load_and_filter_runs_pl(self) -> pl.LazyFrame:
         return (
@@ -85,10 +82,9 @@ class RunLatitudeBearingHistogram:
                 )
                 .struct.field("breakpoint")
                 .alias("latitude_abs_bin_upper"),
-                pl.col("bearing_poleward")
-                .cut(breaks=self.bearing_breaks, left_closed=True, include_breaks=True)
-                .struct.field("breakpoint")
-                .alias("bearing_bin_upper"),
+                cut_bearings_pl(
+                    num_bins=self.num_bearing_bins, bearing_col="bearing_poleward"
+                ).alias("bearing_bin_index"),
             )
         )
 
@@ -130,7 +126,7 @@ class RunLatitudeBearingHistogram:
     def get_latitude_bearing_histogram(self) -> pl.DataFrame:
         histogram = (
             self.load_and_filter_runs_pl()
-            .group_by("latitude_abs_bin_upper", "bearing_bin_upper")
+            .group_by("latitude_abs_bin_upper", "bearing_bin_index")
             .agg(*self._get_agg_metrics())
         )
 
@@ -140,9 +136,9 @@ class RunLatitudeBearingHistogram:
             .join(
                 histogram,
                 how="left",
-                on=["latitude_abs_bin_upper", "bearing_bin_upper"],
+                on=["latitude_abs_bin_upper", "bearing_bin_index"],
             )
-            .sort("latitude_abs_bin_upper", "bearing_bin_upper")
+            .sort("latitude_abs_bin_upper", "bearing_bin_index")
             .collect()
             .with_columns(
                 pl.col("segment_count").fill_null(0),
@@ -235,7 +231,6 @@ def get_bearing_by_latitude_bin_mesh_grids() -> BearingByLatitudeBinMeshGrid:
         .sort("latitude_abs_bin_lower")
         .drop("latitude_abs_bin_lower")
     )
-    assert np.all(np.diff([float(x) for x in grid_pl.columns]) > 0)
     latitude_grid, bearing_grid = np.meshgrid(
         rlbh.latitude_abs_breaks, rlbh.bearing_breaks
     )
