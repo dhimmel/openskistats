@@ -1,5 +1,5 @@
 ---
-title: "OpenSkiStats Manuscript"
+title: "OpenSkiStats: a global webapp of geospatial ski area metrics reveals the orientation of alpine skiing"
 bibliography:
   - references.yml
 csl: https://github.com/manubot/rootstock/raw/main/build/assets/style.csl
@@ -38,7 +38,7 @@ https://www.bea.gov/sites/default/files/2024-11/orsa1124-national_0.xlsx
 See also https://recreationroundtable.org/news/new-data-shows-outdoor-recreation-is-a-1-2-trillion-economic-engine-supporting-5-million-american-jobs/
 -->
 
-Existing scholarly literature related to downhill skiing is limited and primarily focuses on economics, health impacts, environmental sustainability [@ski-resort-sustainability; @apennines-winter], the threat from climate change [@climate-change-europe; @climate-change-alps; @climate-change-usnf], or ski trail routing algorithms [@skivis; @osm-ski-routing].
+Existing scholarly literature related to downhill skiing is limited and primarily focuses on economics [@futile-snowmaking], health impacts, avalanche science [@avalanche-risk-slabs], environmental sustainability [@ski-resort-sustainability; @apennines-winter; @dark-tourism], the threat from climate change [@climate-change-europe; @climate-change-alps; @climate-change-usnf], or ski trail routing algorithms [@skivis; @osm-ski-routing].
 We present one of the first scholarly accounts of the spatial metrics of ski areas on a global scale.
 
 An open and global database and analysis of ski areas will help inform skiers, while providing insights to industry stakeholders.
@@ -59,12 +59,44 @@ including [Liftie](https://liftie.info/) ([open source](https://github.com/pirxp
 
 Here we base our analysis on OpenStreetMap and OpenSkiMap
 
+OpenStreetMap is a collaborative map of the world available under an open license.
+Since its launch in 20024, geospatial data has been continuously contributed by a global community of volunteers and companies [@osm-haklay].
+The platform's crowdsourced nature ensures frequent updates and granular detail,
+with contributors adding information on features such as roads, buildings, natural landscapes, and, crucially for this study, ski areas and their trials and lifts.
+Individual users often contribute to specific domains.
+For example, study author Daniel Himmelstein previously helped complete and align the Long Trail, a long-distance hiking trail in Vermont [@osm-long-trail].
+Meanwhile, the company Amazon [contributed](https://wiki.openstreetmap.org/wiki/Organised_Editing/Activities/Amazon) missing roads, driveways, and vehicle routing restrictions to aid in their delivery operations.
+This mosaic of interests has resulted in an exceptionally broad and diverse collection of volunteered geographic information,
+albeit with varying levels of detail by region.
+This breadth along with OpenStreetMap's open license and availability have made it an invaluable tool for extracting and analyzing spatial data across a range of scientific disciplines [@osm-science].
 
-Orientation Into:
-Analyses of city street orientation [@osmnx; @osmnx-joss; @street-orientation].
-Compass roses are an ancient visualization steeped in tradition and symbolism.
-32-wind compass rose Ski Rose [@compass-rose; @compass-rose-symbolism; @wind-rose-bias]
+OpenStreetMap provides its own general purpose [frontend](https://www.openstreetmap.org) to view a rendered maps of the world.
+Specialized frontends have arisen to refine, analyze, and render maps for particular applications.
+Examples include [OpenRailwayMap](https://www.openrailwaymap.org/) for railroads, [OpenCycleMap](https://www.opencyclemap.org/) for bicycling, [Waymarked Trails](https://hiking.waymarkedtrails.org/) for hiking routes, [OpenSeaMap](https://openseamap.org/) for seafaring and nautical pursuits, [Wheelmap](https://wheelmap.org/) for wheelchair accessibility, and [Open Infrastructure Map](https://openinframap.org) for electrical and telecommunication transmission.
+[OpenSnowMap](https://opensnowmap.org) and [OpenSkiMap](https://openskimap.org) display both nordic and alpine skiing information.
 
+[OpenSkiMap](https://openskimap.org) refines data from OpenStreetMap along with Skimap.org to create an interactive map of the world that highlights ski areas, runs, and lifts along with associated metadata like run difficulty.
+OpenSkiMap is created and maintained by Russell Porter, with much of its code openly [available](https://github.com/russellporter/openskimap.org).
+OpenSkiMap releases refined datasets of ski areas, runs, and lifts as GeoJSON downloads that update daily.
+Since OpenStreetMap does not include granular elevation data,
+OpenSkiMap incorporates the USGS Shuttle Radar Topography Mission [digital elevation data](https://www.usgs.gov/centers/eros/science/usgs-eros-archive-digital-elevation-shuttle-radar-topography-mission-srtm-1).
+<!-- TODO: cite specific SRTM identifier for the dataset used, perhaps https://doi.org/10.5066/F7PR7TFT -->
+
+The founding motivation of this study was to examine trends in ski trail orientations.
+The orientation of a ski trail is a major influencer of sunlight exposure.
+On a local level, orientation affects weather patterns and climate, although in less generalizable ways than it does sunlight.
+We were unable to find a systematic analysis of or database containing ski trial orientations.
+In 2006, Alpine Zone Forum user Jonni [compiled](https://forums.alpinezone.com/threads/mountain-slopes-facing-side.11630/#post-126389 "Mountain Slopes-Facing Side. Alpine Zone Forum post by Jonni on 2006-12-03") a manual and qualitative list of the primary orientation for 37 ski areas in Vermont, Maine, and New Hampshire.
+Hence, we set out to create a global, continuously updating, open, and accessible resource for browsing ski areas and their orientations.
+
+A second motivation was Geoff Boeing's analysis --- first by [blog](https://geoffboeing.com/2018/07/comparing-city-street-orientations/ "Comparing US City Street Orientations") and later publication [@street-orientation] --- of city street orientations from OpenStreetMap.
+Boeing tabulated street segments by their orientation into polar histograms (i.e. roses) to show whether a city's roads were neatly arranged into a grid like Manhattan or a spaghetti mess like Boston.
+Boeing released the modular code underlying his analysis in the osmnx Python package [@osmnx; @osmnx-joss],
+which we use sometimes directly and other times as a reference.
+Boeing's street roses take inspiration from wind roses, which summarize the direction of wind [@wind-rose-bias].
+Wind roses themselves take inspiration from the compass rose,
+an ancient visualization steeped in tradition and symbolism [@compass-rose; @compass-rose-symbolism].
+<!-- 32-wind compass rose -->
 
 ## Main text
 
@@ -135,7 +167,7 @@ Downhill skiing is remarkably concentrated in both the northern hemisphere and a
 Latitude insights of ski runs and their association with orientation.
 :::::
 
-Deduplication of effort: OpenStreetMap used by Strava, etc.
+Deduplication of effort: OpenStreetMap used by Strava, mapy.cz, mapbox, komoot, REGRID etc.
 Single place to curate the world's ski areas
 
 We extract all segments comprising ski runs
@@ -153,6 +185,10 @@ Downhill skiing is the art of descent.
 On flat terrain, the is no terrain shading based on topography
 
 Topographic shadowing versus vegetative shadowing
+
+From https://www.bromley.com/about/:
+
+> Bromley is the only major ski area in New England with a southern exposure, giving our guests sun-drenched smiles!
 
 ## Discussion
 
