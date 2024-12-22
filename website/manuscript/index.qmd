@@ -38,7 +38,7 @@ https://www.bea.gov/sites/default/files/2024-11/orsa1124-national_0.xlsx
 See also https://recreationroundtable.org/news/new-data-shows-outdoor-recreation-is-a-1-2-trillion-economic-engine-supporting-5-million-american-jobs/
 -->
 
-Existing scholarly literature related to downhill skiing is limited and primarily focuses on economics, health impacts, environmental sustainability [@ski-resort-sustainability; @apennines-winter], the threat from climate change [@climate-change-europe; @climate-change-alps; @climate-change-usnf], or ski trail routing algorithms [@skivis; @osm-ski-routing].
+Existing scholarly literature related to downhill skiing is limited and primarily focuses on economics [@futile-snowmaking], health impacts, avalanche science [@avalanche-risk-slabs], environmental sustainability [@ski-resort-sustainability; @apennines-winter; @dark-tourism], the threat from climate change [@climate-change-europe; @climate-change-alps; @climate-change-usnf], or ski trail routing algorithms [@skivis; @osm-ski-routing].
 We present one of the first scholarly accounts of the spatial metrics of ski areas on a global scale.
 
 An open and global database and analysis of ski areas will help inform skiers, while providing insights to industry stakeholders.
@@ -58,6 +58,24 @@ including [Liftie](https://liftie.info/) ([open source](https://github.com/pirxp
 [Skimap.org](https://skimap.org/) compiles official trial maps produced by ski areas.
 
 Here we base our analysis on OpenStreetMap and OpenSkiMap
+
+OpenStreetMap is a collaborative map of the world available under an open license.
+Since its launch in 20024, geospatial data has been continuously contributed by a global community of volunteers and companies [@osm-haklay].
+The platform's crowdsourced nature ensures frequent updates and granular detail,
+with contributors adding information on features such as roads, buildings, natural landscapes, and, crucially for this study, ski areas and their trials and lifts.
+Individual users often contribute to specific domains.
+For example, study author Daniel Himmelstein previously helped complete and align the Long Trail, a long-distance hiking trail in Vermont [@osm-long-trail].
+Meanwhile, the company Amazon [contributed](https://wiki.openstreetmap.org/wiki/Organised_Editing/Activities/Amazon) missing roads, driveways, and vehicle routing restrictions to aid in their delivery operations.
+This mosaic of interests has resulted in an exceptionally broad and diverse collection of volunteered geographic information,
+albeit with varying levels of detail by region.
+This breadth along with OpenStreetMap's open license and availability have made it an invaluable tool for extracting and analyzing spatial data across a range of scientific disciplines [@osm-science].
+
+OpenStreetMap provides its own general purpose [frontend](https://www.openstreetmap.org) to view a rendered maps of the world.
+Specialized frontends have arisen to refine, analyze, and render maps for particular applications.
+Examples include [OpenRailwayMap](https://www.openrailwaymap.org/) for railroads, [OpenCycleMap](https://www.opencyclemap.org/) for bicycling, [Waymarked Trails](https://hiking.waymarkedtrails.org/) for hiking routes, [OpenSeaMap](https://openseamap.org/) for seafaring and nautical pursuits, [Wheelmap](https://wheelmap.org/) for wheelchair accessibility, and [Open Infrastructure Map](https://openinframap.org) for electrical and telecommunication transmission.
+[OpenSnowMap](https://opensnowmap.org) and [OpenSkiMap](https://openskimap.org) display both nordic and alpine skiing information.
+
+OpenSkiMap. Elevation.
 
 
 Orientation Into:
@@ -135,7 +153,7 @@ Downhill skiing is remarkably concentrated in both the northern hemisphere and a
 Latitude insights of ski runs and their association with orientation.
 :::::
 
-Deduplication of effort: OpenStreetMap used by Strava, etc.
+Deduplication of effort: OpenStreetMap used by Strava, mapy.cz, mapbox, komoot, REGRID etc.
 Single place to curate the world's ski areas
 
 We extract all segments comprising ski runs

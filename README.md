@@ -97,6 +97,7 @@ List of related webpages:
 - https://www.stormskiing.com/p/there-are-505-active-ski-areas-in
 - https://github.com/pirxpilot/liftie
 - https://gitlab.com/hugfr/european-ski-resorts-snow-reliability and https://zenodo.org/records/8047168
+- https://mapsynergy.com/ and https://mapsynergy.maps.arcgis.com/apps/dashboards/44d9c8422f3c4cc898642d75392337db
 
 ## Wild Ideas
 
