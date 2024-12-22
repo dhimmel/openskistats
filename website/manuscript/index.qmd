@@ -75,7 +75,12 @@ Specialized frontends have arisen to refine, analyze, and render maps for partic
 Examples include [OpenRailwayMap](https://www.openrailwaymap.org/) for railroads, [OpenCycleMap](https://www.opencyclemap.org/) for bicycling, [Waymarked Trails](https://hiking.waymarkedtrails.org/) for hiking routes, [OpenSeaMap](https://openseamap.org/) for seafaring and nautical pursuits, [Wheelmap](https://wheelmap.org/) for wheelchair accessibility, and [Open Infrastructure Map](https://openinframap.org) for electrical and telecommunication transmission.
 [OpenSnowMap](https://opensnowmap.org) and [OpenSkiMap](https://openskimap.org) display both nordic and alpine skiing information.
 
-OpenSkiMap. Elevation.
+[OpenSkiMap](https://openskimap.org) refines data from OpenStreetMap along with Skimap.org to create an interactive map of the world that highlights ski areas, runs, and lifts along with associated metadata like run difficulty.
+OpenSkiMap is created and maintained by Russell Porter, with much of its code openly [available](https://github.com/russellporter/openskimap.org).
+OpenSkiMap releases refined datasets of ski areas, runs, and lifts as GeoJSON downloads that update daily.
+Since OpenStreetMap does not include granular elevation data,
+OpenSkiMap incorporates the USGS Shuttle Radar Topography Mission [digital elevation data](https://www.usgs.gov/centers/eros/science/usgs-eros-archive-digital-elevation-shuttle-radar-topography-mission-srtm-1).
+<!-- TODO: cite specific SRTM identifier for the dataset used, perhaps https://doi.org/10.5066/F7PR7TFT -->
 
 
 Orientation Into:
