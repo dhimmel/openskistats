@@ -1,5 +1,5 @@
 ---
-title: "The Patterns of the Slopes"
+title: "Which way do you ski?"
 format: 
   closeread-html:
     mainfont: Quicksand
@@ -25,10 +25,10 @@ they're essential for navigating the mountain, finding the fastest lift, or plan
 
 This map,
 painted by the legendary [James Niehues](https://en.wikipedia.org/wiki/James_Niehues),
-shows the [**South Face**]{style="color: #FF8C42;"} of Big Sky, Montana, 🇺🇸.
+shows the [**South Face**]{style="color: #FFC857;"} of Big Sky, Montana, 🇺🇸.
 
 But have you ever wondered how common south-facing slopes are?
-In other words, do most ski trails in this hemisphere favor [**southern**]{style="color: #FF8C42;"} aspects,
+In other words, do most ski trails in this hemisphere favor [**southern**]{style="color: #FFC857;"} aspects,
 or are they more often found on the [**north**]{style="color: #36B37E;"} side of the mountain?
 @cr-southface
 
@@ -38,7 +38,7 @@ or are they more often found on the [**north**]{style="color: #36B37E;"} side of
 ::::
 
 ::::{.cr-section layout="overlay-center"}
-We began our journey to answer this question by gathering data from [OpenSkiMap](https://openskimap.org/),
+We began our journey to answer this question by gathering data from [OpenSkiMap](https://openskimap.org/), 
 which refines [OpenStreetMap](https://www.openstreetmap.org/) to create an amazing interactive visualization of the world and all its ski trails.
 @cr-openskimap
 
@@ -55,8 +55,10 @@ In the Upper Valley region of Vermont and New Hampshire, ...
 [@cr-openskimap]{scale-by="3" pan-to="97%, -57%"}
 
 Here is a [local favorite](https://www.youtube.com/watch?v=1VbO4ZXTM4o "Mountains Not for Profit: short documentary by Teton Gravity Research in collaboration with the Indy Pass on four non-profit ski areas: Shames Mountain, Whaleback, Black Mountain of Maine, and Antelope Butte."), Whaleback Mountain.
-[@cr-openskimap]{scale-by="3" pan-to="-90%, -85%"}
+[@cr-openskimap]{scale-by="3" pan-to="-90%, -90%"}
 
+And just north of it is Storrs Hill, where you can [ski for free](https://www.powder.com/news/free-skiing-new-hampshire-ski-area "Lift Tix Are Now Free All Season Long at New Hampshire Ski Area") this season!
+[@cr-openskimap]{scale-by="3" pan-to="-80%, -65%"}
 
 Analyzing this data, we can see how *north-facing* each ski area is by looking at its "ski rose".
 @cr-openskimap
@@ -93,7 +95,7 @@ If we:
 - gather the coordinates for all trail segments
 - connect the dots
 - treat each of these segments as a [vector]{style="color: #f07178;"}
-- scale the vectors by their [vertical drops]{style="color: #FFC857;"}
+- scale the vectors by their [vertical drops]{style="color: #FF8C42;"}
 
 we can summarize them in a ...
 :::
@@ -112,7 +114,7 @@ ski roses characterize the directions of all trail segments at a ski area.
 :::
 
 Each *spoke* of the circular chart represents a compass direction,
-with its radius proportional to the [**combined vertical**]{style="color: #36B37E;"} of trail segments in that direction.<br><br>
+with its radius proportional to the [combined vertical]{style="color: #FF8C42;"} of trail segments in that direction.<br><br>
 Highlighted is the [**Northwest by West**]{style="color: #f07178;"} spoke...
 @cr-rose-nwbw
 
@@ -136,26 +138,35 @@ While these NNE segments appear similar in horizontal distance to the NWbW segme
 ![](../images/rose_nne.png)
 :::
 
-:::{focus-on="cr-rose-nne" scale-by="0.001"}
-We can do this for other ski areas too!
-:::
-
 ::::
 :::::
 
+:::{style=text-align:center}
+We can do this for other ski areas too!
+:::
+
 ::::{.cr-section}
 
-Here are 48 more roses.
-What do you think?
-Do most of them look north-facing to you?
+Here are 48 more roses in the US (randomly selected from all short-named ski areas).<br><br>
+Have you been to any of these?
+Did you remember facing north while skiing down?
 [@cr-all-roses]
 
 :::{#cr-all-roses}
 ![](../images/all_roses.png)
 :::
 
-Our analysis of the orientation of *all* ski areas across the globe revealed a strong [poleward]{style="color: #36B37E;"} and moderate [eastward]{style="color: #FFC857;"} preference.<br><br>
-In other words, the majority of runs in the [northern]{style="color: #36B37E;"} hemisphere are oriented toward the [north]{style="color: #36B37E;"} and [east]{style="color: #FFC857;"},
+And here are the [ski roses]{style="color: #f07178;"} for 37 US states with at least one ski area.<br><br>
+Do most states look north-facing to you?
+And can you guess which state has the most combined vertical?
+[@cr-us-roses]
+
+:::{#cr-us-roses}
+![](../images/us_roses_dark.png)
+:::
+
+Our analysis of the orientation of *all* ski areas across the globe revealed a strong [poleward]{style="color: #36B37E;"} and moderate [eastward]{style="color: #FF8C42;"} preference.<br><br>
+In other words, the majority of runs in the [northern]{style="color: #36B37E;"} hemisphere are oriented toward the [north]{style="color: #36B37E;"} and [east]{style="color: #FF8C42;"},
 while those in the [southern]{style="color: #36B37E;"} hemisphere are oriented toward the [south]{style="color: #36B37E;"}.
 [@cr-hemisphere]{scale-by="0.8"}
 
@@ -168,17 +179,11 @@ This trend reflects which aspects maximize [snow retention]{style="color: #36B37
 
 ::::
 
-
-::::{.cr-section layout="overlay-center"}
-In addition to trail bearings, we have published data on other key metrics of a ski area like [**total vert**]{style="color: #FFC857;"}, [**number of lifts**]{style="color: #36B37E;"}, and [**peak elevation**]{style="color: #FF8C42;"} for ski areas across the world.
+In addition to trail bearings, we have published data on other key metrics of a ski area like [**total vertical**]{style="color: #FF8C42;"}, [**number of lifts**]{style="color: #36B37E;"}, and [**peak elevation**]{style="color: #FFC857;"} for ski areas across the world.
 <br><br>
-In the table below, you can search for your favorite ski area and explore all of its summary statistics.
-@cr-empty
-
-:::{#cr-empty}
-:::
-
-::::
+In [OpenSkiStats.org/ski-areas](/ski-areas), you can search for your favorite ski area and explore all of its summary statistics.
+<br><br>
+We hope this data will be used to guide winter adventures, assess the climate resilience of distant ski mountains, or to just give you a minute to stop and "smell" the [roses]{style="color: #f07178;"}.
 
 ::::{style="font-family: 'Source Sans 3'; font-size: 45%; color: #002B36"}
 ::: {.column-screen}
@@ -193,12 +198,5 @@ get_ski_area_reactable()
 :::
 ::::
 
-::::{.cr-section layout="overlay-center"}
-Want the inside scoop?
+Curious to learn more?
 Read our [manuscript](/manuscript) to explore the approach we took and dive deeper into our findings.
-@cr-empty
-
-:::{#cr-empty}
-:::
-
-::::
