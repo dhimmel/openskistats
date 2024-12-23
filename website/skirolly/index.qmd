@@ -1,5 +1,5 @@
 ---
-title: "The Patterns of the Slopes"
+title: "Which way do you ski?"
 format: 
   closeread-html:
     mainfont: Quicksand
@@ -157,12 +157,12 @@ Did you remember facing north while skiing down?
 :::
 
 And here are the [ski roses]{style="color: #f07178;"} for 37 US states with at least one ski area.<br><br>
-Can you guess which state has the most combined vertical?
-And do most states look north-facing to you?
+Do most states look north-facing to you?
+And can you guess which state has the most combined vertical?
 [@cr-us-roses]
 
 :::{#cr-us-roses}
-![](../images/us_roses.png)
+![](../images/us_roses_dark.png)
 :::
 
 Our analysis of the orientation of *all* ski areas across the globe revealed a strong [poleward]{style="color: #36B37E;"} and moderate [eastward]{style="color: #FF8C42;"} preference.<br><br>
