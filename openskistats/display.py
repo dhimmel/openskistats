@@ -129,7 +129,8 @@ def get_ski_area_frontend_table(story: bool = False) -> pl.DataFrame:
 
 
 # defining cellLatitude in script.js results in a React not found error
-_latitude_cell = reactable.JS("""
+_latitude_cell = reactable.JS(
+    """
 function cellLatitude(cellInfo) {
   const latitude = cellInfo.value;
   const hemisphereSymbol = latitude > 0 ? "ℕ" : "𝕊";
@@ -163,7 +164,8 @@ function cellLatitude(cellInfo) {
       ]
   );
 }
-""")
+"""
+)
 
 _numeric_filter = reactable.JS("filterNumeric")
 _percent_filter = reactable.JS("filterPercent")
@@ -188,11 +190,13 @@ def _percent_diverging_style(ci: reactable.CellInfo) -> dict[str, Any] | None:
     return {"background": color}
 
 
-_percent_with_donut_cell = reactable.JS("""
+_percent_with_donut_cell = reactable.JS(
+    """
 function(cellInfo) {
   return donutChart(cellInfo.value)
 }
-""")
+"""
+)
 
 columns_descriptions = {
     # pre-populate descriptions from SkiAreaModel
@@ -259,12 +263,12 @@ theme_light = reactable.Theme(
 # modified from https://machow.github.io/reactable-py/get-started/style-theming.html#global-theme
 theme_dark = reactable.Theme(
     color="#dbdce1",
-    background_color="#2c2d35 !important",
+    background_color="#004B59 !important",
     border_color="#33343d !important",
     # highlight color / style is not working for an unknown reason
     highlight_color="#363845 !important",
     row_highlight_style={"background-color": "#3a3b45 !important"},
-    input_style={"background-color": "#3a3b45 !important"},
+    input_style={"background-color": "#002B36 !important"},
     page_button_hover_style={"background-color": "#3a3b45"},
     page_button_active_style={"background-color": "#41424e"},
     style={
@@ -310,7 +314,7 @@ def get_ski_area_reactable(story: bool = False) -> reactable.Reactable:
         data=data_pl,
         theme=theme_dark if story else theme_light,
         searchable=False,
-        highlight=True,
+        highlight=not story,
         full_width=True,
         default_col_def=reactable.Column(
             header=_format_header,
@@ -348,6 +352,7 @@ def get_ski_area_reactable(story: bool = False) -> reactable.Reactable:
             reactable.Column(
                 id="country",
                 name="Country",
+                show=not story,
                 cell=_country_cell,
                 html=True,
                 filter_method=reactable.JS("filterCountry"),
@@ -365,6 +370,7 @@ def get_ski_area_reactable(story: bool = False) -> reactable.Reactable:
             reactable.Column(
                 id="region",
                 name="Region",
+                show=not story,
                 **_column_kwargs_location_str,
             ),
             reactable.Column(

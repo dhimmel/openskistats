@@ -5,10 +5,11 @@ format:
     mainfont: Quicksand
     css: style.css
     theme: solar
-    fontsize: 1.4rem
+    fontsize: 1.2rem
     # remove-header-space: true
     cr-style:
       narrative-background-color-overlay: "rgb(0,43,54,0.75)"
+      narrative-font-size: 1.4rem
       narrative-text-color-overlay: "#e2e2e2"
       narrative-background-color-sidebar: "#002B36"
       narrative-text-color-sidebar: "#e2e2e2"
@@ -178,25 +179,33 @@ This trend reflects which aspects maximize [snow retention]{style="color: #36B37
 :::
 
 ::::
-
+:::{.column-page}
 In addition to trail bearings, we have published data on other key metrics of a ski area like [**total vertical**]{style="color: #FF8C42;"}, [**number of lifts**]{style="color: #36B37E;"}, and [**peak elevation**]{style="color: #FFC857;"} for ski areas across the world.
-<br><br>
-In [OpenSkiStats.org/ski-areas](/ski-areas), you can search for your favorite ski area and explore all of its summary statistics.
-<br><br>
-We hope this data will be used to guide winter adventures, assess the climate resilience of distant ski mountains, or to just give you a minute to stop and "smell" the [roses]{style="color: #f07178;"}.
 
-::::{style="font-family: 'Source Sans 3'; font-size: 45%; color: #002B36"}
-::: {.column-screen}
+In [OpenSkiStats.org/ski-areas](/ski-areas), you can search for your favorite ski area and explore all of its summary statistics.
+
+For example, below are the statistics of the five New Hampshire/Vermont mountains we see earlier:
+
+<br>
+:::
+
+::::{.column-screen-inset}
+:::{style="font-family: 'Source Sans 3'; font-size: 70%;"}
 ```{python}
 #| echo: false
 #| output: asis
 from openskistats.display import embed_reactable_html, get_ski_area_reactable
 
 embed_reactable_html()
-get_ski_area_reactable()
+get_ski_area_reactable(story=True)
 ```
 :::
 ::::
+<br>
+
+:::{.column-page}
+We hope this data inspires winter adventures, helps assess the climate resilience of distant ski mountains, or simply gives you a moment to pause and *"smell" the [roses]{style="color: #f07178;"}*.
 
 Curious to learn more?
 Read our [manuscript](/manuscript) to explore the approach we took and dive deeper into our findings.
+:::
