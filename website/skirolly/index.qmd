@@ -111,7 +111,7 @@ ski roses characterize the directions of all trail segments at a ski area.
 
 
 :::{#cr-dartmouth-rose}
-![](../images/dartmouth_rose.png)
+![](../images/dartmouth_rose.svg)
 :::
 
 Each *spoke* of the circular chart represents a compass direction,
@@ -121,22 +121,22 @@ Highlighted is the [**Northwest by West**]{style="color: #f07178;"} spoke...
 
 
 :::{#cr-rose-nwbw}
-![](../images/rose_nwbw.png)
+![](../images/rose_nwbw.svg)
 :::
 
 :::{focus-on="cr-rose-nwbw"}
 ... to which these particular segments contribute.
-![](../images/segments_highlight_nwbw.png)
+![](../images/segments_highlight_nwbw.svg)
 :::
 
 :::{focus-on="cr-rose-nne"}
 And here's the [**North North East**]{style="color: #f07178;"} spoke.<br><br>
 While these NNE segments appear similar in horizontal distance to the NWbW segments above, their greater steepness results in greater vertical drop, and hence the largest spoke of the rose.
-![](../images/segments_highlight_nne.png)
+![](../images/segments_highlight_nne.svg)
 :::
 
 :::{#cr-rose-nne}
-![](../images/rose_nne.png)
+![](../images/rose_nne.svg)
 :::
 
 ::::
@@ -154,16 +154,16 @@ Did you remember facing north while skiing down?
 [@cr-all-roses]
 
 :::{#cr-all-roses}
-![](../images/all_roses.png)
+![](../images/all_roses.svg)
 :::
 
 And here are the [ski roses]{style="color: #f07178;"} for 37 US states with at least one ski area.<br><br>
 Do most states look north-facing to you?
-And can you guess which state has the most combined vertical?
+And, as an aside, can you guess which state has the most combined vertical?
 [@cr-us-roses]
 
 :::{#cr-us-roses}
-![](../images/us_roses_dark.png)
+![](../images/us_roses_dark.svg)
 :::
 
 Our analysis of the orientation of *all* ski areas across the globe revealed a strong [poleward]{style="color: #36B37E;"} and moderate [eastward]{style="color: #FF8C42;"} preference.<br><br>
@@ -175,7 +175,7 @@ This trend reflects which aspects maximize [snow retention]{style="color: #36B37
 [@cr-hemisphere]{scale-by="0.8"}
 
 :::{#cr-hemisphere}
-![](../images/hemisphere.png)
+![](../images/hemisphere.svg)
 :::
 
 ::::

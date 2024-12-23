@@ -4,6 +4,7 @@ library(ggplot2)
 library(yaml)
 library(patchwork)
 library(cowplot)
+library(svglite)
 
 img_data_dir <- "../images/data"
 img_dir <- "../images"
@@ -229,9 +230,9 @@ ggsave(
 
 dartmouth_rose <- plot_rose(dartmouth, "", labels = c("N", "E", "S", "W"))
 ggsave(
-  file.path(img_dir, "dartmouth_rose.png"), 
+  file.path(img_dir, "dartmouth_rose.svg"), 
   dartmouth_rose,
-  width = 5, height = 5, dpi = 300
+  width = 6, height = 6
 )
 
 rose_nwbw <- dartmouth |>
@@ -239,9 +240,9 @@ rose_nwbw <- dartmouth |>
   plot_rose("", labels = c("N", "E", "S", "W"), highlight = TRUE) +
   geom_text(x = 298, y = 26.3, label = "NWbW", color = rose_pink, family = my_font, size = 6)
 ggsave(
-  file.path(img_dir, "rose_nwbw.png"), 
+  file.path(img_dir, "rose_nwbw.svg"), 
   rose_nwbw,
-  width = 5, height = 5, dpi = 300
+  width = 6, height = 6
 )
 
 rose_nne <- dartmouth |>
@@ -249,16 +250,19 @@ rose_nne <- dartmouth |>
   plot_rose("", labels = c("N", "E", "S", "W"), highlight = TRUE) +
   geom_text(x = 22, y = 29, label = "NNE", color = rose_pink, family = my_font, size = 6)
 ggsave(
-  file.path(img_dir, "rose_nne.png"), 
+  file.path(img_dir, "rose_nne.svg"), 
   rose_nne,
-  width = 5, height = 5, dpi = 300
+  width = 6, height = 6
 ) 
 
 segments_highlight_nwbw <- dartmouth_segs |>
   mutate(nwbw = group == 28) |>
   ggplot() +
   aes(x = x, y = y, xend = xend, yend = yend, color = nwbw) +
-  geom_segment(arrow = arrow(type = "open", length = unit(0.1, "cm"))) +
+  geom_segment(
+    arrow = arrow(type = "open", length = unit(0.2, "cm")),
+    linewidth = 1
+  ) +
   scale_color_manual(values = c(text_teal, rose_pink), guide = "none") +
   coord_dartmouth +
   bg_transparent() +
@@ -267,16 +271,19 @@ segments_highlight_nwbw <- dartmouth_segs |>
   ) 
 
 ggsave(
-  file.path(img_dir, "segments_highlight_nwbw.png"), 
+  file.path(img_dir, "segments_highlight_nwbw.svg"), 
   segments_highlight_nwbw,
-  width = fig_width, height = fig_height, dpi = 300
+  width = fig_width*2, height = fig_height*2
 )
 
 segments_highlight_nne <- dartmouth_segs |>
   mutate(nne = group == 3) |>
   ggplot() +
   aes(x = x, y = y, xend = xend, yend = yend, color = nne) +
-  geom_segment(arrow = arrow(type = "open", length = unit(0.1, "cm"))) +
+  geom_segment(
+    arrow = arrow(type = "open", length = unit(0.2, "cm")),
+    linewidth = 1
+  ) +
   scale_color_manual(values = c(text_teal, rose_pink), guide = "none") +
   coord_dartmouth +
   bg_transparent() +
@@ -285,9 +292,9 @@ segments_highlight_nne <- dartmouth_segs |>
   )
 
 ggsave(
-  file.path(img_dir, "segments_highlight_nne.png"), 
+  file.path(img_dir, "segments_highlight_nne.svg"), 
   segments_highlight_nne,
-  width = fig_width, height = fig_height, dpi = 300
+  width = fig_width*2, height = fig_height*2
 )
 
 all_roses <- cowplot::plot_grid(
@@ -295,20 +302,19 @@ all_roses <- cowplot::plot_grid(
     bearings_ls,
     names(bearings_ls),
     plot_rose,
-    size_x = 7,
-    size_title = 9,
+    size_title = 18,
     vert = 0.1,
     type = "all"
   )
 )
 
 ggsave(
-  file.path(img_dir, "all_roses.png"), 
+  file.path(img_dir, "all_roses.svg"), 
   all_roses,
-  width = 8, height = 6, dpi = 600
+  width = 16, height = 12
 )
 
-north <- hemi |> 
+ north <- hemi |> 
   filter(num_bins == n_groups, hemisphere == "north") |> 
   plot_rose("Northern hemisphere", labels = c("N", "E", "S", "W"))
 
@@ -317,7 +323,7 @@ south <- hemi |>
   plot_rose("Southern hemisphere", labels = c("N", "E", "S", "W"))
 
 ggsave(
-  file.path(img_dir, "hemisphere.png"), 
+  file.path(img_dir, "hemisphere.svg"), 
   cowplot::plot_grid(north, south, ncol = 2),
   width = 12, height = 6, dpi = 300
 )
@@ -450,9 +456,17 @@ for (pal in names(my_aesthetics)) {
     )
   
   ggsave(
-    file.path(img_dir, sprintf("us_roses_%s.png", pal)),
+    file.path(img_dir, sprintf("us_roses_%s.svg", pal)),
     to_publish,
     width = 11 * 3, height = 8 * 3, units = "in",
     dpi = 300
   )
+  ggsave(
+    file.path(img_dir, sprintf("us_roses_%s.png", pal)),
+    to_publish,
+    width = 11, height = 8, units = "in",
+    device = "png",
+    dpi = 300
+  )
+  
 }
