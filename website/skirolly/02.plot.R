@@ -18,6 +18,7 @@ dark_green <- "#002B36"
 my_font <- "Alegreya Sans"
 sysfonts::font_add_google(my_font)
 showtext::showtext_auto()
+showtext::showtext_opts(dpi = 300)
 
 # for US map:
 
@@ -61,11 +62,10 @@ bg_transparent <- function() {
     )
 }
 plot_rose <- function(
-    dat, ski_area_name, size_title = 24, size_x = 20, 
-    highlight = FALSE, labels = NULL, type = NULL, 
+    dat, ski_area_name, size_title = 24, size_x = 20,
+    highlight = FALSE, labels = NULL, type = NULL,
     hemi = NULL, ngr = 32, vert = 0, aesthetics = NULL,
-    empty_rose = FALSE
-  ) {
+    empty_rose = FALSE) {
   y_break <- max(dat$bin_count)
   p <- dat |>
     ggplot() +
@@ -80,10 +80,10 @@ plot_rose <- function(
       panel.grid = element_line(color = "grey60"),
       axis.text.x = element_text(size = size_x, color = text_light),
       plot.title = element_text(hjust = 0.5, size = size_title, color = text_light)
-    ) 
+    )
   
   if (!is.null(type)) {
-    p <- p + 
+    p <- p +
       theme(
         panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
@@ -94,7 +94,9 @@ plot_rose <- function(
     }
     if (type == "us") {
       p <- p +
-        {if (!empty_rose) geom_col(fill = rose_pink, width = 360 / ngr, color = text_light, linewidth = 0.2) else geom_col(fill = NA)} +
+        {
+          if (!empty_rose) geom_col(fill = rose_pink, width = 360 / ngr, color = text_light, linewidth = 0.2) else geom_col(fill = NA)
+        } +
         annotate(
           geom = "label",
           label = ski_area_name,
@@ -145,7 +147,7 @@ dart_url <- "https://github.com/user-attachments/assets/1a02ca26-7034-4d87-bc0c-
 bearings_ls <- readRDS(file.path(img_data_dir, "bearings_48_ls.rds"))
 dartmouth_segs <- read_parquet(file.path(img_data_dir, "dartmouth_segs.parquet"))
 hemi <- read_parquet(file.path(img_data_dir, "hemisphere_roses.parquet")) |>
-  tidyr::unnest(bearings) 
+  tidyr::unnest(bearings)
 
 dart <- read_parquet(file.path(img_data_dir, "dartmouth_runs.parquet")) |>
   group_by(run_id) |>
@@ -165,12 +167,12 @@ length_y <- diff(y_range) # Length in y-direction
 
 ## Plots ----
 fig_height <- 3.75
-fig_width <- fig_height*703/503#865/452
+fig_width <- fig_height * 703 / 503 # 865/452
 
 # desired_yx_ratio <- dim(dartmouth_img)[1] / dim(dartmouth_img)[2]
 # desired_yx_ratio <- 1399/2356
 # desired_yx_ratio <- 1429 / 2768
-desired_yx_ratio <- 1420/1897
+desired_yx_ratio <- 1420 / 1897
 ratio <- (length_x / length_y) * desired_yx_ratio
 coord_dartmouth <- coord_fixed(
   xlim = x_range,
@@ -195,20 +197,20 @@ dots_overlay <- ggimage::ggbackground(
 )
 
 ggsave(
-  file.path(img_dir, "dots_overlay.png"), 
+  file.path(img_dir, "dots_overlay.png"),
   dots_overlay,
   width = fig_width,
   height = fig_height,
   dpi = 300
 )
 
-align_dots <- function(p){
-  ggplot(data.frame(x = 0:1, y = 0:1), aes(x = x, y = y)) + 
-  ggimage::geom_subview(subview = p, width = Inf, height = Inf, x = 0.5, y = 0.5) +
-  ggimage::theme_nothing() 
+align_dots <- function(p) {
+  ggplot(data.frame(x = 0:1, y = 0:1), aes(x = x, y = y)) +
+    ggimage::geom_subview(subview = p, width = Inf, height = Inf, x = 0.5, y = 0.5) +
+    ggimage::theme_nothing()
 }
 ggsave(
-  file.path(img_dir, "dots_only.png"), 
+  file.path(img_dir, "dots_only.png"),
   align_dots(dots_only),
   width = fig_width, height = fig_height, dpi = 300
 )
@@ -223,24 +225,24 @@ segments_plot <- ggplot(dartmouth_segs) +
   bg_transparent()
 
 ggsave(
-  file.path(img_dir, "segments_plot.png"), 
+  file.path(img_dir, "segments_plot.png"),
   align_dots(segments_plot),
   width = fig_width, height = fig_height, dpi = 300
 )
 
 dartmouth_rose <- plot_rose(dartmouth, "", labels = c("N", "E", "S", "W"))
 ggsave(
-  file.path(img_dir, "dartmouth_rose.svg"), 
+  file.path(img_dir, "dartmouth_rose.svg"),
   dartmouth_rose,
   width = 6, height = 6
 )
 
 rose_nwbw <- dartmouth |>
-  mutate(color = if_else((row_number()) != 28, text_teal, rose_pink)) |> 
+  mutate(color = if_else((row_number()) != 28, text_teal, rose_pink)) |>
   plot_rose("", labels = c("N", "E", "S", "W"), highlight = TRUE) +
   geom_text(x = 298, y = 26.3, label = "NWbW", color = rose_pink, family = my_font, size = 6)
 ggsave(
-  file.path(img_dir, "rose_nwbw.svg"), 
+  file.path(img_dir, "rose_nwbw.svg"),
   rose_nwbw,
   width = 6, height = 6
 )
@@ -250,10 +252,10 @@ rose_nne <- dartmouth |>
   plot_rose("", labels = c("N", "E", "S", "W"), highlight = TRUE) +
   geom_text(x = 22, y = 29, label = "NNE", color = rose_pink, family = my_font, size = 6)
 ggsave(
-  file.path(img_dir, "rose_nne.svg"), 
+  file.path(img_dir, "rose_nne.svg"),
   rose_nne,
   width = 6, height = 6
-) 
+)
 
 segments_highlight_nwbw <- dartmouth_segs |>
   mutate(nwbw = group == 28) |>
@@ -268,12 +270,12 @@ segments_highlight_nwbw <- dartmouth_segs |>
   bg_transparent() +
   theme(
     panel.grid = element_blank(),
-  ) 
+  )
 
 ggsave(
-  file.path(img_dir, "segments_highlight_nwbw.svg"), 
+  file.path(img_dir, "segments_highlight_nwbw.svg"),
   segments_highlight_nwbw,
-  width = fig_width*2, height = fig_height*2
+  width = fig_width * 2, height = fig_height * 2
 )
 
 segments_highlight_nne <- dartmouth_segs |>
@@ -292,9 +294,9 @@ segments_highlight_nne <- dartmouth_segs |>
   )
 
 ggsave(
-  file.path(img_dir, "segments_highlight_nne.svg"), 
+  file.path(img_dir, "segments_highlight_nne.svg"),
   segments_highlight_nne,
-  width = fig_width*2, height = fig_height*2
+  width = fig_width * 2, height = fig_height * 2
 )
 
 all_roses <- cowplot::plot_grid(
@@ -309,21 +311,21 @@ all_roses <- cowplot::plot_grid(
 )
 
 ggsave(
-  file.path(img_dir, "all_roses.svg"), 
+  file.path(img_dir, "all_roses.svg"),
   all_roses,
   width = 16, height = 12
 )
 
- north <- hemi |> 
-  filter(num_bins == n_groups, hemisphere == "north") |> 
+north <- hemi |>
+  filter(num_bins == n_groups, hemisphere == "north") |>
   plot_rose("Northern hemisphere", labels = c("N", "E", "S", "W"))
 
-south <- hemi |> 
-  filter(num_bins == n_groups, hemisphere == "south") |> 
+south <- hemi |>
+  filter(num_bins == n_groups, hemisphere == "south") |>
   plot_rose("Southern hemisphere", labels = c("N", "E", "S", "W"))
 
 ggsave(
-  file.path(img_dir, "hemisphere.svg"), 
+  file.path(img_dir, "hemisphere.svg"),
   cowplot::plot_grid(north, south, ncol = 2),
   width = 12, height = 6, dpi = 300
 )
@@ -377,7 +379,7 @@ state_map <- setNames(state.abb, state.name)
 
 for (pal in names(my_aesthetics)) {
   my_aesthetic <- my_aesthetics[[pal]]
-  all_regions <- list(region, state_map[names(region)], vert = verts) |> 
+  all_regions <- list(region, state_map[names(region)], vert = verts) |>
     purrr::pmap(
       plot_rose,
       size_title = size_label,
@@ -464,9 +466,8 @@ for (pal in names(my_aesthetics)) {
   ggsave(
     file.path(img_dir, sprintf("us_roses_%s.png", pal)),
     to_publish,
-    width = 11, height = 8, units = "in",
+    width = 11 * 3, height = 8 * 3, units = "in",
     device = "png",
     dpi = 300
   )
-  
 }
