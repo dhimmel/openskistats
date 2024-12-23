@@ -46,56 +46,14 @@ pre-commit install
 
 ## References
 
-1. **Urban spatial order: street network orientation, configuration, and entropy**  
-Geoff Boeing  
-*Applied Network Science* (2019-08-23) <https://doi.org/gf8srn>  
-DOI: [10.1007/s41109-019-0189-1](https://doi.org/10.1007/s41109-019-0189-1)
+List of related webpages not yet mentioned in the manuscript:
 
-2. **OSMnx: New methods for acquiring, constructing, analyzing, and visualizing complex street networks**  
-Geoff Boeing  
-*Computers, Environment and Urban Systems* (2017-09) <https://doi.org/gbvjxq>  
-DOI: [10.1016/j.compenvurbsys.2017.05.004](https://doi.org/10.1016/j.compenvurbsys.2017.05.004)
-
-3. **Climate change exacerbates snow-water-energy challenges for European ski tourism**  
-Hugues François, Raphaëlle Samacoïts, David Neil Bird, Judith Köberl, Franz Prettenthaler, Samuel Morin  
-*Nature Climate Change* (2023-08-28) <https://doi.org/gsnhbv>  
-DOI: [10.1038/s41558-023-01759-5](https://doi.org/10.1038/s41558-023-01759-5)
-
-4. **Vulnerability of ski tourism towards internal climate variability and climate change in the Swiss Alps**  
-Fabian Willibald, Sven Kotlarski, Pirmin Philipp Ebner, Mathias Bavay, Christoph Marty, Fabian V Trentini, Ralf Ludwig, Adrienne Grêt-Regamey  
-*Science of The Total Environment* (2021-08) <https://doi.org/gvzmqw>  
-DOI: [10.1016/j.scitotenv.2021.147054](https://doi.org/10.1016/j.scitotenv.2021.147054) · PMID: [33894612](https://www.ncbi.nlm.nih.gov/pubmed/33894612)
-
-5. **2022 International Report on Snow & Mountain Tourism: Overview of the key industry figures for ski resorts**  
-Laurent Vanat  
-(2022-04) <https://www.vanat.ch/international-report-on-snow-mountain-tourism>  
-ISBN: [9782970102892](https://www.thebookedition.com/fr/2022-international-snow-report-p-389872.html)
-
-6. **SkiVis: Visual Exploration and Route Planning in Ski Resorts**  
-Julius Rauscher, Raphael Buchmüller, Daniel A Keim, Matthias Miller  
-*IEEE Transactions on Visualization and Computer Graphics* (2023) <https://doi.org/g8qtfb>  
-DOI: [10.1109/tvcg.2023.3326940](https://doi.org/10.1109/tvcg.2023.3326940) · PMID: [37874714](https://www.ncbi.nlm.nih.gov/pubmed/37874714)
-
-7. **OSM Ski Resort Routing**
-Wenzel Friedsam, Robin Hieber, Alexander Kharitonov, Tobias Rupp  
-*Proceedings of the 29th International Conference on Advances in Geographic Information Systems* (2021-11-02) <https://doi.org/g8qtf6>  
-DOI: [10.1145/3474717.3483628](https://doi.org/10.1145/3474717.3483628)
-
-
-List of related webpages:
-
-- https://forums.alpinezone.com/threads/mountain-slopes-facing-side.11630/
 - https://avalanche.org/avalanche-encyclopedia/terrain/slope-characteristics/aspect/
 - https://www.onxmaps.com/backcountry/app/features/slope-aspect-map
 - https://en.wikipedia.org/wiki/Aspect_(geography)
 - https://gisgeography.com/aspect-map/
-- https://geoffboeing.com/2018/07/comparing-city-street-orientations/
-- https://verticalfeet.com/
-- https://en.wikipedia.org/wiki/Comparison_of_North_American_ski_resorts
 - https://www.nsaa.org/NSAA/Media/Industry_Stats.aspx
 - https://www.skitalk.com/threads/comparing-latitude-and-elevation-at-western-us-resorts.9980/
-- https://www.stormskiing.com/p/there-are-505-active-ski-areas-in
-- https://github.com/pirxpilot/liftie
 - https://gitlab.com/hugfr/european-ski-resorts-snow-reliability and https://zenodo.org/records/8047168
 - https://mapsynergy.com/ and https://mapsynergy.maps.arcgis.com/apps/dashboards/44d9c8422f3c4cc898642d75392337db
 
@@ -107,7 +65,6 @@ List of related webpages:
 - fix matplotlib super title spacing
 - How many ski areas in the world, comparing to the Vanat report
 - Total combined vert of ski areas by rank of ski area (how much do big resorts drive the aggregated metrics)
-- fix snowflake alignment
 
 ## Upstream issue tracking
 
