@@ -126,12 +126,18 @@ Highlighted is the [**Northwest by West**]{style="color: #f07178;"} spoke...
 
 :::{focus-on="cr-rose-nwbw"}
 ... to which these particular segments contribute.
+
+<br>
 ![](../images/segments_highlight_nwbw.svg)
 :::
 
 :::{focus-on="cr-rose-nne"}
-And here's the [**North North East**]{style="color: #f07178;"} spoke.<br><br>
+And here's the [**North North East**]{style="color: #f07178;"} spoke.
+
+<br>
 While these NNE segments appear similar in horizontal distance to the NWbW segments above, their greater steepness results in greater vertical drop, and hence the largest spoke of the rose.
+
+<br>
 ![](../images/segments_highlight_nne.svg)
 :::
 
@@ -189,7 +195,7 @@ For example, below are the statistics of the five New Hampshire/Vermont mountain
 <br>
 :::
 
-::::{.column-screen-inset}
+::::{.column-screen}
 :::{style="font-family: 'Source Sans 3'; font-size: 70%;"}
 ```{python}
 #| echo: false
@@ -204,7 +210,7 @@ get_ski_area_reactable(story=True)
 <br>
 
 :::{.column-page}
-We hope this data inspires winter adventures, helps assess the climate resilience of distant ski mountains, or simply gives you a moment to pause and *"smell" the [roses]{style="color: #f07178;"}*.
+We hope this data inspires winter adventures, helps assess the climate resilience of distant ski mountains, or simply gives you a moment to pause and [*smell* the roses]{style="color: #f07178;"}.
 
 Curious to learn more?
 Read our [manuscript](/manuscript) to explore the approach we took and dive deeper into our findings.
