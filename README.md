@@ -23,10 +23,10 @@ uv run openskistats visualize
 uv run openskistats display
 
 # story dependencies (must install R and renv first)
+Rscript -e "setwd('r'); renv::restore()"
+
+# install story extension
 (cd website/story && quarto add --no-prompt https://github.com/qmd-lab/closeread/archive/e3645070dd668004056ae508d2d25d05baca5ad1.zip)
-Rscript -e "setwd('website/story'); renv::restore()"
-
-
 quarto render website
 quarto preview website
 

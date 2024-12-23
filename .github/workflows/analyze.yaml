@@ -42,7 +42,7 @@ jobs:
         uv run openskistats visualize
       shell: bash
     - name: Make story plots
-      working-directory: website/story/
+      working-directory: r/
       run: |
         Rscript 01.data.R
         Rscript 02.plot.R

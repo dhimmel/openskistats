@@ -6,8 +6,8 @@ library(patchwork)
 library(cowplot)
 library(svglite)
 
-img_data_dir <- "../images/data"
-img_dir <- "../images"
+img_data_dir <- "../data/images/data"
+img_dir <- "../data/images"
 colors <- c("#f07178", "#004B59", "#FFC857", "#36B37E", "#FF8C42", "#F4F1E9", "#8A9393", "#2A2D34")
 
 rose_pink <- "#f07178"
