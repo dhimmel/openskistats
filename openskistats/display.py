@@ -261,7 +261,9 @@ theme_dark = reactable.Theme(
     color="#dbdce1",
     background_color="#2c2d35 !important",
     border_color="#33343d !important",
-    highlight_color="#363845",
+    # highlight color / style is not working for an unknown reason
+    highlight_color="#363845 !important",
+    row_highlight_style={"background-color": "#3a3b45 !important"},
     input_style={"background-color": "#3a3b45 !important"},
     page_button_hover_style={"background-color": "#3a3b45"},
     page_button_active_style={"background-color": "#41424e"},

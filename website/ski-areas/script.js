@@ -162,7 +162,7 @@ function cellRose(cellInfo) {
   <div class="tooltip-container"
        onmouseover="showTooltip(event)"
        onmouseout="hideTooltip(event)">
-      <a href="roses-full/${cellInfo.value}.svg" target="_blank">
+      <a href="/ski-areas/roses-full/${cellInfo.value}.svg" target="_blank">
           <img src="/ski-areas/roses-preview/${cellInfo.value}.svg" alt="Preview Rose" class="hover-preview">
       </a>
       <div class="tooltip-image">
