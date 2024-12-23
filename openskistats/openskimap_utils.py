@@ -94,7 +94,7 @@ def download_openskimap_geojsons() -> None:
         info = download_openskimap_geojson(name)  # type: ignore [arg-type]
         download_infos.append(dataclass_to_dict(info))
     # write download info to disk
-    get_openskimap_path("info").write_text(json.dumps(download_infos, indent=2))
+    get_openskimap_path("info").write_text(json.dumps(download_infos, indent=2) + "\n")
 
 
 def load_openskimap_geojson(
@@ -369,7 +369,7 @@ def generate_openskimap_test_data() -> None:
     ]:
         path = get_openskimap_path(name, testing=True)  # type: ignore [arg-type]
         logging.info(f"Writing {len(data['features']):,} {name} to {path}.")
-        path.write_text(json.dumps(data, indent=2, ensure_ascii=False))
+        path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
 
     # copy info.json to testing directory (checksums and sizes will still refer to unfiltered data)
     shutil.copy(
