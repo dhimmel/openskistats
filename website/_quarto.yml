@@ -26,5 +26,7 @@ format:
     css: common/style.css
     toc: true
     code-fold: true
+    include-in-header:
+      - common/matomo.html
 
 jupyter: python3
