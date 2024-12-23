@@ -11,6 +11,7 @@ from mizani.palettes import gradient_n_pal
 
 from openskistats.analyze import (
     get_display_ski_area_filters,
+    get_story_ski_area_names,
     load_bearing_distribution_pl,
     load_ski_areas_pl,
 )
@@ -58,7 +59,7 @@ def country_code_to_emoji(country_code: str) -> str:
     ) + unicodedata.lookup(f"REGIONAL INDICATOR SYMBOL LETTER {country_code[1]}")
 
 
-def get_ski_area_frontend_table() -> pl.DataFrame:
+def get_ski_area_frontend_table(story: bool = False) -> pl.DataFrame:
     """
     Dataframe of ski areas and their metrics designed for display.
     """
@@ -82,9 +83,9 @@ def get_ski_area_frontend_table() -> pl.DataFrame:
             "bin_proportion_2_N",
         )
     )
-    return (
+    table_df = (
         load_ski_areas_pl()
-        .filter(*get_display_ski_area_filters())
+        .filter(*get_display_ski_area_filters(story=story))
         .join(cardinal_direction_props, on="ski_area_id", how="left")
         # inconveniently, order of selection here defines reactable column order
         # https://github.com/glin/reactable/issues/172
@@ -117,6 +118,14 @@ def get_ski_area_frontend_table() -> pl.DataFrame:
         .with_columns(pl.selectors.by_dtype(pl.Float64).round(4))
         .sort("ski_area_name")
     )
+    if story:
+        if missing := set(get_story_ski_area_names()) - set(
+            table_df.get_column("ski_area_name")
+        ):
+            raise ValueError(
+                f"Expected ski areas in get_story_ski_area_names are missing: {missing!r}"
+            )
+    return table_df
 
 
 # defining cellLatitude in script.js results in a React not found error
@@ -248,8 +257,13 @@ theme = reactable.Theme(
 )
 
 
-def get_ski_area_reactable() -> reactable.Reactable:
-    data_pl = get_ski_area_frontend_table()
+def get_ski_area_reactable(story: bool = False) -> reactable.Reactable:
+    """
+    Reactable of ski areas and their metrics designed for website display.
+    If story is True, only display ski areas that are part of the scrollytelling story
+    and subset to select columns.
+    """
+    data_pl = get_ski_area_frontend_table(story=story)
 
     def _ski_area_cell(ci: reactable.CellInfo) -> htmltools.Tag:
         ski_area_id = data_pl.item(row=ci.row_index, column="ski_area_id")
@@ -403,6 +417,7 @@ def get_ski_area_reactable() -> reactable.Reactable:
             reactable.Column(
                 id="bearing_mean",
                 name="Azimuth",
+                show=not story,
                 # format=reactable.ColFormat(suffix="°", digits=0),
                 cell=reactable.JS("cellAzimuth"),
                 html=True,
@@ -413,6 +428,7 @@ def get_ski_area_reactable() -> reactable.Reactable:
             reactable.Column(
                 id="bearing_alignment",
                 name="Alignment",
+                show=not story,
                 cell=_percent_with_donut_cell,
                 html=True,
                 filter_method=_percent_filter,
@@ -420,6 +436,7 @@ def get_ski_area_reactable() -> reactable.Reactable:
             reactable.Column(
                 id="poleward_affinity",
                 name="Poleward",
+                show=not story,
                 format=reactable.ColFormat(percent=True, digits=0),
                 filter_method=_percent_filter,
                 style=_percent_diverging_style,
@@ -427,6 +444,7 @@ def get_ski_area_reactable() -> reactable.Reactable:
             reactable.Column(
                 id="eastward_affinity",
                 name="Eastward",
+                show=not story,
                 format=reactable.ColFormat(percent=True, digits=0),
                 filter_method=_percent_filter,
                 style=_percent_diverging_style,
@@ -434,27 +452,32 @@ def get_ski_area_reactable() -> reactable.Reactable:
             reactable.Column(
                 id="bin_proportion_4_N",
                 name="N₄",
+                show=not story,
                 **_column_kwargs_bin_proportion,
                 class_="border-left",
             ),
             reactable.Column(
                 id="bin_proportion_4_E",
                 name="E₄",
+                show=not story,
                 **_column_kwargs_bin_proportion,
             ),
             reactable.Column(
                 id="bin_proportion_4_S",
                 name="S₄",
+                show=not story,
                 **_column_kwargs_bin_proportion,
             ),
             reactable.Column(
                 id="bin_proportion_4_W",
                 name="W₄",
+                show=not story,
                 **_column_kwargs_bin_proportion,
             ),
             reactable.Column(
                 id="bin_proportion_2_N",
                 name="N₂",
+                show=not story,
                 **_column_kwargs_bin_proportion,
                 class_="border-left",
             ),
