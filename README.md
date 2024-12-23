@@ -22,9 +22,9 @@ uv run openskistats analyze
 uv run openskistats visualize
 uv run openskistats display
 
-# skirolly dependencies (must install R and renv first)
-(cd website/skirolly && quarto add --no-prompt https://github.com/qmd-lab/closeread/archive/e3645070dd668004056ae508d2d25d05baca5ad1.zip)
-Rscript -e "setwd('website/skirolly'); renv::restore()"
+# story dependencies (must install R and renv first)
+(cd website/story && quarto add --no-prompt https://github.com/qmd-lab/closeread/archive/e3645070dd668004056ae508d2d25d05baca5ad1.zip)
+Rscript -e "setwd('website/story'); renv::restore()"
 
 
 quarto render website

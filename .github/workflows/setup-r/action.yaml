@@ -13,4 +13,4 @@ runs:
     - name: Install R Dependencies
       uses: r-lib/actions/setup-renv@v2
       with:
-        working-directory: website/skirolly/
+        working-directory: website/story/
