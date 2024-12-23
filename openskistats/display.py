@@ -250,9 +250,23 @@ _column_kwargs_bin_proportion = {
     "footer": reactable.JS("footerMeanWeightedPercent"),
 }
 
-theme = reactable.Theme(
+theme_light = reactable.Theme(
     style={
         ".border-left": {"border-left": "2px solid #3f3e3e"},
+    },
+)
+
+# modified from https://machow.github.io/reactable-py/get-started/style-theming.html#global-theme
+theme_dark = reactable.Theme(
+    color="#dbdce1",
+    background_color="#2c2d35 !important",
+    border_color="#33343d !important",
+    highlight_color="#363845",
+    input_style={"background-color": "#3a3b45 !important"},
+    page_button_hover_style={"background-color": "#3a3b45"},
+    page_button_active_style={"background-color": "#41424e"},
+    style={
+        ".border-left": {"border-left": "2px solid ##e0dada !important"},
     },
 )
 
@@ -292,8 +306,7 @@ def get_ski_area_reactable(story: bool = False) -> reactable.Reactable:
 
     return reactable.Reactable(
         data=data_pl,
-        # striped=True,
-        theme=theme,
+        theme=theme_dark if story else theme_light,
         searchable=False,
         highlight=True,
         full_width=True,
