@@ -41,8 +41,8 @@ jobs:
         uv run openskistats validate
         uv run openskistats visualize
       shell: bash
-    - name: Make skirolly plots
-      working-directory: website/skirolly/
+    - name: Make story plots
+      working-directory: website/story/
       run: |
         Rscript 01.data.R
         Rscript 02.plot.R
