@@ -18,4 +18,4 @@ jobs:
     - uses: ./.github/workflows/setup-r
     - name: R tests
       run: Rscript -e "packageVersion('arrow')"
-      working-directory: website/story/
+      working-directory: r/

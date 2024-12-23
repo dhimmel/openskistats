@@ -1,6 +1,6 @@
 set.seed(1618)
-data_dir <- "../../data"
-img_data_dir <- "../images/data"
+data_dir <- "../data"
+img_data_dir <- "../data/images/data"
 
 ## dartmouth_runs -----------------------------------------------------------
 runs <- arrow::read_parquet(file.path(data_dir, "runs.parquet"))
