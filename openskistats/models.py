@@ -252,6 +252,11 @@ class SkiAreaModel(Model):  # type: ignore [misc]
     hemisphere: Literal["north", "south"] | None = Field(
         description="Hemisphere of the ski area.",
     )
+    solar_intensity: float | None = Field(
+        description="Solar intensity of the ski resort calculated by the declination at that latitude at the solstice",
+        ge=0.0,
+        le=1.0,
+    )
     min_elevation: Annotated[
         float | None,
         Field(
