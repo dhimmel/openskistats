@@ -315,3 +315,100 @@ def get_bearing_summary_stats(
         bearing_magnitude_net=round(net_magnitude, 7),
         bearing_magnitude_cum=round(cum_magnitude, 7),
     )
+
+
+# def get_solar_intensity(
+#     latitudes: list[float] | npt.NDArray[np.float64]
+# ) -> pl.DataFrame:
+    
+
+HOURS_IN_DAY = 24
+HOURS_START = 9  # Start time (9 AM)
+HOURS_END = 16   # End time (4 PM)
+
+def solar_declination(day_of_year: int) -> float:
+    """
+    Calculate the solar declination for a given day of the year.
+    This uses the approximation formula for solar declination.
+    """
+    # Calculate the solar declination using the approximation formula
+    # δ = 23.44 * sin(360° * (N + 10) / 365)
+    # Where N is the day of the year (1 to 365)
+    return 23.44 * np.sin(np.radians(360 * (day_of_year + 10) / 365))
+
+def solar_intensity_at_time(latitude: float, declination: float, hour: int) -> float:
+    """
+    Calculate the solar intensity at a given time of day (hour) for a given latitude and solar declination.
+    """
+    # Convert latitude and declination to radians for trigonometric calculations
+    latitude_rad = np.radians(latitude)
+    declination_rad = np.radians(declination)
+
+    # Hour angle (ω) for a given time of day (simple model)
+    # Hour angle increases by 15 degrees per hour, starting from 12:00 PM.
+    hour_angle = np.radians(15 * (hour - 12))
+
+    # Calculate the solar zenith angle using the formula
+    # cos(θ) = sin(δ) * sin(φ) + cos(δ) * cos(φ) * cos(ω)
+    # Where:
+    # δ = solar declination, φ = latitude, ω = hour angle
+    solar_zenith = np.arccos(
+        np.sin(declination_rad) * np.sin(latitude_rad) +
+        np.cos(declination_rad) * np.cos(latitude_rad) * np.cos(hour_angle)
+    )
+
+    intensity = np.cos(solar_zenith)
+    return max(intensity, 0)
+
+def integrate_solar_intensity(latitude: float, day_of_year: int) -> float:
+    """
+    Integrate solar intensity from 9 AM to 4 PM.
+    The function returns the average solar intensity over this period.
+    """
+    declination = solar_declination(day_of_year)
+    intensities = [solar_intensity_at_time(latitude, declination, hour) for hour in range(HOURS_START, HOURS_END)]
+    
+    return np.mean(intensities)
+
+def get_hemisphere(latitude: float) -> Literal["north", "south"] | None:
+    if latitude is None:
+        return None
+    elif latitude >= 0:
+        return "north"
+    elif latitude < 0:
+        return "south"
+    
+
+def get_solar_intensity(
+    latitude: float
+) -> float:
+    """
+    Calculate the average solar intensity from 9 AM to 4 PM for each latitude.
+    
+    Args:
+        latitudes (list or ndarray): A list or numpy array of latitudes.
+        hemisphere: lets us know if we are in the northern or southern hemisphere
+    
+    Returns:
+        polars.DataFrame: A DataFrame with latitudes and their corresponding average solar intensity.
+    """
+    # For each latitude, calculate the solar intensity (assuming a fixed day of the year, e.g., 172nd day for mid-winter in southern hemisphere)
+    # and the 355th day for mid-winter in northern hemisphere
+    import logging
+    logging.info(f"latitude is {latitude}")
+    hemisphere: Literal["north", "south"] | None = None
+    hemisphere = get_hemisphere(latitude)
+    if hemisphere == "north":
+        day_of_year = 355 # Mid-winter day (e.g., December 21)
+    elif hemisphere == "south":
+        day_of_year = 172 # Mid-winter day (e.g., June 21)
+    else:
+        logging.info(f"hemisphere has value: {hemisphere}")
+        return None
+
+    # TODO we could dynamically use the open and close dates of each resort
+    avg_intensity = integrate_solar_intensity(latitude, day_of_year)
+    return avg_intensity
+
+def get_solar_intensity_batch(latitudes: pl.Series) -> pl.Series:
+    return pl.Series([get_solar_intensity(latitude) for latitude in latitudes])

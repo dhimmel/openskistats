@@ -13,7 +13,9 @@ from openskistats.bearing import (
     add_spatial_metric_columns,
     get_bearing_histograms,
     get_bearing_summary_stats,
+    get_solar_intensity_batch,
 )
+
 from openskistats.models import BearingStatsModel, SkiAreaModel
 from openskistats.openskimap_utils import (
     load_downhill_ski_areas_from_download_pl,
@@ -93,6 +95,11 @@ def analyze_all_ski_areas_polars(skip_runs: bool = False) -> None:
             combined_vertical=pl.col("distance_vertical_drop").sum(),
             combined_distance=pl.col("distance_3d").sum(),
             latitude=pl.col("latitude").mean(),
+            solar_intensity = pl.col("latitude")
+                .map_batches(
+                    lambda batch: get_solar_intensity_batch(batch),
+                    return_dtype=pl.Float64
+            ).mean(),
             longitude=pl.col("longitude").mean(),
             min_elevation=pl.col("elevation").min(),
             max_elevation=pl.col("elevation").max(),
@@ -221,6 +228,7 @@ def aggregate_ski_areas_pl(
             max_elevation=pl.max("max_elevation"),
             vertical_drop=pl.max("max_elevation") - pl.min("min_elevation"),
             latitude=pl.mean("latitude"),
+            solar_intensity=pl.mean("solar_intensity"),
             longitude=pl.mean("longitude"),
             _bearing_stats=pl.struct(
                 pl.col("bearing_mean").alias("bearing"),

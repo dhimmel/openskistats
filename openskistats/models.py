@@ -90,16 +90,6 @@ class BearingStatsModel(Model):  # type: ignore [misc]
             le=1,
         ),
     ]
-    # solar_intensity: Annotated[
-    #     float | None,
-    #     Field(
-    #         description="The solar intensity, representing the intensity of the sun as a function of latitude / declination "
-    #         "Positive values indicate bearings cluster towards the east. "
-    #         "Negative values indicate bearings cluster towards the west.",
-    #         ge=-1,
-    #         le=1,
-    #     ),
-    # ]
 
 
 class SkiAreaBearingDistributionModel(Model):  # type: ignore [misc]
@@ -261,6 +251,11 @@ class SkiAreaModel(Model):  # type: ignore [misc]
     )
     hemisphere: Literal["north", "south"] | None = Field(
         description="Hemisphere of the ski area.",
+    )
+    solar_intensity: float | None = Field(
+        description="Solar intensity of the ski resort calculated by the declination at that latitude at the solstice",
+        ge=0.0,
+        le=1.0,
     )
     min_elevation: Annotated[
         float | None,
