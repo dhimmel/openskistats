@@ -38,7 +38,7 @@ https://www.bea.gov/sites/default/files/2024-11/orsa1124-national_0.xlsx
 See also https://recreationroundtable.org/news/new-data-shows-outdoor-recreation-is-a-1-2-trillion-economic-engine-supporting-5-million-american-jobs/
 -->
 
-Existing scholarly literature related to downhill skiing is limited and primarily focuses on economics [@futile-snowmaking], health impacts, avalanche science [@avalanche-risk-slabs], environmental sustainability [@ski-resort-sustainability; @apennines-winter; @dark-tourism], the threat from climate change [@climate-change-europe; @climate-change-alps; @climate-change-usnf], or ski trail routing algorithms [@skivis; @osm-ski-routing].
+Existing scholarly literature related to downhill skiing is limited and primarily focuses on economics [@futile-snowmaking], health impacts, avalanche science [@avalanche-risk-slabs], environmental sustainability [@ski-resort-sustainability; @apennines-winter; @dark-tourism], the threat from climate change [@climate-change-europe; @climate-change-alps; @climate-change-usnf; @climate-change-mountain-tourism; @climate-change-us-ski], or ski trail routing algorithms [@skivis; @osm-ski-routing].
 We present one of the first scholarly accounts of the spatial metrics of ski areas on a global scale.
 
 An open and global database and analysis of ski areas will help inform skiers, while providing insights to industry stakeholders.
