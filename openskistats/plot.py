@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import math
 import textwrap
 from enum import IntEnum
@@ -14,19 +12,12 @@ from matplotlib.figure import Figure
 from matplotlib.path import Path as MplPath
 from matplotlib.projections.polar import PolarAxes
 from matplotlib.text import Text as MplText
-from matplotlib import font_manager
 from osmnx.plot import _get_fig_ax
-
-from openskistats.utils import get_font_path
 
 try:
     from lets_plot.plot.core import PlotSpec as LetsPlotSpec
 except ImportError:
     LetsPlotSpec = Any
-
-
-TITLE_FONT = 'Noto Sans CJK JP'
-TITLE_WEIGHT = "bold"
 
 SUBPLOT_FIGSIZE = 4.0
 """Size in inches for each subplot in a grid."""
@@ -185,19 +176,15 @@ def plot_orientation(
         _mpl_add_polar_margin_text(ax=ax, ylim=ylim, location=location, text=text)
 
     if title:
-        font_path: Path = get_font_path(TITLE_FONT, keywords=[TITLE_WEIGHT])
-        if font_path:
-            print(f"Font path: {font_path}")
-        else:
-            print(f"Font not found at {font_path}")
-        prop = font_manager.FontProperties(fname=font_path)
-
         ax.set_title(
             title,
             y=title_y,
-            fontproperties=prop,  # Use the Noto Sans CJK JP font explicitly
-            size=title_font_size,
-            weight=TITLE_WEIGHT,
+            fontdict={
+                # fallback font families for more character support https://matplotlib.org/stable/users/explain/text/fonts.html
+                "family": ["DejaVu Sans", "Noto Sans CJK JP"],
+                "size": title_font_size,
+                "weight": "bold",
+            },
             pad=13,
         )
     return fig, ax

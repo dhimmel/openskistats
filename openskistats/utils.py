@@ -4,27 +4,7 @@ from pathlib import Path
 import numpy as np
 import numpy.typing as npt
 import polars as pl
-import subprocess
 
-def get_font_path(font_name: str, keywords: list[str] = None) -> Path | None:
-    try:
-        result = subprocess.check_output(f"fc-list | grep '{font_name}'", shell=True, stderr=subprocess.PIPE)
-        font_list = result.decode('utf-8').strip().splitlines()
-        
-        for line in font_list:
-            keywords_all_match_line = True
-            if keywords is not None:
-                keywords_match_line: list[bool] = [keyword in line for keyword in keywords]
-                keywords_all_match_line: bool = False in keywords_match_line
-            if 'Library/Fonts' in line and keywords_all_match_line:
-                parts = line.split(":")
-                if len(parts) > 1:
-                    return Path(parts[0].strip())
-        
-        return None
-    except subprocess.CalledProcessError as e:
-        print(f"Error searching for fonts: {e}")
-        return None
 
 def get_repo_directory() -> Path:
     return Path(__file__).parent.parent
