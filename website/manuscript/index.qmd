@@ -57,7 +57,7 @@ Other resources focus primarily on ski lifts,
 including [Liftie](https://liftie.info/) ([open source](https://github.com/pirxpilot/liftie)) and [Lift Blog](https://liftblog.com/).
 [Skimap.org](https://skimap.org/) compiles official trial maps produced by ski areas.
 
-Here we base our analysis on OpenStreetMap and OpenSkiMap
+Here we base our analysis on OpenStreetMap and OpenSkiMap.
 
 OpenStreetMap is a collaborative map of the world available under an open license.
 Since its launch in 20024, geospatial data has been continuously contributed by a global community of volunteers and companies [@osm-haklay].
@@ -101,6 +101,7 @@ an ancient visualization steeped in tradition and symbolism [@compass-rose; @com
 ## Main text
 
 Run counts: (with segments and points)
+
 - geometry filter
 - downhill filter
 - coordinate filter (remove elevation voids)
@@ -109,6 +110,7 @@ Run counts: (with segments and points)
 - ski resort
 
 Ski area counts (potentially lifts as well?)
+
 - downhill in uses
 - operating
 - named filter
@@ -134,11 +136,36 @@ Winchester required ski areas to have one or more lifts, a snow surface, operate
 OpenSkiMap contains 510 operating downhill ski areas in the United States.
 <!-- FIXME: operating filters: should just be operating or also null? -->
 
+## Ski area influence
+
+::::: {#fig-ski-area-metric-dists layout="[60,40]"}
+::: {#fig-ski-area-metric-lorenz}
+![](../images/ski_area_lorenz_curves.svg)
+
+Lorenz curves show each ski area's share of the total for a variety of metrics.
+:::
+
+::: {#fig-ski-area-metric-gini}
+![](../images/ski_area_gini_bars.svg)
+
+Gini coefficients showing concentration of metrics.
+:::
+:::::
+
+## Orientation findings
+
 ::: {#fig-hemisphere-roses}
 ![](../images/hemisphere_roses.svg)
 
 Ski roses by hemisphere
 :::
+
+::: {#fig-us-roses}
+![](../images/us_roses_light.svg)
+
+Ski roses for US states.
+:::
+
 
 ::::: {#fig-latitude-panel layout="[75,25]"}
 ::: {#fig-eye}
@@ -199,6 +226,22 @@ Yet, it is undeniable that conditions and logistics make a big impact on the exp
 Furthermore, each day skiing represents a large investment in terms of time and the cost of lift tickets, gear, and travel.
 Accordingly, OpenSkiStats serves the large contingent of savvy skiers who seek exhaustive metrics into ski areas.
 Such skiers meld observations on their own experiences with the data-driven insights provided by OpenSkiStats to create mental models on what factors of a ski area matter most to them and how these factors interact with conditions in search of the ultimate experience.
+
+## Methods
+
+::: {#fig-dartmouth-rose-nne}
+![](../images/rose_nne.svg)
+
+Dartmouth Skiway rose with the NNE pedal highlighted.
+:::
+
+::: {#fig-dartmouth-coordinates}
+![](../images/segments_highlight_nne.svg)
+
+Dartmouth Skiway rose with the NNE pedal highlighted.
+:::
+
+
 
 ## References
 
