@@ -23,10 +23,34 @@ uv run openskistats visualize
 uv run openskistats display
 
 # story dependencies (must install R and renv first)
+# If R is not already installed, use Homebrew to install it:
+brew install r
+
+# 2. Verify R Installation
+# Check that R is installed by running:
+R --version
+
+# Installing Dependencies
+
+# 1. Install the `renv` Package
+# Open an R console:
+R
+
+# In the R session, install `renv`:
+brew install imagemagick@6
+install.packages("renv")
+
+# Exit the R session:
+quit()
+
+# 2. Restore Dependencies with `renv`
+# Use the following command to restore the project's dependencies as defined in the `renv.lock` file:
 Rscript -e "setwd('r'); renv::restore()"
 
+brew install quarto
 # install story extension
 (cd website/story && quarto add --no-prompt https://github.com/qmd-lab/closeread/archive/e3645070dd668004056ae508d2d25d05baca5ad1.zip)
+source .venv/bin/activate
 quarto render website
 quarto preview website
 
@@ -42,6 +66,11 @@ uv sync --extra=dev
 
 # install the pre-commit git hooks
 pre-commit install
+
+# install the fallback font if you don't have it
+# otherwise uv run openskistats analyze will give error:
+# WARNING:matplotlib.font_manager:findfont: Font family 'Noto Sans CJK JP' not found.
+brew install --cask font-noto-sans-cjk
 ```
 
 ## References
