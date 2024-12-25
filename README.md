@@ -12,53 +12,27 @@ The first application is the creation of roses showing the compass orientations 
 
 ## Development
 
+The [`analyze` workflow](.github/workflows/analyze.yaml) performs a complete installation of dependencies on Linux and runs the analysis.
+It serves as the reference for installing dependencies and executing the analysis, as well as the sole deployment route.
+For convenience, we provide some local development instructions below.
+
+### Installation
+
+Installation and execution requires several system dependencies,
+whose installation and presence varies by platform.
+The following commands are one method of installation on macOS:
+
 ```shell
-# download latest OpenSkiMap data
-uv run openskistats download
-
-# extract ski area metadata and metrics
-uv run openskistats analyze
-
-uv run openskistats visualize
-uv run openskistats display
-
-# story dependencies (must install R and renv first)
-# If R is not already installed, use Homebrew to install it:
-brew install r
-
-# 2. Verify R Installation
-# Check that R is installed by running:
-R --version
-
-# Installing Dependencies
-
-# 1. Install the `renv` Package
-# Open an R console:
-R
-
-# In the R session, install `renv`:
 brew install imagemagick@6
-install.packages("renv")
 
-# Exit the R session:
-quit()
-
-# 2. Restore Dependencies with `renv`
-# Use the following command to restore the project's dependencies as defined in the `renv.lock` file:
-Rscript -e "setwd('r'); renv::restore()"
-
-brew install quarto
-# install story extension
-(cd website/story && quarto add --no-prompt https://github.com/qmd-lab/closeread/archive/e3645070dd668004056ae508d2d25d05baca5ad1.zip)
-source .venv/bin/activate
-quarto render website
-quarto preview website
-
-# webserver for viewing http://localhost:8000
-python -m http.server --directory=data/webapp
+# install the fallback font if you don't have it
+# otherwise uv run openskistats visualize will warn:
+# WARNING:matplotlib.font_manager:findfont: Font family 'Noto Sans CJK JP' not found.
+brew install --cask font-noto-sans-cjk
 ```
 
-Commands that you will have to run less frequently:
+For initial Python setup, first [install uv](https://docs.astral.sh/uv/getting-started/installation/).
+Then run the following commands:
 
 ```shell
 # install the uv environment in uv.lock
@@ -66,11 +40,72 @@ uv sync --extra=dev
 
 # install the pre-commit git hooks
 pre-commit install
+```
 
-# install the fallback font if you don't have it
-# otherwise uv run openskistats analyze will give error:
-# WARNING:matplotlib.font_manager:findfont: Font family 'Noto Sans CJK JP' not found.
-brew install --cask font-noto-sans-cjk
+[Install quarto](https://quarto.org/docs/get-started/) and extensions:
+
+```shell
+# install quarto story extension
+(cd website/story && quarto add --no-prompt https://github.com/qmd-lab/closeread/archive/e3645070dd668004056ae508d2d25d05baca5ad1.zip)
+```
+
+Install [R](https://cran.r-project.org/) and the `renv` environment:
+
+```shell
+# Check that R is installed by running:
+R --version
+
+# Install the R environment by restoring the project's dependencies in the `renv.lock` file:
+Rscript -e "setwd('r'); renv::restore()"
+```
+
+### Execution
+
+For commands that require access to the python environment,
+which includes those beginning with `openskistats` and `quarto`,
+you can activate the `uv` environment any of the following ways:
+
+- configure your IDE to activate the venv automatically, e.g. via "Python: Select Interpreter" [in](https://code.visualstudio.com/docs/python/environments) Visual Studio Code.
+- prefix the command with `uv run`, e.g. `uv run openskistats --help`
+- [activate](https://docs.astral.sh/uv/pip/environments/#using-a-virtual-environment) the venv like `source .venv/bin/activate`
+
+To execute the Python analysis, run the following commands:
+
+```shell
+# download latest OpenSkiMap data
+# run infrequently as we want to minimize stress on the OpenSkiMap servers
+# downloads persist locally
+openskistats download
+
+# extract ski area metadata and metrics
+openskistats analyze
+
+openskistats visualize
+
+# run python test suite
+pytest
+
+# run the full pre-commit suite
+pre-commit run --all
+```
+
+To execute the R analysis, run the following command:
+
+```shell
+cd r
+Rscript 01.data.R
+Rscript 02.plot.R
+```
+
+To render the website, use either:
+
+```shell
+# using quarto preview to render and serve
+quarto preview website
+
+# render and serve to <http://localhost:8000> manually 
+quarto render website
+python -m http.server --directory=data/webapp
 ```
 
 ## References

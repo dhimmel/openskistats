@@ -52,10 +52,12 @@ class Commands:
         create_ski_area_roses(overwrite=overwrite)
 
     @staticmethod
-    @cli.command(name="display")  # type: ignore [misc]
+    @cli.command(name="display", deprecated=True)  # type: ignore [misc]
     def display() -> None:
         """
         Display ski area metrics in a web browser.
+        DEPRECATED: table is rendered in quarto website.
+        This command should be removed in the future.
         """
         export_display_notebook()
 
