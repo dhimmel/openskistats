@@ -47,7 +47,7 @@ which refines [OpenStreetMap](https://www.openstreetmap.org/) to create an ama
 ![](https://github.com/dhimmel/openskistats/raw/assets/assets/openskimap.jpg){style="border-radius: 0%;"}
 :::
 
-Thousands of OpenStreetMap contributors have worked for decades to annotate ski areas and their trails.<br><br>
+For decades, thousands of OpenStreetMap contributors have worked to annotate ski areas and their trails.<br><br>
 In the Upper Valley region of Vermont and New Hampshire, ...
 @cr-openskimap
 
@@ -111,7 +111,7 @@ ski roses characterize the directions of all trail segments at a ski area.
 
 
 :::{#cr-dartmouth-rose}
-![](../images/dartmouth_rose.svg)
+![](../images/rose_dartmouth.svg)
 :::
 
 Each *spoke* of the circular chart represents a compass direction,
@@ -128,7 +128,7 @@ Highlighted is the [**Northwest by West**]{style="color: #f07178;"} spoke...
 ... to which these particular segments contribute.
 
 <br>
-![](../images/segments_highlight_nwbw.svg)
+![](../images/segments_nwbw.svg)
 :::
 
 :::{focus-on="cr-rose-nne"}
@@ -138,7 +138,7 @@ And here's the [**North North East**]{style="color: #f07178;"} spoke.
 While these NNE segments appear similar in horizontal distance to the NWbW segments above, their greater steepness results in greater vertical drop, and hence the largest spoke of the rose.
 
 <br>
-![](../images/segments_highlight_nne.svg)
+![](../images/segments_nne.svg)
 :::
 
 :::{#cr-rose-nne}
@@ -189,6 +189,7 @@ This trend reflects which aspects maximize [snow retention]{style="color: #36B37
 In addition to trail bearings, we have published data on other key metrics of a ski area like [**total vertical**]{style="color: #FF8C42;"}, [**number of lifts**]{style="color: #36B37E;"}, and [**peak elevation**]{style="color: #FFC857;"} for ski areas across the world.
 
 In [OpenSkiStats.org/ski-areas](/ski-areas), you can search for your favorite ski area and explore all of its summary statistics.
+Whether you're planning your next powder day or just marveling at the hidden patterns of the slopes, this data offers a fresh way to see the mountains you love.
 
 For example, below are the statistics of the five New Hampshire/Vermont mountains we see earlier:
 
