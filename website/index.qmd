@@ -1,11 +1,27 @@
 ---
 anchor-sections: false
+navbar: false 
 format:
   html:
     css: index/style.css
+    toc: false
+listing:
+  - id: pages
+    contents: 
+      - title: Data Table
+        path: /ski-areas/
+        image: "https://github.com/dhimmel/openskistats/raw/assets/assets/preview-table.png"
+      - title: Story
+        path: /story/
+        image: "../images/rose_dartmouth.svg"
+      - title: Manuscript
+        path: /manuscript/
+        image: "../images/bearing_by_latitude_eye.svg"
+    type: grid
+    grid-columns: 3
+    image-height: 220px
 ---
 
-::: {.column-screen}
 <div class="snow-container" id="snow-container"></div>
 <div class="text-overlay">
 
@@ -14,17 +30,8 @@ format:
 an open resource for geospatial metrics of downhill ski areas
 
 </div>
-<div class="body-text">
 
-The data comes from [OpenSkiMap](https://openskimap.org), which refines [OpenStreetMap](https://www.openstreetmap.org) to create an amazing interactive visualization of the world and all its ski trails.
-Thousands of OpenStreetMap contributors have worked for decades to annotate ski areas and their trails.
-This is an ongoing effort, and we can expect the underlying data to continue to improve over time.
-
-This project brings to life the data behind these ski areas with summary statistics. 
-<!-- Explore ski area metrics like trail orientation, vertical drops, and more to uncover fascinating insights into the geography of skiing. -->
-The founding application of this project is to explore the orientation (compass bearings) of all the runs that comprise a ski area or grouping of ski areas.
-
-</div>
-<script src="index/snowflake.js"></script>
-
+:::{#pages}
 :::
+
+<script src="index/snowflake.js"></script>
