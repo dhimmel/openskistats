@@ -19,7 +19,7 @@ listing:
         image: "../images/bearing_by_latitude_eye.svg"
     type: grid
     grid-columns: 3
-    image-height: 220px
+    image-height: 240px
 ---
 
 <div class="snow-container" id="snow-container"></div>
