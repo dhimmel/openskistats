@@ -1,6 +1,5 @@
 ---
 anchor-sections: false
-navbar: false 
 format:
   html:
     css: index/style.css
@@ -8,7 +7,7 @@ format:
 listing:
   - id: pages
     contents: 
-      - title: Data Table
+      - title: Ski Areas
         path: /ski-areas/
         image: "https://github.com/dhimmel/openskistats/raw/assets/assets/preview-table.png"
       - title: Story
@@ -19,17 +18,20 @@ listing:
         image: "../images/bearing_by_latitude_eye.svg"
     type: grid
     grid-columns: 3
-    image-height: 240px
+    image-height: 220px
 ---
+:::column-screen
+:::{class="snow-container" id="snow-container"}
+:::
+:::
 
-<div class="snow-container" id="snow-container"></div>
-<div class="text-overlay">
+:::{class="text-overlay"}
 
 ## OpenSkiStats
 
 an open resource for geospatial metrics of downhill ski areas
 
-</div>
+:::
 
 :::{#pages}
 :::
