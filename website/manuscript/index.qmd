@@ -1,5 +1,7 @@
 ---
+pagetitle: Manuscript
 title: "OpenSkiStats: a global webapp of geospatial ski area metrics reveals the orientation of alpine skiing"
+image: "../images/bearing_by_latitude_eye.svg"
 bibliography:
   - references.yml
 csl: https://github.com/manubot/rootstock/raw/main/build/assets/style.csl

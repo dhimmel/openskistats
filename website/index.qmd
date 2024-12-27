@@ -5,20 +5,23 @@ format:
     css: index/style.css
     toc: false
 listing:
-  - id: pages
-    contents: 
-      - title: Ski Areas
-        path: /ski-areas/
-        image: "https://github.com/dhimmel/openskistats/raw/assets/assets/preview-table.png"
-      - title: Story
-        path: /story/
-        image: "../images/rose_dartmouth.svg"
-      - title: Manuscript
-        path: /manuscript/
-        image: "../images/bearing_by_latitude_eye.svg"
-    type: grid
-    grid-columns: 3
-    image-height: 220px
+  id: pages
+  contents:
+    - path: ski-areas/index.qmd
+      title: Ski Areas
+    - path: story/index.qmd
+      title: Story
+    - path: manuscript/index.qmd
+      title: Manuscript
+      subtitle: Read the manuscript for the technical details of OpenSkiStats to become a scholar of skiing.
+  sort: false
+  fields:
+    - image
+    - title
+    - subtitle
+  type: grid
+  grid-columns: 3
+  image-height: 220px
 ---
 
 ::::column-screen
