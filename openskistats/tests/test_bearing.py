@@ -54,7 +54,7 @@ class BearingSummaryStatsPytestParam:
     https://github.com/pytest-dev/pytest/issues/9216
     """
 
-    bearings: list[float] | None
+    bearings: list[float]
     weights: list[float] | None
     combined_vertical: list[float] | None
     hemisphere: Literal["north", "south"] | None

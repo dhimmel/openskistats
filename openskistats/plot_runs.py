@@ -23,7 +23,7 @@ class RunLatitudeBearingHistogram:
 
     @property
     def latitude_abs_breaks(self) -> npt.NDArray[np.float64]:
-        return np.linspace(0, 90, self.num_latitude_bins + 1)
+        return np.linspace(0, 90, self.num_latitude_bins + 1, dtype=np.float64)
 
     @property
     def bearing_breaks(self) -> npt.NDArray[np.float64]:
