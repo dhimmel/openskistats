@@ -128,12 +128,9 @@
     },
     "arrow": {
       "Package": "arrow",
-      "Version": "16.1.0",
+      "Version": "18.1.0",
       "Source": "Repository",
-      "Repository": "https://apache.r-universe.dev",
-      "RemoteUrl": "https://github.com/apache/arrow",
-      "RemoteRef": "r-universe-release",
-      "RemoteSha": "7dd1d34074af176d9e861a360e135ae57b21cf96",
+      "Repository": "CRAN",
       "Requirements": [
         "R",
         "R6",
@@ -149,7 +146,7 @@
         "utils",
         "vctrs"
       ],
-      "Hash": "d9cb18a8fc53895548150650cadde3a6"
+      "Hash": "d83c5ed8c1a89c5fd5788a8da714364e"
     },
     "assertthat": {
       "Package": "assertthat",
