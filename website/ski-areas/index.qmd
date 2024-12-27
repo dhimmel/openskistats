@@ -3,6 +3,7 @@ pagetitle: Ski Areas
 title: Ski Areas
 subtitle: Browse an interactive table of the world's ski areas.
 image: https://github.com/dhimmel/openskistats/raw/assets/assets/preview-table.png
+engine: jupyter
 format:
   html:
     code-fold: true
@@ -45,7 +46,7 @@ Numeric columns support the filtering filters:
 from IPython.display import Markdown
 from openskistats.openskimap_utils import load_openskimap_download_info
 
-infos = load_openskimap_download_info()
-date_str = infos[0].last_modified.split("T")[0]
+info = load_openskimap_download_info()["ski_areas"]
+date_str = info.last_modified.split("T")[0]
 Markdown(f"OpenSkiMap data is from {date_str}.")
 ```
