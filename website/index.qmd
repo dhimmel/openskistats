@@ -20,17 +20,16 @@ listing:
     grid-columns: 3
     image-height: 220px
 ---
-:::column-screen
+
+::::column-screen
 :::{class="snow-container" id="snow-container"}
 :::
-:::
+::::
 
 :::{class="text-overlay"}
-
 ## OpenSkiStats
 
 an open resource for geospatial metrics of downhill ski areas
-
 :::
 
 :::{#pages}
