@@ -45,9 +45,9 @@ def process_and_export_runs() -> None:
     """
     Process and export runs from OpenSkiMap.
     """
-    runs_df = load_runs_from_download_pl().lazy()
+    runs_lazy = load_runs_from_download_pl().lazy()
     coords_df = (
-        runs_df.select("run_id", "run_coordinates_clean")
+        runs_lazy.select("run_id", "run_coordinates_clean")
         .explode("run_coordinates_clean")
         .unnest("run_coordinates_clean")
         .pipe(add_spatial_metric_columns, partition_by="run_id")
@@ -55,7 +55,7 @@ def process_and_export_runs() -> None:
         .agg(run_coordinates_clean=pl.struct(pl.exclude("run_id")))
     )
     runs_df = (
-        runs_df.drop("run_coordinates_clean").join(coords_df, on="run_id").collect()
+        runs_lazy.drop("run_coordinates_clean").join(coords_df, on="run_id").collect()
     )
     runs_path = get_runs_parquet_path()
     logging.info(f"Writing {len(runs_df):,} runs to {runs_path}")
@@ -107,8 +107,8 @@ def analyze_all_ski_areas_polars(skip_runs: bool = False) -> None:
             # do we need to filter nulls?
             bearings=pl.struct("bearing", "distance_vertical_drop").map_batches(
                 lambda x: get_bearing_histograms(
-                    bearings=x.struct.field("bearing"),
-                    weights=x.struct.field("distance_vertical_drop"),
+                    bearings=x.struct.field("bearing").to_numpy(),
+                    weights=x.struct.field("distance_vertical_drop").to_numpy(),
                 ).to_struct(),
                 returns_scalar=True,
             ),
@@ -189,7 +189,7 @@ def _prepare_ski_area_filters(
     if not ski_area_filters:
         # pl.lit(True) had issues that True did not.
         # https://github.com/pola-rs/polars/issues/19771
-        ski_area_filters = [True]
+        return [True]
     return ski_area_filters
 
 
@@ -319,7 +319,7 @@ def bearing_dists_by_country() -> pl.DataFrame:
     )
 
 
-def ski_rose_the_world(min_combined_vertical: int = 10_000) -> pl.DataFrame:
+def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
     image_directory = get_images_directory()
     path = image_directory.joinpath("ski-roses.pdf")
     pdf_pages = PdfPages(
