@@ -1,5 +1,5 @@
 library(ggplot2)
-# so that we don't have to do ggplot2::element_line a zillion times
+# so that we don't have to do patchwork::area a zillion times
 area <- patchwork::area
 
 img_data_dir <- "../data/images/data"
