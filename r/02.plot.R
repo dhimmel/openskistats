@@ -1,10 +1,6 @@
-library(arrow)
-library(dplyr)
 library(ggplot2)
-library(yaml)
-library(patchwork)
-library(cowplot)
-library(svglite)
+# so that we don't have to do ggplot2::element_line a zillion times
+area <- patchwork::area
 
 img_data_dir <- "../data/images/data"
 img_dir <- "../data/images"
@@ -52,7 +48,6 @@ my_aesthetics <- list(light = light_pal, dark = dark_pal)
 
 ## Plot functions ------------------------------------------------
 #' Make transparent background
-#' @import ggplot2
 #'
 #' @return ggplot2 theme with transparent background
 #' @export
@@ -63,12 +58,12 @@ my_aesthetics <- list(light = light_pal, dark = dark_pal)
 #'   geom_point() +
 #'   bg_transparent()
 bg_transparent <- function() {
-  ggplot2::theme_minimal(base_family = my_font) +
-    ggplot2::theme(
-      panel.background = ggplot2::element_rect(fill = "transparent", colour = NA),
-      plot.background = ggplot2::element_rect(fill = "transparent", colour = NA),
-      axis.title = ggplot2::element_blank(),
-      axis.text = ggplot2::element_blank(),
+  theme_minimal(base_family = my_font) +
+    theme(
+      panel.background = element_rect(fill = "transparent", colour = NA),
+      plot.background = element_rect(fill = "transparent", colour = NA),
+      axis.title = element_blank(),
+      axis.text = element_blank(),
       legend.position = "none",
     )
 }
@@ -99,49 +94,49 @@ plot_rose <- function(
     ngr = 32, vert = 0, aesthetics = NULL, empty_rose = FALSE) {
   y_break <- max(dat$bin_count)
   p <- dat |>
-    ggplot2::ggplot() +
-    ggplot2::aes(x = "bin_center", y = "bin_count") +
-    ggplot2::coord_radial(start = -pi / ngr, expand = FALSE) +
+    ggplot() +
+    aes(x = bin_center, y = bin_count) +
+    coord_radial(start = -pi / ngr, expand = FALSE) +
     # coord_polar(start = -pi / 32) +
-    ggplot2::scale_x_continuous(breaks = seq(0, 270, 90), labels = labels) +
-    ggplot2::scale_y_sqrt(breaks = y_break) + # scaled by area
-    ggplot2::labs(title = ski_area_name) +
-    ggplot2::theme(
-      panel.grid = ggplot2::element_line(color = "grey60"),
-      axis.text.x = ggplot2::element_text(size = size_x, color = text_light),
-      plot.title = ggplot2::element_text(hjust = 0.5, size = size_title, color = text_light)
+    scale_x_continuous(breaks = seq(0, 270, 90), labels = labels) +
+    scale_y_sqrt(breaks = y_break) + # scaled by area
+    labs(title = ski_area_name) +
+    theme(
+      panel.grid = element_line(color = "grey60"),
+      axis.text.x = element_text(size = size_x, color = text_light),
+      plot.title = element_text(hjust = 0.5, size = size_title, color = text_light)
     )
 
   if (highlight) {
     return(
       p +
-        ggplot2::geom_col(color = text_light, width = 360 / ngr, ggplot2::aes(fill = "color")) +
-        ggplot2::scale_fill_identity()
+        geom_col(color = text_light, width = 360 / ngr, aes(fill = color)) +
+        scale_fill_identity()
     )
   }
 
   if (is.null(type)) { # standard rose
-    return(p + ggplot2::geom_col(color = text_light, width = 360 / ngr, fill = rose_pink))
+    return(p + geom_col(color = text_light, width = 360 / ngr, fill = rose_pink))
   }
 
   p <- p +
-    ggplot2::theme(
-      panel.grid.major.x = ggplot2::element_blank(),
-      panel.grid.minor.x = ggplot2::element_blank(),
-      panel.grid.major.y = ggplot2::element_line(linewidth = vert, color = aesthetics$circle_color)
+    theme(
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_blank(),
+      panel.grid.major.y = element_line(linewidth = vert, color = aesthetics$circle_color)
     )
   if (type == "all") {
-    return(p + ggplot2::geom_col(fill = rose_pink))
+    return(p + geom_col(fill = rose_pink))
   }
 
   # type == "us"
   if (!empty_rose) {
-    p <- p + ggplot2::geom_col(fill = rose_pink, width = 360 / ngr, color = text_light, linewidth = 0.2)
+    p <- p + geom_col(fill = rose_pink, width = 360 / ngr, color = text_light, linewidth = 0.2)
   } else {
-    p <- p + ggplot2::geom_col(fill = NA)
+    p <- p + geom_col(fill = NA)
   }
   p <- p +
-    ggplot2::annotate(
+    annotate(
       geom = "label",
       label = ski_area_name,
       x = 180, y = max(dat$bin_count),
@@ -152,10 +147,10 @@ plot_rose <- function(
       family = aesthetics$my_font,
       color = aesthetics$title_color
     ) +
-    ggplot2::theme(
+    theme(
       # plot.margin=grid::unit(c(-35,-35, -35, -35), "mm"),
-      panel.background = ggplot2::element_rect(fill = aesthetics$circle_fill),
-      plot.title = ggplot2::element_blank()
+      panel.background = element_rect(fill = aesthetics$circle_fill),
+      plot.title = element_blank()
     )
   p
 }
@@ -172,9 +167,9 @@ rose_empty <- function(ski_area_name, aesthetics) {
     type = "us", aesthetics = aesthetics,
     empty_rose = TRUE, labels = NULL
   ) +
-    ggplot2::theme(
-      plot.background = ggplot2::element_blank(),
-      panel.grid.major.y = ggplot2::element_blank(),
+    theme(
+      plot.background = element_blank(),
+      panel.grid.major.y = element_blank(),
     )
 }
 
@@ -184,7 +179,7 @@ rose_empty <- function(ski_area_name, aesthetics) {
 #'
 #' @return ggplot2 object of dots aligned earlier images (dots_overlay)
 align_dots <- function(p) {
-  ggplot2::ggplot(data.frame(x = 0:1, y = 0:1), ggplot2::aes(x = "x", y = "y")) +
+  ggplot(data.frame(x = 0:1, y = 0:1), aes(x = x, y = y)) +
     ggimage::geom_subview(subview = p, width = Inf, height = Inf, x = 0.5, y = 0.5) +
     ggimage::theme_nothing()
 }
@@ -200,16 +195,16 @@ plot_segments <- function(
     dat, linewidth = 1, arrow_length = 0.2,
     color_vals = c(`FALSE` = text_teal, `TRUE` = rose_pink)) {
   dat |>
-    ggplot2::ggplot() +
-    ggplot2::aes(x = "x", y = "y", xend = "xend", yend = "yend", color = "highlight") +
-    ggplot2::geom_segment(
-      arrow = ggplot2::arrow(type = "open", length = grid::unit(arrow_length, "cm")),
+    ggplot() +
+    aes(x = x, y = y, xend = xend, yend = yend, color = highlight) +
+    geom_segment(
+      arrow = arrow(type = "open", length = grid::unit(arrow_length, "cm")),
       linewidth = linewidth
     ) +
-    ggplot2::scale_color_manual(values = color_vals, guide = "none") +
+    scale_color_manual(values = color_vals, guide = "none") +
     coord_dartmouth +
-    ggplot2::theme(
-      panel.grid = ggplot2::element_blank(),
+    theme(
+      panel.grid = element_blank(),
     )
 }
 
@@ -261,32 +256,32 @@ coord_dartmouth <- coord_fixed(
 
 ## Dots and segments ----
 dots_only <- dart |>
-  ggplot2::ggplot() +
-  ggplot2::aes(x = longitude, y = latitude, color = winslow) +
-  ggplot2::scale_color_manual(values = c("#FF8C42", "#36B37E"), guide = "none") +
-  ggplot2::geom_point(size = 0.5) +
+  ggplot() +
+  aes(x = longitude, y = latitude, color = winslow) +
+  scale_color_manual(values = c("#FF8C42", "#36B37E"), guide = "none") +
+  geom_point(size = 0.5) +
   coord_dartmouth +
-  ggplot2::theme(
+  theme(
     panel.grid.major = element_line(linewidth = 0.2, color = "grey80"),
     panel.grid.minor = element_line(linewidth = 0.2, color = "grey80"),
   )
 dots_overlay <- ggimage::ggbackground(
   dots_only +
-    ggplot2::theme(
-      panel.grid.major = ggplot2::element_blank(),
-      panel.grid.minor = ggplot2::element_blank(),
+    theme(
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
     ),
   dart_url
 )
 
-ggplot2::ggsave(
+ggsave(
   file.path(img_dir, "dots_overlay.png"),
   dots_overlay,
   width = fig_width,
   height = fig_height,
   dpi = 300
 )
-ggplot2::ggsave(
+ggsave(
   file.path(img_dir, "dots_only.png"),
   align_dots(dots_only),
   width = fig_width, height = fig_height, dpi = 300
@@ -296,9 +291,9 @@ ggplot2::ggsave(
   dartmouth_segs |>
     dplyr::mutate(highlight = TRUE) |>
     plot_segments(linewidth = 0.5, arrow_length = 0.1) +
-    ggplot2::theme(
-      panel.grid.major = ggplot2::element_line(linewidth = 0.2, color = "grey80"),
-      panel.grid.minor = ggplot2::element_line(linewidth = 0.2, color = "grey80"),
+    theme(
+      panel.grid.major = element_line(linewidth = 0.2, color = "grey80"),
+      panel.grid.minor = element_line(linewidth = 0.2, color = "grey80"),
     )
 ) |>
   align_dots() |>
@@ -311,7 +306,7 @@ ggplot2::ggsave(
 dartmouth_segs |>
   dplyr::mutate(highlight = group == 28) |>
   plot_segments() |>
-  ggplot2::ggsave(
+  ggsave(
     file.path(img_dir, "segments_nwbw.svg"),
     plot = _,
     width = fig_width * 2, height = fig_height * 2
@@ -327,7 +322,7 @@ dartmouth_segs |>
 #   )
 
 segs_nne <- dartmouth_segs |>
-  mutate(highlight = group == 3) |>
+  dplyr::mutate(highlight = group == 3) |>
   plot_segments()
 ggsave(
   file.path(img_dir, "segments_nne.svg"),
@@ -344,7 +339,7 @@ ggsave(
 )
 
 rose_nwbw <- dartmouth |>
-  mutate(color = if_else((row_number()) != 28, text_teal, rose_pink)) |>
+  dplyr::mutate(color = dplyr::if_else((dplyr::row_number()) != 28, text_teal, rose_pink)) |>
   plot_rose(highlight = TRUE) +
   geom_text(x = 298, y = 26.3, label = "NWbW", color = rose_pink, family = my_font, size = 8)
 
@@ -355,9 +350,10 @@ ggsave(
 )
 
 rose_nne <- dartmouth |>
-  mutate(color = if_else((row_number()) != 3, text_teal, rose_pink)) |>
+  dplyr::mutate(color = dplyr::if_else((dplyr::row_number()) != 3, text_teal, rose_pink)) |>
   plot_rose(highlight = TRUE) +
   geom_text(x = 22, y = 29, label = "NNE", color = rose_pink, family = my_font, size = 8)
+
 ggsave(
   file.path(img_dir, "rose_nne.svg"),
   rose_nne,
@@ -365,19 +361,19 @@ ggsave(
 )
 
 segs_nne_light <- dartmouth_segs |>
-  mutate(highlight = group == 3) |>
+  dplyr::mutate(highlight = group == 3) |>
   plot_segments(color_vals = c("grey80", dark_pink))
 
 rose_nne_light <- dartmouth |>
-  mutate(color = if_else((row_number()) != 3, "grey80", dark_pink)) |>
+  dplyr::mutate(color = dplyr::if_else((dplyr::row_number()) != 3, "grey80", dark_pink)) |>
   plot_rose(highlight = TRUE) +
   theme(axis.text.x = element_text(color = light_pal$circle_color, size = 12)) +
   geom_text(x = 22, y = 30, label = "NNE", color = dark_pink, family = my_font, size = 7)
 
 ggsave(
   file.path(img_dir, "dartmouth_nne_light.svg"),
-  ggdraw(segs_nne_light) +
-    draw_plot(rose_nne_light, .25, 0, .6, .6)
+  cowplot::ggdraw(segs_nne_light) +
+    cowplot::draw_plot(rose_nne_light, .25, 0, .6, .6)
 )
 
 all_roses <- cowplot::plot_grid(
@@ -397,10 +393,10 @@ ggsave(
 )
 
 north <- hemi |>
-  filter(num_bins == n_groups, hemisphere == "north") |>
+  dplyr::filter(num_bins == n_groups, hemisphere == "north") |>
   plot_rose("Northern hemisphere", size_title = 24, size_x = 20)
 south <- hemi |>
-  filter(num_bins == n_groups, hemisphere == "south") |>
+  dplyr::filter(num_bins == n_groups, hemisphere == "south") |>
   plot_rose("Southern hemisphere", size_title = 24, size_x = 20)
 ggsave(
   file.path(img_dir, "hemisphere.svg"),
@@ -502,14 +498,14 @@ for (pal in names(my_aesthetics)) {
     )
 
   map_plots <- c(list(title = title), state_plots) |>
-    wrap_plots(design = layout_title) &
-    plot_annotation(theme = theme(
-      panel.background = ggplot2::element_rect(fill = my_aesthetic$canvas, colour = NA),
-      plot.background = ggplot2::element_rect(fill = my_aesthetic$canvas, colour = NA)
+    patchwork::wrap_plots(design = layout_title) &
+    patchwork::plot_annotation(theme = theme(
+      panel.background = element_rect(fill = my_aesthetic$canvas, colour = NA),
+      plot.background = element_rect(fill = my_aesthetic$canvas, colour = NA)
     ))
 
-  to_publish <- ggdraw(map_plots) +
-    draw_label(
+  to_publish <- cowplot::ggdraw(map_plots) +
+    cowplot::draw_label(
       x = 0.985,
       y = 0.043,
       size = 28,
@@ -519,7 +515,7 @@ for (pal in names(my_aesthetics)) {
       lineheight = 1.6,
       label = water_mark
     ) +
-    draw_label(
+    cowplot::draw_label(
       x = 0.165,
       y = 0.78,
       size = 28,
@@ -528,12 +524,12 @@ for (pal in names(my_aesthetics)) {
       fontfamily = my_font,
       label = "border proportional to\ncombined vertical drop"
     ) +
-    draw_line(
+    cowplot::draw_line(
       x = c(0.185, 0.21),
       y = c(0.768, 0.726),
       color = my_aesthetic$circle_color, size = 2
     ) +
-    draw_line(
+    cowplot::draw_line(
       x = c(0.17, 0.185),
       y = c(0.768, 0.768),
       color = my_aesthetic$circle_color, size = 2
