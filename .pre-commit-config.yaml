@@ -30,9 +30,3 @@ repos:
     rev: '0.5.4'
     hooks:
       - id: uv-lock
-  - repo: https://github.com/lorenzwalthert/precommit
-    rev: v0.4.3
-    hooks:
-      - id: style-files
-        args: [--scope=tokens]
-        files: ^r/.*\.R$
