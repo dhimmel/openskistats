@@ -100,6 +100,7 @@ def get_ski_area_frontend_table(story: bool = False) -> pl.DataFrame:
             "country_code",
             "region",
             "locality",
+            "solar_intensity",
             "latitude",
             "run_count",
             "lift_count",
@@ -204,6 +205,7 @@ columns_descriptions = {
     # add custom descriptions including overwriting SkiAreaModel descriptions
     "latitude": "Hemisphere where the ski area is located, either ℕ for north or 𝕊 for south, "
     "as well as the latitude (φ) in decimal degrees.",
+    "solar_intensity"
     "bin_proportion_4_N": "Proportion of vertical-weighted run segments oriented with a northern cardinal direction.",
     "bin_proportion_4_E": "Proportion of vertical-weighted run segments oriented with an eastern cardinal direction.",
     "bin_proportion_4_S": "Proportion of vertical-weighted run segments oriented with a southern cardinal direction.",
@@ -386,6 +388,11 @@ def get_ski_area_reactable(story: bool = False) -> reactable.Reactable:
                 min_width=60,
             ),
             reactable.Column(
+                id="solar_intensity",
+                name=f"Solar",
+                **_column_kwargs_location_str,
+            ),
+            reactable.Column(
                 id="run_count",
                 name="Runs",
                 filter_method=_numeric_filter,
@@ -511,7 +518,7 @@ def get_ski_area_reactable(story: bool = False) -> reactable.Reactable:
                 cell=reactable.JS("cellRose"),
                 # max_width=45,
                 class_="border-left",
-            ),
+            )
         ],
         column_groups=[
             reactable.ColGroup(
@@ -521,6 +528,7 @@ def get_ski_area_reactable(story: bool = False) -> reactable.Reactable:
                 name="Location",
                 columns=[
                     "latitude",
+                    "solar_intensity",
                     "country_emoji",
                     "country",
                     "region",
