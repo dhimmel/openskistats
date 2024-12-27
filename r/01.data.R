@@ -53,14 +53,16 @@ bearings_ls <- ski_area_metrics |>
     country == "United States", nchar(ski_area_name) < 20
   ) |>
   dplyr::sample_n(48) |>
-  dplyr::bind_rows(ski_area_metrics |> dplyr::filter(ski_area_name == "Dartmouth Skiway")) |>
+  dplyr::bind_rows(dplyr::filter(ski_area_metrics, ski_area_name == "Dartmouth Skiway")) |>
   dplyr::arrange(ski_area_name) |>
   dplyr::select(ski_area_name, bearings) |>
   tibble::deframe() |>
   lapply(
-    \(x) dplyr::filter(x, num_bins == 32) |>
-      dplyr::mutate(
-        color = dplyr::if_else(bin_index == 2, "#f07178", "#004B59"),
-      )
+    function(x) {
+      dplyr::filter(x, num_bins == 32) |>
+        dplyr::mutate(
+          color = dplyr::if_else(bin_index == 2, "#f07178", "#004B59")
+        )
+    }
   )
 saveRDS(bearings_ls, file.path(img_data_dir, "bearings_48_ls.rds"))

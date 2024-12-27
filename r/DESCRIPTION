@@ -1,0 +1,15 @@
+Type: project
+Title: Which way do you ski?
+Description: Scrollytelling story of the ski roses.
+Version: 0.0.0.9000
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.0.0
+Imports:
+  dplyr,
+  ggplot2,
+  arrow,
+  cowplot,
+  patchwork,
+  styler,
+  svglite
