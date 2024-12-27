@@ -17,6 +17,7 @@ import requests
 
 from openskistats.models import RunCoordinateModel
 from openskistats.utils import get_data_directory, get_repo_directory
+from openskistats.variables import set_variables
 
 
 def get_openskimap_path(
@@ -110,6 +111,12 @@ def load_openskimap_geojson(
     features = data["features"]
     assert isinstance(features, list)
     geometry_types = Counter(feature["geometry"]["type"] for feature in features)
+    set_variables(
+        **{
+            f"openskimap__{name}__counts__01_raw": len(features),
+            f"openskimap__{name}__counts__01_raw_by_geometry": dict(geometry_types),
+        }
+    )
     logging.info(
         f"Loaded {len(features):,} {name} with geometry types {geometry_types}"
     )
@@ -174,6 +181,15 @@ def load_runs_from_download_pl() -> pl.DataFrame:
             for x in _structure_coordinates(_clean_coordinates(coordinates))
         ]
         rows.append(row)
+    set_variables(
+        openskimap__runs__counts__02_linestring=len(rows),
+        openskimap__runs__coordinates__counts__01_raw=sum(
+            len(row["run_coordinates_raw"]) for row in rows
+        ),
+        openskimap__runs__coordinates__counts__02_clean=sum(
+            len(row["run_coordinates_clean"]) for row in rows
+        ),
+    )
     return pl.DataFrame(rows, strict=False)
 
 
@@ -195,7 +211,7 @@ def load_lifts_from_download_pl() -> pl.DataFrame:
             ski_area["properties"]["id"] for ski_area in lift_properties["skiAreas"]
         )
         row["lift_sources"] = sorted(
-            "{type}:{id}".format(**source) for source in lift_properties["sources"]
+            openskimap_source_to_url(**source) for source in lift_properties["sources"]
         )
         row["lift_geometry_type"] = lift["geometry"]["type"]
         # row["lift_coordinates"] = lift["geometry"]["coordinates"]
@@ -235,7 +251,7 @@ def load_downhill_ski_areas_from_download_pl() -> pl.DataFrame:
         .group_by("ski_area_id")
         .agg(pl.col("lift_id").n_unique().alias("lift_count"))
     )
-    return (
+    ski_area_df = (
         load_ski_areas_from_download_pl()
         .filter(pl.col("type") == "skiArea")
         .filter(pl.col("activities").list.contains("downhill"))
@@ -267,6 +283,8 @@ def load_downhill_ski_areas_from_download_pl() -> pl.DataFrame:
         )
         .join(lift_metrics, on="ski_area_id", how="left")
     )
+    set_variables(openskimap__ski_areas__counts__02_downhill=len(ski_area_df))
+    return ski_area_df
 
 
 def get_ski_area_to_runs(
