@@ -122,6 +122,8 @@ Ski area counts (potentially lifts as well?)
 
 ### Number of Ski Areas
 
+OpenSkiMap contained {{< var openskimap.ski_areas.counts.01_raw >}} ski areas with {{< var openskimap.ski_areas.counts.02_downhill >}} of those assigned a downhill usage.
+
 Laurent Vanat's _2022 International Report on Snow & Mountain Tourism_ compiled primarily national level data to report on global ski area metrics [@vanat-2022].
 Vanat identified 5,764 ski areas worldwide,
 when limiting to "equipped outdoor ski areas covered with snow", which excludes "indoor facilities, mountaineering-only areas, and other types of facilities such as dry slopes."
