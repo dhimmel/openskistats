@@ -53,19 +53,22 @@ my_aesthetics <- list(light = light_pal, dark = dark_pal)
 ## Plot functions ------------------------------------------------
 #' Make transparent background
 #' @import ggplot2
-#' 
+#'
 #' @return ggplot2 theme with transparent background
 #' @export
 #'
 #' @examples
-#' ggplot(mtcars) + aes(mpg, wt) + geom_point() + bg_transparent()
+#' ggplot(mtcars) +
+#'   aes(mpg, wt) +
+#'   geom_point() +
+#'   bg_transparent()
 bg_transparent <- function() {
-  theme_minimal(base_family = my_font) +
-    theme(
-      panel.background = element_rect(fill = "transparent", colour = NA),
-      plot.background = element_rect(fill = "transparent", colour = NA),
-      axis.title = element_blank(),
-      axis.text = element_blank(),
+  ggplot2::theme_minimal(base_family = my_font) +
+    ggplot2::theme(
+      panel.background = ggplot2::element_rect(fill = "transparent", colour = NA),
+      plot.background = ggplot2::element_rect(fill = "transparent", colour = NA),
+      axis.title = ggplot2::element_blank(),
+      axis.text = ggplot2::element_blank(),
       legend.position = "none",
     )
 }
@@ -79,12 +82,12 @@ bg_transparent <- function() {
 #' Defaults to `c("N", "E", "S", "W")`.
 #' @param highlight Logical. If `TRUE`, highlight one petal of the rose.
 #' @param type Character. Type of rose plot.
-#'  - `NULL`: a standard rose 
+#'  - `NULL`: a standard rose
 #'  - `"all"`: a minimal rose for a randomly selected ski area
 #'  - `"us"`: a rose for a US state
-#' @param ngr Number of bearing groups. Defaults to 32. 
+#' @param ngr Number of bearing groups. Defaults to 32.
 #' @param vert Numeric. Width of the spokes. Defaults to 0.
-#' @param aesthetics List. Aesthetics for the plot. Including `title_color`, 
+#' @param aesthetics List. Aesthetics for the plot. Including `title_color`,
 #' `anno_color`, `circle_color`, `canvas`, `circle_fill`, `size_label`, and
 #' `my_font`.
 #' @param empty_rose Logical. If `TRUE`, plot an empty rose.
@@ -93,53 +96,52 @@ bg_transparent <- function() {
 plot_rose <- function(
     dat, ski_area_name = "", size_title = 18, size_x = 24,
     labels = c("N", "E", "S", "W"), highlight = FALSE, type = NULL,
-    ngr = 32, vert = 0, aesthetics = NULL, empty_rose = FALSE
-  ) {
-  
+    ngr = 32, vert = 0, aesthetics = NULL, empty_rose = FALSE) {
   y_break <- max(dat$bin_count)
   p <- dat |>
-    ggplot() +
-    aes(x = bin_center, y = bin_count) +
-    coord_radial(start = -pi / ngr, expand = FALSE) +
+    ggplot2::ggplot() +
+    ggplot2::aes(x = "bin_center", y = "bin_count") +
+    ggplot2::coord_radial(start = -pi / ngr, expand = FALSE) +
     # coord_polar(start = -pi / 32) +
-    scale_x_continuous(breaks = seq(0, 270, 90), labels = labels) +
-    scale_y_sqrt(breaks = y_break) + # scaled by area
-    labs(title = ski_area_name) +
-    theme(
-      panel.grid = element_line(color = "grey60"),
-      axis.text.x = element_text(size = size_x, color = text_light),
-      plot.title = element_text(hjust = 0.5, size = size_title, color = text_light)
+    ggplot2::scale_x_continuous(breaks = seq(0, 270, 90), labels = labels) +
+    ggplot2::scale_y_sqrt(breaks = y_break) + # scaled by area
+    ggplot2::labs(title = ski_area_name) +
+    ggplot2::theme(
+      panel.grid = ggplot2::element_line(color = "grey60"),
+      axis.text.x = ggplot2::element_text(size = size_x, color = text_light),
+      plot.title = ggplot2::element_text(hjust = 0.5, size = size_title, color = text_light)
     )
 
   if (highlight) {
-    return(p +
-      geom_col(color = text_light, width = 360 / ngr, aes(fill = color)) +
-      scale_fill_identity()
+    return(
+      p +
+        ggplot2::geom_col(color = text_light, width = 360 / ngr, ggplot2::aes(fill = "color")) +
+        ggplot2::scale_fill_identity()
     )
   }
-  
+
   if (is.null(type)) { # standard rose
-    return(p + geom_col(color = text_light, width = 360 / ngr, fill = rose_pink))
-  } 
-  
+    return(p + ggplot2::geom_col(color = text_light, width = 360 / ngr, fill = rose_pink))
+  }
+
   p <- p +
-    theme(
-      panel.grid.major.x = element_blank(),
-      panel.grid.minor.x = element_blank(),
-      panel.grid.major.y = element_line(linewidth = vert, color = aesthetics$circle_color)
+    ggplot2::theme(
+      panel.grid.major.x = ggplot2::element_blank(),
+      panel.grid.minor.x = ggplot2::element_blank(),
+      panel.grid.major.y = ggplot2::element_line(linewidth = vert, color = aesthetics$circle_color)
     )
   if (type == "all") {
-    return(p + geom_col(fill = rose_pink))
+    return(p + ggplot2::geom_col(fill = rose_pink))
   }
-  
+
   # type == "us"
   if (!empty_rose) {
-    p <- p + geom_col(fill = rose_pink, width = 360 / ngr, color = text_light, linewidth = 0.2) 
+    p <- p + ggplot2::geom_col(fill = rose_pink, width = 360 / ngr, color = text_light, linewidth = 0.2)
   } else {
-    p <- p + geom_col(fill = NA)
+    p <- p + ggplot2::geom_col(fill = NA)
   }
   p <- p +
-    annotate(
+    ggplot2::annotate(
       geom = "label",
       label = ski_area_name,
       x = 180, y = max(dat$bin_count),
@@ -150,28 +152,29 @@ plot_rose <- function(
       family = aesthetics$my_font,
       color = aesthetics$title_color
     ) +
-    theme(
+    ggplot2::theme(
       # plot.margin=grid::unit(c(-35,-35, -35, -35), "mm"),
-      panel.background = element_rect(fill = aesthetics$circle_fill),
-      plot.title = element_blank()
+      panel.background = ggplot2::element_rect(fill = aesthetics$circle_fill),
+      plot.title = ggplot2::element_blank()
     )
   p
 }
 
 #' Plot an empty rose.
-#' 
+#'
 #' @inheritParams plot_rose
 #'
 #' @return ggplot2 object of an empty rose
 rose_empty <- function(ski_area_name, aesthetics) {
   dat <- data.frame(bin_center = c(0, 360), bin_count = c(1, 1))
   plot_rose(
-    dat, ski_area_name, type = "us", aesthetics = aesthetics, 
+    dat, ski_area_name,
+    type = "us", aesthetics = aesthetics,
     empty_rose = TRUE, labels = NULL
   ) +
-    theme(
-      plot.background = element_blank(),
-      panel.grid.major.y = element_blank(),
+    ggplot2::theme(
+      plot.background = ggplot2::element_blank(),
+      panel.grid.major.y = ggplot2::element_blank(),
     )
 }
 
@@ -181,31 +184,32 @@ rose_empty <- function(ski_area_name, aesthetics) {
 #'
 #' @return ggplot2 object of dots aligned earlier images (dots_overlay)
 align_dots <- function(p) {
-  ggplot(data.frame(x = 0:1, y = 0:1), aes(x = x, y = y)) +
+  ggplot2::ggplot(data.frame(x = 0:1, y = 0:1), ggplot2::aes(x = "x", y = "y")) +
     ggimage::geom_subview(subview = p, width = Inf, height = Inf, x = 0.5, y = 0.5) +
     ggimage::theme_nothing()
 }
 
 #' Plot segments, highlight specific directions
 #'
-#' @param dat Data frame of segments with columns `x`, `y`, `xend`, `yend`, 
+#' @param dat Data frame of segments with columns `x`, `y`, `xend`, `yend`,
 #' and `highlight`
 #' @param color_vals Character vector of colors for `FALSE` and `TRUE`.
 #'
 #' @return ggplot2 object of segments with potential highlights
-plot_segments <- function(dat, linewidth = 1, arrow_length = 0.2,
-                          color_vals = c(`FALSE` = text_teal, `TRUE` = rose_pink)){
+plot_segments <- function(
+    dat, linewidth = 1, arrow_length = 0.2,
+    color_vals = c(`FALSE` = text_teal, `TRUE` = rose_pink)) {
   dat |>
-    ggplot() +
-    aes(x = x, y = y, xend = xend, yend = yend, color = highlight) +
-    geom_segment(
-      arrow = arrow(type = "open", length = unit(arrow_length, "cm")),
+    ggplot2::ggplot() +
+    ggplot2::aes(x = "x", y = "y", xend = "xend", yend = "yend", color = "highlight") +
+    ggplot2::geom_segment(
+      arrow = ggplot2::arrow(type = "open", length = grid::unit(arrow_length, "cm")),
       linewidth = linewidth
     ) +
-    scale_color_manual(values = color_vals, guide = "none") +
+    ggplot2::scale_color_manual(values = color_vals, guide = "none") +
     coord_dartmouth +
-    theme(
-      panel.grid = element_blank(),
+    ggplot2::theme(
+      panel.grid = ggplot2::element_blank(),
     )
 }
 
@@ -222,14 +226,14 @@ dart_url <- "https://github.com/user-attachments/assets/1a02ca26-7034-4d87-bc0c-
 # download.file(dart_url, destfile = file.path(img_dir, "dartmouth.png"))
 # dartmouth_img <- png::readPNG(file.path(img_dir, "dartmouth.png"), native = TRUE)
 bearings_ls <- readRDS(file.path(img_data_dir, "bearings_48_ls.rds"))
-dartmouth_segs <- read_parquet(file.path(img_data_dir, "dartmouth_segs.parquet"))
-hemi <- read_parquet(file.path(img_data_dir, "hemisphere_roses.parquet")) |>
+dartmouth_segs <- arrow::read_parquet(file.path(img_data_dir, "dartmouth_segs.parquet"))
+hemi <- arrow::read_parquet(file.path(img_data_dir, "hemisphere_roses.parquet")) |>
   tidyr::unnest(bearings)
 
-dart <- read_parquet(file.path(img_data_dir, "dartmouth_runs.parquet")) |>
-  group_by(run_id) |>
-  mutate(winslow = (m * longitude) + b < latitude) |>
-  arrange(index)
+dart <- arrow::read_parquet(file.path(img_data_dir, "dartmouth_runs.parquet")) |>
+  dplyr::group_by(run_id) |>
+  dplyr::mutate(winslow = (m * longitude) + b < latitude) |>
+  dplyr::arrange(index)
 
 dartmouth <- bearings_ls[["Dartmouth Skiway"]]
 # whaleback <- bearings_ls[["Whaleback Mountain"]]
@@ -257,32 +261,32 @@ coord_dartmouth <- coord_fixed(
 
 ## Dots and segments ----
 dots_only <- dart |>
-  ggplot() +
-  aes(x = longitude, y = latitude, color = winslow) +
-  scale_color_manual(values = c("#FF8C42", "#36B37E"), guide = "none") +
-  geom_point(size = 0.5) +
+  ggplot2::ggplot() +
+  ggplot2::aes(x = longitude, y = latitude, color = winslow) +
+  ggplot2::scale_color_manual(values = c("#FF8C42", "#36B37E"), guide = "none") +
+  ggplot2::geom_point(size = 0.5) +
   coord_dartmouth +
-  theme(
+  ggplot2::theme(
     panel.grid.major = element_line(linewidth = 0.2, color = "grey80"),
     panel.grid.minor = element_line(linewidth = 0.2, color = "grey80"),
   )
 dots_overlay <- ggimage::ggbackground(
-  dots_only + 
-    theme(
-      panel.grid.major = element_blank(),
-      panel.grid.minor = element_blank(),
+  dots_only +
+    ggplot2::theme(
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank(),
     ),
   dart_url
 )
 
-ggsave(
+ggplot2::ggsave(
   file.path(img_dir, "dots_overlay.png"),
   dots_overlay,
   width = fig_width,
   height = fig_height,
   dpi = 300
 )
-ggsave(
+ggplot2::ggsave(
   file.path(img_dir, "dots_only.png"),
   align_dots(dots_only),
   width = fig_width, height = fig_height, dpi = 300
@@ -290,14 +294,14 @@ ggsave(
 
 (
   dartmouth_segs |>
-    mutate(highlight = TRUE) |> 
+    dplyr::mutate(highlight = TRUE) |>
     plot_segments(linewidth = 0.5, arrow_length = 0.1) +
-    theme(
-      panel.grid.major = element_line(linewidth = 0.2, color = "grey80"),
-      panel.grid.minor = element_line(linewidth = 0.2, color = "grey80"),
+    ggplot2::theme(
+      panel.grid.major = ggplot2::element_line(linewidth = 0.2, color = "grey80"),
+      panel.grid.minor = ggplot2::element_line(linewidth = 0.2, color = "grey80"),
     )
-) |> 
-  align_dots() |> 
+) |>
+  align_dots() |>
   ggsave(
     file.path(img_dir, "segments_plot.png"),
     plot = _,
@@ -305,17 +309,17 @@ ggsave(
   )
 
 dartmouth_segs |>
-  mutate(highlight = group == 28) |> 
-  plot_segments() |> 
-  ggsave(
+  dplyr::mutate(highlight = group == 28) |>
+  plot_segments() |>
+  ggplot2::ggsave(
     file.path(img_dir, "segments_nwbw.svg"),
     plot = _,
     width = fig_width * 2, height = fig_height * 2
   )
 
 # dartmouth_segs |>
-#   mutate(highlight = group == 28) |> 
-#   plot_segments(color_vals = c("grey80", dark_pink)) |> 
+#   mutate(highlight = group == 28) |>
+#   plot_segments(color_vals = c("grey80", dark_pink)) |>
 #   ggsave(
 #     file.path(img_dir, "segments_nwbw_light.svg"),
 #     plot = _,
@@ -323,8 +327,8 @@ dartmouth_segs |>
 #   )
 
 segs_nne <- dartmouth_segs |>
-  mutate(highlight = group == 3) |> 
-  plot_segments() 
+  mutate(highlight = group == 3) |>
+  plot_segments()
 ggsave(
   file.path(img_dir, "segments_nne.svg"),
   plot = segs_nne,
@@ -361,7 +365,7 @@ ggsave(
 )
 
 segs_nne_light <- dartmouth_segs |>
-  mutate(highlight = group == 3) |> 
+  mutate(highlight = group == 3) |>
   plot_segments(color_vals = c("grey80", dark_pink))
 
 rose_nne_light <- dartmouth |>
@@ -376,7 +380,7 @@ ggsave(
     draw_plot(rose_nne_light, .25, 0, .6, .6)
 )
 
- all_roses <- cowplot::plot_grid(
+all_roses <- cowplot::plot_grid(
   plotlist = purrr::map2(
     bearings_ls,
     names(bearings_ls),
@@ -410,8 +414,11 @@ water_mark <- "OpenSkiStats.org\nLicense: CC BY 4.0"
 region_raw <- arrow::read_parquet(file.path(img_data_dir, "region_roses.parquet"))
 n_ski_areas <- sum(region_raw$ski_areas_count)
 verts <- region_raw |>
-  select(region, combined_vertical) |>
-  mutate(thickness = sqrt(combined_vertical / max(combined_vertical)) * max_thickness + min_thickness, .keep = "unused") |>
+  dplyr::select(region, combined_vertical) |>
+  dplyr::mutate(
+    thickness = sqrt(combined_vertical / max(combined_vertical)) * max_thickness + min_thickness,
+    .keep = "unused"
+  ) |>
   tibble::deframe()
 
 region <- region_raw |>
@@ -462,18 +469,18 @@ for (pal in names(my_aesthetics)) {
       aesthetics = my_aesthetic,
       type = "us"
     )
-  
+
   names(all_regions) <- state_map[names(region)]
-  
+
   state_plots <- lapply(state_names, rose_empty, aesthetics = my_aesthetic) |>
     setNames(state_names)
-  
+
   skiable_states <- names(all_regions)
   for (i in skiable_states) {
     state_plots[[i]] <- all_regions[[i]]
   }
   state_plots <- state_plots[state_names]
-  
+
   title <-
     ggplot() +
     theme_void() +
@@ -493,14 +500,14 @@ for (pal in names(my_aesthetics)) {
       color = my_aesthetic$title_color,
       family = my_aesthetic$my_font
     )
-  
+
   map_plots <- c(list(title = title), state_plots) |>
     wrap_plots(design = layout_title) &
     plot_annotation(theme = theme(
-      panel.background = element_rect(fill = my_aesthetic$canvas, colour = NA),
-      plot.background = element_rect(fill = my_aesthetic$canvas, colour = NA)
+      panel.background = ggplot2::element_rect(fill = my_aesthetic$canvas, colour = NA),
+      plot.background = ggplot2::element_rect(fill = my_aesthetic$canvas, colour = NA)
     ))
-  
+
   to_publish <- ggdraw(map_plots) +
     draw_label(
       x = 0.985,
@@ -531,7 +538,7 @@ for (pal in names(my_aesthetics)) {
       y = c(0.768, 0.768),
       color = my_aesthetic$circle_color, size = 2
     )
-  
+
   ggsave(
     file.path(img_dir, sprintf("us_roses_%s.svg", pal)),
     to_publish,
