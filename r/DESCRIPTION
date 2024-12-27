@@ -11,4 +11,5 @@ Imports:
   arrow,
   cowplot,
   patchwork,
+  styler,
   svglite
