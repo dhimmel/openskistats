@@ -8,12 +8,15 @@ listing:
   - id: pages
     contents: 
       - title: Ski Areas
+        subtitle: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
         path: /ski-areas/
         image: "https://github.com/dhimmel/openskistats/raw/assets/assets/preview-table.png"
       - title: Story
+        subtitle: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
         path: /story/
         image: "../images/rose_dartmouth.svg"
       - title: Manuscript
+        subtitle: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
         path: /manuscript/
         image: "../images/bearing_by_latitude_eye.svg"
     type: grid
