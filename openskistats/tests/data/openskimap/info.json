@@ -1,29 +1,29 @@
-[
-  {
+{
+  "lifts": {
     "url": "https://tiles.openskimap.org/geojson/lifts.geojson",
     "relative_path": "data/openskimap/lifts.geojson.xz",
-    "last_modified": "2024-11-24T02:12:17+00:00",
-    "downloaded": "2024-11-24T02:39:12+00:00",
-    "content_size_mb": 99.38406276702881,
-    "compressed_size_mb": 6.898139953613281,
-    "checksum_sha256": "debe004877f8a707ec91b0f46244c378934f047a921fafe2de03c0a12aab82f6"
+    "last_modified": "2024-12-27T02:26:14+00:00",
+    "downloaded": "2024-12-27T19:57:31+00:00",
+    "content_size_mb": 99.43077945709229,
+    "compressed_size_mb": 6.891986846923828,
+    "checksum_sha256": "9252019438acbfaa737466cf73d50659b9c0728e8defbec5d05fb74544ecec04"
   },
-  {
+  "ski_areas": {
     "url": "https://tiles.openskimap.org/geojson/ski_areas.geojson",
     "relative_path": "data/openskimap/ski_areas.geojson.xz",
-    "last_modified": "2024-11-24T02:12:16+00:00",
-    "downloaded": "2024-11-24T02:39:39+00:00",
-    "content_size_mb": 15.574418067932129,
-    "compressed_size_mb": 2.3949623107910156,
-    "checksum_sha256": "f1f8dc60d1fac64c86bf59130e47e86d4d0cdf43dde8a8e9992e1b45ef17324a"
+    "last_modified": "2024-12-27T02:26:13+00:00",
+    "downloaded": "2024-12-27T19:57:49+00:00",
+    "content_size_mb": 15.647958755493164,
+    "compressed_size_mb": 2.4046401977539062,
+    "checksum_sha256": "9ba4f0091d8978ade54f83be9d3fc379703eaf307835b5e32d2d0beac59ee940"
   },
-  {
+  "runs": {
     "url": "https://tiles.openskimap.org/geojson/runs.geojson",
     "relative_path": "data/openskimap/runs.geojson.xz",
-    "last_modified": "2024-11-24T02:12:21+00:00",
-    "downloaded": "2024-11-24T02:39:48+00:00",
-    "content_size_mb": 891.1626243591309,
-    "compressed_size_mb": 91.94179153442383,
-    "checksum_sha256": "12e4cc298585d0b880d67c6dce11e9380740d0bd5cdfb8a4965c5b691375862d"
+    "last_modified": "2024-12-27T02:26:16+00:00",
+    "downloaded": "2024-12-27T19:57:55+00:00",
+    "content_size_mb": 894.6473083496094,
+    "compressed_size_mb": 92.48648071289062,
+    "checksum_sha256": "4549037d1c8c60f91e1963363940ba3e6ca51752ddde7f181cf906e57a027f04"
   }
-]
+}

@@ -18,6 +18,7 @@ from openskistats.models import BearingStatsModel, SkiAreaModel
 from openskistats.openskimap_utils import (
     load_downhill_ski_areas_from_download_pl,
     load_runs_from_download_pl,
+    set_openskimap_download_info_in_variables,
 )
 from openskistats.plot import (
     _generate_margin_text,
@@ -69,6 +70,7 @@ def analyze_all_ski_areas_polars(skip_runs: bool = False) -> None:
     Keyed on ski_area_id.
     Write data as parquet.
     """
+    set_openskimap_download_info_in_variables()
     if not skip_runs:
         process_and_export_runs()
     logging.info("Creating ski area metrics dataframe with bearing distributions.")

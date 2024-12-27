@@ -1,0 +1,48 @@
+openskimap:
+  lifts:
+    counts:
+      01_raw: 5
+      01_raw_by_geometry:
+        LineString: 5
+    download:
+      checksum_sha256: 9252019438acbfaa737466cf73d50659b9c0728e8defbec5d05fb74544ecec04
+      compressed_size_mb: 6.891986846923828
+      content_size_mb: 99.43077945709229
+      downloaded: '2024-12-27T19:57:31+00:00'
+      last_modified: '2024-12-27T02:26:14+00:00'
+      relative_path: data/openskimap/lifts.geojson.xz
+      url: https://tiles.openskimap.org/geojson/lifts.geojson
+  runs:
+    coordinates:
+      counts:
+        01_raw: 346
+        02_clean: 346
+    counts:
+      01_raw: 43
+      01_raw_by_geometry:
+        LineString: 39
+        Polygon: 4
+      02_linestring: 39
+      03_downhill: 38
+    download:
+      checksum_sha256: 4549037d1c8c60f91e1963363940ba3e6ca51752ddde7f181cf906e57a027f04
+      compressed_size_mb: 92.48648071289062
+      content_size_mb: 894.6473083496094
+      downloaded: '2024-12-27T19:57:55+00:00'
+      last_modified: '2024-12-27T02:26:16+00:00'
+      relative_path: data/openskimap/runs.geojson.xz
+      url: https://tiles.openskimap.org/geojson/runs.geojson
+  ski_areas:
+    counts:
+      01_raw: 2
+      01_raw_by_geometry:
+        Polygon: 2
+      02_downhill: 2
+    download:
+      checksum_sha256: 9ba4f0091d8978ade54f83be9d3fc379703eaf307835b5e32d2d0beac59ee940
+      compressed_size_mb: 2.4046401977539062
+      content_size_mb: 15.647958755493164
+      downloaded: '2024-12-27T19:57:49+00:00'
+      last_modified: '2024-12-27T02:26:13+00:00'
+      relative_path: data/openskimap/ski_areas.geojson.xz
+      url: https://tiles.openskimap.org/geojson/ski_areas.geojson
