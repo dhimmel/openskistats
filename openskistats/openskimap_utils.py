@@ -57,6 +57,9 @@ class OsmDownloadInfo:
             f"  Checksum (SHA-256): {self.checksum_sha256}"
         )
 
+    def to_dict(self) -> dict[str, Any]:
+        return dataclass_to_dict(self)
+
 
 def download_openskimap_geojson(
     name: Literal["runs", "ski_areas", "lifts"],
@@ -90,10 +93,10 @@ def download_openskimap_geojson(
 
 def download_openskimap_geojsons() -> None:
     """Download all OpenSkiMap geojson files."""
-    download_infos = []
+    download_infos = {}
     for name in ["lifts", "ski_areas", "runs"]:
         info = download_openskimap_geojson(name)  # type: ignore [arg-type]
-        download_infos.append(dataclass_to_dict(info))
+        download_infos[name] = info.to_dict()
     # write download info to disk
     get_openskimap_path("info").write_text(json.dumps(download_infos, indent=2) + "\n")
 
@@ -123,9 +126,20 @@ def load_openskimap_geojson(
     return features
 
 
-def load_openskimap_download_info() -> list[OsmDownloadInfo]:
+def load_openskimap_download_info() -> dict[str, OsmDownloadInfo]:
     download_infos = json.loads(get_openskimap_path("info").read_text())
-    return [OsmDownloadInfo(**info_dict) for info_dict in download_infos]
+    return {
+        name: OsmDownloadInfo(**info_dict) for name, info_dict in download_infos.items()
+    }
+
+
+def set_openskimap_download_info_in_variables() -> None:
+    set_variables(
+        **{
+            f"openskimap__{name}__download": info.to_dict()
+            for name, info in load_openskimap_download_info().items()
+        }
+    )
 
 
 @cache
@@ -188,6 +202,9 @@ def load_runs_from_download_pl() -> pl.DataFrame:
         ),
         openskimap__runs__coordinates__counts__02_clean=sum(
             len(row["run_coordinates_clean"]) for row in rows
+        ),
+        openskimap__runs__counts__03_downhill=len(
+            [row for row in rows if "downhill" in row["run_uses"]]
         ),
     )
     return pl.DataFrame(rows, strict=False)
