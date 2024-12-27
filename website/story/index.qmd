@@ -1,5 +1,8 @@
 ---
+pagetitle: Story
 title: "Which way do you ski?"
+subtitle: Scroll your way through the story of OpenSkiStats and visualize the methods used to assess ski area orientation.
+image: "../images/rose_dartmouth.svg"
 format: 
   closeread-html:
     mainfont: Quicksand

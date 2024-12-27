@@ -1,5 +1,8 @@
 ---
-title: "OpenSkiStats Ski Area Browser"
+pagetitle: Ski Areas
+title: Ski Areas
+subtitle: Browse an interactive table of the world's ski areas.
+image: https://github.com/dhimmel/openskistats/raw/assets/assets/preview-table.png
 format:
   html:
     code-fold: true
