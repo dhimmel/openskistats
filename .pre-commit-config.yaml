@@ -36,5 +36,3 @@ repos:
       - id: style-files
         args: [--scope=tokens]
         files: ^r/.*\.R$
-      - id: lintr
-        files: ^r/.*\.R$
