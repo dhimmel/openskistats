@@ -1,0 +1,3 @@
+linters: lintr::linters_with_defaults(
+    line_length_linter = line_length_linter(120),
+    object_name_linter(styles = "snake_case"))
