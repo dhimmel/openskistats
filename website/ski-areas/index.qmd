@@ -4,6 +4,8 @@ title: Ski Areas
 subtitle: Browse an interactive table of the world's ski areas.
 image: https://github.com/dhimmel/openskistats/raw/assets/assets/preview-table.png
 engine: jupyter
+execute:
+  echo: false
 format:
   html:
     code-fold: true
@@ -18,7 +20,6 @@ This project is currently under heavy development and is not yet ready for publi
 
 ::: {.column-screen-inset}
 ```{python}
-#| echo: false
 #| output: asis
 from openskistats.display import embed_reactable_html, get_ski_area_reactable
 
@@ -42,7 +43,6 @@ Numeric columns support the filtering filters:
 ### Source data 
 
 ```{python}
-#| echo: false
 from IPython.display import Markdown
 from openskistats.openskimap_utils import load_openskimap_download_info
 

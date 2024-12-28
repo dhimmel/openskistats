@@ -3,6 +3,9 @@ pagetitle: Story
 title: "Which way do you ski?"
 subtitle: Scroll your way through the story of OpenSkiStats and visualize the methods used to assess ski area orientation.
 image: "../images/rose_dartmouth.svg"
+engine: jupyter
+execute:
+  echo: false
 format: 
   closeread-html:
     mainfont: Quicksand
@@ -202,7 +205,6 @@ For example, below are the statistics of the five New Hampshire/Vermont mountain
 ::::{.column-screen}
 :::{style="font-family: 'Source Sans 3'; font-size: 70%;"}
 ```{python}
-#| echo: false
 #| output: asis
 from openskistats.display import embed_reactable_html, get_ski_area_reactable
 

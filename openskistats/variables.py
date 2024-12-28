@@ -21,12 +21,14 @@ def _read_variables() -> dict[str, Any]:
     return yaml.safe_load(stream=_get_variables_path().read_text()) or {}
 
 
-def read_variable(key: str) -> Any:
+def read_variable(key: str, format_spec: str | None) -> Any:
     """key supports nested access with __ notation"""
     variable = _read_variables()
     for part in key.split("__"):
         variable = variable[part]
-    return variable
+    if format_spec is None:
+        return variable
+    return format(variable, format_spec)
 
 
 def set_variables(**kwargs: Any) -> None:

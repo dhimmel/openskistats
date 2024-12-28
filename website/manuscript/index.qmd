@@ -2,6 +2,9 @@
 pagetitle: Manuscript
 title: "OpenSkiStats: a global webapp of geospatial ski area metrics reveals the orientation of alpine skiing"
 image: "../images/bearing_by_latitude_eye.svg"
+engine: jupyter
+execute:
+  echo: false
 bibliography:
   - references.yml
 csl: https://github.com/manubot/rootstock/raw/main/build/assets/style.csl
@@ -14,12 +17,16 @@ editor:
 This manuscript is a work in progress and is not yet ready for public consumption.
 :::
 
+```{python}
+from openskistats.variables import read_variable as var
+```
+
 ## Abstract
 
 We present OpenSkiStats, the first open, global, and continuously updating resource of downhill skiing summary statistics.
 The initial focus of OpenSkiStats is to provide spatial statistics of ski areas and their runs, in particular, the orientation of ski runs.
 Data is sourced from OpenSkiMap, a project to extract and visualize skiing related features from the crowd-sourced OpenStreetMap.
-OpenSkiMap provides a resource of XX downhill ski areas in XX countries and XX downhill ski runs comprised of XX segments.
+OpenSkiMap provides a resource of `{python} var("openskimap__ski_areas__counts__02_downhill", ",")` downhill ski areas in XX countries and `{python} var("openskimap__runs__counts__03_downhill", ",")` downhill ski runs comprised of XX segments.
 
 ## Introduction
 
@@ -122,7 +129,7 @@ Ski area counts (potentially lifts as well?)
 
 ### Number of Ski Areas
 
-OpenSkiMap contained {{< var openskimap.ski_areas.counts.01_raw >}} ski areas with {{< var openskimap.ski_areas.counts.02_downhill >}} of those assigned a downhill usage.
+OpenSkiMap contained `{python} var("openskimap__ski_areas__counts__01_raw", ",")` ski areas with `{python} var("openskimap__ski_areas__counts__02_downhill", ",")` of those assigned a downhill usage.
 
 Laurent Vanat's _2022 International Report on Snow & Mountain Tourism_ compiled primarily national level data to report on global ski area metrics [@vanat-2022].
 Vanat identified 5,764 ski areas worldwide,
