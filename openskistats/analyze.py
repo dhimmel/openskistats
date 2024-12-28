@@ -42,6 +42,19 @@ def get_runs_parquet_path(testing: bool = False) -> Path:
     return get_data_directory(testing=testing).joinpath("runs.parquet")
 
 
+_aggregate_run_coordinates_exprs = {
+    "coordinate_count": pl.len(),
+    "segment_count": pl.count("segment_hash"),
+    "combined_vertical": pl.col("distance_vertical_drop").sum(),
+    "combined_distance": pl.col("distance_3d").sum(),
+    "latitude": pl.col("latitude").mean(),
+    "longitude": pl.col("longitude").mean(),
+    "min_elevation": pl.col("elevation").min(),
+    "max_elevation": pl.col("elevation").max(),
+    "vertical_drop": pl.max("elevation") - pl.min("elevation"),
+}
+
+
 def process_and_export_runs() -> None:
     """
     Process and export runs from OpenSkiMap.
@@ -53,7 +66,10 @@ def process_and_export_runs() -> None:
         .unnest("run_coordinates_clean")
         .pipe(add_spatial_metric_columns, partition_by="run_id")
         .group_by("run_id")
-        .agg(run_coordinates_clean=pl.struct(pl.exclude("run_id")))
+        .agg(
+            **_aggregate_run_coordinates_exprs,
+            run_coordinates_clean=pl.struct(pl.exclude("run_id")),
+        )
     )
     runs_df = (
         runs_lazy.drop("run_coordinates_clean")
@@ -83,6 +99,7 @@ def analyze_all_ski_areas_polars(skip_runs: bool = False) -> None:
         .explode("ski_area_ids")
         .rename({"ski_area_ids": "ski_area_id"})
         .filter(pl.col("ski_area_id").is_not_null())
+        .select("ski_area_id", "run_id", "run_coordinates_clean")
         .explode("run_coordinates_clean")
         .unnest("run_coordinates_clean")
         .with_columns(
@@ -91,15 +108,7 @@ def analyze_all_ski_areas_polars(skip_runs: bool = False) -> None:
         .group_by("ski_area_id")
         .agg(
             run_count=pl.col("run_id").n_unique(),
-            coordinate_count=pl.len(),
-            segment_count=pl.count("segment_hash"),
-            combined_vertical=pl.col("distance_vertical_drop").sum(),
-            combined_distance=pl.col("distance_3d").sum(),
-            latitude=pl.col("latitude").mean(),
-            longitude=pl.col("longitude").mean(),
-            min_elevation=pl.col("elevation").min(),
-            max_elevation=pl.col("elevation").max(),
-            vertical_drop=pl.max("elevation") - pl.min("elevation"),
+            **_aggregate_run_coordinates_exprs,
             hemisphere=pl.first("hemisphere"),
             _bearing_stats=pl.struct(
                 "bearing",
