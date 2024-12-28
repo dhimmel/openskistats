@@ -64,7 +64,6 @@ class RunLatitudeBearingHistogram:
     def load_and_filter_runs_pl(self) -> pl.LazyFrame:
         return (
             load_runs_pl()
-            .filter(pl.col("run_uses").list.contains("downhill"))
             .explode("run_coordinates_clean")
             .unnest("run_coordinates_clean")
             .filter(pl.col("segment_hash").is_not_null())

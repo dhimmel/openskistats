@@ -161,10 +161,10 @@ def _structure_coordinates(
     ]
 
 
-def load_runs_from_download_pl() -> pl.DataFrame:
+def load_downhill_runs_from_download_pl() -> pl.DataFrame:
     """
     Load OpenSkiMap runs from their geojson source into a polars DataFrame.
-    Filters for runs with a LineString geometry.
+    Filters for runs with a LineString geometry and for downhill use.
     Rename columns for project nomenclature.
     """
     runs = load_runs_from_download()
@@ -203,11 +203,18 @@ def load_runs_from_download_pl() -> pl.DataFrame:
         openskimap__runs__coordinates__counts__02_clean=sum(
             len(row["run_coordinates_clean"]) for row in rows
         ),
-        openskimap__runs__counts__03_downhill=len(
-            [row for row in rows if "downhill" in row["run_uses"]]
+    )
+    rows = [row for row in rows if "downhill" in row["run_uses"]]
+    set_variables(
+        openskimap__runs__counts__03_downhill=len(rows),
+        openskimap__runs__coordinates__counts__03_downhill_raw=sum(
+            len(row["run_coordinates_raw"]) for row in rows
+        ),
+        openskimap__runs__coordinates__counts__04_downhill_clean=sum(
+            len(row["run_coordinates_clean"]) for row in rows
         ),
     )
-    return pl.DataFrame(rows, strict=False)
+    return pl.DataFrame(rows, strict=False).drop("run_coordinates_raw")
 
 
 def load_lifts_from_download_pl() -> pl.DataFrame:
@@ -312,8 +319,7 @@ def get_ski_area_to_runs(
     """
     # ski area names can be duplicated, like 'Black Mountain', so use the id instead.
     return dict(
-        runs_pl.filter(pl.col("run_uses").list.contains("downhill"))
-        .explode("ski_area_ids")
+        runs_pl.explode("ski_area_ids")
         .filter(pl.col("ski_area_ids").is_not_null())
         .select(
             pl.col("ski_area_ids").alias("ski_area_id"),

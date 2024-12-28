@@ -16,8 +16,8 @@ from openskistats.bearing import (
 )
 from openskistats.models import BearingStatsModel, SkiAreaModel
 from openskistats.openskimap_utils import (
+    load_downhill_runs_from_download_pl,
     load_downhill_ski_areas_from_download_pl,
-    load_runs_from_download_pl,
     set_openskimap_download_info_in_variables,
 )
 from openskistats.plot import (
@@ -46,7 +46,7 @@ def process_and_export_runs() -> None:
     """
     Process and export runs from OpenSkiMap.
     """
-    runs_lazy = load_runs_from_download_pl().lazy()
+    runs_lazy = load_downhill_runs_from_download_pl().lazy()
     coords_df = (
         runs_lazy.select("run_id", "run_coordinates_clean")
         .explode("run_coordinates_clean")
@@ -56,7 +56,9 @@ def process_and_export_runs() -> None:
         .agg(run_coordinates_clean=pl.struct(pl.exclude("run_id")))
     )
     runs_df = (
-        runs_lazy.drop("run_coordinates_clean").join(coords_df, on="run_id").collect()
+        runs_lazy.drop("run_coordinates_clean")
+        .join(coords_df, on="run_id", how="left")
+        .collect()
     )
     runs_path = get_runs_parquet_path()
     logging.info(f"Writing {len(runs_df):,} runs to {runs_path}")
@@ -78,7 +80,6 @@ def analyze_all_ski_areas_polars(skip_runs: bool = False) -> None:
     ski_area_run_metrics_df = (
         load_runs_pl()
         .lazy()
-        .filter(pl.col("run_uses").list.contains("downhill"))
         .explode("ski_area_ids")
         .rename({"ski_area_ids": "ski_area_id"})
         .filter(pl.col("ski_area_id").is_not_null())
