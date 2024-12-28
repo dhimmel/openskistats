@@ -64,6 +64,9 @@ class RunLatitudeBearingHistogram:
     def load_and_filter_runs_pl(self) -> pl.LazyFrame:
         return (
             load_runs_pl()
+            # filter for on-piste runs within a ski area
+            .filter(pl.col("ski_area_ids").list.len() > 0)
+            .filter(pl.col("run_difficulty").ne_missing(pl.lit("freeride")))
             .select("run_id", "run_coordinates_clean")
             .explode("run_coordinates_clean")
             .unnest("run_coordinates_clean")
