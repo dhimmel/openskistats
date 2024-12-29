@@ -32,6 +32,7 @@ from openskistats.utils import (
     get_images_directory,
     pl_hemisphere,
 )
+from openskistats.variables import set_variables
 
 
 def get_ski_area_metrics_path(testing: bool = False) -> Path:
@@ -75,6 +76,17 @@ def process_and_export_runs() -> None:
         runs_lazy.drop("run_coordinates_clean")
         .join(coords_df, on="run_id", how="left")
         .collect()
+    )
+    set_variables(
+        openskimap__runs__segments__counts__04_downhill_clean=runs_df[
+            "segment_count"
+        ].sum(),
+        openskimap__runs__distance__vertical__04_downhill_clean=runs_df[
+            "combined_vertical"
+        ].sum(),
+        openskimap__runs__distance__3d__04_downhill_clean=runs_df[
+            "combined_distance"
+        ].sum(),
     )
     runs_path = get_runs_parquet_path()
     logging.info(f"Writing {len(runs_df):,} runs to {runs_path}")
