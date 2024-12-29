@@ -14,11 +14,6 @@ from matplotlib.projections.polar import PolarAxes
 from matplotlib.text import Text as MplText
 from osmnx.plot import _get_fig_ax
 
-try:
-    from lets_plot.plot.core import PlotSpec as LetsPlotSpec
-except ImportError:
-    LetsPlotSpec = Any
-
 SUBPLOT_FIGSIZE = 4.0
 """Size in inches for each subplot in a grid."""
 
@@ -425,68 +420,6 @@ def plot_mean_bearing(
         ax.set_title(title, y=title_y, fontdict=title_font)
     fig.tight_layout()
     return fig, ax
-
-
-def subplot_orientations_lets_plot(
-    distribution_pl: pl.DataFrame,
-    grouping_col: str,
-    n_cols: int | None = None,
-    free_y: bool = True,
-) -> LetsPlotSpec:
-    """
-    Plot orientations from multiple graphs in a grid
-    using Let's Plot. This is exploratory with much broken.
-    """
-    import lets_plot as lp
-
-    return (
-        lp.ggplot(
-            data=(
-                distribution_pl
-                # .filter(pl.col("ski_area_name").is_in(["Sugarloaf", "Dartmouth Skiway"]))
-                .with_columns(pl.col("bin_count").replace(0, 360))
-            ),
-            mapping=lp.aes(x="bin_center", y="bin_count"),
-        )
-        + lp.geom_bar(
-            stat="identity",
-            tooltips=lp.layer_tooltips()
-            .format(field="^y", format="{,.0f}{NARROW_SPACE}m")
-            .format(field="^x", format="{}°"),
-            width=0.7,
-            size=0.5,
-            color="black",
-        )
-        + lp.facet_wrap(
-            [grouping_col],
-            scales="free_y" if free_y else "fixed",
-            ncol=n_cols,
-        )
-        + lp.scale_x_continuous(
-            labels={
-                0: "N",
-                45: "NE",
-                90: "E",
-                135: "SE",
-                180: "S",
-                225: "SW",
-                270: "W",
-                315: "NW",
-                360: "N",
-            },
-            # limits=(0, 360),
-            name="Trial Orientation",
-        )
-        # + lp.xlim(0, 360)
-        + lp.geom_text(x=45, y=1700, label="test")
-        + lp.scale_y_continuous(trans="sqrt", breaks=[])
-        + lp.guides(bin_count=None)
-        + lp.coord_polar()  # start=np.radians(-5))
-        + lp.theme(
-            axis_title=lp.element_blank(),
-            # axis_text_y=lp.element_blank(),
-        )
-    )
 
 
 @cache
