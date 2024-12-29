@@ -9,6 +9,15 @@ from typing import Annotated, Literal
 from patito import Field, Model
 
 
+class OpenSkiMapStatus(StrEnum):
+    """Operating status of a run, ski area, or lift according to OpenSkiMap"""
+
+    operating = "operating"
+    abandoned = "abandoned"
+    proposed = "proposed"
+    disused = "disused"
+
+
 class SkiRunDifficulty(StrEnum):
     novice = "novice"
     easy = "easy"
@@ -105,6 +114,7 @@ class RunSegmentModel(Model):  # type: ignore [misc]
 
 
 class RunCoordinateSegmentModel(RunSegmentModel, RunCoordinateModel):
+    # NOTE: fields from RunCoordinateModel are placed before fields from RunSegmentModel
     pass
 
 
@@ -129,7 +139,7 @@ class RunModel(Model):  # type: ignore [misc]
         Field(description="OpenSkiMap usage types for the run."),
     ]
     run_status: Annotated[
-        Literal["operating", "abandoned", "proposed", "disused"] | None,
+        OpenSkiMapStatus | None,
         Field(description="Operating status of the run according to OpenSkiMap."),
     ]
     run_difficulty: Annotated[
@@ -265,7 +275,7 @@ class SkiAreaModel(Model):  # type: ignore [misc]
         Literal["japan", "europe", "north_america"],
         Field(description="OpenSkiMap convention for the runs in the ski area."),
     ]
-    osm_status: Literal["operating", "abandoned", "proposed", "disused"] | None = Field(
+    osm_status: OpenSkiMapStatus | None = Field(
         description="Operating status of the ski area according to OpenSkiMap. "
         "Null values arise for ski areas without an OSM source in ski_area_sources. "
         "See OpenSkiMap processing code at <https://github.com/russellporter/openskidata-processor/blob/bc168105f4d90c19817189ebe47e7bee20a2dcbc/src/transforms/Status.ts#L3-L8>."

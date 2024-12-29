@@ -16,6 +16,7 @@ from openskistats.bearing import (
 )
 from openskistats.models import (
     BearingStatsModel,
+    OpenSkiMapStatus,
     RunCoordinateSegmentModel,
     RunModel,
     SkiAreaModel,
@@ -310,7 +311,7 @@ def bearing_dists_by_us_state() -> pl.DataFrame:
         ski_area_filters=[
             pl.col("country") == "United States",
             pl.col("region").is_not_null(),
-            pl.col("osm_status") == "operating",
+            pl.col("osm_status") == OpenSkiMapStatus.operating,
             pl.col("ski_area_name").is_not_null(),
         ],
     )
@@ -321,7 +322,7 @@ def bearing_dists_by_hemisphere() -> pl.DataFrame:
         group_by=["hemisphere"],
         ski_area_filters=[
             pl.col("hemisphere").is_not_null(),
-            pl.col("osm_status") == "operating",
+            pl.col("osm_status") == OpenSkiMapStatus.operating,
             pl.col("ski_area_name").is_not_null(),
         ],
     )
@@ -336,7 +337,9 @@ def bearing_dists_by_status() -> pl.DataFrame:
         group_by=["hemisphere", "osm_status"],
         ski_area_filters=[
             pl.col("hemisphere") == "north",
-            pl.col("osm_status").is_in(["abandoned", "operating"]),
+            pl.col("osm_status").is_in(
+                [OpenSkiMapStatus.abandoned, OpenSkiMapStatus.operating]
+            ),
         ],
     ).with_columns(
         hemisphere_status=pl.format(
@@ -352,7 +355,7 @@ def bearing_dists_by_country() -> pl.DataFrame:
         group_by=["country"],
         ski_area_filters=[
             pl.col("country").is_not_null(),
-            pl.col("osm_status") == "operating",
+            pl.col("osm_status") == OpenSkiMapStatus.operating,
             pl.col("ski_area_name").is_not_null(),
         ],
     )

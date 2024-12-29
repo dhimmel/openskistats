@@ -15,7 +15,7 @@ from typing import Any, Literal
 import polars as pl
 import requests
 
-from openskistats.models import RunCoordinateModel
+from openskistats.models import OpenSkiMapStatus, RunCoordinateModel
 from openskistats.utils import get_data_directory, get_repo_directory
 from openskistats.variables import set_variables
 
@@ -271,7 +271,7 @@ def load_downhill_ski_areas_from_download_pl() -> pl.DataFrame:
         .explode("ski_area_ids")
         .rename({"ski_area_ids": "ski_area_id"})
         .filter(pl.col("ski_area_id").is_not_null())
-        .filter(pl.col("lift_status") == "operating")
+        .filter(pl.col("lift_status") == OpenSkiMapStatus.operating)
         .group_by("ski_area_id")
         .agg(pl.col("lift_id").n_unique().alias("lift_count"))
     )

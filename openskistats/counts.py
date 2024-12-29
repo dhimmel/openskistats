@@ -3,6 +3,7 @@ from dataclasses import dataclass
 import polars as pl
 
 from openskistats.analyze import load_ski_areas_pl
+from openskistats.models import OpenSkiMapStatus
 
 
 @dataclass
@@ -31,7 +32,7 @@ ski_area_filters = [
     NamedPolarFilter(
         name="operating",
         display_name="Operating",
-        filter=pl.col("osm_status") == "operating",
+        filter=pl.col("osm_status") == OpenSkiMapStatus.operating,
     ),
     NamedPolarFilter(
         name="named",
