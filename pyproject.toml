@@ -26,6 +26,7 @@ dependencies = [
     "plotly >= 5.24.1",
     "plotnine >= 0.13.6",
     "polars >= 1.17.1",
+    "pvlib>=0.11.2",
     "pyarrow >= 17.0.0",
     "reactable >= 0.1.5",
     "requests >= 2.32.3",
