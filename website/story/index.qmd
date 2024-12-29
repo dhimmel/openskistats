@@ -101,8 +101,8 @@ If we:
 
 - gather the coordinates for all trail segments
 - connect the dots
-- treat each of these segments as a [vector]{style="color: #f07178;"}
-- scale the vectors by their [vertical drops]{style="color: #FF8C42;"}
+- treat each of these segments as a [**vector**]{style="color: #f07178;"}
+- scale the vectors by their vertical drops
 
 we can summarize them in a ...
 :::
@@ -121,7 +121,7 @@ ski roses characterize the directions of all trail segments at a ski area.
 :::
 
 Each *spoke* of the circular chart represents a compass direction,
-with its radius proportional to the [combined vertical]{style="color: #FF8C42;"} of trail segments in that direction.<br><br>
+with its radius proportional to the [**combined vertical**]{style="color: #A56ACF;"} of trail segments in that direction.<br><br>
 Highlighted is the [**Northwest by West**]{style="color: #f07178;"} spoke...
 @cr-rose-nwbw
 
@@ -171,15 +171,15 @@ Did you remember facing north while skiing down?
 
 And here are the [ski roses]{style="color: #f07178;"} for 37 US states with at least one ski area.<br><br>
 Do most states look north-facing to you?
-And, as an aside, can you guess which state has the most combined vertical?
+And, as an aside, can you guess which state has more combined vertical: California or Vermont?
 [@cr-us-roses]
 
 :::{#cr-us-roses}
 ![](../images/us_roses_dark.svg)
 :::
 
-Our analysis of the orientation of *all* ski areas across the globe revealed a strong [poleward]{style="color: #36B37E;"} and moderate [eastward]{style="color: #FF8C42;"} preference.<br><br>
-In other words, the majority of runs in the [northern]{style="color: #36B37E;"} hemisphere are oriented toward the [north]{style="color: #36B37E;"} and [east]{style="color: #FF8C42;"},
+Our analysis of the orientation of *all* ski areas across the globe revealed a strong [poleward]{style="color: #36B37E;"} and moderate [eastward]{style="color: #36B37E;"} preference.<br><br>
+In other words, the majority of runs in the [northern]{style="color: #36B37E;"} hemisphere are oriented toward the [north]{style="color: #36B37E;"} and [east]{style="color: #36B37E;"},
 while those in the [southern]{style="color: #36B37E;"} hemisphere are oriented toward the [south]{style="color: #36B37E;"}.
 [@cr-hemisphere]{scale-by="0.8"}
 
@@ -192,12 +192,12 @@ This trend reflects which aspects maximize [snow retention]{style="color: #36B37
 
 ::::
 :::{.column-page}
-In addition to trail bearings, we have published data on other key metrics of a ski area like [**total vertical**]{style="color: #FF8C42;"}, [**number of lifts**]{style="color: #36B37E;"}, and [**peak elevation**]{style="color: #FFC857;"} for ski areas across the world.
+In addition to trail bearings, we have published data on other key metrics of a ski area like [**total vertical**]{style="color: #A56ACF;"}, [**number of lifts**]{style="color: #A56ACF;"}, and [**peak elevation**]{style="color: #A56ACF;"} for ski areas across the world.
 
 In [OpenSkiStats.org/ski-areas](/ski-areas), you can search for your favorite ski area and explore all of its summary statistics.
-Whether you're planning your next powder day or just marveling at the hidden patterns of the slopes, this data offers a fresh way to see the mountains you love.
+Whether you're planning your next powder day or just marveling at the hidden patterns of the slopes, this may be a fresh way to see the mountains you love.
 
-For example, below are the statistics of the five New Hampshire/Vermont mountains we see earlier:
+For example, below are the statistics of the five New Hampshire/Vermont mountains we saw earlier:
 
 <br>
 :::
@@ -216,7 +216,7 @@ get_ski_area_reactable(story=True)
 <br>
 
 :::{.column-page}
-We hope this data inspires winter adventures, helps assess the climate resilience of distant ski mountains, or simply gives you a moment to pause and [*smell* the roses]{style="color: #f07178;"}.
+We hope this data inspires your winter adventures, helps you assess the climate resilience of distant ski mountains, or simply gives you a moment to pause and [*smell* the roses]{style="color: #f07178;"}.
 
 Curious to learn more?
 Read our [manuscript](/manuscript) to explore the approach we took and dive deeper into our findings.
