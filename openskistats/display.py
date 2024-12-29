@@ -1,6 +1,4 @@
-import subprocess
 import unicodedata
-from pathlib import Path
 from typing import Any
 
 import htmltools
@@ -17,22 +15,7 @@ from openskistats.analyze import (
 )
 from openskistats.models import SkiAreaModel
 from openskistats.plot import NARROW_SPACE
-from openskistats.utils import get_data_directory, get_website_source_directory
-
-
-def export_display_notebook() -> None:
-    directory = get_data_directory()
-    subprocess.check_call(
-        args=[
-            "jupyter",
-            "nbconvert",
-            "--execute",
-            "--to=html",
-            f"--output-dir={directory}",
-            "--no-input",
-            Path(__file__).parent.joinpath("display.ipynb"),
-        ],
-    )
+from openskistats.utils import get_website_source_directory
 
 
 def embed_reactable_html() -> None:

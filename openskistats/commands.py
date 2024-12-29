@@ -9,7 +9,6 @@ from openskistats.analyze import (
     load_ski_areas_pl,
     ski_rose_the_world,
 )
-from openskistats.display import export_display_notebook
 from openskistats.models import SkiAreaModel
 from openskistats.openskimap_utils import (
     download_openskimap_geojsons,
@@ -50,16 +49,6 @@ class Commands:
         """Perform ski area aggregations and export visualizations."""
         ski_rose_the_world()
         create_ski_area_roses(overwrite=overwrite)
-
-    @staticmethod
-    @cli.command(name="display", deprecated=True)  # type: ignore [misc]
-    def display() -> None:
-        """
-        Display ski area metrics in a web browser.
-        DEPRECATED: table is rendered in quarto website.
-        This command should be removed in the future.
-        """
-        export_display_notebook()
 
     @staticmethod
     @cli.command(name="generate_test_data")  # type: ignore [misc]
