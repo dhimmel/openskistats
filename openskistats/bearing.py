@@ -244,8 +244,8 @@ def get_bearing_histogram(
 
 def get_bearing_summary_stats(
     bearings: list[float] | npt.NDArray[np.float64],
-    net_magnitudes: list[float] | npt.NDArray[np.float64] | None = None,
     cum_magnitudes: list[float] | npt.NDArray[np.float64] | None = None,
+    alignments: list[float] | npt.NDArray[np.float64] | None = None,
     hemisphere: Literal["north", "south"] | None = None,
 ) -> BearingStatsModel:
     """
@@ -255,14 +255,13 @@ def get_bearing_summary_stats(
 
     bearings:
         An array or list of bearing angles in degrees. These represent directions, headings, or orientations.
-    net_magnitudes:
-        An array or list of weights (importance factors, influence coefficients, scaling factors) applied to each bearing.
-        If None, all weights are assumed to be 1.
-        These represent external weighting factors, priorities, or significance levels assigned to each bearing.
     cum_magnitudes:
         An array or list of combined verticals of the each bearing.
         If None, all combined verticals are assumed to be 1.
         These represent the total verticals of all the original group of segments attributing to this bearing.
+    alignments:
+        An array or list of alignments between 0 and 1 useful for repeated bearing summarization.
+        Defaults to 100% alignment (1.0) for all bearings when not specified.
     hemisphere:
         The hemisphere in which the bearings are located used to calculate poleward affinity.
         If None, poleward affinity is not calculated.
@@ -280,14 +279,15 @@ def get_bearing_summary_stats(
     - https://chatgpt.com/share/6718521f-6768-8011-aed4-db345efb68b7
     - https://chatgpt.com/share/a2648aee-194b-4744-8a81-648d124d17f2
     """
-    if net_magnitudes is None:
-        net_magnitudes = np.ones_like(bearings, dtype=np.float64)
     if cum_magnitudes is None:
         cum_magnitudes = np.ones_like(bearings, dtype=np.float64)
+    if alignments is None:
+        alignments = np.ones_like(bearings, dtype=np.float64)
     bearings = np.array(bearings, dtype=np.float64)
-    net_magnitudes = np.array(net_magnitudes, dtype=np.float64)
     cum_magnitudes = np.array(cum_magnitudes, dtype=np.float64)
-    assert bearings.shape == net_magnitudes.shape == cum_magnitudes.shape
+    alignments = np.array(alignments, dtype=np.float64)
+    assert bearings.shape == cum_magnitudes.shape == alignments.shape
+    net_magnitudes = cum_magnitudes * alignments
 
     # Sum all vectors in their complex number form using weights and bearings
     total_complex = sum(net_magnitudes * np.exp(1j * np.deg2rad(bearings)))

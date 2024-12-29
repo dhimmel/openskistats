@@ -107,7 +107,6 @@ class RunLatitudeBearingHistogram:
                 *self._get_agg_metrics(),
                 _bearing_stats=pl.struct(
                     "bearing",
-                    pl.col("distance_vertical_drop").alias("bearing_magnitude_net"),
                     pl.col("distance_vertical_drop").alias("bearing_magnitude_cum"),
                     "hemisphere",
                 ).map_batches(_get_bearing_summary_stats_pl, returns_scalar=True),
