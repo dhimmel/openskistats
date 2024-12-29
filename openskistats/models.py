@@ -10,12 +10,19 @@ from patito import Field, Model
 
 
 class OpenSkiMapStatus(StrEnum):
-    """Operating status of a run, ski area, or lift according to OpenSkiMap"""
+    """
+    Operating status of a run, ski area, or lift according to OpenSkiMap.
+    Null values can arise for elements without an OSM source. "
+    See OpenSkiMap processing code at
+    <https://github.com/russellporter/openskidata-processor/blob/bc168105f4d90c19817189ebe47e7bee20a2dcbc/src/transforms/Status.ts#L3-L8>.
+    """
 
-    operating = "operating"
-    abandoned = "abandoned"
     proposed = "proposed"
+    planned = "planned"
+    construction = "construction"
+    operating = "operating"
     disused = "disused"
+    abandoned = "abandoned"
 
 
 class SkiRunDifficulty(StrEnum):

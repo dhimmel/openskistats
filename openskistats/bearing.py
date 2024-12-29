@@ -47,6 +47,7 @@ def add_spatial_metric_columns(
                 pl.col("_coord_struct").hash(seed=0)
             ),
             distance_vertical_drop=pl.col("distance_vertical").clip(lower_bound=0),
+            # distance_vertical_gain=pl.col("distance_vertical").mul(-1).clip(lower_bound=0),
             distance_horizontal=pl.col("_coord_struct").map_batches(
                 lambda x: great_circle(
                     lat1=x.struct.field("latitude_lag"),

@@ -24,6 +24,7 @@ from openskistats.models import (
 from openskistats.openskimap_utils import (
     load_downhill_runs_from_download_pl,
     load_downhill_ski_areas_from_download_pl,
+    load_lifts_from_download_pl,
     set_openskimap_download_info_in_variables,
 )
 from openskistats.plot import (
@@ -49,6 +50,10 @@ def get_runs_parquet_path(testing: bool = False) -> Path:
     return get_data_directory(testing=testing).joinpath("runs.parquet")
 
 
+def get_lifts_parquet_path(testing: bool = False) -> Path:
+    return get_data_directory(testing=testing).joinpath("lifts.parquet")
+
+
 _aggregate_run_coordinates_exprs = {
     "coordinate_count": pl.len(),
     "segment_count": pl.count("segment_hash"),
@@ -60,6 +65,40 @@ _aggregate_run_coordinates_exprs = {
     "max_elevation": pl.col("elevation").max(),
     "vertical_drop": pl.max("elevation") - pl.min("elevation"),
 }
+
+
+def process_and_export_lifts() -> None:
+    """
+    Process and export lifts from OpenSkiMap.
+    """
+    lifts = load_lifts_from_download_pl()
+    coords_df = (
+        lifts.lazy()
+        .select("lift_id", "lift_coordinates")
+        .explode("lift_coordinates")
+        .unnest("lift_coordinates")
+        .filter(pl.col("index").is_not_null())
+        .pipe(add_spatial_metric_columns, partition_by="lift_id")
+        .select("lift_id", *RunCoordinateSegmentModel.model_fields)
+        .group_by("lift_id")
+        .agg(
+            **_aggregate_run_coordinates_exprs,
+            lift_coordinates=pl.struct(pl.exclude("lift_id")),
+        )
+        .collect()
+    )
+    lifts = (
+        lifts.drop("lift_coordinates")
+        .join(coords_df, on="lift_id", how="left")
+        .with_columns(
+            pl.col("coordinate_count").fill_null(0),
+            pl.col("segment_count").fill_null(0),
+        )
+        .sort("lift_id")
+    )
+    lifts_path = get_lifts_parquet_path()
+    logging.info(f"Writing {len(lifts):,} lifts to {lifts_path}")
+    lifts.write_parquet(lifts_path)
 
 
 def process_and_export_runs() -> None:
@@ -117,6 +156,7 @@ def analyze_all_ski_areas_polars(skip_runs: bool = False) -> None:
     Write data as parquet.
     """
     set_openskimap_download_info_in_variables()
+    process_and_export_lifts()
     if not skip_runs:
         process_and_export_runs()
     logging.info("Creating ski area metrics dataframe with bearing distributions.")
@@ -178,6 +218,12 @@ def load_runs_pl() -> pl.LazyFrame:
     path = get_runs_parquet_path()
     logging.info(f"Loading runs metrics from {path}")
     return pl.scan_parquet(source=path)
+
+
+def load_lifts_pl() -> pl.DataFrame:
+    path = get_lifts_parquet_path()
+    logging.info(f"Loading lifts metrics from {path}")
+    return pl.read_parquet(source=path)
 
 
 def load_ski_areas_pl(ski_area_filters: list[pl.Expr] | None = None) -> pl.DataFrame:

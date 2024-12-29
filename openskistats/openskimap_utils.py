@@ -228,17 +228,32 @@ def load_lifts_from_download_pl() -> pl.DataFrame:
         lift_properties = lift["properties"]
         row["lift_id"] = lift_properties["id"]
         row["lift_name"] = lift_properties["name"]
-        # row["lift_uses"] = lift_properties["uses"]
         row["lift_type"] = lift_properties["liftType"]
         row["lift_status"] = lift_properties["status"]
+        # see https://wiki.openstreetmap.org/wiki/Pistes#Ski_lifts
+        row["lift_occupancy"] = lift_properties["occupancy"]
+        row["lift_capacity"] = lift_properties["capacity"]
+        row["lift_duration"] = lift_properties["duration"]
         row["ski_area_ids"] = sorted(
             ski_area["properties"]["id"] for ski_area in lift_properties["skiAreas"]
         )
+        row["lift_websites"] = lift_properties["websites"]
         row["lift_sources"] = sorted(
             openskimap_source_to_url(**source) for source in lift_properties["sources"]
         )
         row["lift_geometry_type"] = lift["geometry"]["type"]
-        # row["lift_coordinates"] = lift["geometry"]["coordinates"]
+        row["lift_coordinates"] = (
+            [
+                x.model_dump()
+                for x in _structure_coordinates(
+                    _clean_coordinates(
+                        lift["geometry"]["coordinates"], ensure_downhill=False
+                    )
+                )
+            ]
+            if row["lift_geometry_type"] == "LineString"
+            else None
+        )
         rows.append(row)
     return pl.DataFrame(rows, strict=False)
 
