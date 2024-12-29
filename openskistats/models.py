@@ -20,6 +20,17 @@ class SkiRunDifficulty(StrEnum):
     other = "other"
 
 
+class SkiRunUsage(StrEnum):
+    connection = "connection"
+    downhill = "downhill"
+    hike = "hike"
+    nordic = "nordic"
+    playground = "playground"
+    skitour = "skitour"
+    sled = "sled"
+    snow_park = "snow_park"
+
+
 class RunCoordinateModel(Model):  # type: ignore [misc]
     index: Annotated[
         int,
@@ -36,6 +47,116 @@ class RunCoordinateModel(Model):  # type: ignore [misc]
     elevation: Annotated[
         float,
         Field(description="Elevation of the coordinate in meters."),
+    ]
+
+
+class RunSegmentModel(Model):  # type: ignore [misc]
+    segment_hash: Annotated[
+        int | None,
+        Field(
+            description="Hash of the run segment, "
+            "where the segment refers to the segment from the preceding coordinate to the current coordinate. "
+            "Null for the first coordinate of a run as each run has one fewer segments than coordinates. "
+            "The hash uniquely identifies a segment by its coordinates as (latitude, longitude) pairs."
+        ),
+    ]
+    distance_vertical: Annotated[
+        float | None,
+        Field(
+            description="Vertical distance from the previous coordinate to the current coordinate in meters."
+        ),
+    ]
+    distance_vertical_drop: Annotated[
+        float | None,
+        Field(
+            ge=0,
+            description="Vertical drop/descent between from the previous coordinate to the current coordinate in meters. "
+            "Segments that ascend are set to zero.",
+        ),
+    ]
+    distance_horizontal: Annotated[
+        float | None,
+        Field(ge=0, description="Horizontal distance of the segment in meters."),
+    ]
+    distance_3d: Annotated[
+        float | None,
+        Field(ge=0, description="3D distance of the segment in meters."),
+    ]
+    bearing: Annotated[
+        float | None,
+        Field(
+            ge=0,
+            lt=360,
+            description="Bearing of the segment from the previous coordinate to the current coordinate in degrees.",
+        ),
+    ]
+    gradient: Annotated[
+        float | None,
+        Field(
+            description="Gradient of the segment from the previous coordinate to the current coordinate."
+        ),
+    ]
+    slope: Annotated[
+        float | None,
+        Field(
+            description="Slope of the segment from the previous coordinate to the current coordinate in degrees."
+        ),
+    ]
+
+
+class RunCoordinateSegmentModel(RunSegmentModel, RunCoordinateModel):
+    pass
+
+
+class RunModel(Model):  # type: ignore [misc]
+    run_id: Annotated[
+        str,
+        Field(
+            unique=True,
+            description="Unique OpenSkiMap identifier for a run.",
+            examples=["d0d6b1c60f677c255eb19dad12c6dd33a141831c"],
+        ),
+    ]
+    run_name: Annotated[
+        str | None,
+        Field(
+            description="Name of the run.",
+            examples=["Howard Chivers"],
+        ),
+    ]
+    run_uses: Annotated[
+        list[SkiRunUsage] | None,
+        Field(description="OpenSkiMap usage types for the run."),
+    ]
+    run_status: Annotated[
+        Literal["operating", "abandoned", "proposed", "disused"] | None,
+        Field(description="Operating status of the run according to OpenSkiMap."),
+    ]
+    run_difficulty: Annotated[
+        SkiRunDifficulty | None,
+        Field(description="OpenSkiMap difficulty rating for the run."),
+    ]
+    run_convention: Annotated[
+        Literal["north_america", "europe", "japan"] | None,
+        Field(description="OpenSkiMap convention for the run."),
+    ]
+    ski_area_ids: Annotated[
+        list[str] | None,
+        Field(description="Ski areas containing the run."),
+    ]
+    run_sources: Annotated[
+        list[str] | None,
+        Field(
+            description="List of sources for the run from OpenSkiMap.",
+        ),
+    ]
+    run_coordinates_clean: Annotated[
+        list[RunCoordinateSegmentModel] | None,
+        Field(
+            description="Nested coordinates and segment metrics for the run. "
+            "Coordinates with extreme negative values are removed as per <https://github.com/russellporter/openskimap.org/issues/141>. "
+            "Ascending runs are reversed to ensure all runs are descending.",
+        ),
     ]
 
 

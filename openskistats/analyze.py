@@ -14,7 +14,12 @@ from openskistats.bearing import (
     get_bearing_histograms,
     get_bearing_summary_stats,
 )
-from openskistats.models import BearingStatsModel, SkiAreaModel
+from openskistats.models import (
+    BearingStatsModel,
+    RunCoordinateSegmentModel,
+    RunModel,
+    SkiAreaModel,
+)
 from openskistats.openskimap_utils import (
     load_downhill_runs_from_download_pl,
     load_downhill_ski_areas_from_download_pl,
@@ -65,7 +70,9 @@ def process_and_export_runs() -> None:
         runs_lazy.select("run_id", "run_coordinates_clean")
         .explode("run_coordinates_clean")
         .unnest("run_coordinates_clean")
+        .filter(pl.col("index").is_not_null())
         .pipe(add_spatial_metric_columns, partition_by="run_id")
+        .select("run_id", *RunCoordinateSegmentModel.model_fields)
         .group_by("run_id")
         .agg(
             **_aggregate_run_coordinates_exprs,
@@ -75,8 +82,16 @@ def process_and_export_runs() -> None:
     runs_df = (
         runs_lazy.drop("run_coordinates_clean")
         .join(coords_df, on="run_id", how="left")
+        .with_columns(
+            pl.col("coordinate_count").fill_null(0),
+            pl.col("segment_count").fill_null(0),
+        )
         .collect()
     )
+    try:
+        RunModel.validate(runs_df, allow_superfluous_columns=True)
+    except DataFrameValidationError as exc:
+        logging.error(f"RunModel.validate failed with {exc}")
     set_variables(
         openskimap__runs__segments__counts__04_downhill_clean=runs_df[
             "segment_count"

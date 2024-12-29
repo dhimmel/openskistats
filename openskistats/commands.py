@@ -6,10 +6,11 @@ import typer
 from openskistats.analyze import (
     analyze_all_ski_areas_polars,
     create_ski_area_roses,
+    load_runs_pl,
     load_ski_areas_pl,
     ski_rose_the_world,
 )
-from openskistats.models import SkiAreaModel
+from openskistats.models import RunModel, SkiAreaModel
 from openskistats.openskimap_utils import (
     download_openskimap_geojsons,
     generate_openskimap_test_data,
@@ -37,6 +38,10 @@ class Commands:
     @cli.command(name="validate")  # type: ignore [misc]
     def validate() -> None:
         """Validate ski area metadata and metrics."""
+        runs_df = load_runs_pl().collect()
+        RunModel.validate(runs_df, allow_superfluous_columns=True)
+        logging.info("RunModel.validate success.")
+
         ski_areas = load_ski_areas_pl()
         SkiAreaModel.validate(ski_areas, allow_superfluous_columns=True)
         logging.info("SkiAreaModel.validate success.")
