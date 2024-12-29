@@ -15,7 +15,7 @@ from typing import Any, Literal
 import polars as pl
 import requests
 
-from openskistats.models import OpenSkiMapStatus, RunCoordinateModel
+from openskistats.models import OpenSkiMapStatus, RunCoordinateModel, SkiRunUsage
 from openskistats.utils import get_data_directory, get_repo_directory
 from openskistats.variables import set_variables
 
@@ -204,7 +204,7 @@ def load_downhill_runs_from_download_pl() -> pl.DataFrame:
             len(row["run_coordinates_clean"]) for row in rows
         ),
     )
-    rows = [row for row in rows if "downhill" in row["run_uses"]]
+    rows = [row for row in rows if SkiRunUsage.downhill in row["run_uses"]]
     set_variables(
         openskimap__runs__counts__03_downhill=len(rows),
         openskimap__runs__coordinates__counts__03_downhill_raw=sum(
@@ -278,7 +278,7 @@ def load_downhill_ski_areas_from_download_pl() -> pl.DataFrame:
     ski_area_df = (
         load_ski_areas_from_download_pl()
         .filter(pl.col("type") == "skiArea")
-        .filter(pl.col("activities").list.contains("downhill"))
+        .filter(pl.col("activities").list.contains(SkiRunUsage.downhill))
         .select(
             "ski_area_id",
             "ski_area_name",

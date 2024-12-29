@@ -27,7 +27,7 @@ ski_area_filters = [
     # NamedPolarFilter(
     #     "downhill",
     #     display_name="Downhill",
-    #     filter=pl.col("run_uses").list.contains("downhill"),
+    #     filter=pl.col("run_uses").list.contains(SkiRunUsage.downhill),
     # ),
     NamedPolarFilter(
         name="operating",

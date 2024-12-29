@@ -17,6 +17,8 @@ openskimap:
       counts:
         01_raw: 346
         02_clean: 346
+        03_downhill_raw: 344
+        04_downhill_clean: 344
     counts:
       01_raw: 43
       01_raw_by_geometry:
@@ -24,6 +26,11 @@ openskimap:
         Polygon: 4
       02_linestring: 39
       03_downhill: 38
+    distance:
+      3d:
+        04_downhill_clean: 9845.301161414029
+      vertical:
+        04_downhill_clean: 1793.500000000001
     download:
       checksum_sha256: 4549037d1c8c60f91e1963363940ba3e6ca51752ddde7f181cf906e57a027f04
       compressed_size_mb: 92.48648071289062
@@ -32,6 +39,9 @@ openskimap:
       last_modified: '2024-12-27T02:26:16+00:00'
       relative_path: data/openskimap/runs.geojson.xz
       url: https://tiles.openskimap.org/geojson/runs.geojson
+    segments:
+      counts:
+        04_downhill_clean: 306
   ski_areas:
     counts:
       01_raw: 2
