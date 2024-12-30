@@ -120,9 +120,9 @@ ski roses characterize the directions of all trail segments at a ski area.
 ![](../images/rose_dartmouth.svg)
 :::
 
-Each *spoke* of the circular chart represents a compass direction,
+Each *petal* of the circular chart represents a compass direction,
 with its radius proportional to the [**combined vertical**]{style="color: #A56ACF;"} of trail segments in that direction.<br><br>
-Highlighted is the [**Northwest by West**]{style="color: #f07178;"} spoke...
+Highlighted is the [**Northwest by West**]{style="color: #f07178;"} petal...
 @cr-rose-nwbw
 
 
@@ -138,10 +138,10 @@ Highlighted is the [**Northwest by West**]{style="color: #f07178;"} spoke...
 :::
 
 :::{focus-on="cr-rose-nne"}
-And here's the [**North North East**]{style="color: #f07178;"} spoke.
+And here's the [**North North East**]{style="color: #f07178;"} petal.
 
 <br>
-While these NNE segments appear similar in horizontal distance to the NWbW segments above, their greater steepness results in greater vertical drop, and hence the largest spoke of the rose.
+While these NNE segments appear similar in horizontal distance to the NWbW segments above, their greater steepness results in greater vertical drop, and hence the largest petal of the rose.
 
 <br>
 ![](../images/segments_nne.svg)
@@ -160,7 +160,7 @@ We can do this for other ski areas too!
 
 ::::{.cr-section}
 
-Here are 48 more roses in the US (randomly selected from all short-named ski areas).<br><br>
+Here are 48 more ski roses randomly selected from the US.<br><br>
 Have you been to any of these?
 Did you remember facing north while skiing down?
 [@cr-all-roses]
@@ -180,7 +180,7 @@ And, as an aside, can you guess which state has more combined vertical: Californ
 
 Our analysis of the orientation of *all* ski areas across the globe revealed a strong [poleward]{style="color: #36B37E;"} and moderate [eastward]{style="color: #36B37E;"} preference.<br><br>
 In other words, the majority of runs in the [northern]{style="color: #36B37E;"} hemisphere are oriented toward the [north]{style="color: #36B37E;"} and [east]{style="color: #36B37E;"},
-while those in the [southern]{style="color: #36B37E;"} hemisphere are oriented toward the [south]{style="color: #36B37E;"}.
+while those in the [southern]{style="color: #36B37E;"} hemisphere are oriented toward the [south]{style="color: #36B37E;"} and [east]{style="color: #36B37E;"}.
 [@cr-hemisphere]{scale-by="0.8"}
 
 This trend reflects which aspects maximize [snow retention]{style="color: #36B37E;"} by minimizing [sun exposure]{style="color: #FFC857;"} and preferring morning sun --- when temperatures are lower --- to afternoon sun.

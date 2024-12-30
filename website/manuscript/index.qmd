@@ -243,13 +243,13 @@ Such skiers meld observations on their own experiences with the data-driven insi
 ::: {#fig-dartmouth-rose-nne}
 ![](../images/rose_nne.svg)
 
-Dartmouth Skiway rose with the NNE pedal highlighted.
+Dartmouth Skiway rose with the NNE petal highlighted.
 :::
 
 ::: {#fig-dartmouth-coordinates}
 ![](../images/segments_highlight_nne.svg)
 
-Dartmouth Skiway rose with the NNE pedal highlighted.
+Dartmouth Skiway rose with the NNE petal highlighted.
 :::
 
 
