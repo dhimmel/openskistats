@@ -1,5 +1,6 @@
+from dataclasses import dataclass
 from datetime import date, timedelta
-from functools import cache, lru_cache
+from functools import cached_property, lru_cache
 from typing import Literal
 
 import pandas as pd
@@ -19,6 +20,7 @@ def compute_solar_irradiance(
     slope: float,
     bearing: float,
     time_freq: str = "1h",
+    extent: Literal["solstice", "season"] = "solstice",
     collapse: bool = True,
 ) -> float | pl.Series | None:
     """
@@ -26,6 +28,12 @@ def compute_solar_irradiance(
     """
     if slope is None:
         return None
+
+    ski_season = SkiSeasonDatetimes(
+        freq=time_freq,
+        hemisphere=get_hemisphere(latitude),
+        extent=extent,
+    )
     # rounding as a hack to improve efficiency via caching
     latitude = round(latitude, 0)
     longitude = round(longitude, 0)
@@ -34,7 +42,7 @@ def compute_solar_irradiance(
         latitude=latitude,
         longitude=longitude,
         elevation=elevation,
-        time_freq=time_freq,
+        ski_season=ski_season,
     )
     # Calculate plane-of-array irradiance for each hour
     irrad_df = pvlib.irradiance.get_total_irradiance(
@@ -47,74 +55,94 @@ def compute_solar_irradiance(
         dhi=clearsky_df["dhi"],  # direct horizontal irradiance
         surface_type="snow",
     )
-    # FIXME: scale poa_global to daily values in case season length is greater than 1 day
-    time_freq_hours = pd.to_timedelta(time_freq).total_seconds() / 3_600
     if collapse:
-        return float(irrad_df["poa_global"].sum() * time_freq_hours)
+        return (
+            float(irrad_df["poa_global"].sum())
+            * ski_season.times_per_hour
+            / ski_season.season_duration_days
+        )
     else:
         return pl.DataFrame(
             {
                 "datetime": irrad_df.index,
-                "poa_global": irrad_df["poa_global"] * time_freq_hours,
+                "poa_global": irrad_df["poa_global"] * ski_season.times_per_hour,
             }
-        ).to_struct()
+        ).to_struct(name="solar_irradiance")
 
 
-def get_typical_ski_season_dates(
-    hemisphere: Literal["north", "south"], extent: Literal["solstice", "season"]
-) -> tuple[date, date]:
-    """
-    Return open and closing dates for a typical ski season.
-    """
-    match hemisphere, extent:
-        case "north", "solstice":
-            return SOLSTICE_NORTH, SOLSTICE_NORTH
-        case "south", "solstice":
-            return SOLSTICE_SOUTH, SOLSTICE_SOUTH
-        case "north", "season":
-            return SOLSTICE_NORTH - timedelta(days=20), SOLSTICE_NORTH + timedelta(
-                days=100
-            )
-        case "south", "season":
-            return SOLSTICE_SOUTH - timedelta(days=20), SOLSTICE_SOUTH + timedelta(
-                days=100
-            )
-        case _:
-            raise ValueError("Invalid hemisphere or extent")
+@dataclass(frozen=True)
+class SkiSeasonDatetimes:
+    freq: str
+    hemisphere: Literal["north", "south"]
+    extent: Literal["solstice", "season"]
 
+    @staticmethod
+    def get_typical_ski_season_dates(
+        hemisphere: Literal["north", "south"], extent: Literal["solstice", "season"]
+    ) -> tuple[date, date]:
+        """
+        Return open and closing dates for a typical ski season.
+        """
+        match hemisphere, extent:
+            case "north", "solstice":
+                return SOLSTICE_NORTH, SOLSTICE_NORTH
+            case "south", "solstice":
+                return SOLSTICE_SOUTH, SOLSTICE_SOUTH
+            case "north", "season":
+                return SOLSTICE_NORTH - timedelta(days=20), SOLSTICE_NORTH + timedelta(
+                    days=100
+                )
+            case "south", "season":
+                return SOLSTICE_SOUTH - timedelta(days=20), SOLSTICE_SOUTH + timedelta(
+                    days=100
+                )
+            case _:
+                raise ValueError("Invalid hemisphere or extent")
 
-@cache
-def interpolate_ski_season_datetimes(
-    freq: str,
-    hemisphere: Literal["north", "south"],
-    extent: Literal["solstice", "season"],
-) -> pd.DatetimeIndex:
-    date_open, date_close = get_typical_ski_season_dates(hemisphere, extent)
-    return pd.date_range(
-        start=date_open,
-        # add one day to include the closing date
-        end=date_close + timedelta(days=1),
-        inclusive="left",
-        freq=freq,
-        tz="UTC",
-        unit="s",
-    )
+    @cached_property
+    def ski_season_dates(self) -> tuple[date, date]:
+        return self.get_typical_ski_season_dates(
+            hemisphere=self.hemisphere, extent=self.extent
+        )
+
+    @cached_property
+    def freq_time_delta(self) -> pd.Timedelta:
+        return pd.to_timedelta(self.freq)
+
+    @cached_property
+    def times_per_hour(self) -> float:
+        return float(self.freq_time_delta.total_seconds()) / 3_600
+
+    @cached_property
+    def season_duration_days(self) -> int:
+        date_open, date_close = self.ski_season_dates
+        return (date_close - date_open).days + 1
+
+    @cached_property
+    def interpolated_range(self) -> pd.DatetimeIndex:
+        """Interpolate ski season datetimes."""
+        date_open, date_close = self.ski_season_dates
+        return pd.date_range(
+            start=date_open,
+            # add one day to include the closing date
+            end=date_close + timedelta(days=1),
+            inclusive="left",
+            freq=self.freq_time_delta,
+            tz="UTC",
+            unit="s",
+        )
 
 
 @lru_cache(maxsize=10_000)
 def get_clearsky(
-    latitude: float, longitude: float, elevation: float, time_freq: str
+    latitude: float, longitude: float, elevation: float, ski_season: SkiSeasonDatetimes
 ) -> pd.DataFrame:
     location = pvlib.location.Location(
         latitude=latitude,
         longitude=longitude,
         altitude=elevation,
     )
-    times = interpolate_ski_season_datetimes(
-        freq=time_freq,
-        hemisphere=get_hemisphere(latitude),
-        extent="solstice",
-    )
+    times = ski_season.interpolated_range
     solar_positions = location.get_solarposition(times)
     clearsky = location.get_clearsky(times, model="ineichen")
     return pd.concat([solar_positions, clearsky], axis=1)[
