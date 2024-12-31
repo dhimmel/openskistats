@@ -180,7 +180,6 @@ def analyze_all_ski_areas_polars(skip_runs: bool = False) -> None:
             hemisphere=pl.first("hemisphere"),
             _bearing_stats=pl.struct(
                 "bearing",
-                pl.col("distance_vertical_drop").alias("bearing_magnitude_net"),
                 pl.col("distance_vertical_drop").alias("bearing_magnitude_cum"),
                 "hemisphere",
             ).map_batches(_get_bearing_summary_stats_pl, returns_scalar=True),
@@ -263,8 +262,8 @@ def _get_bearing_summary_stats_pl(struct_series: pl.Series) -> BearingStatsModel
         hemisphere = None
     return get_bearing_summary_stats(
         bearings=df.get_column("bearing").to_numpy(),
-        net_magnitudes=df.get_column("bearing_magnitude_net").to_numpy(),
         cum_magnitudes=df.get_column("bearing_magnitude_cum").to_numpy(),
+        alignments=df.get_column("bearing_alignment", default=None),
         hemisphere=hemisphere,
     )
 
@@ -310,8 +309,8 @@ def aggregate_ski_areas_pl(
             longitude=pl.mean("longitude"),
             _bearing_stats=pl.struct(
                 pl.col("bearing_mean").alias("bearing"),
-                "bearing_magnitude_net",
                 "bearing_magnitude_cum",
+                "bearing_alignment",
                 "hemisphere",
             ).map_batches(_get_bearing_summary_stats_pl, returns_scalar=True),
         )
