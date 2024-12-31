@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from typing import Literal
 
 import numpy as np
 import numpy.typing as npt
@@ -36,6 +37,16 @@ def get_images_data_directory() -> Path:
 
 def get_website_source_directory() -> Path:
     return get_repo_directory().joinpath("website")
+
+
+def get_hemisphere(latitude: float) -> Literal["north", "south"]:
+    if latitude > 0:
+        return "north"
+    if latitude < 0:
+        return "south"
+    raise ValueError(
+        f"{latitude=} must be non-zero as equator is not supported value by downstream applications."
+    )
 
 
 def pl_hemisphere(latitude_col: str = "latitude") -> pl.Expr:

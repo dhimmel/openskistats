@@ -1,10 +1,15 @@
+from datetime import date, timedelta
 from functools import cache, lru_cache
+from typing import Literal
 
 import pandas as pd
 import polars as pl
 import pvlib
 
-from openskistats.utils import get_data_directory
+from openskistats.utils import get_data_directory, get_hemisphere
+
+SOLSTICE_NORTH = date.fromisoformat("2024-12-21")
+SOLSTICE_SOUTH = date.fromisoformat("2024-06-20")
 
 
 def compute_solar_irradiance(
@@ -42,6 +47,7 @@ def compute_solar_irradiance(
         dhi=clearsky_df["dhi"],  # direct horizontal irradiance
         surface_type="snow",
     )
+    # FIXME: scale poa_global to daily values in case season length is greater than 1 day
     time_freq_hours = pd.to_timedelta(time_freq).total_seconds() / 3_600
     if collapse:
         return float(irrad_df["poa_global"].sum() * time_freq_hours)
@@ -54,15 +60,44 @@ def compute_solar_irradiance(
         ).to_struct()
 
 
+def get_typical_ski_season_dates(
+    hemisphere: Literal["north", "south"], extent: Literal["solstice", "season"]
+) -> tuple[date, date]:
+    """
+    Return open and closing dates for a typical ski season.
+    """
+    match hemisphere, extent:
+        case "north", "solstice":
+            return SOLSTICE_NORTH, SOLSTICE_NORTH
+        case "south", "solstice":
+            return SOLSTICE_SOUTH, SOLSTICE_SOUTH
+        case "north", "season":
+            return SOLSTICE_NORTH - timedelta(days=20), SOLSTICE_NORTH + timedelta(
+                days=100
+            )
+        case "south", "season":
+            return SOLSTICE_SOUTH - timedelta(days=20), SOLSTICE_SOUTH + timedelta(
+                days=100
+            )
+        case _:
+            raise ValueError("Invalid hemisphere or extent")
+
+
 @cache
-def get_times(freq: str) -> pd.DatetimeIndex:
-    # FIXME: dates based on hemisphere
+def interpolate_ski_season_datetimes(
+    freq: str,
+    hemisphere: Literal["north", "south"],
+    extent: Literal["solstice", "season"],
+) -> pd.DatetimeIndex:
+    date_open, date_close = get_typical_ski_season_dates(hemisphere, extent)
     return pd.date_range(
-        start="2024-12-21 00:00:00",
-        end="2024-12-22 00:00:00",
+        start=date_open,
+        # add one day to include the closing date
+        end=date_close + timedelta(days=1),
         inclusive="left",
         freq=freq,
         tz="UTC",
+        unit="s",
     )
 
 
@@ -75,7 +110,11 @@ def get_clearsky(
         longitude=longitude,
         altitude=elevation,
     )
-    times = get_times(freq=time_freq)
+    times = interpolate_ski_season_datetimes(
+        freq=time_freq,
+        hemisphere=get_hemisphere(latitude),
+        extent="solstice",
+    )
     solar_positions = location.get_solarposition(times)
     clearsky = location.get_clearsky(times, model="ineichen")
     return pd.concat([solar_positions, clearsky], axis=1)[
