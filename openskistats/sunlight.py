@@ -190,13 +190,19 @@ def write_dartmouth_skiway_solar_irradiance() -> pl.DataFrame:
     return skiway_df
 
 
-def compute_solar_irradiance_all_segments(cache_version: int = 1) -> pl.DataFrame:
+SOLAR_IRRADIANCE_CACHE_VERSION = 1
+
+
+def compute_solar_irradiance_all_segments(
+    cache_version: int = SOLAR_IRRADIANCE_CACHE_VERSION, clear_cache: bool = False
+) -> pl.DataFrame:
     from openskistats.analyze import (
         get_display_ski_area_filters,
         load_runs_pl,
         load_ski_areas_pl,
     )
 
+    segments_cached = load_solar_irradiance_pl(skip_cache=clear_cache)
     path = get_data_directory().joinpath("runs_segments_solar_irradiance.parquet")
     ski_areas = (
         load_ski_areas_pl(ski_area_filters=get_display_ski_area_filters())
@@ -221,9 +227,10 @@ def compute_solar_irradiance_all_segments(cache_version: int = 1) -> pl.DataFram
             "elevation",
             "slope",
             "bearing",
-            pl.lit(cache_version).alias("cache_version"),
+            pl.lit(cache_version, dtype=pl.Int32).alias("cache_version"),
         )
         .unique(subset=["segment_hash"])
+        .join(segments_cached, on=["segment_hash", "cache_version"], how="anti")
         .with_columns(
             solar_irradiance_solstice=pl.struct(
                 "latitude", "longitude", "elevation", "slope", "bearing"
@@ -238,5 +245,33 @@ def compute_solar_irradiance_all_segments(cache_version: int = 1) -> pl.DataFram
         )
         .collect()
     )
+    segments = segments.vstack(segments_cached.collect())
     segments.write_parquet(path)
     return segments
+
+
+def load_solar_irradiance_pl(
+    skip_cache: bool = False, apply_filter_select: bool = False
+) -> pl.LazyFrame:
+    path = get_data_directory().joinpath("runs_segments_solar_irradiance.parquet")
+    if skip_cache or not path.exists():
+        segments_cached = pl.DataFrame(
+            data=[],
+            schema={
+                "segment_hash": pl.UInt64,
+                "latitude": pl.Float64,
+                "longitude": pl.Float64,
+                "elevation": pl.Float64,
+                "slope": pl.Float64,
+                "bearing": pl.Float64,
+                "cache_version": pl.Int32,
+                "solar_irradiance_solstice": pl.Float64,
+            },
+        ).lazy()
+    else:
+        segments_cached = pl.scan_parquet(path)
+    if apply_filter_select:
+        segments_cached = segments_cached.filter(
+            pl.col("cache_version") == SOLAR_IRRADIANCE_CACHE_VERSION
+        ).select("segment_hash", "solar_irradiance_solstice")
+    return segments_cached
