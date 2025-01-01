@@ -101,17 +101,29 @@ def process_and_export_lifts() -> None:
     lifts.write_parquet(lifts_path)
 
 
+def load_solar_irradiance_pl() -> pl.LazyFrame:
+    path = get_data_directory().joinpath("runs_segments_solar_irradiance.parquet")
+    if not path.exists():
+        logging.info(f"Creating solar irradiance parquet at {path}")
+        # create empty df
+        return pl.DataFrame(
+            {
+                "segment_hash": [],
+                "solar_irradiance_solstice": [],
+            },
+            schema={"segment_hash": pl.Int64, "solar_irradiance_solstice": pl.Float64},
+        ).lazy()
+    return (
+        pl.scan_parquet(path)
+        .filter(pl.col("cache_version") == 1)
+        .select("segment_hash", "solar_irradiance_solstice")
+    )
+
+
 def process_and_export_runs() -> None:
     """
     Process and export runs from OpenSkiMap.
     """
-    solar_irradiance = (
-        pl.scan_parquet(
-            get_data_directory().joinpath("runs_segments_solar_irradiance.parquet")
-        )
-        .filter(pl.col("cache_version") == 1)
-        .select("segment_hash", "solar_irradiance_solstice")
-    )
     runs_lazy = load_downhill_runs_from_download_pl().lazy()
     coords_df = (
         runs_lazy.select("run_id", "run_coordinates_clean")
@@ -119,7 +131,7 @@ def process_and_export_runs() -> None:
         .unnest("run_coordinates_clean")
         .filter(pl.col("index").is_not_null())
         .pipe(add_spatial_metric_columns, partition_by="run_id")
-        .join(solar_irradiance, on="segment_hash", how="left")
+        .join(load_solar_irradiance_pl(), on="segment_hash", how="left")
         .select(
             "run_id",
             *RunCoordinateSegmentModel.model_fields,
