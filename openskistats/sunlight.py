@@ -35,9 +35,9 @@ def compute_solar_irradiance(
         extent=extent,
     )
     # rounding as a hack to improve efficiency via caching
-    latitude = round(latitude, 0)
-    longitude = round(longitude, 0)
-    elevation = 100 * round(elevation / 100, 0)
+    latitude = round(latitude, 1)
+    longitude = round(longitude, 1)
+    elevation = round(elevation, -1)
     clearsky_df = get_clearsky(
         latitude=latitude,
         longitude=longitude,
@@ -133,7 +133,7 @@ class SkiSeasonDatetimes:
         )
 
 
-@lru_cache(maxsize=10_000)
+@lru_cache(maxsize=20_000)
 def get_clearsky(
     latitude: float, longitude: float, elevation: float, ski_season: SkiSeasonDatetimes
 ) -> pd.DataFrame:
@@ -206,8 +206,8 @@ def compute_solar_irradiance_all_segments(
     path = get_data_directory().joinpath("runs_segments_solar_irradiance.parquet")
     ski_areas = (
         load_ski_areas_pl(ski_area_filters=get_display_ski_area_filters())
-        .filter(pl.col("country") == "United States")
-        .filter(pl.col("region") == "New Hampshire")
+        # .filter(pl.col("country") == "United States")
+        # .filter(pl.col("region") == "New Hampshire")
         .select("ski_area_id")
         .lazy()
     )
@@ -243,9 +243,9 @@ def compute_solar_irradiance_all_segments(
                 strategy="thread_local",
             ),
         )
-        .collect()
     )
-    segments = segments.vstack(segments_cached.collect())
+    segments = pl.concat([segments_cached, segments], how="vertical")
+    segments = segments.collect()
     segments.write_parquet(path)
     return segments
 
