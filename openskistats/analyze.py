@@ -105,6 +105,13 @@ def process_and_export_runs() -> None:
     """
     Process and export runs from OpenSkiMap.
     """
+    solar_irradiance = (
+        pl.scan_parquet(
+            get_data_directory().joinpath("runs_segments_solar_irradiance.parquet")
+        )
+        .filter(pl.col("cache_version") == 1)
+        .select("segment_hash", "solar_irradiance_solstice")
+    )
     runs_lazy = load_downhill_runs_from_download_pl().lazy()
     coords_df = (
         runs_lazy.select("run_id", "run_coordinates_clean")
@@ -112,10 +119,23 @@ def process_and_export_runs() -> None:
         .unnest("run_coordinates_clean")
         .filter(pl.col("index").is_not_null())
         .pipe(add_spatial_metric_columns, partition_by="run_id")
-        .select("run_id", *RunCoordinateSegmentModel.model_fields)
+        .join(solar_irradiance, on="segment_hash", how="left")
+        .select(
+            "run_id",
+            *RunCoordinateSegmentModel.model_fields,
+            "solar_irradiance_solstice",
+        )
         .group_by("run_id")
         .agg(
             **_aggregate_run_coordinates_exprs,
+            # weighted mean https://github.com/pola-rs/polars/issues/7499#issuecomment-1465185075
+            # does this handle missing values correctly?
+            solar_irradiance_solstice=pl.col("distance_vertical_drop").dot(
+                "solar_irradiance_solstice"
+            )
+            / pl.when(pl.col("solar_irradiance_solstice").is_not_null())
+            .then("distance_vertical_drop")
+            .sum(),
             run_coordinates_clean=pl.struct(pl.exclude("run_id")),
         )
     )
@@ -177,6 +197,13 @@ def analyze_all_ski_areas_polars(skip_runs: bool = False) -> None:
         .agg(
             run_count=pl.col("run_id").n_unique(),
             **_aggregate_run_coordinates_exprs,
+            # FIXME: this computation is duplicated
+            solar_irradiance_solstice=pl.col("distance_vertical_drop").dot(
+                "solar_irradiance_solstice"
+            )
+            / pl.when(pl.col("solar_irradiance_solstice").is_not_null())
+            .then("distance_vertical_drop")
+            .sum(),
             hemisphere=pl.first("hemisphere"),
             _bearing_stats=pl.struct(
                 "bearing",

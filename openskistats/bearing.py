@@ -43,6 +43,7 @@ def add_spatial_metric_columns(
             ),
         )
         .with_columns(
+            # NOTE: Polars only guarantees hash stability within a single polars version.
             segment_hash=pl.when(pl.col("latitude_lag").is_not_null()).then(
                 pl.col("_coord_struct").hash(seed=0)
             ),

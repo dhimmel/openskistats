@@ -65,7 +65,7 @@ def compute_solar_irradiance(
         return pl.DataFrame(
             {
                 "datetime": irrad_df.index,
-                "poa_global": irrad_df["poa_global"] * ski_season.times_per_hour,
+                "poa_global": irrad_df["poa_global"],
             }
         ).to_struct(name="solar_irradiance")
 
@@ -169,12 +169,13 @@ def write_dartmouth_skiway_solar_irradiance() -> pl.DataFrame:
         .select("run_id", "run_coordinates_clean")
         .explode("run_coordinates_clean")
         .unnest("run_coordinates_clean")
-        # .drop_nulls(subset=["segment_hash"])
         .with_columns(
             solar_irradiance=pl.struct(
                 "latitude", "longitude", "elevation", "slope", "bearing"
             ).map_elements(
-                lambda x: compute_solar_irradiance(**x, collapse=False),
+                lambda x: compute_solar_irradiance(
+                    **x, time_freq="1h", extent="solstice", collapse=False
+                ),
                 return_dtype=pl.List(
                     pl.Struct({"datetime": pl.Datetime(), "poa_global": pl.Float64})
                 ),
@@ -187,3 +188,55 @@ def write_dartmouth_skiway_solar_irradiance() -> pl.DataFrame:
     path = get_data_directory().joinpath("dartmouth_skiway_solar_irradiance.parquet")
     skiway_df.write_parquet(path)
     return skiway_df
+
+
+def compute_solar_irradiance_all_segments(cache_version: int = 1) -> pl.DataFrame:
+    from openskistats.analyze import (
+        get_display_ski_area_filters,
+        load_runs_pl,
+        load_ski_areas_pl,
+    )
+
+    path = get_data_directory().joinpath("runs_segments_solar_irradiance.parquet")
+    ski_areas = (
+        load_ski_areas_pl(ski_area_filters=get_display_ski_area_filters())
+        .filter(pl.col("country") == "United States")
+        .filter(pl.col("region") == "New Hampshire")
+        .select("ski_area_id")
+        .lazy()
+    )
+    segments = (
+        load_runs_pl()
+        .explode("ski_area_ids")
+        .rename({"ski_area_ids": "ski_area_id"})
+        .join(ski_areas, on="ski_area_id")
+        .select("run_id", "run_coordinates_clean")
+        .explode("run_coordinates_clean")
+        .unnest("run_coordinates_clean")
+        .filter(pl.col("segment_hash").is_not_null())
+        .select(
+            "segment_hash",
+            "latitude",
+            "longitude",
+            "elevation",
+            "slope",
+            "bearing",
+            pl.lit(cache_version).alias("cache_version"),
+        )
+        .unique(subset=["segment_hash"])
+        .with_columns(
+            solar_irradiance_solstice=pl.struct(
+                "latitude", "longitude", "elevation", "slope", "bearing"
+            ).map_elements(
+                lambda x: compute_solar_irradiance(
+                    **x, time_freq="1h", extent="solstice", collapse=True
+                ),
+                return_dtype=pl.Float64,
+                returns_scalar=True,
+                strategy="thread_local",
+            ),
+        )
+        .collect()
+    )
+    segments.write_parquet(path)
+    return segments

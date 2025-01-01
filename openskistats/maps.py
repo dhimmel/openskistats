@@ -4,6 +4,7 @@ import polars as pl
 from openskistats.utils import get_data_directory
 
 # from folium.plugins.timeline import Timeline, TimelineSlider
+# from folium.plugins.timestamped_geo_json import TimestampedGeoJson
 # https://python-visualization.github.io/folium/latest/user_guide/plugins/timeline.html
 
 
