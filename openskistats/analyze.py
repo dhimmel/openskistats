@@ -142,12 +142,14 @@ def process_and_export_runs() -> None:
             **_aggregate_run_coordinates_exprs,
             # weighted mean https://github.com/pola-rs/polars/issues/7499#issuecomment-1465185075
             # does this handle missing values correctly?
-            solar_irradiance_solstice=pl.col("distance_vertical_drop").dot(
-                "solar_irradiance_solstice"
+            solar_irradiance_solstice=pl.col("distance_vertical_drop")
+            .dot("solar_irradiance_solstice")
+            .truediv(
+                pl.when(pl.col("solar_irradiance_solstice").is_not_null())
+                .then("distance_vertical_drop")
+                .sum()
             )
-            / pl.when(pl.col("solar_irradiance_solstice").is_not_null())
-            .then("distance_vertical_drop")
-            .sum(),
+            .fill_nan(None),
             run_coordinates_clean=pl.struct(pl.exclude("run_id")),
         )
     )
@@ -210,12 +212,14 @@ def analyze_all_ski_areas_polars(skip_runs: bool = False) -> None:
             run_count=pl.col("run_id").n_unique(),
             **_aggregate_run_coordinates_exprs,
             # FIXME: this computation is duplicated
-            solar_irradiance_solstice=pl.col("distance_vertical_drop").dot(
-                "solar_irradiance_solstice"
+            solar_irradiance_solstice=pl.col("distance_vertical_drop")
+            .dot("solar_irradiance_solstice")
+            .truediv(
+                pl.when(pl.col("solar_irradiance_solstice").is_not_null())
+                .then("distance_vertical_drop")
+                .sum()
             )
-            / pl.when(pl.col("solar_irradiance_solstice").is_not_null())
-            .then("distance_vertical_drop")
-            .sum(),
+            .fill_nan(None),
             hemisphere=pl.first("hemisphere"),
             _bearing_stats=pl.struct(
                 "bearing",
