@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import date, timedelta
-from functools import cached_property, lru_cache
+from functools import cached_property
 from typing import Literal
 
 import pandas as pd
@@ -21,18 +21,15 @@ def compute_solar_irradiance(
     bearing: float,
     time_freq: str = "1h",
     extent: Literal["solstice", "season"] = "solstice",
-    collapse: bool = True,
-) -> float | pl.Series | None:
+) -> pl.DataFrame:
     """
     Compute daily clear-sky irradiance (W/m^2) for the winter solstice in the Northern Hemisphere.
     """
-    if slope is None:
-        return None
-
+    assert slope is not None
     ski_season = SkiSeasonDatetimes(
-        freq=time_freq,
         hemisphere=get_hemisphere(latitude),
         extent=extent,
+        freq=time_freq,
     )
     # rounding as a hack to improve efficiency via caching
     latitude = round(latitude, 1)
@@ -45,65 +42,65 @@ def compute_solar_irradiance(
         ski_season=ski_season,
     )
     # Calculate plane-of-array irradiance for each hour
-    irrad_df = pvlib.irradiance.get_total_irradiance(
+    # Returns an OrderedDict when inputs are not pd.Series.
+    # https://github.com/pvlib/pvlib-python/blob/9fb2eb3aa7984c6283252e53e3052fe2c2cee90e/pvlib/irradiance.py#L506-L507
+    irrad_dict = pvlib.irradiance.get_total_irradiance(
         surface_tilt=slope,
         surface_azimuth=bearing,
-        solar_zenith=clearsky_df["apparent_zenith"],
-        solar_azimuth=clearsky_df["azimuth"],
+        solar_zenith=clearsky_df["sun_apparent_zenith"],
+        solar_azimuth=clearsky_df["sun_azimuth"],
         dni=clearsky_df["dni"],  # diffuse normal irradiance
         ghi=clearsky_df["ghi"],  # global horizontal irradiance
         dhi=clearsky_df["dhi"],  # direct horizontal irradiance
         surface_type="snow",
     )
-    if collapse:
-        return (
-            float(irrad_df["poa_global"].sum())
-            * ski_season.times_per_hour
-            / ski_season.season_duration_days
-        )
-    else:
-        return pl.DataFrame(
-            {
-                "datetime": irrad_df.index,
-                "poa_global": irrad_df["poa_global"],
-            }
-        ).to_struct(name="solar_irradiance")
+    irrad_df = clearsky_df.hstack(pl.from_dict(irrad_dict)).with_columns(
+        is_solstice=pl.col("datetime").dt.date() == ski_season.solstice,
+    )
+    return irrad_df
+
+
+def collapse_solar_irradiance(
+    irrad_df: pl.DataFrame,
+) -> dict[str, float]:
+    def get_mean_irradiance(df: pl.DataFrame) -> float:
+        return 24 * float(df["poa_global"].mean()) / 1_000
+
+    return {
+        "solar_irradiance_season": get_mean_irradiance(irrad_df),
+        "solar_irradiance_solstice": get_mean_irradiance(
+            irrad_df.filter(pl.col("is_solstice"))
+        ),
+    }
 
 
 @dataclass(frozen=True)
 class SkiSeasonDatetimes:
-    freq: str
     hemisphere: Literal["north", "south"]
     extent: Literal["solstice", "season"]
-
-    @staticmethod
-    def get_typical_ski_season_dates(
-        hemisphere: Literal["north", "south"], extent: Literal["solstice", "season"]
-    ) -> tuple[date, date]:
-        """
-        Return open and closing dates for a typical ski season.
-        """
-        match hemisphere, extent:
-            case "north", "solstice":
-                return SOLSTICE_NORTH, SOLSTICE_NORTH
-            case "south", "solstice":
-                return SOLSTICE_SOUTH, SOLSTICE_SOUTH
-            case "north", "season":
-                return SOLSTICE_NORTH - timedelta(days=20), SOLSTICE_NORTH + timedelta(
-                    days=100
-                )
-            case "south", "season":
-                return SOLSTICE_SOUTH - timedelta(days=20), SOLSTICE_SOUTH + timedelta(
-                    days=100
-                )
-            case _:
-                raise ValueError("Invalid hemisphere or extent")
+    freq: str = "60min"
 
     @cached_property
     def ski_season_dates(self) -> tuple[date, date]:
-        return self.get_typical_ski_season_dates(
-            hemisphere=self.hemisphere, extent=self.extent
-        )
+        """
+        Return open and closing dates for a typical ski season.
+        """
+        solstice = self.solstice
+        match self.extent:
+            case "solstice":
+                return solstice, solstice
+            case "season":
+                return solstice - timedelta(days=20), solstice + timedelta(days=100)
+            case _:
+                raise ValueError("Invalid extent.")
+
+    @cached_property
+    def solstice(self) -> date:
+        """Return the winter solstice date."""
+        return {
+            "north": SOLSTICE_NORTH,
+            "south": SOLSTICE_SOUTH,
+        }[self.hemisphere]
 
     @cached_property
     def freq_time_delta(self) -> pd.Timedelta:
@@ -133,27 +130,25 @@ class SkiSeasonDatetimes:
         )
 
 
-@lru_cache(maxsize=20_000)
+# @lru_cache(maxsize=20_000)
 def get_clearsky(
     latitude: float, longitude: float, elevation: float, ski_season: SkiSeasonDatetimes
-) -> pd.DataFrame:
+) -> pl.DataFrame:
     location = pvlib.location.Location(
         latitude=latitude,
         longitude=longitude,
         altitude=elevation,
     )
     times = ski_season.interpolated_range
-    solar_positions = location.get_solarposition(times)
+    solar_positions = location.get_solarposition(times, method="nrel_numpy").add_prefix(
+        "sun_"
+    )
     clearsky = location.get_clearsky(times, model="ineichen")
-    return pd.concat([solar_positions, clearsky], axis=1)[
-        [
-            "apparent_zenith",
-            "azimuth",
-            "dni",
-            "ghi",
-            "dhi",
-        ]
-    ]
+    return (
+        pd.concat([solar_positions, clearsky], axis=1)
+        .reset_index(names="datetime")
+        .pipe(pl.from_pandas)
+    )
 
 
 def write_dartmouth_skiway_solar_irradiance() -> pl.DataFrame:
@@ -170,17 +165,19 @@ def write_dartmouth_skiway_solar_irradiance() -> pl.DataFrame:
         .explode("run_coordinates_clean")
         .unnest("run_coordinates_clean")
         .with_columns(
-            solar_irradiance=pl.struct(
-                "latitude", "longitude", "elevation", "slope", "bearing"
-            ).map_elements(
-                lambda x: compute_solar_irradiance(
-                    **x, time_freq="1h", extent="solstice", collapse=False
-                ),
-                return_dtype=pl.List(
-                    pl.Struct({"datetime": pl.Datetime(), "poa_global": pl.Float64})
-                ),
-                returns_scalar=True,
-                strategy="thread_local",
+            solar_irradiance=pl.when(pl.col("segment_hash").is_not_null()).then(
+                pl.struct(
+                    "latitude", "longitude", "elevation", "slope", "bearing"
+                ).map_elements(
+                    lambda x: compute_solar_irradiance(
+                        **x, time_freq="1h", extent="solstice"
+                    ).to_struct(),
+                    return_dtype=pl.List(
+                        pl.Struct({"datetime": pl.Datetime(), "poa_global": pl.Float64})
+                    ),
+                    returns_scalar=True,
+                    strategy="thread_local",
+                )
             ),
         )
         .collect()
@@ -206,8 +203,9 @@ def compute_solar_irradiance_all_segments(
     path = get_data_directory().joinpath("runs_segments_solar_irradiance.parquet")
     ski_areas = (
         load_ski_areas_pl(ski_area_filters=get_display_ski_area_filters())
-        # .filter(pl.col("country") == "United States")
-        # .filter(pl.col("region") == "New Hampshire")
+        .filter(pl.col("country") == "United States")
+        .filter(pl.col("region") == "New Hampshire")
+        .head(2)
         .select("ski_area_id")
         .lazy()
     )
@@ -232,17 +230,25 @@ def compute_solar_irradiance_all_segments(
         .unique(subset=["segment_hash"])
         .join(segments_cached, on=["segment_hash", "cache_version"], how="anti")
         .with_columns(
-            solar_irradiance_solstice=pl.struct(
-                "latitude", "longitude", "elevation", "slope", "bearing"
-            ).map_elements(
-                lambda x: compute_solar_irradiance(
-                    **x, time_freq="1h", extent="solstice", collapse=True
-                ),
-                return_dtype=pl.Float64,
-                returns_scalar=True,
-                strategy="thread_local",
+            _solar_irradiance=pl.when(pl.col("segment_hash").is_not_null()).then(
+                pl.struct(
+                    "latitude", "longitude", "elevation", "slope", "bearing"
+                ).map_elements(
+                    lambda x: compute_solar_irradiance(
+                        **x, time_freq="1h", extent="solstice"
+                    ).pipe(collapse_solar_irradiance),
+                    return_dtype=pl.Struct(
+                        {
+                            "solar_irradiance_season": pl.Float64,
+                            "solar_irradiance_solstice": pl.Float64,
+                        },
+                    ),
+                    returns_scalar=True,
+                    strategy="thread_local",
+                )
             ),
         )
+        .unnest("_solar_irradiance")
     )
     segments = pl.concat([segments_cached, segments], how="vertical")
     segments = segments.collect()
@@ -265,6 +271,7 @@ def load_solar_irradiance_pl(
                 "slope": pl.Float64,
                 "bearing": pl.Float64,
                 "cache_version": pl.Int32,
+                "solar_irradiance_season": pl.Float64,
                 "solar_irradiance_solstice": pl.Float64,
             },
         ).lazy()
@@ -273,5 +280,5 @@ def load_solar_irradiance_pl(
     if apply_filter_select:
         segments_cached = segments_cached.filter(
             pl.col("cache_version") == SOLAR_IRRADIANCE_CACHE_VERSION
-        ).select("segment_hash", "solar_irradiance_solstice")
+        ).select("segment_hash", "solar_irradiance_season", "solar_irradiance_solstice")
     return segments_cached
