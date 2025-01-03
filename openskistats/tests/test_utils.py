@@ -2,7 +2,7 @@ import polars as pl
 import pytest
 from polars.testing import assert_frame_equal
 
-from openskistats.utils import gini_coefficient, pl_flip_bearing
+from openskistats.utils import gini_coefficient, pl_flip_bearing, pl_weighted_mean
 
 
 def test_pl_flip_bearing() -> None:
@@ -24,6 +24,17 @@ def test_pl_flip_bearing() -> None:
     )
     output_df = expected_df.with_columns(bearing_poleward=pl_flip_bearing())
     assert_frame_equal(output_df, expected_df)
+
+
+def test_pl_weighted_mean() -> None:
+    df = pl.DataFrame(
+        {
+            "value": [0.0, 1.0, 2.0, 3.0, None, None],
+            "weight": [0.0, 1.0, 3.0, None, 4.0, None],
+        }
+    )
+    wtd_mean = df.select(pl_weighted_mean("value", "weight")).item(0, 0)
+    assert wtd_mean == 1.75
 
 
 @pytest.mark.parametrize(

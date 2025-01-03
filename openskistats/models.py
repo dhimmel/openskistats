@@ -118,6 +118,18 @@ class RunSegmentModel(Model):  # type: ignore [misc]
             description="Slope of the segment from the previous coordinate to the current coordinate in degrees."
         ),
     ]
+    solar_irradiance_season: Annotated[
+        float | None,
+        Field(
+            description="Average daily solar irradiance received by the segment over the course of a typical 120 ski season in kilowatt-hours per square meter (kW/m²/day)."
+        ),
+    ]
+    solar_irradiance_solstice: Annotated[
+        float | None,
+        Field(
+            description="Solar irradiance received by the segment on the winter solstice in kilowatt-hours per square meter (kW/m²/day)."
+        ),
+    ]
 
 
 class RunCoordinateSegmentModel(RunSegmentModel, RunCoordinateModel):

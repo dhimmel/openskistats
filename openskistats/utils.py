@@ -73,6 +73,16 @@ def pl_flip_bearing(
     )
 
 
+def pl_weighted_mean(value_col: str, weight_col: str) -> pl.Expr:
+    """
+    Generate a Polars aggregation expression to take a weighted mean
+    https://github.com/pola-rs/polars/issues/7499#issuecomment-2569748864
+    """
+    values = pl.col(value_col)
+    weights = pl.when(values.is_not_null()).then(weight_col)
+    return weights.dot(values).truediv(weights.sum()).fill_nan(None)
+
+
 def gini_coefficient(values: npt.NDArray[np.float64] | list[float]) -> float:
     """Compute the Gini coefficient of a list of values."""
     n = len(values)

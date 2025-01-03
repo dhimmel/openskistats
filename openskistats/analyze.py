@@ -39,6 +39,7 @@ from openskistats.utils import (
     get_images_data_directory,
     get_images_directory,
     pl_hemisphere,
+    pl_weighted_mean,
 )
 from openskistats.variables import set_variables
 
@@ -67,6 +68,17 @@ _aggregate_run_coordinates_exprs = {
     "vertical_drop": pl.max("elevation") - pl.min("elevation"),
 }
 
+_aggregate_run_segment_sunlight_exprs = {
+    "solar_irradiance_season": pl_weighted_mean(
+        value_col="solar_irradiance_season",
+        weight_col="distance_vertical_drop",
+    ),
+    "solar_irradiance_solstice": pl_weighted_mean(
+        value_col="solar_irradiance_solstice",
+        weight_col="distance_vertical_drop",
+    ),
+}
+
 
 def process_and_export_lifts() -> None:
     """
@@ -80,7 +92,14 @@ def process_and_export_lifts() -> None:
         .unnest("lift_coordinates")
         .filter(pl.col("index").is_not_null())
         .pipe(add_spatial_metric_columns, partition_by="lift_id")
-        .select("lift_id", *RunCoordinateSegmentModel.model_fields)
+        .select(
+            "lift_id",
+            *[
+                x
+                for x in RunCoordinateSegmentModel.model_fields
+                if not x.startswith("solar_irradiance")
+            ],
+        )
         .group_by("lift_id")
         .agg(
             **_aggregate_run_coordinates_exprs,
@@ -118,22 +137,11 @@ def process_and_export_runs() -> None:
         .select(
             "run_id",
             *RunCoordinateSegmentModel.model_fields,
-            "solar_irradiance_season",
-            "solar_irradiance_solstice",
         )
         .group_by("run_id")
         .agg(
             **_aggregate_run_coordinates_exprs,
-            # weighted mean https://github.com/pola-rs/polars/issues/7499#issuecomment-1465185075
-            # does this handle missing values correctly?
-            solar_irradiance_season=pl.col("distance_vertical_drop")
-            .dot("solar_irradiance_season")
-            .truediv(
-                pl.when(pl.col("solar_irradiance_season").is_not_null())
-                .then("distance_vertical_drop")
-                .sum()
-            )
-            .fill_nan(None),
+            **_aggregate_run_segment_sunlight_exprs,
             run_coordinates_clean=pl.struct(pl.exclude("run_id")),
         )
     )
@@ -195,15 +203,7 @@ def analyze_all_ski_areas_polars(skip_runs: bool = False) -> None:
         .agg(
             run_count=pl.col("run_id").n_unique(),
             **_aggregate_run_coordinates_exprs,
-            # FIXME: this computation is duplicated
-            solar_irradiance_season=pl.col("distance_vertical_drop")
-            .dot("solar_irradiance_season")
-            .truediv(
-                pl.when(pl.col("solar_irradiance_season").is_not_null())
-                .then("distance_vertical_drop")
-                .sum()
-            )
-            .fill_nan(None),
+            **_aggregate_run_segment_sunlight_exprs,
             hemisphere=pl.first("hemisphere"),
             _bearing_stats=pl.struct(
                 "bearing",
