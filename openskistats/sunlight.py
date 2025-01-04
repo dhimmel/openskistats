@@ -170,19 +170,17 @@ def write_dartmouth_skiway_solar_irradiance() -> pl.DataFrame:
         .explode("run_coordinates_clean")
         .unnest("run_coordinates_clean")
         .with_columns(
-            solar_irradiance=pl.when(pl.col("segment_hash").is_not_null()).then(
-                pl.struct(
-                    "latitude", "longitude", "elevation", "slope", "bearing"
-                ).map_elements(
-                    lambda x: compute_solar_irradiance(
-                        **x, time_freq="1h", extent="solstice"
-                    ).to_struct(),
-                    return_dtype=pl.List(
-                        pl.Struct({"datetime": pl.Datetime(), "poa_global": pl.Float64})
-                    ),
-                    returns_scalar=True,
-                    strategy="thread_local",
-                )
+            solar_irradiance=pl.when(pl.col("segment_hash").is_not_null())
+            .then(pl.struct("latitude", "longitude", "elevation", "slope", "bearing"))
+            .map_elements(
+                lambda x: compute_solar_irradiance(
+                    **x, time_freq="1h", extent="solstice"
+                ).to_struct(),
+                return_dtype=pl.List(
+                    pl.Struct({"datetime": pl.Datetime(), "poa_global": pl.Float64})
+                ),
+                skip_nulls=True,
+                strategy="thread_local",
             ),
         )
         .collect()
@@ -217,25 +215,22 @@ def add_solar_irradiance_columns(
             on=["segment_hash", "solar_irradiance_cache_version"],
             how="left",
         )
+        # when-then-map-elements order here is key https://stackoverflow.com/a/79007841/4651668
         .with_columns(
             _solar_irradiance=pl.when(
                 is_segment & pl.col("solar_irradiance_season").is_null()
-            ).then(
-                pl.struct(
-                    "latitude", "longitude", "elevation", "slope", "bearing"
-                ).map_elements(
-                    lambda x: compute_solar_irradiance(**x).pipe(
-                        collapse_solar_irradiance
-                    ),
-                    return_dtype=pl.Struct(
-                        {
-                            "solar_irradiance_season": pl.Float64,
-                            "solar_irradiance_solstice": pl.Float64,
-                        },
-                    ),
-                    returns_scalar=True,
-                    strategy="thread_local",
-                )
+            )
+            .then(pl.struct("latitude", "longitude", "elevation", "slope", "bearing"))
+            .map_elements(
+                lambda x: compute_solar_irradiance(**x).pipe(collapse_solar_irradiance),
+                return_dtype=pl.Struct(
+                    {
+                        "solar_irradiance_season": pl.Float64,
+                        "solar_irradiance_solstice": pl.Float64,
+                    },
+                ),
+                skip_nulls=True,
+                strategy="thread_local",
             )
         )
         .with_columns(
@@ -280,5 +275,5 @@ def load_solar_irradiance_cache_pl(skip_cache: bool = False) -> pl.LazyFrame:
             "solar_irradiance_season",
             "solar_irradiance_solstice",
         )
-        .distinct(subset=["segment_hash"])
+        .unique(subset=["segment_hash"])
     )
