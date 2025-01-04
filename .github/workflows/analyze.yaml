@@ -52,7 +52,10 @@ jobs:
       # https://stackoverflow.com/questions/76292948/github-action-boolean-input-with-default-value
       # https://github.com/actions/runner/issues/1483
       if: toJSON(inputs.refresh_cache) || steps.cache-openskimap.outputs.cache-hit != 'true'
-      run: uv run openskistats download
+      # the step if condition stopped working around 2025-01-03, so use bash condition to skip the download if files exist
+      run: |
+        [ ! -f "data/openskimap/runs.geojson.xz" ] && uv run openskistats download
+      shell: bash
     - name: Python Analysis
       env:
         OPENSKISTATS_SOLAR_SEGMENT_COUNT: ${{ inputs.solar_segment_count || 2000000 }}
