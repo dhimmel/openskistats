@@ -36,6 +36,16 @@ jobs:
         path: data/openskimap
         key: openskimap
         lookup-only: ${{ toJSON(inputs.refresh_cache) }}
+    - name: Debug Inputs
+      run: |
+        echo "refresh_cache: ${{ inputs.refresh_cache }}"\
+        echo "refresh_cache json: ${{ toJSON(inputs.refresh_cache) }}"
+        echo "cache-hit: ${{ steps.cache-openskimap.outputs.cache-hit }}"
+        echo "cache-hit json: ${{ toJSON(steps.cache-openskimap.outputs.cache-hit) }}"
+        echo "solar_segment_count: ${{ inputs.solar_segment_count }}"
+        echo "solar_segment_count json: ${{ toJSON(inputs.solar_segment_count) }}"
+        echo "OPENSKISTATS_SOLAR_SEGMENT_COUNT: ${{ inputs.solar_segment_count || 2000000 }}"
+        echo "OPENSKISTATS_SOLAR_SEGMENT_COUNT json: ${{ toJSON(inputs.solar_segment_count || 2000000) }}"
     - name: Download OpenSkiMap
       # confusing behavior where inputs.refresh_cache acts like a string not a boolean
       # https://stackoverflow.com/questions/76292948/github-action-boolean-input-with-default-value
