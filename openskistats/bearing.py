@@ -34,7 +34,7 @@ def add_spatial_metric_columns(
             .over(partition_by, order_by="index"),
         )
         .with_columns(
-            distance_vertical=pl.col("elevation_lag") - pl.col("elevation"),
+            distance_vertical=pl.col("elevation_lag").sub("elevation"),
             _coord_struct=pl.struct(
                 "latitude_lag",
                 "longitude_lag",
@@ -78,6 +78,19 @@ def add_spatial_metric_columns(
             slope=pl.col("gradient").arctan().degrees(),
         )
         .drop("latitude_lag", "longitude_lag", "elevation_lag", "_coord_struct")
+        # reduce precision to save on storage
+        .cast(
+            {
+                "distance_vertical": pl.Float32,
+                "distance_vertical_drop": pl.Float32,
+                # "distance_vertical_gain": pl.Float32,
+                "distance_horizontal": pl.Float32,
+                "distance_3d": pl.Float32,
+                "bearing": pl.Float32,
+                "gradient": pl.Float32,
+                "slope": pl.Float32,
+            }
+        )
     )
 
 

@@ -201,8 +201,8 @@ def write_dartmouth_skiway_solar_irradiance() -> pl.DataFrame:
 
 def add_solar_irradiance_columns(
     run_segments: pl.DataFrame,
-    skip_cache: bool = False,
-    max_items: int | None = 5_000,
+    skip_cache: bool = True,
+    max_items: int | None = 500,
 ) -> pl.DataFrame:
     """
     Adds three columns to a run coordinate/segment DataFrame:
@@ -268,9 +268,9 @@ def add_solar_irradiance_columns(
 def _get_solar_irradiance_cache_schema() -> dict[str, pl.DataType]:
     return {
         "segment_hash": pl.UInt64,
-        "solar_irradiance_cache_version": pl.Int8,
-        "solar_irradiance_season": pl.Float64,
-        "solar_irradiance_solstice": pl.Float64,
+        "solar_irradiance_cache_version": pl.UInt8,
+        "solar_irradiance_season": pl.Float32,
+        "solar_irradiance_solstice": pl.Float32,
     }
 
 
