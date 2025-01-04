@@ -90,7 +90,7 @@ def get_ski_area_frontend_table(story: bool = False) -> pl.DataFrame:
             "min_elevation",
             "max_elevation",
             "vertical_drop",
-            pl.col("solar_irradiance_season").round(1),  # kWh/m²/day
+            "solar_irradiance_season",
             "bearing_mean",
             "bearing_alignment",
             "poleward_affinity",
@@ -423,6 +423,13 @@ def get_ski_area_reactable(story: bool = False) -> reactable.Reactable:
                 id="solar_irradiance_season",
                 name="Sunlight",
                 show=not story,
+                format=reactable.ColFormat(
+                    # suffix=f"{NARROW_SPACE}kWh/m²",
+                    digits=1,
+                    separators=True,
+                ),
+                min_width=80,
+                filter_method=_numeric_filter,
                 style=_ski_area_metric_style,
                 class_="mu",
             ),
@@ -528,7 +535,7 @@ def get_ski_area_reactable(story: bool = False) -> reactable.Reactable:
                     "min_elevation",
                     "max_elevation",
                     "vertical_drop",
-                    "solar_irradiance_solstice",
+                    "solar_irradiance_season",
                 ],
             ),
             reactable.ColGroup(

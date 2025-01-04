@@ -47,6 +47,12 @@ class SkiRunUsage(StrEnum):
     snow_park = "snow_park"
 
 
+_solar_irradiance_description = (
+    "This value measures solar irradiance by treating each run segment as a plane according to its latitude, longitude, elevation, bearing, and slope. "
+    "Solar irradiance is computed using clear sky estimates for diffuse normal irradiance, global horizontal irradiance, and direct horizontal irradiance according to the Ineichen and Perez model with Linke turbidity.",
+)
+
+
 class RunCoordinateModel(Model):  # type: ignore [misc]
     index: Annotated[
         int,
@@ -121,13 +127,17 @@ class RunSegmentModel(Model):  # type: ignore [misc]
     solar_irradiance_season: Annotated[
         float | None,
         Field(
-            description="Average daily solar irradiance received by the segment over the course of a typical 120 ski season in kilowatt-hours per square meter (kW/m²/day)."
+            ge=0,
+            lt=15,  # practical limit
+            description=f"Average daily solar irradiance received by the segment over the course of a typical 115 ski season in kilowatt-hours per square meter (kW/m²/day). {_solar_irradiance_description}",
         ),
     ]
     solar_irradiance_solstice: Annotated[
         float | None,
         Field(
-            description="Solar irradiance received by the segment on the winter solstice in kilowatt-hours per square meter (kW/m²/day)."
+            ge=0,
+            lt=15,  # practical limit
+            description="Solar irradiance received by the segment on the winter solstice in kilowatt-hours per square meter (kW/m²/day).",
         ),
     ]
     solar_irradiance_cache_version: Annotated[
@@ -419,6 +429,22 @@ class SkiAreaModel(Model):  # type: ignore [misc]
         float | None,
         Field(
             description="Peak elevation of the ski area in meters computed as the highest elevation along all runs.",
+        ),
+    ]
+    solar_irradiance_season: Annotated[
+        float | None,
+        Field(
+            description="Average daily solar irradiance received by run segments over the course of a typical 120 ski season in kilowatt-hours per square meter (kW/m²/day). "
+            "The average is weighted by the vertical drop of each segment. "
+            f"{_solar_irradiance_description}",
+        ),
+    ]
+    solar_irradiance_solstice: Annotated[
+        float | None,
+        Field(
+            description="Average daily solar irradiance received by run segments on the winter solstice in kilowatt-hours per square meter (kW/m²/day). "
+            "The average is weighted by the vertical drop of each segment. "
+            f"{_solar_irradiance_description}",
         ),
     ]
     for field_name in BearingStatsModel.model_fields:
