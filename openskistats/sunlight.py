@@ -3,6 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import date, timedelta
 from functools import cached_property, lru_cache
+from pathlib import Path
 from time import perf_counter
 from typing import Any, Literal
 
@@ -10,7 +11,12 @@ import pandas as pd
 import polars as pl
 import pvlib
 
-from openskistats.utils import get_data_directory, get_hemisphere, running_in_test
+from openskistats.utils import (
+    get_data_directory,
+    get_hemisphere,
+    running_in_ci,
+    running_in_test,
+)
 
 SOLAR_IRRADIANCE_CACHE_VERSION = 1
 """
@@ -229,9 +235,9 @@ def add_solar_irradiance_columns(
     )
     if max_items is not None:
         segments_to_compute = segments_to_compute[:max_items]
-        logging.info(
-            f"Computing solar irradiance for {len(segments_to_compute):,} segments after limiting to {max_items=}."
-        )
+    logging.info(
+        f"Computing solar irradiance for {len(segments_to_compute):,} segments after limiting to {max_items=}."
+    )
 
     def _process_segment(segment: dict[str, Any]) -> dict[str, float]:
         segment_hash = segment.pop("segment_hash")
@@ -268,16 +274,29 @@ def _get_solar_irradiance_cache_schema() -> dict[str, pl.DataType]:
     }
 
 
-def load_solar_irradiance_cache_pl(skip_cache: bool = False) -> pl.DataFrame:
-    from openskistats.analyze import get_runs_parquet_path, load_runs_pl
+def _get_runs_cache_path(skip_cache: bool = False) -> str | None | Path:
+    from openskistats.analyze import get_runs_parquet_path
 
-    if skip_cache or running_in_test() or not get_runs_parquet_path().exists():
+    if skip_cache or running_in_test():
+        return None
+    if running_in_ci():
+        # FIXME: return materialized data path
+        return None
+    local_path = get_runs_parquet_path()
+    if not local_path.exists():
+        return None
+    return local_path
+
+
+def load_solar_irradiance_cache_pl(skip_cache: bool = False) -> pl.DataFrame:
+    path = _get_runs_cache_path(skip_cache=skip_cache)
+    if not path:
         return pl.DataFrame(
             data=[],
             schema=_get_solar_irradiance_cache_schema(),
         )
     return (
-        load_runs_pl()
+        pl.scan_parquet(source=path)
         .select("run_id", "run_coordinates_clean")
         .explode("run_coordinates_clean")
         .unnest("run_coordinates_clean")

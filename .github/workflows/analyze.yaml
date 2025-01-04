@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    # default timeout of 360 minutes (6 hours) might be too short to compute all solar irradiation values
+    timeout-minutes: 600
     steps:
     - uses: actions/checkout@v4
     - uses: ./.github/workflows/setup-python

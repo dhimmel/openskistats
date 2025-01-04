@@ -43,6 +43,10 @@ def running_in_test() -> bool:
     return "PYTEST_CURRENT_TEST" in os.environ
 
 
+def running_in_ci() -> bool:
+    return os.environ.get("GITHUB_ACTIONS") == "true"
+
+
 def get_hemisphere(latitude: float) -> Literal["north", "south"]:
     if latitude > 0:
         return "north"
