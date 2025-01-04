@@ -50,10 +50,20 @@ jobs:
         Rscript 02.plot.R
     - name: Quarto Render
       run: uv run quarto render website
-    - name: Deploy
+    - name: Publish data
       uses: peaceiris/actions-gh-pages@v4
       if: github.ref == 'refs/heads/main'
       with:
+        publish_branch: data
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./data
+        exclude_assets: "website,openskistats"
+        force_orphan: true
+    - name: Deploy website
+      uses: peaceiris/actions-gh-pages@v4
+      if: github.ref == 'refs/heads/main'
+      with:
+        publish_branch: gh-pages
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./data/webapp
         exclude_assets: "**.xz,**.parquet"
