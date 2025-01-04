@@ -38,8 +38,9 @@ jobs:
         lookup-only: ${{ toJSON(inputs.refresh_cache) }}
     - name: Debug Inputs
       run: |
-        echo "refresh_cache: ${{ inputs.refresh_cache }}"\
+        echo "refresh_cache: ${{ inputs.refresh_cache }}"
         echo "refresh_cache json: ${{ toJSON(inputs.refresh_cache) }}"
+        echo "cache miss: ${{ steps.cache-openskimap.outputs.cache-hit != 'true' }}"
         echo "cache-hit: ${{ steps.cache-openskimap.outputs.cache-hit }}"
         echo "cache-hit json: ${{ toJSON(steps.cache-openskimap.outputs.cache-hit) }}"
         echo "solar_segment_count: ${{ inputs.solar_segment_count }}"
