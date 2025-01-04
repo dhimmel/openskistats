@@ -171,7 +171,7 @@ Did you remember facing north while skiing down?
 
 And here are the [ski roses]{style="color: #f07178;"} for 37 US states with at least one ski area.<br><br>
 Do most states look north-facing to you?
-And, as an aside, can you guess which state has more combined vertical: California or Vermont?
+And, as an aside, can you tell which state has most combined vertical?
 [@cr-us-roses]
 
 :::{#cr-us-roses}
