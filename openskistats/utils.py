@@ -14,7 +14,7 @@ def get_repo_directory() -> Path:
 def get_data_directory(testing: bool = False) -> Path:
     directory = (
         Path(__file__).parent.joinpath("tests", "data")
-        if testing or "PYTEST_CURRENT_TEST" in os.environ
+        if testing or running_in_test()
         else get_repo_directory().joinpath("data")
     )
     directory.mkdir(exist_ok=True)
@@ -37,6 +37,10 @@ def get_images_data_directory() -> Path:
 
 def get_website_source_directory() -> Path:
     return get_repo_directory().joinpath("website")
+
+
+def running_in_test() -> bool:
+    return "PYTEST_CURRENT_TEST" in os.environ
 
 
 def get_hemisphere(latitude: float) -> Literal["north", "south"]:

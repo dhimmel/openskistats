@@ -2,7 +2,6 @@ import hashlib
 import json
 import logging
 import lzma
-import os
 import shutil
 from collections import Counter
 from dataclasses import asdict as dataclass_to_dict
@@ -16,7 +15,7 @@ import polars as pl
 import requests
 
 from openskistats.models import OpenSkiMapStatus, RunCoordinateModel, SkiRunUsage
-from openskistats.utils import get_data_directory, get_repo_directory
+from openskistats.utils import get_data_directory, get_repo_directory, running_in_test
 from openskistats.variables import set_variables
 
 
@@ -24,7 +23,7 @@ def get_openskimap_path(
     name: Literal["runs", "ski_areas", "lifts", "info"],
     testing: bool = False,
 ) -> Path:
-    testing = testing or "PYTEST_CURRENT_TEST" in os.environ
+    testing = testing or running_in_test()
     directory = get_data_directory(testing=testing).joinpath("openskimap")
     directory.mkdir(exist_ok=True)
     if name == "info":

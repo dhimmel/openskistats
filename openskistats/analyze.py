@@ -33,7 +33,9 @@ from openskistats.plot import (
     plot_orientation,
     subplot_orientations,
 )
-from openskistats.sunlight import load_solar_irradiance_pl
+from openskistats.sunlight import (
+    add_solar_irradiance_columns,
+)
 from openskistats.utils import (
     get_data_directory,
     get_images_data_directory,
@@ -125,7 +127,6 @@ def process_and_export_runs() -> None:
     """
     Process and export runs from OpenSkiMap.
     """
-    solar_irradiance = load_solar_irradiance_pl(apply_filter_select=True)
     runs_lazy = load_downhill_runs_from_download_pl().lazy()
     coords_df = (
         runs_lazy.select("run_id", "run_coordinates_clean")
@@ -133,7 +134,7 @@ def process_and_export_runs() -> None:
         .unnest("run_coordinates_clean")
         .filter(pl.col("index").is_not_null())
         .pipe(add_spatial_metric_columns, partition_by="run_id")
-        .join(solar_irradiance, on="segment_hash", how="left")
+        .pipe(add_solar_irradiance_columns)
         .select(
             "run_id",
             *RunCoordinateSegmentModel.model_fields,

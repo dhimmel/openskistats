@@ -1,13 +1,18 @@
 from dataclasses import dataclass
 from datetime import date, timedelta
-from functools import cached_property
+from functools import cached_property, lru_cache
 from typing import Literal
 
 import pandas as pd
 import polars as pl
 import pvlib
 
-from openskistats.utils import get_data_directory, get_hemisphere
+from openskistats.utils import get_data_directory, get_hemisphere, running_in_test
+
+SOLAR_IRRADIANCE_CACHE_VERSION = 1
+"""
+Increment this version number to invalidate the solar irradiance cache.
+"""
 
 SOLSTICE_NORTH = date.fromisoformat("2024-12-21")
 SOLSTICE_SOUTH = date.fromisoformat("2024-06-20")
@@ -19,8 +24,8 @@ def compute_solar_irradiance(
     elevation: float,
     slope: float,
     bearing: float,
-    time_freq: str = "1h",
-    extent: Literal["solstice", "season"] = "solstice",
+    time_freq: str = "15min",
+    extent: Literal["solstice", "season"] = "season",
 ) -> pl.DataFrame:
     """
     Compute daily clear-sky irradiance (W/m^2) for the winter solstice in the Northern Hemisphere.
@@ -78,7 +83,7 @@ def collapse_solar_irradiance(
 class SkiSeasonDatetimes:
     hemisphere: Literal["north", "south"]
     extent: Literal["solstice", "season"]
-    freq: str = "60min"
+    freq: str = "15min"
 
     @cached_property
     def ski_season_dates(self) -> tuple[date, date]:
@@ -130,7 +135,7 @@ class SkiSeasonDatetimes:
         )
 
 
-# @lru_cache(maxsize=20_000)
+@lru_cache(maxsize=20_000)
 def get_clearsky(
     latitude: float, longitude: float, elevation: float, ski_season: SkiSeasonDatetimes
 ) -> pl.DataFrame:
@@ -187,56 +192,41 @@ def write_dartmouth_skiway_solar_irradiance() -> pl.DataFrame:
     return skiway_df
 
 
-SOLAR_IRRADIANCE_CACHE_VERSION = 1
+def add_solar_irradiance_columns(
+    run_segments: pl.LazyFrame, skip_cache: bool = False
+) -> pl.LazyFrame:
+    """
+    Adds three columns to a run coordinate/segment DataFrame:
 
+    - solar_irradiance_cache_version
+    - solar_irradiance_season
+    - solar_irradiance_solstice
 
-def compute_solar_irradiance_all_segments(
-    cache_version: int = SOLAR_IRRADIANCE_CACHE_VERSION, clear_cache: bool = False
-) -> pl.DataFrame:
-    from openskistats.analyze import (
-        get_display_ski_area_filters,
-        load_runs_pl,
-        load_ski_areas_pl,
-    )
-
-    segments_cached = load_solar_irradiance_pl(skip_cache=clear_cache)
-    path = get_data_directory().joinpath("runs_segments_solar_irradiance.parquet")
-    ski_areas = (
-        load_ski_areas_pl(ski_area_filters=get_display_ski_area_filters())
-        .filter(pl.col("country") == "United States")
-        .filter(pl.col("region") == "New Hampshire")
-        .head(2)
-        .select("ski_area_id")
-        .lazy()
-    )
-    segments = (
-        load_runs_pl()
-        .explode("ski_area_ids")
-        .rename({"ski_area_ids": "ski_area_id"})
-        .join(ski_areas, on="ski_area_id")
-        .select("run_id", "run_coordinates_clean")
-        .explode("run_coordinates_clean")
-        .unnest("run_coordinates_clean")
-        .filter(pl.col("segment_hash").is_not_null())
-        .select(
-            "segment_hash",
-            "latitude",
-            "longitude",
-            "elevation",
-            "slope",
-            "bearing",
-            pl.lit(cache_version, dtype=pl.Int32).alias("cache_version"),
+    Unless clear_cache is True, a lookup of prior results is attempted because the computation is quite slow.
+    """
+    segments_cached = load_solar_irradiance_cache_pl(skip_cache=skip_cache)
+    is_segment = pl.col("segment_hash").is_not_null()
+    return (
+        run_segments.with_columns(
+            solar_irradiance_cache_version=pl.when(is_segment).then(
+                pl.lit(SOLAR_IRRADIANCE_CACHE_VERSION, dtype=pl.Int8)
+            )
         )
-        .unique(subset=["segment_hash"])
-        .join(segments_cached, on=["segment_hash", "cache_version"], how="anti")
+        .join(
+            segments_cached,
+            on=["segment_hash", "solar_irradiance_cache_version"],
+            how="left",
+        )
         .with_columns(
-            _solar_irradiance=pl.when(pl.col("segment_hash").is_not_null()).then(
+            _solar_irradiance=pl.when(
+                is_segment & pl.col("solar_irradiance_season").is_null()
+            ).then(
                 pl.struct(
                     "latitude", "longitude", "elevation", "slope", "bearing"
                 ).map_elements(
-                    lambda x: compute_solar_irradiance(
-                        **x, time_freq="1h", extent="solstice"
-                    ).pipe(collapse_solar_irradiance),
+                    lambda x: compute_solar_irradiance(**x).pipe(
+                        collapse_solar_irradiance
+                    ),
                     return_dtype=pl.Struct(
                         {
                             "solar_irradiance_season": pl.Float64,
@@ -246,39 +236,49 @@ def compute_solar_irradiance_all_segments(
                     returns_scalar=True,
                     strategy="thread_local",
                 )
+            )
+        )
+        .with_columns(
+            solar_irradiance_season=pl.coalesce(
+                "solar_irradiance_season",
+                pl.col("_solar_irradiance").struct.field("solar_irradiance_season"),
+            ),
+            solar_irradiance_solstice=pl.coalesce(
+                "solar_irradiance_solstice",
+                pl.col("_solar_irradiance").struct.field("solar_irradiance_solstice"),
             ),
         )
-        .unnest("_solar_irradiance")
+        .drop("_solar_irradiance")
     )
-    segments = pl.concat([segments_cached, segments], how="vertical")
-    segments = segments.collect()
-    segments.write_parquet(path)
-    return segments
 
 
-def load_solar_irradiance_pl(
-    skip_cache: bool = False, apply_filter_select: bool = False
-) -> pl.LazyFrame:
-    path = get_data_directory().joinpath("runs_segments_solar_irradiance.parquet")
-    if skip_cache or not path.exists():
-        segments_cached = pl.DataFrame(
+def load_solar_irradiance_cache_pl(skip_cache: bool = False) -> pl.LazyFrame:
+    from openskistats.analyze import get_runs_parquet_path, load_runs_pl
+
+    if skip_cache or running_in_test() or not get_runs_parquet_path().exists():
+        return pl.DataFrame(
             data=[],
             schema={
                 "segment_hash": pl.UInt64,
-                "latitude": pl.Float64,
-                "longitude": pl.Float64,
-                "elevation": pl.Float64,
-                "slope": pl.Float64,
-                "bearing": pl.Float64,
-                "cache_version": pl.Int32,
+                "solar_irradiance_cache_version": pl.Int8,
                 "solar_irradiance_season": pl.Float64,
                 "solar_irradiance_solstice": pl.Float64,
             },
         ).lazy()
-    else:
-        segments_cached = pl.scan_parquet(path)
-    if apply_filter_select:
-        segments_cached = segments_cached.filter(
-            pl.col("cache_version") == SOLAR_IRRADIANCE_CACHE_VERSION
-        ).select("segment_hash", "solar_irradiance_season", "solar_irradiance_solstice")
-    return segments_cached
+    return (
+        load_runs_pl()
+        .select("run_id", "run_coordinates_clean")
+        .explode("run_coordinates_clean")
+        .unnest("run_coordinates_clean")
+        .filter(pl.col("segment_hash").is_not_null())
+        .filter(
+            pl.col("solar_irradiance_cache_version") == SOLAR_IRRADIANCE_CACHE_VERSION
+        )
+        .select(
+            "segment_hash",
+            "solar_irradiance_cache_version",
+            "solar_irradiance_season",
+            "solar_irradiance_solstice",
+        )
+        .distinct(subset=["segment_hash"])
+    )
