@@ -215,14 +215,22 @@ def add_solar_irradiance_columns(
             on=["segment_hash", "solar_irradiance_cache_version"],
             how="left",
         )
-        # when-then-map-elements order here is key https://stackoverflow.com/a/79007841/4651668
+        .collect()
         .with_columns(
             _solar_irradiance=pl.when(
                 is_segment & pl.col("solar_irradiance_season").is_null()
             )
             .then(pl.struct("latitude", "longitude", "elevation", "slope", "bearing"))
+            # map_elements must be outside when-then https://stackoverflow.com/a/79007841/4651668\
             .map_elements(
-                lambda x: compute_solar_irradiance(**x).pipe(collapse_solar_irradiance),
+                # the function is getting called on null values, hence the hackiness,
+                # see https://github.com/pola-rs/polars/issues/15322#issuecomment-2570076975
+                lambda x: {
+                    "solar_irradiance_season": None,
+                    "solar_irradiance_solstice": None,
+                }
+                if x is None
+                else compute_solar_irradiance(**x).pipe(collapse_solar_irradiance),
                 return_dtype=pl.Struct(
                     {
                         "solar_irradiance_season": pl.Float64,
@@ -233,6 +241,8 @@ def add_solar_irradiance_columns(
                 strategy="thread_local",
             )
         )
+        # when the following struct.field accessors occur lazily, they're prone to
+        # pyo3_runtime.PanicException: expected known type
         .with_columns(
             solar_irradiance_season=pl.coalesce(
                 "solar_irradiance_season",
@@ -244,6 +254,7 @@ def add_solar_irradiance_columns(
             ),
         )
         .drop("_solar_irradiance")
+        .lazy()
     )
 
 

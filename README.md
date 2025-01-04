@@ -144,6 +144,7 @@ List of related webpages not yet mentioned in the manuscript:
 - [patito/issues/103](https://github.com/JakobGM/patito/issues/103): Validation fails on an empty list
 - [patito/issues/104](https://github.com/JakobGM/patito/issues/104): Optional list field with nested model fails to validate
 - [polars/issues/19771](https://github.com/pola-rs/polars/issues/19771): A no-op filter errors when the dataframe has an all null column
+- [polars/issues/15322](https://github.com/pola-rs/polars/issues/15322#issuecomment-2570076975): skip_nulls does not work in map_elements
 - [reactable-py/issues/25](https://github.com/machow/reactable-py/issues/25): Column default sort order does not override global default
 - [reactable-py/issues/28](https://github.com/machow/reactable-py/issues/28): Column class_ argument only sets the dev class for the first row
 - [reactable-py/issues/29](https://github.com/machow/reactable-py/issues/29): Should great_tables be a dependency (currently dev dependency)
