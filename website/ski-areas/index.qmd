@@ -15,7 +15,8 @@ Explore statistics on all named ski areas in the world with at least 3 runs and 
 The underlying data is provided by [OpenSkiMap](https://openskimap.org) and [OpenStreetMap](https://www.openstreetmap.org) with statistics computed by <https://github.com/dhimmel/openskistats>.
 
 ::: {.callout-warning}
-This project is currently under heavy development and is not yet ready for public consumption.
+This project is currently under heavy development.
+Methods and results are still preliminary and subject to change.
 :::
 
 ::: {.column-screen-inset}

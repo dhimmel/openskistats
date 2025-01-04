@@ -14,7 +14,7 @@ editor:
 ---
 
 ::: {.callout-warning}
-This manuscript is a work in progress and is not yet ready for public consumption.
+This manuscript is an incomplete in-progress draft.
 :::
 
 ```{python}
