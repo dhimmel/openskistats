@@ -1,7 +1,10 @@
+import logging
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import date, timedelta
 from functools import cached_property, lru_cache
-from typing import Literal
+from time import perf_counter
+from typing import Any, Literal
 
 import pandas as pd
 import polars as pl
@@ -135,7 +138,7 @@ class SkiSeasonDatetimes:
         )
 
 
-@lru_cache(maxsize=20_000)
+@lru_cache(maxsize=5_000)
 def get_clearsky(
     latitude: float, longitude: float, elevation: float, ski_season: SkiSeasonDatetimes
 ) -> pl.DataFrame:
@@ -191,8 +194,10 @@ def write_dartmouth_skiway_solar_irradiance() -> pl.DataFrame:
 
 
 def add_solar_irradiance_columns(
-    run_segments: pl.LazyFrame, skip_cache: bool = False
-) -> pl.LazyFrame:
+    run_segments: pl.DataFrame,
+    skip_cache: bool = False,
+    max_items: int | None = 5_000,
+) -> pl.DataFrame:
     """
     Adds three columns to a run coordinate/segment DataFrame:
 
@@ -203,74 +208,74 @@ def add_solar_irradiance_columns(
     Unless clear_cache is True, a lookup of prior results is attempted because the computation is quite slow.
     """
     segments_cached = load_solar_irradiance_cache_pl(skip_cache=skip_cache)
-    is_segment = pl.col("segment_hash").is_not_null()
-    return (
-        run_segments.with_columns(
-            solar_irradiance_cache_version=pl.when(is_segment).then(
-                pl.lit(SOLAR_IRRADIANCE_CACHE_VERSION, dtype=pl.Int8)
-            )
-        )
+    n_segments = run_segments["segment_hash"].drop_nulls().n_unique()
+    segments_to_compute = (
+        run_segments
+        # remove segments that have already been computed
+        .filter(pl.col("segment_hash").is_not_null())
         .join(
             segments_cached,
-            on=["segment_hash", "solar_irradiance_cache_version"],
-            how="left",
+            on="segment_hash",
+            how="anti",
         )
-        .collect()
-        .with_columns(
-            _solar_irradiance=pl.when(
-                is_segment & pl.col("solar_irradiance_season").is_null()
-            )
-            .then(pl.struct("latitude", "longitude", "elevation", "slope", "bearing"))
-            # map_elements must be outside when-then https://stackoverflow.com/a/79007841/4651668\
-            .map_elements(
-                # the function is getting called on null values, hence the hackiness,
-                # see https://github.com/pola-rs/polars/issues/15322#issuecomment-2570076975
-                lambda x: {
-                    "solar_irradiance_season": None,
-                    "solar_irradiance_solstice": None,
-                }
-                if x is None
-                else compute_solar_irradiance(**x).pipe(collapse_solar_irradiance),
-                return_dtype=pl.Struct(
-                    {
-                        "solar_irradiance_season": pl.Float64,
-                        "solar_irradiance_solstice": pl.Float64,
-                    },
-                ),
-                skip_nulls=True,
-                strategy="thread_local",
-            )
+        .select(
+            "segment_hash", "latitude", "longitude", "elevation", "slope", "bearing"
         )
-        # when the following struct.field accessors occur lazily, they're prone to
-        # pyo3_runtime.PanicException: expected known type
-        .with_columns(
-            solar_irradiance_season=pl.coalesce(
-                "solar_irradiance_season",
-                pl.col("_solar_irradiance").struct.field("solar_irradiance_season"),
-            ),
-            solar_irradiance_solstice=pl.coalesce(
-                "solar_irradiance_solstice",
-                pl.col("_solar_irradiance").struct.field("solar_irradiance_solstice"),
-            ),
+        .unique(subset=["segment_hash"])
+        .to_dicts()
+    )
+    logging.info(
+        f"Solar irradiance requested for {n_segments:,} segments, {len(segments_to_compute):,} segments not in cache."
+    )
+    if max_items is not None:
+        segments_to_compute = segments_to_compute[:max_items]
+        logging.info(
+            f"Computing solar irradiance for {len(segments_to_compute):,} segments after limiting to {max_items=}."
         )
-        .drop("_solar_irradiance")
-        .lazy()
+
+    def _process_segment(segment: dict[str, Any]) -> dict[str, float]:
+        segment_hash = segment.pop("segment_hash")
+        result = compute_solar_irradiance(**segment).pipe(collapse_solar_irradiance)
+        assert isinstance(result, dict)
+        result["segment_hash"] = segment_hash
+        result["solar_irradiance_cache_version"] = SOLAR_IRRADIANCE_CACHE_VERSION
+        return result
+
+    start_time = perf_counter()
+    with ThreadPoolExecutor() as executor:
+        results = list(executor.map(_process_segment, segments_to_compute))
+    total_time = perf_counter() - start_time
+    logging.info(
+        f"Computed solar irradiance for {len(segments_to_compute):,} segments in {total_time / 60:.1f} minutes: "
+        f"{total_time / len(segments_to_compute):.4f} seconds per segment."
+    )
+    segments_computed = pl.DataFrame(
+        data=results, schema=_get_solar_irradiance_cache_schema()
+    )
+    return run_segments.join(
+        pl.concat([segments_cached, segments_computed]),
+        on="segment_hash",
+        how="left",
     )
 
 
-def load_solar_irradiance_cache_pl(skip_cache: bool = False) -> pl.LazyFrame:
+def _get_solar_irradiance_cache_schema() -> dict[str, pl.DataType]:
+    return {
+        "segment_hash": pl.UInt64,
+        "solar_irradiance_cache_version": pl.Int8,
+        "solar_irradiance_season": pl.Float64,
+        "solar_irradiance_solstice": pl.Float64,
+    }
+
+
+def load_solar_irradiance_cache_pl(skip_cache: bool = False) -> pl.DataFrame:
     from openskistats.analyze import get_runs_parquet_path, load_runs_pl
 
     if skip_cache or running_in_test() or not get_runs_parquet_path().exists():
         return pl.DataFrame(
             data=[],
-            schema={
-                "segment_hash": pl.UInt64,
-                "solar_irradiance_cache_version": pl.Int8,
-                "solar_irradiance_season": pl.Float64,
-                "solar_irradiance_solstice": pl.Float64,
-            },
-        ).lazy()
+            schema=_get_solar_irradiance_cache_schema(),
+        )
     return (
         load_runs_pl()
         .select("run_id", "run_coordinates_clean")
@@ -287,4 +292,5 @@ def load_solar_irradiance_cache_pl(skip_cache: bool = False) -> pl.LazyFrame:
             "solar_irradiance_solstice",
         )
         .unique(subset=["segment_hash"])
+        .collect()
     )

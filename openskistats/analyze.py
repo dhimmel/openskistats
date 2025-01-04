@@ -134,7 +134,9 @@ def process_and_export_runs() -> None:
         .unnest("run_coordinates_clean")
         .filter(pl.col("index").is_not_null())
         .pipe(add_spatial_metric_columns, partition_by="run_id")
+        .collect()
         .pipe(add_solar_irradiance_columns)
+        .lazy()
         .select(
             "run_id",
             *RunCoordinateSegmentModel.model_fields,

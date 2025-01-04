@@ -130,6 +130,13 @@ class RunSegmentModel(Model):  # type: ignore [misc]
             description="Solar irradiance received by the segment on the winter solstice in kilowatt-hours per square meter (kW/m²/day)."
         ),
     ]
+    solar_irradiance_cache_version: Annotated[
+        int | None,
+        Field(
+            description="Version of the solar irradiance calculation and parameters used to compute the solar irradiance values. "
+            "This version can be incremented in the source code to invalidate cached solar irradiance values.",
+        ),
+    ]
 
 
 class RunCoordinateSegmentModel(RunSegmentModel, RunCoordinateModel):
