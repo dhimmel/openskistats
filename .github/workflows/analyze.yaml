@@ -57,7 +57,9 @@ jobs:
         publish_branch: data
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./data
-        exclude_assets: "website,openskistats"
+        # it's not clear how exclude_assets works
+        # https://github.com/peaceiris/actions-gh-pages/blob/ababa3d330af34b07419f6bc9f4a6b817ed7930b/src/git-utils.ts#L21-L39
+        exclude_assets: "website/**,openskistats/**"
         force_orphan: true
     - name: Deploy website
       uses: peaceiris/actions-gh-pages@v4

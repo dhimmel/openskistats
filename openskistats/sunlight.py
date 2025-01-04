@@ -201,7 +201,7 @@ def write_dartmouth_skiway_solar_irradiance() -> pl.DataFrame:
 
 def add_solar_irradiance_columns(
     run_segments: pl.DataFrame,
-    skip_cache: bool = True,
+    skip_cache: bool = False,
     max_items: int | None = 500,
 ) -> pl.DataFrame:
     """
@@ -280,8 +280,7 @@ def _get_runs_cache_path(skip_cache: bool = False) -> str | None | Path:
     if skip_cache or running_in_test():
         return None
     if running_in_ci():
-        # FIXME: return materialized data path
-        return None
+        return "https://github.com/dhimmel/openskistats/raw/data/runs.parquet"
     local_path = get_runs_parquet_path()
     if not local_path.exists():
         return None
