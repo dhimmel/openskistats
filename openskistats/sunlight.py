@@ -1,4 +1,5 @@
 import logging
+import os
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import date, timedelta
@@ -202,7 +203,9 @@ def write_dartmouth_skiway_solar_irradiance() -> pl.DataFrame:
 def add_solar_irradiance_columns(
     run_segments: pl.DataFrame,
     skip_cache: bool = False,
-    max_items: int | None = 500,
+    max_items: int | None = int(
+        os.environ.get("OPENSKISTATS_SOLAR_SEGMENT_COUNT", "500")
+    ),
 ) -> pl.DataFrame:
     """
     Adds three columns to a run coordinate/segment DataFrame:

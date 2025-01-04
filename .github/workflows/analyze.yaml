@@ -7,6 +7,11 @@ on:
         type: boolean
         required: true
         default: false
+      solar_segment_count:
+        description: Number of uncached run segments to compute solar irradiation for
+        type: number
+        required: false
+        default: 5000
   schedule:
     - cron: "0 10 * * SAT"  # https://crontab.guru/#0_10_*_*_SAT
 jobs:
@@ -38,6 +43,8 @@ jobs:
       if: toJSON(inputs.refresh_cache) || steps.cache-openskimap.outputs.cache-hit != 'true'
       run: uv run openskistats download
     - name: Python Analysis
+      env:
+        OPENSKISTATS_SOLAR_SEGMENT_COUNT: ${{ inputs.solar_segment_count || 2000000 }}
       run: |
         uv run openskistats analyze
         uv run openskistats validate
