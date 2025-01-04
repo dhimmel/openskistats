@@ -3,9 +3,8 @@
 [![GitHub Actions CI Tests Status](https://img.shields.io/github/actions/workflow/status/dhimmel/openskistats/tests.yaml?branch=main&label=actions&style=for-the-badge&logo=github&logoColor=white)](https://github.com/dhimmel/openskistats/actions/workflows/tests.yaml)
 
 > [!IMPORTANT]
-> This project is currently under heavy development and is not yet ready for public consumption.
-> If you happen to locate the results of the analyses in the meantime,
-> please do not disseminate them before contacting the authors.
+> This project is currently under heavy development.
+> Methods and results are still preliminary and subject to change.
 
 This project generates statistics on downhill ski slopes and areas from around the globe powered by the underlying OpenSkiMap/OpenStreetMap data.
 The first application is the creation of roses showing the compass orientations of ski areas.
