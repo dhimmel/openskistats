@@ -265,11 +265,12 @@ def add_solar_irradiation_columns(
             results.append(result)
             progress.advance(progress_task)
     total_time = perf_counter() - start_time
-    logging.info(
-        f"Computed solar irradiation for {len(segments_to_compute):,} segments in {total_time / 60:.1f} minutes: "
-        f"{total_time / len(segments_to_compute):.4f} seconds per segment."
-    )
-    logging.info(f"_get_clearsky lru_cache info: {get_clearsky.cache_info()}")
+    if segments_to_compute:
+        logging.info(
+            f"Computed solar irradiation for {len(segments_to_compute):,} segments in {total_time / 60:.1f} minutes: "
+            f"{total_time / len(segments_to_compute):.4f} seconds per segment."
+        )
+        logging.info(f"_get_clearsky lru_cache info: {get_clearsky.cache_info()}")
     segments_computed = pl.DataFrame(
         data=results, schema=_get_solar_irradiation_cache_schema()
     )

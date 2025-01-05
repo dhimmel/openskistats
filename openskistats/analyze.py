@@ -184,6 +184,8 @@ def analyze_all_ski_areas_polars(skip_runs: bool = False) -> None:
     Keyed on ski_area_id.
     Write data as parquet.
     """
+    from openskistats.counts import get_ski_area_comparable_counts
+
     set_openskimap_download_info_in_variables()
     process_and_export_lifts()
     if not skip_runs:
@@ -241,6 +243,7 @@ def analyze_all_ski_areas_polars(skip_runs: bool = False) -> None:
     ski_area_metrics_path = get_ski_area_metrics_path()
     logging.info(f"Writing {ski_area_metrics_path}")
     ski_area_metrics_df.write_parquet(ski_area_metrics_path)
+    set_variables(**get_ski_area_comparable_counts())
 
 
 def load_runs_pl() -> pl.LazyFrame:

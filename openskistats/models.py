@@ -316,6 +316,10 @@ class SkiAreaModel(Model):  # type: ignore [misc]
         "Null values arise for ski areas without an OSM source in ski_area_sources. "
         "See OpenSkiMap processing code at <https://github.com/russellporter/openskidata-processor/blob/bc168105f4d90c19817189ebe47e7bee20a2dcbc/src/transforms/Status.ts#L3-L8>."
     )
+    ski_area_uses: list[SkiRunUsage] | None = Field(
+        description="OpenSkiMap usage types / activities for the ski area.",
+        examples=["downhill"],
+    )
     country: str | None = Field(
         description="Country where the ski area is located.",
         examples=["United States"],

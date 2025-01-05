@@ -136,16 +136,13 @@ Vanat identified 5,764 ski areas worldwide,
 when limiting to "equipped outdoor ski areas covered with snow", which excludes "indoor facilities, mountaineering-only areas, and other types of facilities such as dry slopes."
 The 1,945 ski areas with 5 or more lifts qualified as a ski resort,
 of which 52 were deemed as _major_ based on a threshold of "1 million skier visits per winter season".
-OpenSkiMap contains 5,115 downhill ski areas with one or more lifts (i.e. equipped) and 1,635 with 5 or more lifts.
-This equates to 89% and 84% of Vanat's respective counts.
-<!-- should vanat comparables be filtered for operating?
-TODO: country count: vanat identifies 68 countries
--->
+OpenSkiMap contained `{python} var("openskimap__ski_areas__counts__04_downhill_operating_1_lift", ",")` operating downhill ski areas with one or more lifts (i.e. equipped) and `{python} var("openskimap__ski_areas__counts__05_downhill_operating_5_lift", ",")` with 5 or more lifts.
+This equates to `{python} f"{var('openskimap__ski_areas__counts__04_downhill_operating_1_lift') / 5764:.0%}"` and `{python} f"{var('openskimap__ski_areas__counts__05_downhill_operating_5_lift') / 1945:.0%}"` of Vanat's respective counts.
+Vanat identified "68 countries offering equipped outdoor ski areas covered with snow" compared to `{python} var("openskimap__countries__counts__ski_areas_04_downhill_operating_1_lift", ",")` in our analysis.
 
 Stuart Winchester identified 505 active ski areas in the United States as of 2023 [@storm-skiing-505-ski-areas].
 Winchester required ski areas to have one or more lifts, a snow surface, operated for at least 1 day in the last season, excluding areas operating solely for personal use.
-OpenSkiMap contains 510 operating downhill ski areas in the United States.
-<!-- FIXME: operating filters: should just be operating or also null? -->
+OpenSkiMap contains `{python} var("openskimap__ski_areas__counts__04_downhill_operating_1_lift_us", ",")` downhill, equipped, operating ski areas in the United States.
 
 ## Ski area influence
 

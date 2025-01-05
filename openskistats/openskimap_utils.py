@@ -299,6 +299,7 @@ def load_downhill_ski_areas_from_download_pl() -> pl.DataFrame:
             pl.col("generated").alias("osm_is_generated"),
             pl.col("runConvention").alias("osm_run_convention"),
             pl.col("status").alias("osm_status"),
+            pl.col("activities").alias("ski_area_uses"),
             pl.col("location__localized__en__country").alias("country"),
             pl.col("location__localized__en__region").alias("region"),
             pl.col("location__localized__en__locality").alias("locality"),

@@ -119,15 +119,13 @@ List of related webpages not yet mentioned in the manuscript:
 - https://www.skitalk.com/threads/comparing-latitude-and-elevation-at-western-us-resorts.9980/
 - https://gitlab.com/hugfr/european-ski-resorts-snow-reliability and https://zenodo.org/records/8047168
 - https://mapsynergy.com/ and https://mapsynergy.maps.arcgis.com/apps/dashboards/44d9c8422f3c4cc898642d75392337db
+- [Closeread Prize Submission: Which way do you ski?](https://forum.posit.co/t/which-way-do-you-ski-closeread-prize/196451)
 
 ## Wild Ideas
 
 - Table of all OpenStreetMap users that have contributed to ski areas, i.e. top skiers
-- Display table webpage background of falling snowflakes ([examples](https://freefrontend.com/css-snow-effects/))
 - Max slope v difficulty by region
 - fix matplotlib super title spacing
-- How many ski areas in the world, comparing to the Vanat report
-- Total combined vert of ski areas by rank of ski area (how much do big resorts drive the aggregated metrics)
 
 ## Upstream issue tracking
 
