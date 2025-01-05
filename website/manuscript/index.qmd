@@ -252,7 +252,19 @@ Dartmouth Skiway rose with the NNE petal highlighted.
 Dartmouth Skiway rose with the NNE petal highlighted.
 :::
 
+### Sunlight
 
+Solar irradiance is computed at the level of a run segment, as defined by its latitude, longitude, elevation, bearing, and slope.
+The segment is treated as a plane, analogous to a solar panel allowing us to use the `pvlib` photovoltaic modeling library for these calculations [@joss-pvlib-2023].
+The Ineichen and Perez model with Linke turbidity estimates diffuse normal irradiance, global horizontal irradiance, and direct horizontal irradiance,
+under the assumption of a clear sky.
+We compute irradiance at 15 minute intervals for the duration of a typical 120 day ski season ---
+December 1 to March 31 in the northern hemisphere and May 31 to September 28 in the southern hemisphere for the 2024 ski season.
+We average the irradiance over the ski season to compute solar irradiation in kilowatt-hours per square meter per day (kW/m²/day) along the segment.
+When averaging irradiation across segments, like when aggregating to the level of a run or ski area, we weight by the vertical drop of the segment.
+
+Some shortcomings of these estimates are that they do not account for cloud cover, shadowing due to vegetation, and shadowing due to topography both on a micro (fine topographic variation like boulders, cliffs, moguls, etcetera) and macro scale (higher terrain like ridges or summits that block sunlight).
+We specify a surface type of snow in `pvlib`, which sets an albedo of 65%, i.e. snow reflects 65% of incoming light.
 
 ## References
 
