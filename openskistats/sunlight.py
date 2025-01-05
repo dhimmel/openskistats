@@ -255,7 +255,7 @@ def add_solar_irradiation_columns(
         return result
 
     start_time = perf_counter()
-    with ThreadPoolExecutor() as executor, Progress() as progress:
+    with ThreadPoolExecutor(max_workers=4) as executor, Progress() as progress:
         progress_task = progress.add_task(
             "Computing solar irradiation...",
             total=len(segments_to_compute),
@@ -269,6 +269,7 @@ def add_solar_irradiation_columns(
         f"Computed solar irradiation for {len(segments_to_compute):,} segments in {total_time / 60:.1f} minutes: "
         f"{total_time / len(segments_to_compute):.4f} seconds per segment."
     )
+    logging.info(f"_get_clearsky lru_cache info: {get_clearsky.cache_info()}")
     segments_computed = pl.DataFrame(
         data=results, schema=_get_solar_irradiation_cache_schema()
     )
