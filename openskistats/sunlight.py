@@ -19,7 +19,7 @@ from openskistats.utils import (
     running_in_test,
 )
 
-SOLAR_IRRADIANCE_CACHE_VERSION = 1
+SOLAR_CACHE_VERSION = 1
 """
 Increment this version number to invalidate the solar irradiance cache.
 """
@@ -78,12 +78,14 @@ def compute_solar_irradiance(
 def collapse_solar_irradiance(
     irrad_df: pl.DataFrame,
 ) -> dict[str, float]:
-    def get_mean_irradiance(df: pl.DataFrame) -> float:
+    """Aggregate solar irradiance to solar irradiation."""
+
+    def get_irradiation(df: pl.DataFrame) -> float:
         return 24 * float(df["poa_global"].mean()) / 1_000
 
     return {
-        "solar_irradiance_season": get_mean_irradiance(irrad_df),
-        "solar_irradiance_solstice": get_mean_irradiance(
+        "solar_irradiation_season": get_irradiation(irrad_df),
+        "solar_irradiation_solstice": get_irradiation(
             irrad_df.filter(pl.col("is_solstice"))
         ),
     }
@@ -200,7 +202,7 @@ def write_dartmouth_skiway_solar_irradiance() -> pl.DataFrame:
     return skiway_df
 
 
-def add_solar_irradiance_columns(
+def add_solar_irradiation_columns(
     run_segments: pl.DataFrame,
     skip_cache: bool = False,
     max_items: int | None = int(
@@ -210,13 +212,13 @@ def add_solar_irradiance_columns(
     """
     Adds three columns to a run coordinate/segment DataFrame:
 
-    - solar_irradiance_cache_version
-    - solar_irradiance_season
-    - solar_irradiance_solstice
+    - solar_cache_version
+    - solar_irradiation_season
+    - solar_irradiation_solstice
 
     Unless clear_cache is True, a lookup of prior results is attempted because the computation is quite slow.
     """
-    segments_cached = load_solar_irradiance_cache_pl(skip_cache=skip_cache)
+    segments_cached = load_solar_irradiation_cache_pl(skip_cache=skip_cache)
     n_segments = run_segments["segment_hash"].drop_nulls().n_unique()
     segments_to_compute = (
         run_segments
@@ -234,12 +236,12 @@ def add_solar_irradiance_columns(
         .to_dicts()
     )
     logging.info(
-        f"Solar irradiance requested for {n_segments:,} segments, {len(segments_to_compute):,} segments not in cache."
+        f"Solar irradiation requested for {n_segments:,} segments, {len(segments_to_compute):,} segments not in cache."
     )
     if max_items is not None:
         segments_to_compute = segments_to_compute[:max_items]
     logging.info(
-        f"Computing solar irradiance for {len(segments_to_compute):,} segments after limiting to {max_items=}."
+        f"Computing solar irradiation for {len(segments_to_compute):,} segments after limiting to {max_items=}."
     )
 
     def _process_segment(segment: dict[str, Any]) -> dict[str, float]:
@@ -247,7 +249,7 @@ def add_solar_irradiance_columns(
         result = compute_solar_irradiance(**segment).pipe(collapse_solar_irradiance)
         assert isinstance(result, dict)
         result["segment_hash"] = segment_hash
-        result["solar_irradiance_cache_version"] = SOLAR_IRRADIANCE_CACHE_VERSION
+        result["solar_cache_version"] = SOLAR_CACHE_VERSION
         return result
 
     start_time = perf_counter()
@@ -255,11 +257,11 @@ def add_solar_irradiance_columns(
         results = list(executor.map(_process_segment, segments_to_compute))
     total_time = perf_counter() - start_time
     logging.info(
-        f"Computed solar irradiance for {len(segments_to_compute):,} segments in {total_time / 60:.1f} minutes: "
+        f"Computed solar irradiation for {len(segments_to_compute):,} segments in {total_time / 60:.1f} minutes: "
         f"{total_time / len(segments_to_compute):.4f} seconds per segment."
     )
     segments_computed = pl.DataFrame(
-        data=results, schema=_get_solar_irradiance_cache_schema()
+        data=results, schema=_get_solar_irradiation_cache_schema()
     )
     return run_segments.join(
         pl.concat([segments_cached, segments_computed]),
@@ -268,12 +270,12 @@ def add_solar_irradiance_columns(
     )
 
 
-def _get_solar_irradiance_cache_schema() -> dict[str, pl.DataType]:
+def _get_solar_irradiation_cache_schema() -> dict[str, pl.DataType]:
     return {
         "segment_hash": pl.UInt64,
-        "solar_irradiance_cache_version": pl.UInt8,
-        "solar_irradiance_season": pl.Float32,
-        "solar_irradiance_solstice": pl.Float32,
+        "solar_cache_version": pl.UInt8,
+        "solar_irradiation_season": pl.Float32,
+        "solar_irradiation_solstice": pl.Float32,
     }
 
 
@@ -290,12 +292,12 @@ def _get_runs_cache_path(skip_cache: bool = False) -> str | None | Path:
     return local_path
 
 
-def load_solar_irradiance_cache_pl(skip_cache: bool = False) -> pl.DataFrame:
+def load_solar_irradiation_cache_pl(skip_cache: bool = False) -> pl.DataFrame:
     path = _get_runs_cache_path(skip_cache=skip_cache)
     if not path:
         return pl.DataFrame(
             data=[],
-            schema=_get_solar_irradiance_cache_schema(),
+            schema=_get_solar_irradiation_cache_schema(),
         )
     return (
         pl.scan_parquet(source=path)
@@ -303,14 +305,12 @@ def load_solar_irradiance_cache_pl(skip_cache: bool = False) -> pl.DataFrame:
         .explode("run_coordinates_clean")
         .unnest("run_coordinates_clean")
         .filter(pl.col("segment_hash").is_not_null())
-        .filter(
-            pl.col("solar_irradiance_cache_version") == SOLAR_IRRADIANCE_CACHE_VERSION
-        )
+        .filter(pl.col("solar_cache_version") == SOLAR_CACHE_VERSION)
         .select(
             "segment_hash",
-            "solar_irradiance_cache_version",
-            "solar_irradiance_season",
-            "solar_irradiance_solstice",
+            "solar_cache_version",
+            "solar_irradiation_season",
+            "solar_irradiation_solstice",
         )
         .unique(subset=["segment_hash"])
         .collect()

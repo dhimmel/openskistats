@@ -90,7 +90,7 @@ def get_ski_area_frontend_table(story: bool = False) -> pl.DataFrame:
             "min_elevation",
             "max_elevation",
             "vertical_drop",
-            "solar_irradiance_season",
+            "solar_irradiation_season",
             "bearing_mean",
             "bearing_alignment",
             "poleward_affinity",
@@ -420,7 +420,7 @@ def get_ski_area_reactable(story: bool = False) -> reactable.Reactable:
                 footer=reactable.JS("footerMaxMeters"),
             ),
             reactable.Column(
-                id="solar_irradiance_season",
+                id="solar_irradiation_season",
                 name="Sunlight",
                 show=not story,
                 format=reactable.ColFormat(
@@ -535,7 +535,7 @@ def get_ski_area_reactable(story: bool = False) -> reactable.Reactable:
                     "min_elevation",
                     "max_elevation",
                     "vertical_drop",
-                    "solar_irradiance_season",
+                    "solar_irradiation_season",
                 ],
             ),
             reactable.ColGroup(

@@ -47,8 +47,8 @@ class SkiRunUsage(StrEnum):
     snow_park = "snow_park"
 
 
-_solar_irradiance_description = (
-    "This value measures solar irradiance by treating each run segment as a plane according to its latitude, longitude, elevation, bearing, and slope. "
+_solar_irradiation_description = (
+    "This value measures solar irradiation by treating each run segment as a plane according to its latitude, longitude, elevation, bearing, and slope. "
     "Solar irradiance is computed using clear sky estimates for diffuse normal irradiance, global horizontal irradiance, and direct horizontal irradiance according to the Ineichen and Perez model with Linke turbidity.",
 )
 
@@ -124,27 +124,27 @@ class RunSegmentModel(Model):  # type: ignore [misc]
             description="Slope of the segment from the previous coordinate to the current coordinate in degrees."
         ),
     ]
-    solar_irradiance_season: Annotated[
+    solar_irradiation_season: Annotated[
         float | None,
         Field(
             ge=0,
             lt=15,  # practical limit
-            description=f"Average daily solar irradiance received by the segment over the course of a typical 115 ski season in kilowatt-hours per square meter (kW/m²/day). {_solar_irradiance_description}",
+            description=f"Average daily solar irradiation received by the segment over the course of a typical 115 ski season in kilowatt-hours per square meter (kW/m²/day). {_solar_irradiation_description}",
         ),
     ]
-    solar_irradiance_solstice: Annotated[
+    solar_irradiation_solstice: Annotated[
         float | None,
         Field(
             ge=0,
             lt=15,  # practical limit
-            description="Solar irradiance received by the segment on the winter solstice in kilowatt-hours per square meter (kW/m²/day).",
+            description="Solar irradiation received by the segment on the winter solstice in kilowatt-hours per square meter (kW/m²/day).",
         ),
     ]
-    solar_irradiance_cache_version: Annotated[
+    solar_cache_version: Annotated[
         int | None,
         Field(
-            description="Version of the solar irradiance calculation and parameters used to compute the solar irradiance values. "
-            "This version can be incremented in the source code to invalidate cached solar irradiance values.",
+            description="Version of the solar irradiation calculation and parameters used to compute the solar irradiation values. "
+            "This version can be incremented in the source code to invalidate cached solar irradiation values.",
         ),
     ]
 
@@ -431,20 +431,20 @@ class SkiAreaModel(Model):  # type: ignore [misc]
             description="Peak elevation of the ski area in meters computed as the highest elevation along all runs.",
         ),
     ]
-    solar_irradiance_season: Annotated[
+    solar_irradiation_season: Annotated[
         float | None,
         Field(
-            description="Average daily solar irradiance received by run segments over the course of a typical 120 ski season in kilowatt-hours per square meter (kW/m²/day). "
+            description="Average daily solar irradiation received by run segments over the course of a typical 120 ski season in kilowatt-hours per square meter (kW/m²/day). "
             "The average is weighted by the vertical drop of each segment. "
-            f"{_solar_irradiance_description}",
+            f"{_solar_irradiation_description}",
         ),
     ]
-    solar_irradiance_solstice: Annotated[
+    solar_irradiation_solstice: Annotated[
         float | None,
         Field(
-            description="Average daily solar irradiance received by run segments on the winter solstice in kilowatt-hours per square meter (kW/m²/day). "
+            description="Average daily solar irradiation received by run segments on the winter solstice in kilowatt-hours per square meter (kW/m²/day). "
             "The average is weighted by the vertical drop of each segment. "
-            f"{_solar_irradiance_description}",
+            f"{_solar_irradiation_description}",
         ),
     ]
     for field_name in BearingStatsModel.model_fields:

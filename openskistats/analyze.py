@@ -34,7 +34,7 @@ from openskistats.plot import (
     subplot_orientations,
 )
 from openskistats.sunlight import (
-    add_solar_irradiance_columns,
+    add_solar_irradiation_columns,
 )
 from openskistats.utils import (
     get_data_directory,
@@ -71,12 +71,12 @@ _aggregate_run_coordinates_exprs = {
 }
 
 _aggregate_run_segment_sunlight_exprs = {
-    "solar_irradiance_season": pl_weighted_mean(
-        value_col="solar_irradiance_season",
+    "solar_irradiation_season": pl_weighted_mean(
+        value_col="solar_irradiation_season",
         weight_col="distance_vertical_drop",
     ),
-    "solar_irradiance_solstice": pl_weighted_mean(
-        value_col="solar_irradiance_solstice",
+    "solar_irradiation_solstice": pl_weighted_mean(
+        value_col="solar_irradiation_solstice",
         weight_col="distance_vertical_drop",
     ),
 }
@@ -135,7 +135,7 @@ def process_and_export_runs() -> None:
         .filter(pl.col("index").is_not_null())
         .pipe(add_spatial_metric_columns, partition_by="run_id")
         .collect()
-        .pipe(add_solar_irradiance_columns)
+        .pipe(add_solar_irradiation_columns)
         .lazy()
         .select(
             "run_id",
