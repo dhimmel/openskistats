@@ -55,7 +55,9 @@ jobs:
       if: toJSON(inputs.refresh_cache) || steps.cache-openskimap.outputs.cache-hit != 'true'
       # the step if condition stopped working around 2025-01-03, so use bash condition to skip the download if files exist
       run: |
-        [ ! -f "data/openskimap/runs.geojson.xz" ] && uv run openskistats download
+        if [ ! -f "data/openskimap/runs.geojson.xz" ]; then
+          uv run openskistats download
+        fi
       shell: bash
     - name: Python Analysis
       env:
