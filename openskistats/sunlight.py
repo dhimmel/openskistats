@@ -11,6 +11,8 @@ from typing import Any, Literal
 import pandas as pd
 import polars as pl
 import pvlib
+import requests
+from rich.progress import Progress
 
 from openskistats.utils import (
     get_data_directory,
@@ -253,8 +255,15 @@ def add_solar_irradiation_columns(
         return result
 
     start_time = perf_counter()
-    with ThreadPoolExecutor() as executor:
-        results = list(executor.map(_process_segment, segments_to_compute))
+    with ThreadPoolExecutor() as executor, Progress() as progress:
+        progress_task = progress.add_task(
+            "Computing solar irradiation...",
+            total=len(segments_to_compute),
+        )
+        results = []
+        for result in executor.map(_process_segment, segments_to_compute):
+            results.append(result)
+            progress.advance(progress_task)
     total_time = perf_counter() - start_time
     logging.info(
         f"Computed solar irradiation for {len(segments_to_compute):,} segments in {total_time / 60:.1f} minutes: "
@@ -285,7 +294,9 @@ def _get_runs_cache_path(skip_cache: bool = False) -> str | None | Path:
     if skip_cache or running_in_test():
         return None
     if running_in_ci():
-        return "https://github.com/dhimmel/openskistats/raw/data/runs.parquet"
+        url = "https://github.com/dhimmel/openskistats/raw/data/runs.parquet"
+        if not requests.head(url).ok:
+            return None
     local_path = get_runs_parquet_path()
     if not local_path.exists():
         return None
@@ -299,6 +310,7 @@ def load_solar_irradiation_cache_pl(skip_cache: bool = False) -> pl.DataFrame:
             data=[],
             schema=_get_solar_irradiation_cache_schema(),
         )
+    logging.info(f"Loading solar irradiation cache from {path=}.")
     return (
         pl.scan_parquet(source=path)
         .select("run_id", "run_coordinates_clean")

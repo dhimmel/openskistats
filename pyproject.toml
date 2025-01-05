@@ -31,6 +31,7 @@ dependencies = [
     "pyarrow >= 17.0.0",
     "reactable >= 0.1.5",
     "requests >= 2.32.3",
+    "rich>=13.9.4",
     "typer >= 0.12.5",
 ]
 

@@ -99,7 +99,7 @@ def process_and_export_lifts() -> None:
             *[
                 x
                 for x in RunCoordinateSegmentModel.model_fields
-                if not x.startswith("solar_irradiance")
+                if not x.startswith("solar_")
             ],
         )
         .group_by("lift_id")

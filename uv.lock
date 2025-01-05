@@ -1340,6 +1340,7 @@ dependencies = [
     { name = "pyarrow" },
     { name = "reactable" },
     { name = "requests" },
+    { name = "rich" },
     { name = "typer" },
 ]
 
@@ -1369,6 +1370,7 @@ requires-dist = [
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.4.4" },
     { name = "reactable", specifier = ">=0.1.5" },
     { name = "requests", specifier = ">=2.32.3" },
+    { name = "rich", specifier = ">=13.9.4" },
     { name = "typer", specifier = ">=0.12.5" },
 ]
 
