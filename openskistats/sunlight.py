@@ -297,8 +297,7 @@ def _get_runs_cache_path(skip_cache: bool = False) -> str | None | Path:
         return None
     if running_in_ci():
         url = "https://github.com/dhimmel/openskistats/raw/data/runs.parquet"
-        if not requests.head(url).ok:
-            return None
+        return url if requests.head(url).ok else None
     local_path = get_runs_parquet_path()
     if not local_path.exists():
         return None
