@@ -49,7 +49,7 @@ class SkiRunUsage(StrEnum):
 
 _solar_irradiation_description = (
     "This value measures solar irradiation by treating each run segment as a plane according to its latitude, longitude, elevation, bearing, and slope. "
-    "Solar irradiance is computed using clear sky estimates for diffuse normal irradiance, global horizontal irradiance, and direct horizontal irradiance according to the Ineichen and Perez model with Linke turbidity.",
+    "Solar irradiance is computed using clear sky estimates for diffuse normal irradiance, global horizontal irradiance, and direct horizontal irradiance according to the Ineichen and Perez model with Linke turbidity."
 )
 
 
@@ -438,7 +438,7 @@ class SkiAreaModel(Model):  # type: ignore [misc]
     solar_irradiation_season: Annotated[
         float | None,
         Field(
-            description="Average daily solar irradiation received by run segments over the course of a typical 120 ski season in kilowatt-hours per square meter (kW/m²/day). "
+            description="Average daily solar irradiation received by run segments over the course of a typical 120 day ski season in kilowatt-hours per square meter (kW/m²/day). "
             "The average is weighted by the vertical drop of each segment. "
             f"{_solar_irradiation_description}",
         ),
