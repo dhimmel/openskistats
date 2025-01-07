@@ -338,7 +338,9 @@ def get_solar_location_band(
     This is a preliminary function which likely will be changed to support the exact data schema
     required for plotting the sun's path as a band between the solstice and closing day of a typical ski season.
     """
-    times = SkiSeasonDatetimes(hemisphere="north", extent="season").interpolated_range
+    times = SkiSeasonDatetimes(
+        hemisphere="north", extent="season", freq="1min"
+    ).interpolated_range
     return (
         pvlib.location.Location(
             latitude=latitude, longitude=longitude, altitude=elevation
@@ -347,19 +349,19 @@ def get_solar_location_band(
         .add_prefix("sun_")
         .reset_index(names="datetime")
         .pipe(pl.from_pandas)
+        # restrict to daytime
         .filter(pl.col("sun_apparent_elevation") > 0)
         .select(
             "datetime",
             pl.col("datetime").dt.date().alias("date"),
             pl.col("datetime").dt.time().alias("time"),
-            "sun_zenith",
+            pl.col("sun_apparent_zenith").alias("sun_zenith"),
             "sun_azimuth",
             sun_azimuth_bin_center=pl.col("sun_azimuth")
             .cut(breaks=list(range(0, 361)), left_closed=True, include_breaks=True)
             .struct.field("breakpoint")
             .sub(0.5),
         )
-        # .filter(pl.col("date") == date.fromisoformat("2024-12-21"))
         .group_by("sun_azimuth_bin_center")
         .agg(
             pl.count("sun_zenith").alias("sun_zenith_count"),

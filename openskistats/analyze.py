@@ -8,6 +8,7 @@ import matplotlib.pyplot
 import polars as pl
 from matplotlib.backends.backend_pdf import PdfPages
 from patito.exceptions import DataFrameValidationError
+from rich.progress import Progress
 
 from openskistats.bearing import (
     add_spatial_metric_columns,
@@ -30,6 +31,7 @@ from openskistats.openskimap_utils import (
 from openskistats.plot import (
     _generate_margin_text,
     _plot_mean_bearing_as_snowflake,
+    _plot_solar_location_band,
     plot_orientation,
     subplot_orientations,
 )
@@ -575,7 +577,8 @@ def create_ski_area_roses(overwrite: bool = False) -> None:
     # use spawn instead of fork until Python 3.14 as per https://docs.pola.rs/user-guide/misc/multiprocessing/
     mp_context = multiprocessing.get_context("spawn")
 
-    with ProcessPoolExecutor(mp_context=mp_context) as executor:
+    with ProcessPoolExecutor(mp_context=mp_context) as executor, Progress() as progress:
+        task_progress = progress.add_task("[cyan]Creating roses...", total=len(tasks))
         futures = [executor.submit(_create_ski_area_rose, **task) for task in tasks]
         for future in as_completed(futures):
             try:
@@ -583,6 +586,8 @@ def create_ski_area_roses(overwrite: bool = False) -> None:
             except Exception as e:
                 logging.error(f"Task failed: {e}")
                 raise
+            finally:
+                progress.update(task_progress, advance=1)
 
 
 def _create_ski_area_rose(
@@ -635,6 +640,12 @@ def _create_ski_area_rose(
     )
     _plot_mean_bearing_as_snowflake(
         ax=ax, bearing=info["bearing_mean"], alignment=info["bearing_alignment"]
+    )
+    _plot_solar_location_band(
+        ax=ax,
+        latitude=info["latitude"],
+        longitude=info["longitude"],
+        elevation=info["min_elevation"],
     )
     logging.info(f"Writing {full_path}")
     fig.savefig(

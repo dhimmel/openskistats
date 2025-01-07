@@ -14,6 +14,8 @@ from matplotlib.projections.polar import PolarAxes
 from matplotlib.text import Text as MplText
 from osmnx.plot import _get_fig_ax
 
+from openskistats.sunlight import get_solar_location_band
+
 SUBPLOT_FIGSIZE = 4.0
 """Size in inches for each subplot in a grid."""
 
@@ -231,6 +233,28 @@ def _generate_margin_text(group_info: dict[str, Any]) -> dict[MarginTextLocation
             f"elevation:\n{group_info['min_elevation']:,.0f}{NARROW_SPACE}m base\n{group_info['max_elevation']:,.0f}{NARROW_SPACE}m peak"
         )
     return margin_text
+
+
+def _plot_solar_location_band(
+    ax: PolarAxes,
+    latitude: float,
+    longitude: float,
+    elevation: float,
+) -> None:
+    location_df = get_solar_location_band(
+        latitude=latitude,
+        longitude=longitude,
+        elevation=elevation,
+    )
+    zenith_scaler = ax.get_rmax() / 90
+    ax.fill_between(
+        x=np.deg2rad(location_df["sun_azimuth_bin_center"]),
+        y1=location_df["sun_zenith_min"] * zenith_scaler,
+        y2=location_df["sun_zenith_max"] * zenith_scaler,
+        color="#ffee9c",
+        # alpha=0.5,
+        zorder=1,
+    )
 
 
 def _plot_mean_bearing_as_snowflake(
