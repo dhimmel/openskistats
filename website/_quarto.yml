@@ -5,6 +5,7 @@ website:
   title: "OpenSkiStats"
   search: false
   site-url: https://openskistats.org
+  favicon: common/snowflake.svg
   navbar:
     left:
       - href: ski-areas/
