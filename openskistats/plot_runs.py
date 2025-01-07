@@ -12,6 +12,7 @@ from openskistats.bearing import (
     cut_bearings_pl,
     get_cut_bearing_bins_df,
 )
+from openskistats.models import SkiRunDifficulty
 from openskistats.utils import pl_flip_bearing, pl_hemisphere
 
 
@@ -294,3 +295,67 @@ def plot_bearing_by_latitude_bin() -> plt.Figure:
         )
 
     return fig
+
+
+def plot_run_difficulty_histograms_by_slope() -> pn.ggplot:
+    runs = (
+        load_runs_pl()
+        .with_columns(
+            run_difficulty_condensed=pl.col("run_difficulty")
+            .replace_strict(SkiRunDifficulty.condense())
+            .fill_null(SkiRunDifficulty.other),
+            run_grade=pl.col("vertical_drop").truediv("combined_distance"),
+        )
+        .with_columns(
+            run_slope=pl.col("run_grade").arctan().degrees(),
+        )
+        .with_columns(
+            run_slope_bin_center=pl.col("run_slope")
+            .cut(
+                breaks=pl.int_range(0, 51, 1, eager=True),
+                left_closed=True,
+                include_breaks=True,
+            )
+            .struct.field("breakpoint")
+            .sub(0.5)
+        )
+        .group_by("run_slope_bin_center", "run_difficulty_condensed")
+        .agg(
+            pl.count("run_id").alias("runs_count"),
+            pl.col("combined_vertical").sum().alias("combined_vertical"),
+        )
+        .sort("run_slope_bin_center", "run_difficulty_condensed")
+        .filter(pl.col("run_slope_bin_center").is_not_null())
+        .collect()
+    )
+    return (
+        pn.ggplot(
+            data=runs,
+            mapping=pn.aes(
+                x="run_slope_bin_center",
+                y="combined_vertical",
+                fill="run_difficulty_condensed",
+            ),
+        )
+        + pn.geom_bar(stat="identity", width=1)
+        + pn.facet_grid("run_difficulty_condensed ~ .", space="free", shrink=True)
+        + pn.scale_fill_manual(
+            values=SkiRunDifficulty.colormap(),
+            limits=list(SkiRunDifficulty.colormap()),
+            guide=None,
+        )
+        + pn.scale_x_continuous(
+            name="Slope",
+            breaks=np.arange(0, 90, 10),
+            labels=lambda values: [f"{x:.0f}°" for x in values],
+            expand=(0, 0),
+        )
+        + pn.scale_y_continuous(
+            name="Combined Vertical (km)",
+            labels=lambda values: [f"{x / 1_000:.0f}" for x in values],
+        )
+        + pn.theme_bw()
+        + pn.theme(
+            figure_size=(3, 7),
+        )
+    )

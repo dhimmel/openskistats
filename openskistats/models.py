@@ -26,6 +26,10 @@ class OpenSkiMapStatus(StrEnum):
 
 
 class SkiRunDifficulty(StrEnum):
+    """
+    https://wiki.openstreetmap.org/wiki/Key:piste:difficulty
+    """
+
     novice = "novice"
     easy = "easy"
     intermediate = "intermediate"
@@ -34,6 +38,31 @@ class SkiRunDifficulty(StrEnum):
     extreme = "extreme"
     freeride = "freeride"
     other = "other"
+
+    @classmethod
+    def condense(cls) -> "dict[SkiRunDifficulty, SkiRunDifficulty]":
+        """Map to a condensed set of difficulty levels."""
+        return {
+            cls.novice: cls.easy,
+            cls.easy: cls.easy,
+            cls.intermediate: cls.intermediate,
+            cls.advanced: cls.advanced,
+            cls.expert: cls.expert,
+            cls.extreme: cls.expert,
+            cls.freeride: cls.other,
+            cls.other: cls.other,
+        }
+
+    @classmethod
+    def colormap(cls) -> "dict[SkiRunDifficulty, str]":
+        """Condensed difficulty to color mapping based on North American conventions."""
+        return {
+            cls.easy: "#32a852",
+            cls.intermediate: "#005aa8",
+            cls.advanced: "#000000",
+            cls.expert: "#000000",
+            cls.other: "#bfbfbf",
+        }
 
 
 class SkiRunUsage(StrEnum):
