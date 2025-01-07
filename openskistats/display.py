@@ -194,7 +194,9 @@ columns_descriptions = {
     "bin_proportion_4_W": "Proportion of vertical-weighted run segments oriented with a western cardinal direction.",
     "bin_proportion_2_N": "Proportion of vertical-weighted run segments oriented northward with the remaining proportion oriented southward.",
     "rose": "Compass rose histogram of run segment orientations. "
-    "Hover over or click on the 8-bin preview rose to view the full 32-bin rose.",
+    "Hover over or click on the 8-bin preview rose to view the full 32-bin rose. "
+    "The snowflake represents the mean orientation and alignment of all run segments, weighted by vertical drop. "
+    "The sun's path throughout the course of a 120-day season is shown as a yellow band defined by the sun's azimuth on the angular axis and zenith on the radial axis.",
 }
 
 
