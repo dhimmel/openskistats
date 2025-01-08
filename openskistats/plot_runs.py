@@ -343,11 +343,11 @@ def plot_run_difficulty_histograms_by_slope(
         .agg(
             pl.sum("runs_count"),
             pl.sum("combined_vertical"),
-            pl.max("combined_vertical").mul(0.8).alias("bin_max_combined_vertical"),
+            pl.max("combined_vertical").mul(0.97).alias("bin_max_combined_vertical"),
         )
         .with_columns(
             label=pl.struct("runs_count", "combined_vertical").map_elements(
-                lambda x: f"{x['runs_count']:,} runs\n{x['combined_vertical'] / 1_000:.0f} km vert",
+                lambda x: f"{x['runs_count']:,} runs\n{x['combined_vertical'] / 1_000:,.0f} km vert",
                 return_dtype=pl.String,
             )
         )
@@ -363,10 +363,15 @@ def plot_run_difficulty_histograms_by_slope(
             ),
         )
         + pn.geom_bar(stat="identity", width=1)
-        + pn.geom_text(
-            pn.aes(x=38, y="bin_max_combined_vertical", label="label"),
+        + pn.geom_label(
+            pn.aes(x=40.8, y="bin_max_combined_vertical", label="label"),
+            fill="#fff9e8",
+            boxcolor="#8c8980",
             data=difficulty_stats,
+            ha="right",
+            va="top",
             size=8,
+            alpha=0.8,
         )
         + pn.facet_grid(f"{difficulty_col} ~ .", scales="free_y")
         + pn.scale_fill_manual(
@@ -375,10 +380,11 @@ def plot_run_difficulty_histograms_by_slope(
             guide=None,
         )
         + pn.scale_x_continuous(
-            name="Slope",
+            name="\nSlope",  # newline to prevent overplotting bug when axis_text_y=pn.element_blank()
             breaks=np.arange(0, 90, 10),
             labels=lambda values: [f"{x:.0f}°" for x in values],
             expand=(0, 0),
+            limits=(0, 42),
         )
         + pn.scale_y_continuous(
             name="Combined Vertical (km)",
@@ -387,5 +393,7 @@ def plot_run_difficulty_histograms_by_slope(
         + pn.theme_bw()
         + pn.theme(
             figure_size=(3, len(colormap)),
+            axis_text_y=pn.element_blank(),
+            axis_ticks_y=pn.element_blank(),
         )
     )

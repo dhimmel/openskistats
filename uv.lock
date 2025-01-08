@@ -1561,7 +1561,7 @@ wheels = [
 
 [[package]]
 name = "plotnine"
-version = "0.14.2"
+version = "0.14.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "matplotlib" },
@@ -1571,9 +1571,9 @@ dependencies = [
     { name = "scipy" },
     { name = "statsmodels" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e3/54/61d43826064be1b02c02ad6e602613992f02b7ec61acf6490b5140a8722b/plotnine-0.14.2.tar.gz", hash = "sha256:40091588cabbd1287fb9969e4f7d77ce50eefb1b2a15abb3486f27329ead745c", size = 6412802 }
+sdist = { url = "https://files.pythonhosted.org/packages/5d/0e/618bfa724ad19418c83eb22cdc4332dc69bb67f47094bd013ffe15e188d2/plotnine-0.14.5.tar.gz", hash = "sha256:9e75969e8e10d8d770a4be36d10e075cc10b88ca6fcc99e36ada53436fb5653f", size = 6424617 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/12/3e/40c4ff57dd63c608b35cc1f710f8f017ab9caf4d79cf442ca8c330997010/plotnine-0.14.2-py3-none-any.whl", hash = "sha256:26d7723c7464142d094e26892e597107814eb47634a5c902459850de3cf73360", size = 1300426 },
+    { url = "https://files.pythonhosted.org/packages/4d/c5/7cfda7ba9fa02243367fbfb4880b6de8039266f22c47c2dbbd39b6adc46f/plotnine-0.14.5-py3-none-any.whl", hash = "sha256:4a8bc4360732dd69a0263def4abab285ed8f0f4386186f1e44c642f2cea79b88", size = 1301197 },
 ]
 
 [[package]]
