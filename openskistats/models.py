@@ -47,22 +47,42 @@ class SkiRunDifficulty(StrEnum):
             cls.easy: cls.easy,
             cls.intermediate: cls.intermediate,
             cls.advanced: cls.advanced,
-            cls.expert: cls.expert,
-            cls.extreme: cls.expert,
-            cls.freeride: cls.other,
+            cls.expert: cls.advanced,
+            cls.extreme: cls.advanced,
+            cls.freeride: cls.advanced,
             cls.other: cls.other,
         }
 
     @classmethod
-    def colormap(cls) -> "dict[SkiRunDifficulty, str]":
-        """Condensed difficulty to color mapping based on North American conventions."""
-        return {
+    def condensed_values(cls) -> "list[SkiRunDifficulty]":
+        """Get the condensed set of difficulty levels."""
+        return [
+            cls.easy,
+            cls.intermediate,
+            cls.advanced,
+            cls.other,
+        ]
+
+    @classmethod
+    def colormap(cls, condense: bool = False) -> "dict[SkiRunDifficulty, str]":
+        """Difficulty to color mapping based on North American conventions."""
+        colormap = {
+            cls.novice: "#32a852",
             cls.easy: "#32a852",
             cls.intermediate: "#005aa8",
             cls.advanced: "#000000",
             cls.expert: "#000000",
+            cls.extreme: "#000000",
+            cls.freeride: "#000000",  # "#FFA500",
             cls.other: "#bfbfbf",
         }
+        if condense:
+            colormap = {
+                key: value
+                for key, value in colormap.items()
+                if key in cls.condensed_values()
+            }
+        return colormap
 
 
 class SkiRunUsage(StrEnum):

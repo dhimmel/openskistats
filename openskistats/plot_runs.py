@@ -297,13 +297,23 @@ def plot_bearing_by_latitude_bin() -> plt.Figure:
     return fig
 
 
-def plot_run_difficulty_histograms_by_slope() -> pn.ggplot:
-    runs = (
+def plot_run_difficulty_histograms_by_slope(
+    condense_difficulty: bool = False,
+) -> pn.ggplot:
+    difficulty_col = (
+        "run_difficulty_condensed" if condense_difficulty else "run_difficulty"
+    )
+    run_stats = (
         load_runs_pl()
         .with_columns(
-            run_difficulty_condensed=pl.col("run_difficulty")
-            .replace_strict(SkiRunDifficulty.condense())
-            .fill_null(SkiRunDifficulty.other),
+            run_difficulty=pl.col("run_difficulty")
+            .fill_null(SkiRunDifficulty.other)
+            .cast(pl.Enum(SkiRunDifficulty)),
+        )
+        .with_columns(
+            run_difficulty_condensed=pl.col("run_difficulty").replace_strict(
+                SkiRunDifficulty.condense()
+            ),
             run_grade=pl.col("vertical_drop").truediv("combined_distance"),
         )
         .with_columns(
@@ -319,29 +329,49 @@ def plot_run_difficulty_histograms_by_slope() -> pn.ggplot:
             .struct.field("breakpoint")
             .sub(0.5)
         )
-        .group_by("run_slope_bin_center", "run_difficulty_condensed")
+        .group_by("run_slope_bin_center", difficulty_col)
         .agg(
             pl.count("run_id").alias("runs_count"),
             pl.col("combined_vertical").sum().alias("combined_vertical"),
         )
-        .sort("run_slope_bin_center", "run_difficulty_condensed")
+        .sort("run_slope_bin_center", difficulty_col)
         .filter(pl.col("run_slope_bin_center").is_not_null())
         .collect()
     )
+    difficulty_stats = (
+        run_stats.group_by(difficulty_col)
+        .agg(
+            pl.sum("runs_count"),
+            pl.sum("combined_vertical"),
+            pl.max("combined_vertical").mul(0.8).alias("bin_max_combined_vertical"),
+        )
+        .with_columns(
+            label=pl.struct("runs_count", "combined_vertical").map_elements(
+                lambda x: f"{x['runs_count']:,} runs\n{x['combined_vertical'] / 1_000:.0f} km vert",
+                return_dtype=pl.String,
+            )
+        )
+    )
+    colormap = SkiRunDifficulty.colormap(condense=condense_difficulty)
     return (
         pn.ggplot(
-            data=runs,
+            data=run_stats,
             mapping=pn.aes(
                 x="run_slope_bin_center",
                 y="combined_vertical",
-                fill="run_difficulty_condensed",
+                fill=difficulty_col,
             ),
         )
         + pn.geom_bar(stat="identity", width=1)
-        + pn.facet_grid("run_difficulty_condensed ~ .", space="free", shrink=True)
+        + pn.geom_text(
+            pn.aes(x=38, y="bin_max_combined_vertical", label="label"),
+            data=difficulty_stats,
+            size=8,
+        )
+        + pn.facet_grid(f"{difficulty_col} ~ .", scales="free_y")
         + pn.scale_fill_manual(
-            values=SkiRunDifficulty.colormap(),
-            limits=list(SkiRunDifficulty.colormap()),
+            values=colormap,
+            limits=list(colormap),
             guide=None,
         )
         + pn.scale_x_continuous(
@@ -356,6 +386,6 @@ def plot_run_difficulty_histograms_by_slope() -> pn.ggplot:
         )
         + pn.theme_bw()
         + pn.theme(
-            figure_size=(3, 7),
+            figure_size=(3, len(colormap)),
         )
     )
