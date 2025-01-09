@@ -13,6 +13,7 @@ from openskistats.bearing import (
     get_cut_bearing_bins_df,
 )
 from openskistats.models import SkiRunDifficulty
+from openskistats.plot import NARROW_SPACE
 from openskistats.utils import pl_flip_bearing, pl_hemisphere
 
 
@@ -347,7 +348,7 @@ def plot_run_difficulty_histograms_by_slope(
         )
         .with_columns(
             label=pl.struct("runs_count", "combined_vertical").map_elements(
-                lambda x: f"{x['runs_count']:,} runs\n{x['combined_vertical'] / 1_000:,.0f} km vert",
+                lambda x: f"{x['runs_count']:,} runs\n{x['combined_vertical'] / 1_000:,.0f}{NARROW_SPACE}km vert",
                 return_dtype=pl.String,
             )
         )
@@ -384,12 +385,12 @@ def plot_run_difficulty_histograms_by_slope(
             breaks=np.arange(0, 90, 10),
             labels=lambda values: [f"{x:.0f}°" for x in values],
             expand=(0, 0),
-            limits=(0, 42),
         )
         + pn.scale_y_continuous(
             name="Combined Vertical (km)",
             labels=lambda values: [f"{x / 1_000:.0f}" for x in values],
         )
+        + pn.coord_cartesian(xlim=(0, 42))
         + pn.theme_bw()
         + pn.theme(
             figure_size=(3, len(colormap)),
