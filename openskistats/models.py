@@ -334,6 +334,22 @@ class SkiAreaBearingDistributionModel(Model):  # type: ignore [misc]
         ge=0,
         le=1,
     )
+    bin_count_easy: float = Field(
+        description="Weighted count of bearings in the bin for easy difficulty runs.",
+        ge=0,
+    )
+    bin_count_intermediate: float = Field(
+        description="Weighted count of bearings in the bin for intermediate difficulty runs.",
+        ge=0,
+    )
+    bin_count_advanced: float = Field(
+        description="Weighted count of bearings in the bin for advanced difficulty runs.",
+        ge=0,
+    )
+    bin_count_other: float = Field(
+        description="Weighted count of bearings in the bin for other difficulty runs.",
+        ge=0,
+    )
     bin_label: str | None = Field(
         description="Human readable short label of the bearing bin.",
         examples=["N", "NE", "NEbE", "ENE"],

@@ -14,7 +14,11 @@ from openskistats.bearing import (
 )
 from openskistats.models import SkiRunDifficulty
 from openskistats.plot import NARROW_SPACE
-from openskistats.utils import pl_flip_bearing, pl_hemisphere
+from openskistats.utils import (
+    pl_condense_run_difficulty,
+    pl_flip_bearing,
+    pl_hemisphere,
+)
 
 
 @dataclass
@@ -310,15 +314,11 @@ def plot_run_difficulty_histograms_by_slope(
             run_difficulty=pl.col("run_difficulty")
             .fill_null(SkiRunDifficulty.other)
             .cast(pl.Enum(SkiRunDifficulty)),
-        )
-        .with_columns(
-            run_difficulty_condensed=pl.col("run_difficulty").replace_strict(
-                SkiRunDifficulty.condense()
-            ),
-            run_grade=pl.col("vertical_drop").truediv("combined_distance"),
-        )
-        .with_columns(
-            run_slope=pl.col("run_grade").arctan().degrees(),
+            run_difficulty_condensed=pl_condense_run_difficulty(),
+            run_slope=pl.col("vertical_drop")
+            .truediv("combined_distance")
+            .arctan()
+            .degrees(),
         )
         .with_columns(
             run_slope_bin_center=pl.col("run_slope")

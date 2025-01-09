@@ -9,6 +9,7 @@ from osmnx.distance import great_circle
 from openskistats.models import (
     BearingStatsModel,
     SkiAreaBearingDistributionModel,
+    SkiRunDifficulty,
 )
 
 
@@ -193,6 +194,7 @@ def get_cut_bearing_bins_df(num_bins: int) -> pl.DataFrame:
 def get_bearing_histograms(
     bearings: npt.NDArray[np.float64],
     weights: npt.NDArray[np.float64],
+    difficulties: npt.NDArray[np.str_],
 ) -> pl.DataFrame:
     """
     Get the bearing distributions of a graph as a pl.DataFrame.
@@ -201,7 +203,12 @@ def get_bearing_histograms(
     bins = [2, 4, 8, 16, 32]
     return pl.concat(
         [
-            get_bearing_histogram(bearings=bearings, weights=weights, num_bins=num_bins)
+            get_bearing_histogram(
+                bearings=bearings,
+                weights=weights,
+                num_bins=num_bins,
+                difficulties=difficulties,
+            )
             for num_bins in bins
         ],
         how="vertical",
@@ -211,6 +218,7 @@ def get_bearing_histograms(
 def get_bearing_histogram(
     bearings: npt.NDArray[np.float64],
     weights: npt.NDArray[np.float64],
+    difficulties: npt.NDArray[np.str_],
     num_bins: int,
 ) -> pl.DataFrame:
     """
@@ -225,18 +233,31 @@ def get_bearing_histogram(
     representing 355 degrees to 5 degrees.
     """
     return (
-        pl.DataFrame(data={"bearing": bearings, "weight": weights})
+        pl.DataFrame(
+            data={
+                "bearing": bearings,
+                "weight": weights,
+                "run_difficulty_condensed": difficulties,
+            }
+        )
         .with_columns(cut_bearings_pl(num_bins=num_bins))
         .group_by("bin_index")
         .agg(
-            bin_count=pl.sum("weight"),
+            pl.sum("weight").alias("bin_count"),
+            *[
+                pl.when(pl.col("run_difficulty_condensed") == diff)
+                .then("weight")
+                .sum()
+                .alias(f"bin_count_{diff.name}")
+                for diff in SkiRunDifficulty.condensed_values()
+            ],
         )
         .join(
             get_cut_bearing_bins_df(num_bins=num_bins),
             on="bin_index",
             how="right",
         )
-        .with_columns(bin_count=pl.coalesce("bin_count", 0.0))
+        .with_columns(pl.selectors.starts_with("bin_count").fill_null(0.0))
         .with_columns(bin_count_total=pl.sum("bin_count").over(pl.lit(True)))
         # nan values are not helpful here when bin_count_total is 0
         # Instead, set bin_proportion to 0, although setting to null could also make sense
