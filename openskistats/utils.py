@@ -6,6 +6,8 @@ import numpy as np
 import numpy.typing as npt
 import polars as pl
 
+from openskistats.models import SkiRunDifficulty
+
 
 def get_repo_directory() -> Path:
     return Path(__file__).parent.parent
@@ -89,6 +91,16 @@ def pl_weighted_mean(value_col: str, weight_col: str) -> pl.Expr:
     values = pl.col(value_col)
     weights = pl.when(values.is_not_null()).then(weight_col)
     return weights.dot(values).truediv(weights.sum()).fill_nan(None)
+
+
+def pl_condense_run_difficulty(run_difficulty_col: str = "run_difficulty") -> pl.Expr:
+    return (
+        pl.col(run_difficulty_col)
+        .fill_null(SkiRunDifficulty.other)
+        .replace_strict(SkiRunDifficulty.condense())
+        .cast(pl.Enum(SkiRunDifficulty))
+        .alias("run_difficulty_condensed")
+    )
 
 
 def gini_coefficient(values: npt.NDArray[np.float64] | list[float]) -> float:

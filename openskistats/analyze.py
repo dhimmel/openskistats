@@ -42,6 +42,7 @@ from openskistats.utils import (
     get_data_directory,
     get_images_data_directory,
     get_images_directory,
+    pl_condense_run_difficulty,
     pl_hemisphere,
     pl_weighted_mean,
 )
@@ -200,7 +201,12 @@ def analyze_all_ski_areas_polars(skip_runs: bool = False) -> None:
         .explode("ski_area_ids")
         .rename({"ski_area_ids": "ski_area_id"})
         .filter(pl.col("ski_area_id").is_not_null())
-        .select("ski_area_id", "run_id", "run_coordinates_clean")
+        .select(
+            "ski_area_id",
+            "run_id",
+            pl_condense_run_difficulty(),
+            "run_coordinates_clean",
+        )
         .explode("run_coordinates_clean")
         .unnest("run_coordinates_clean")
         .with_columns(
@@ -218,10 +224,13 @@ def analyze_all_ski_areas_polars(skip_runs: bool = False) -> None:
                 "hemisphere",
             ).map_batches(_get_bearing_summary_stats_pl, returns_scalar=True),
             # do we need to filter nulls?
-            bearings=pl.struct("bearing", "distance_vertical_drop").map_batches(
+            bearings=pl.struct(
+                "bearing", "distance_vertical_drop", "run_difficulty_condensed"
+            ).map_batches(
                 lambda x: get_bearing_histograms(
                     bearings=x.struct.field("bearing").to_numpy(),
                     weights=x.struct.field("distance_vertical_drop").to_numpy(),
+                    difficulties=x.struct.field("run_difficulty_condensed").to_numpy(),
                 ).to_struct(),
                 returns_scalar=True,
             ),
@@ -366,9 +375,9 @@ def aggregate_ski_area_bearing_dists_pl(
         .unnest("bearings")
         .group_by(*group_by, "num_bins", "bin_index")
         .agg(
-            bin_center=pl.first("bin_center"),
-            bin_count=pl.sum("bin_count"),
-            bin_label=pl.first("bin_label"),
+            pl.first("bin_center").alias("bin_center"),
+            pl.selectors.starts_with("bin_count").sum(),
+            pl.first("bin_label").alias("bin_label"),
         )
         .with_columns(
             bin_count_total=pl.sum("bin_count").over(*group_by, "num_bins"),
