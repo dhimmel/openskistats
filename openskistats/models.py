@@ -65,15 +65,18 @@ class SkiRunDifficulty(StrEnum):
 
     @classmethod
     def colormap(cls, condense: bool = False) -> "dict[SkiRunDifficulty, str]":
-        """Difficulty to color mapping based on North American conventions."""
+        """
+        Difficulty to color mapping based on North American conventions.
+        https://www.nsaa.org/NSAA/Safety/Trail_Signage/NSAA/Safety/Trail_Signage.aspx
+        """
         colormap = {
-            cls.novice: "#32a852",
-            cls.easy: "#32a852",
-            cls.intermediate: "#005aa8",
+            cls.novice: "#60A45C",
+            cls.easy: "#60A45C",
+            cls.intermediate: "#3E7DBF",
             cls.advanced: "#000000",
             cls.expert: "#000000",
             cls.extreme: "#000000",
-            cls.freeride: "#000000",  # "#FFA500",
+            cls.freeride: "#000000",  # "#DEB251",
             cls.other: "#bfbfbf",
         }
         if condense:
@@ -87,10 +90,10 @@ class SkiRunDifficulty(StrEnum):
     @classmethod
     def colormap_subtle(cls) -> "dict[SkiRunDifficulty, str]":
         return {
-            cls.easy: "#8BC34A",
-            cls.intermediate: "#2196F3",
-            cls.advanced: "#616161",
-            cls.other: "#bfbfbf",
+            cls.easy: "#badbb8",
+            cls.intermediate: "#a1a1d8",
+            cls.advanced: "#828282",
+            cls.other: "#d9d9d9",
         }
 
     def color(self, subtle: bool = False) -> str:
