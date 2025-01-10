@@ -14,6 +14,7 @@ from matplotlib.projections.polar import PolarAxes
 from matplotlib.text import Text as MplText
 from osmnx.plot import _get_fig_ax
 
+from openskistats.bearing import get_difficulty_color_to_bearing_bin_counts
 from openskistats.sunlight import get_solar_location_band
 
 SUBPLOT_FIGSIZE = 4.0
@@ -379,6 +380,9 @@ def subplot_orientations(
         fig, ax = plot_orientation(
             bin_counts=group_dist_pl.get_column("bin_count").to_numpy(),
             bin_centers=group_dist_pl.get_column("bin_center").to_numpy(),
+            color_to_bin_counts=get_difficulty_color_to_bearing_bin_counts(
+                group_dist_pl
+            ),
             ax=ax,
             max_bin_count=max_bin_count,
             title=name,

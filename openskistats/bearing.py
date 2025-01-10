@@ -277,6 +277,27 @@ def get_bearing_histogram(
     )
 
 
+def get_difficulty_color_to_bearing_bin_counts(
+    bearing_pl: pl.DataFrame,
+) -> dict[str, pl.Series]:
+    return (  # type: ignore [no-any-return]
+        bearing_pl.select(
+            "bin_count_other",
+            "bin_count_easy",
+            "bin_count_intermediate",
+            "bin_count_advanced",
+        )
+        .select(
+            pl.all().name.map(
+                lambda x: SkiRunDifficulty(x.removeprefix("bin_count_")).color(
+                    subtle=True
+                )
+            )
+        )
+        .to_dict()
+    )
+
+
 def get_bearing_summary_stats(
     bearings: list[float] | npt.NDArray[np.float64],
     cum_magnitudes: list[float] | npt.NDArray[np.float64] | None = None,
