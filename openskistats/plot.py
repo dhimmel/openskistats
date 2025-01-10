@@ -53,7 +53,7 @@ def plot_orientation(  # noqa: C901
     max_bin_count: float | None = None,
     area: bool = True,
     color: str = "#D4A0A7",
-    edgecolor: str = "black",
+    edgecolor: str = "#292929",
     linewidth: float = 0.5,
     alpha: float = 0.7,
     title: str | None = None,
@@ -191,6 +191,7 @@ def plot_orientation(  # noqa: C901
                 alpha=alpha,
             )
             cum_radii = cum_radii + group_radii
+        # draw the outline
         ax.bar(
             positions,
             height=cum_radii,

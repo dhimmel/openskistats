@@ -119,6 +119,7 @@ List of related webpages not yet mentioned in the manuscript:
 - https://www.skitalk.com/threads/comparing-latitude-and-elevation-at-western-us-resorts.9980/
 - https://gitlab.com/hugfr/european-ski-resorts-snow-reliability and https://zenodo.org/records/8047168
 - https://mapsynergy.com/ and https://mapsynergy.maps.arcgis.com/apps/dashboards/44d9c8422f3c4cc898642d75392337db
+- https://snowbrains.com/inconsistencies-in-classification-of-ski-slope-difficulty-ratings/
 - [Closeread Prize Submission: Which way do you ski?](https://forum.posit.co/t/which-way-do-you-ski-closeread-prize/196451)
 
 ## Wild Ideas
