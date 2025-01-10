@@ -84,6 +84,11 @@ class SkiRunDifficulty(StrEnum):
             }
         return colormap
 
+    @property
+    def color(self) -> str:
+        """Get the color for the difficulty level."""
+        return self.colormap()[self]
+
 
 class SkiRunUsage(StrEnum):
     connection = "connection"

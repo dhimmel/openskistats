@@ -43,10 +43,11 @@ class MarginTextLocation(IntEnum):
         return self.name.split("_")[1]
 
 
-def plot_orientation(
+def plot_orientation(  # noqa: C901
     *,
     bin_counts: npt.NDArray[np.float64],
     bin_centers: npt.NDArray[np.float64],
+    color_to_bin_counts: dict[str, npt.NDArray[np.float64]] | None = None,
     ax: PolarAxes | None = None,
     figsize: tuple[float, float] = (4.5, 4.5),
     max_bin_count: float | None = None,
@@ -72,6 +73,9 @@ def plot_orientation(
 
     Parameters
     ----------
+    color_to_bin_counts
+        If not None, each bin_count is divided into respective groups.
+        This should be a dictionary of HTML color to bin_counts for the group.
     ax
         If not None, plot on this pre-existing axes instance (must have
         projection=polar).
@@ -150,18 +154,56 @@ def plot_orientation(
         ax.tick_params(axis="x", which="major", pad=-2)
 
     # draw the bars
-    ax.bar(
-        positions,
-        height=radius,
-        width=width,
-        align="center",
-        bottom=0,
-        zorder=2,
-        color=color,
-        edgecolor=edgecolor,
-        linewidth=linewidth,
-        alpha=alpha,
-    )
+    # FIXME: deduplicate bar drawing with a more streamlined handling of group_to_bin_counts versus ungrouped
+    if not color_to_bin_counts:
+        ax.bar(
+            positions,
+            height=radius,
+            width=width,
+            align="center",
+            bottom=0,
+            zorder=2,
+            facecolor=color,
+            edgecolor=edgecolor,
+            linewidth=linewidth,
+            alpha=alpha,
+        )
+    else:
+        cum_value = np.zeros_like(bin_centers, dtype=np.float64)
+        cum_radii = np.zeros_like(bin_centers, dtype=np.float64)
+        for group_color, group_bin_counts in color_to_bin_counts.items():
+            cum_value = cum_value + group_bin_counts  # type: ignore [assignment]
+            group_radii = (
+                np.sqrt(cum_value * num_bins / np.pi) - cum_radii
+                if area
+                else group_bin_counts
+            )
+            ax.bar(
+                positions,
+                bottom=cum_radii,
+                height=group_radii,
+                width=width,
+                align="center",
+                zorder=2,
+                facecolor=group_color,
+                edgecolor=group_color,
+                linewidth=0,
+                alpha=alpha,
+            )
+            cum_radii = cum_radii + group_radii
+        ax.bar(
+            positions,
+            height=cum_radii,
+            width=width,
+            align="center",
+            bottom=0,
+            zorder=2,
+            facecolor="none",
+            edgecolor=edgecolor,
+            linewidth=linewidth,
+            alpha=alpha,
+        )
+        ax.set_ylim(top=cum_radii.max())
 
     if margin_text is None:
         margin_text = {
