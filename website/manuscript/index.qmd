@@ -249,6 +249,28 @@ Dartmouth Skiway rose with the NNE petal highlighted.
 Dartmouth Skiway rose with the NNE petal highlighted.
 :::
 
+### Run Difficulty
+
+Difficulty assigned by ski area.
+
+::::: {#fig-slope-by-difficulty layout="[50,50]"}
+::: {#fig-slope-by-difficulty-full}
+![](../images/slope_by_difficulty_distributions_full.svg)
+
+**All difficulty levels.**
+:::
+
+::: {#fig-slope-by-difficulty-condensed}
+![](../images/slope_by_difficulty_distributions_condensed.svg)
+
+**Condensed difficulty levels.**
+:::
+
+Distribution of slope by run difficulty. See OpenStreetMap `piste:difficulty` key.
+:::::
+
+
+
 ### Sunlight
 
 Solar irradiance is computed at the level of a run segment, as defined by its latitude, longitude, elevation, bearing, and slope.
