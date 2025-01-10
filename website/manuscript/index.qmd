@@ -144,6 +144,14 @@ Stuart Winchester identified 505 active ski areas in the United States as of 202
 Winchester required ski areas to have one or more lifts, a snow surface, operated for at least 1 day in the last season, excluding areas operating solely for personal use.
 OpenSkiMap contains `{python} var("openskimap__ski_areas__counts__04_downhill_operating_1_lift_us", ",")` downhill, equipped, operating ski areas in the United States.
 
+We observe a striking difference in the amount of skiing infrastructure between the northern and southern hemispheres.
+The northern hemisphere is home to
+`{python} var("hemisphere__north_over_south__combined_vertical", ".0f")` times the combined vertical drop,
+`{python} var("hemisphere__north_over_south__run_count", ".0f")` times the number of runs,
+`{python} var("hemisphere__north_over_south__lift_count", ".0f")` times the number of lifts,
+and `{python} var("hemisphere__north_over_south__ski_areas_count", ".0f")` times the number of ski areas
+than the southern hemisphere.
+
 ## Ski area influence
 
 ::::: {#fig-ski-area-metric-dists layout="[60,40]"}

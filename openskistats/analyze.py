@@ -408,7 +408,7 @@ def bearing_dists_by_us_state() -> pl.DataFrame:
 
 
 def bearing_dists_by_hemisphere() -> pl.DataFrame:
-    return aggregate_ski_areas_pl(
+    dists = aggregate_ski_areas_pl(
         group_by=["hemisphere"],
         ski_area_filters=[
             pl.col("hemisphere").is_not_null(),
@@ -416,6 +416,27 @@ def bearing_dists_by_hemisphere() -> pl.DataFrame:
             pl.col("ski_area_name").is_not_null(),
         ],
     )
+    # compare key metrics in the northern and southern hemispheres
+    compare_cols = pl.selectors.by_name(
+        "ski_areas_count",
+        "run_count",
+        "coordinate_count",
+        "segment_count",
+        "lift_count",
+        "combined_vertical",
+        "combined_distance",
+    )
+    set_variables(
+        **dists.sort("hemisphere")
+        .select(
+            compare_cols.first()
+            .truediv(compare_cols.last())
+            .round(4)
+            .name.map(lambda x: f"hemisphere__north_over_south__{x}")
+        )
+        .to_dicts()[0]
+    )
+    return dists
 
 
 def bearing_dists_by_status() -> pl.DataFrame:
