@@ -353,7 +353,7 @@ def plot_run_difficulty_histograms_by_slope(
             )
         )
     )
-    colormap = SkiRunDifficulty.colormap(condense=condense_difficulty)
+    colormap = SkiRunDifficulty.colormap(condense=condense_difficulty, subtle=True)
     return (
         pn.ggplot(
             data=run_stats,
@@ -363,7 +363,12 @@ def plot_run_difficulty_histograms_by_slope(
                 fill=difficulty_col,
             ),
         )
-        + pn.geom_bar(stat="identity", width=1)
+        + pn.geom_bar(
+            stat="identity",
+            width=1,
+            color="#292929",
+            size=0.3,
+        )
         + pn.geom_label(
             pn.aes(x=40.8, y="bin_max_combined_vertical", label="label"),
             fill="#fff9e8",
@@ -396,5 +401,6 @@ def plot_run_difficulty_histograms_by_slope(
             figure_size=(3, len(colormap)),
             axis_text_y=pn.element_blank(),
             axis_ticks_y=pn.element_blank(),
+            strip_background=pn.element_rect(fill="#fef2e2"),
         )
     )

@@ -64,21 +64,36 @@ class SkiRunDifficulty(StrEnum):
         ]
 
     @classmethod
-    def colormap(cls, condense: bool = False) -> "dict[SkiRunDifficulty, str]":
+    def colormap(
+        cls, condense: bool = False, subtle: bool = True
+    ) -> "dict[SkiRunDifficulty, str]":
         """
         Difficulty to color mapping based on North American conventions.
         https://www.nsaa.org/NSAA/Safety/Trail_Signage/NSAA/Safety/Trail_Signage.aspx
         """
-        colormap = {
-            cls.novice: "#60A45C",
-            cls.easy: "#60A45C",
-            cls.intermediate: "#3E7DBF",
-            cls.advanced: "#000000",
-            cls.expert: "#000000",
-            cls.extreme: "#000000",
-            cls.freeride: "#000000",  # "#DEB251",
-            cls.other: "#bfbfbf",
-        }
+        colormap = (
+            {
+                cls.novice: "#badbb8",
+                cls.easy: "#badbb8",
+                cls.intermediate: "#a1a1d8",
+                cls.advanced: "#828282",
+                cls.expert: "#828282",
+                cls.extreme: "#828282",
+                cls.freeride: "#828282",  # considered "#e5c47e"
+                cls.other: "#d9d9d9",
+            }
+            if subtle
+            else {
+                cls.novice: "#60A45C",
+                cls.easy: "#60A45C",
+                cls.intermediate: "#3E7DBF",
+                cls.advanced: "#000000",
+                cls.expert: "#000000",
+                cls.extreme: "#000000",
+                cls.freeride: "#000000",  # considered "#DEB251"
+                cls.other: "#bfbfbf",
+            }
+        )
         if condense:
             colormap = {
                 key: value
@@ -87,19 +102,9 @@ class SkiRunDifficulty(StrEnum):
             }
         return colormap
 
-    @classmethod
-    def colormap_subtle(cls) -> "dict[SkiRunDifficulty, str]":
-        return {
-            cls.easy: "#badbb8",
-            cls.intermediate: "#a1a1d8",
-            cls.advanced: "#828282",
-            cls.other: "#d9d9d9",
-        }
-
     def color(self, subtle: bool = False) -> str:
         """Get the color for the difficulty level."""
-        colormap = self.colormap_subtle() if subtle else self.colormap()
-        return colormap[self]
+        return self.colormap(subtle=subtle)[self]
 
 
 class SkiRunUsage(StrEnum):
