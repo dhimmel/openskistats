@@ -127,11 +127,11 @@ def plot_orientation(  # noqa: C901
 
     # radius: how long to make each bar. set bar length so either the bar area
     # (ie, via sqrt) or the bar height is proportional to the bin's frequency
-    radius = np.sqrt(bin_counts) if area else bin_counts
+    radius = np.sqrt(bin_counts * num_bins / np.pi) if area else bin_counts
     if max_bin_count is None:
         ylim = radius.max()
     else:
-        ylim = np.sqrt(max_bin_count) if area else max_bin_count
+        ylim = np.sqrt(max_bin_count * num_bins / np.pi) if area else max_bin_count
 
     # create PolarAxes (if not passed-in) then set N at top and go clockwise
     fig, ax = _get_fig_ax(ax=ax, figsize=figsize, bgcolor=None, polar=True)
@@ -205,7 +205,6 @@ def plot_orientation(  # noqa: C901
             linewidth=linewidth,
             alpha=alpha,
         )
-        ax.set_ylim(top=cum_radii.max())
 
     if margin_text is None:
         margin_text = {
