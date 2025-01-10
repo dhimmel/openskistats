@@ -212,7 +212,7 @@ def plot_orientation(  # noqa: C901
     for location, text in margin_text.items():
         if not text:
             continue
-        _mpl_add_polar_margin_text(ax=ax, ylim=ylim, location=location, text=text)
+        _mpl_add_polar_margin_text(ax=ax, location=location, text=text)
 
     if title:
         ax.set_title(
@@ -231,14 +231,13 @@ def plot_orientation(  # noqa: C901
 
 def _mpl_add_polar_margin_text(
     ax: PolarAxes,
-    ylim: float,
     location: MarginTextLocation,
     text: str,
     color: str = "#95A5A6",
 ) -> MplText:
     return ax.text(
         x=location.radians,
-        y=ylim * 1.58,
+        y=ax.get_ylim()[1] * 1.58,
         s=text,
         verticalalignment=location.vertical_alignment,
         horizontalalignment=location.horizontal_alignment,
@@ -307,7 +306,7 @@ def _plot_mean_bearing_as_snowflake(
     ax.scatter(
         x=np.radians(bearing),
         y=alignment * ax.get_ylim()[1],
-        color="blue",
+        color="#9e2096",
         label="Mean Bearing",
         zorder=2,
         marker=get_snowflake_marker(),

@@ -84,10 +84,19 @@ class SkiRunDifficulty(StrEnum):
             }
         return colormap
 
-    @property
-    def color(self) -> str:
+    @classmethod
+    def colormap_subtle(cls) -> "dict[SkiRunDifficulty, str]":
+        return {
+            cls.easy: "#8BC34A",
+            cls.intermediate: "#2196F3",
+            cls.advanced: "#616161",
+            cls.other: "#bfbfbf",
+        }
+
+    def color(self, subtle: bool = False) -> str:
         """Get the color for the difficulty level."""
-        return self.colormap()[self]
+        colormap = self.colormap_subtle() if subtle else self.colormap()
+        return colormap[self]
 
 
 class SkiRunUsage(StrEnum):

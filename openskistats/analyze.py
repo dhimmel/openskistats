@@ -21,6 +21,7 @@ from openskistats.models import (
     RunCoordinateSegmentModel,
     RunModel,
     SkiAreaModel,
+    SkiRunDifficulty,
 )
 from openskistats.openskimap_utils import (
     load_downhill_runs_from_download_pl,
@@ -645,9 +646,26 @@ def _create_ski_area_rose(
 
     # plot and save full rose
     bearing_full_pl = bearing_pl.filter(pl.col("num_bins") == 32)
+    difficulty_counts = (
+        bearing_full_pl.select(
+            "bin_count_other",
+            "bin_count_easy",
+            "bin_count_intermediate",
+            "bin_count_advanced",
+        )
+        .select(
+            pl.all().name.map(
+                lambda x: SkiRunDifficulty(x.removeprefix("bin_count_")).color(
+                    subtle=True
+                )
+            )
+        )
+        .to_dict()
+    )
     fig, ax = plot_orientation(
         bin_counts=bearing_full_pl.get_column("bin_count").to_numpy(),
         bin_centers=bearing_full_pl.get_column("bin_center").to_numpy(),
+        color_to_bin_counts=difficulty_counts,
         title=ski_area_name,
         title_font_size=16,
         margin_text=_generate_margin_text(info),
