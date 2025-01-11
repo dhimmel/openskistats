@@ -5,7 +5,7 @@ from mizani.formatters import percent_format
 
 from openskistats.analyze import load_ski_areas_pl
 from openskistats.plot import subplot_orientations
-from openskistats.utils import gini_coefficient
+from openskistats.utils import gini_coefficient, running_in_test
 
 
 def get_ski_area_metric_ecdfs(
@@ -110,22 +110,26 @@ def plot_ski_area_metric_ecdfs(
 
 
 class SkiAreaSubsetPlot:
-    select_ski_area_names = [
-        "Les Trois Vallées",  # biggest
-        "Dartmouth Skiway",  # bimodal
-        "Killington Resort",  # eastfacing
-        "Mt. Bachelor",  # difficulty by orientation
-        "Olos Ski Resort",  # darkest resort in the world
-        "Etna Sud/Nicolosi",  # sunniest
-        "Jackson Hole",  # southfacing
-        "Narvik",  # northernmost ski resort, https://www.openstreetmap.org/relation/12567328 should be Narvikfjellet
-        "Cerro Castor",  # southernmost ski area/resort
-    ]
+    @classmethod
+    def get_ski_area_names(self) -> list[str]:
+        if running_in_test():
+            return ["Storrs Hill Ski Area"]
+        return [
+            "Les Trois Vallées",  # biggest
+            "Dartmouth Skiway",  # bimodal
+            "Killington Resort",  # eastfacing
+            "Mt. Bachelor",  # difficulty by orientation
+            "Olos Ski Resort",  # darkest resort in the world
+            "Etna Sud/Nicolosi",  # sunniest
+            "Jackson Hole",  # southfacing
+            "Narvik",  # northernmost ski resort, https://www.openstreetmap.org/relation/12567328 should be Narvikfjellet
+            "Cerro Castor",  # southernmost ski area/resort
+        ]
 
     @classmethod
     def get_ski_areas_df(cls) -> pl.DataFrame:
         ski_areas = (
-            pl.Series(name="ski_area_name", values=cls.select_ski_area_names)
+            pl.Series(name="ski_area_name", values=cls.get_ski_area_names())
             .to_frame()
             .join(
                 load_ski_areas_pl(),

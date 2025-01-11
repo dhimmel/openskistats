@@ -1,4 +1,16 @@
+hemisphere:
+  north_over_south:
+    combined_distance: 1.0
+    combined_vertical: 1.0
+    coordinate_count: 1.0
+    lift_count: 1.0
+    run_count: 1.0
+    segment_count: 1.0
+    ski_areas_count: 1.0
 openskimap:
+  countries:
+    counts:
+      ski_areas_04_downhill_operating_1_lift: 1
   lifts:
     counts:
       01_raw: 5
@@ -28,9 +40,9 @@ openskimap:
       03_downhill: 38
     distance:
       3d:
-        04_downhill_clean: 9845.301161414029
+        04_downhill_clean: 9845.30078125
       vertical:
-        04_downhill_clean: 1793.500000000001
+        04_downhill_clean: 1793.500244140625
     download:
       checksum_sha256: 4549037d1c8c60f91e1963363940ba3e6ca51752ddde7f181cf906e57a027f04
       compressed_size_mb: 92.48648071289062
@@ -48,6 +60,9 @@ openskimap:
       01_raw_by_geometry:
         Polygon: 2
       02_downhill: 2
+      04_downhill_operating_1_lift: 2
+      04_downhill_operating_1_lift_us: 2
+      05_downhill_operating_5_lift: 0
     download:
       checksum_sha256: 9ba4f0091d8978ade54f83be9d3fc379703eaf307835b5e32d2d0beac59ee940
       compressed_size_mb: 2.4046401977539062
