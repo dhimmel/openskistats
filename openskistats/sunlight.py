@@ -339,7 +339,9 @@ def get_solar_location_band(
     required for plotting the sun's path as a band between the solstice and closing day of a typical ski season.
     """
     times = SkiSeasonDatetimes(
-        hemisphere="north", extent="season", freq="1min"
+        hemisphere=get_hemisphere(latitude),
+        extent="season",
+        freq="1min",
     ).interpolated_range
     return (
         pvlib.location.Location(
