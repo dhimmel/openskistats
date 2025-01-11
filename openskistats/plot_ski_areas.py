@@ -1,8 +1,10 @@
 import plotnine as pn
 import polars as pl
+from matplotlib.figure import Figure
 from mizani.formatters import percent_format
 
 from openskistats.analyze import load_ski_areas_pl
+from openskistats.plot import subplot_orientations
 from openskistats.utils import gini_coefficient
 
 
@@ -105,3 +107,46 @@ def plot_ski_area_metric_ecdfs(
         + pn.theme(figure_size=(3, 4))
     )
     return lorenz_plot, gini_plot
+
+
+class SkiAreaSubsetPlot:
+    select_ski_area_names = [
+        "Les Trois Vallées",  # biggest
+        "Dartmouth Skiway",  # bimodal
+        "Killington Resort",  # eastfacing
+        "Mt. Bachelor",  # difficulty by orientation
+        "Olos Ski Resort",  # darkest resort in the world
+        "Etna Sud/Nicolosi",  # sunniest
+        "Jackson Hole",  # southfacing
+        "Narvik",  # northernmost ski resort, https://www.openstreetmap.org/relation/12567328 should be Narvikfjellet
+        "Cerro Castor",  # southernmost ski area/resort
+    ]
+
+    @classmethod
+    def get_ski_areas_df(cls) -> pl.DataFrame:
+        ski_areas = (
+            pl.Series(name="ski_area_name", values=cls.select_ski_area_names)
+            .to_frame()
+            .join(
+                load_ski_areas_pl(),
+                on="ski_area_name",
+                how="left",
+                maintain_order="left",
+            )
+        )
+        if unmatched_names := ski_areas.filter(pl.col("ski_area_id").is_null())[
+            "ski_area_name"
+        ].to_list():
+            raise ValueError(f"Unmatched ski area names: {unmatched_names}")
+        return ski_areas
+
+    @classmethod
+    def plot_rose_grid(cls) -> Figure:
+        ski_areas = cls.get_ski_areas_df()
+        fig = subplot_orientations(
+            groups_pl=ski_areas,
+            grouping_col="ski_area_name",
+            sort_groups=False,
+            plot_solar_band=True,
+        )
+        return fig

@@ -56,7 +56,7 @@ def plot_orientation(  # noqa: C901
     color: str = "#D4A0A7",
     edgecolor: str = "#292929",
     linewidth: float = 0.5,
-    alpha: float = 0.7,
+    alpha: float = 1.0,
     title: str | None = None,
     title_wrap: int | None = 30,
     title_y: float = 1.05,
@@ -324,6 +324,8 @@ def subplot_orientations(
     free_y: bool = True,
     num_bins: int = 32,
     suptitle: str | None = None,
+    sort_groups: bool = True,
+    plot_solar_band: bool = False,
 ) -> plt.Figure:
     """
     Plot orientations from multiple graphs in a grid.
@@ -347,7 +349,9 @@ def subplot_orientations(
         The figure's super title.
     """
     assert not groups_pl.select(grouping_col).is_duplicated().any()
-    names = groups_pl.get_column(grouping_col).sort().to_list()
+    names = groups_pl.get_column(grouping_col).to_list()
+    if sort_groups:
+        names.sort()
     # create figure and axes
     n_subplots = len(names)
     if n_cols is None:
@@ -396,6 +400,13 @@ def subplot_orientations(
                 ax=ax,
                 bearing=group_info["bearing_mean"],
                 alignment=group_info["bearing_alignment"],
+            )
+        if plot_solar_band:
+            _plot_solar_location_band(
+                ax=ax,
+                latitude=group_info["latitude"],
+                longitude=group_info["longitude"],
+                elevation=group_info["min_elevation"],
             )
 
     # hide axes for unused subplots

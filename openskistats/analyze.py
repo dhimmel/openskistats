@@ -516,9 +516,11 @@ def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
         plot_run_difficulty_histograms_by_slope,
     )
     from openskistats.plot_ski_areas import (
+        SkiAreaSubsetPlot,
         plot_ski_area_metric_ecdfs,
     )
 
+    figures["select_ski_area_roses"] = SkiAreaSubsetPlot.plot_rose_grid()
     figures["bearing_by_latitude_eye"] = plot_bearing_by_latitude_bin()
     figures["latitude_histogram"] = (
         RunLatitudeBearingHistogram().plot_latitude_histogram().draw()
