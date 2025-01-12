@@ -106,6 +106,29 @@ class SkiRunDifficulty(StrEnum):
         """Get the color for the difficulty level."""
         return self.colormap(subtle=subtle)[self]
 
+    @classmethod
+    def markdown_description(cls, mode: Literal["phrase", "list"] = "phrase") -> str:
+        """Get a markdown description of the difficulty levels that describes how values are condensed."""
+        from openskistats.utils import oxford_join
+
+        condensed_to_sources: dict[SkiRunDifficulty, list[SkiRunDifficulty]] = {}
+        for raw, cond in cls.condense().items():
+            condensed_to_sources.setdefault(cond, []).append(raw)
+        condensed_strings = []
+        for cond, raws in condensed_to_sources.items():
+            color = cond.color(subtle=True)
+            raw_strings = [raw.value for raw in raws]
+            if cond == cls.other:
+                raw_strings.append("_missing_")
+            condensed_strings.append(
+                f"""<span style="background-color: {color}">{cond.value}</span> combines {oxford_join(raw_strings)}"""
+            )
+        if mode == "list":
+            return "\n".join(f"- {s}" for s in condensed_strings)
+        if mode == "phrase":
+            return oxford_join(condensed_strings, sep="; ")
+        raise ValueError(f"Invalid mode: {mode}")
+
 
 class SkiRunUsage(StrEnum):
     connection = "connection"

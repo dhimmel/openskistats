@@ -41,6 +41,15 @@ Numeric columns support the filtering filters:
 - `(, 5]` for value ≤ 5
 - `80` (not 0.8) for a percent value ≥ 80%.
 
+Ski run difficulty is collapsed and colored as follows:
+
+```{python}
+#| output: asis
+from IPython.display import Markdown
+from openskistats.models import SkiRunDifficulty
+
+Markdown(SkiRunDifficulty.markdown_description(mode="list"))
+```
 
 ### Source data 
 

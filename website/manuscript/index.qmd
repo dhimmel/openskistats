@@ -18,7 +18,10 @@ This manuscript is an incomplete in-progress draft.
 :::
 
 ```{python}
+from IPython.display import Markdown
+
 from openskistats.variables import read_variable as var
+from openskistats.models import SkiRunDifficulty
 ```
 
 ## Abstract
@@ -288,6 +291,10 @@ Dartmouth Skiway rose with the NNE petal highlighted.
 ### Run Difficulty
 
 Difficulty assigned by ski area.
+
+OpenSkiMap extracts run difficulties from OpenStreetMap according to the [`piste:difficulty`](https://wiki.openstreetmap.org/wiki/Key:piste:difficulty) key.
+We condense difficulties into a simplified set as follows:
+`{python} Markdown(SkiRunDifficulty.markdown_description(mode="phrase") + ".")`
 
 ::::: {#fig-slope-by-difficulty layout="[50,50]"}
 ::: {#fig-slope-by-difficulty-full}

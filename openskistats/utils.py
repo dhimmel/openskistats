@@ -108,3 +108,20 @@ def gini_coefficient(values: npt.NDArray[np.float64] | list[float]) -> float:
     n = len(values)
     cumsum = np.cumsum(sorted(values))
     return float(1 - 2 * (cumsum.sum() / (n * cumsum[-1])) + n**-1)
+
+
+def oxford_join(
+    strings: list[str], sep: str = ", ", final_sep_extra: str = "and "
+) -> str:
+    """
+    Join a list of strings with a separator,
+    using a final separator for the last pair to reflect an Oxford comma style.
+    """
+    if not strings:
+        return ""
+    *head, final = strings
+    if not head:
+        return final
+    if len(head) == 1:
+        return f"{head[0]} {final_sep_extra}{final}"
+    return f"{sep.join(head)}{sep}{final_sep_extra}{final}"
