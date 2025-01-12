@@ -264,6 +264,13 @@ Furthermore, each day skiing represents a large investment in terms of time and 
 Accordingly, OpenSkiStats serves the large contingent of savvy skiers who seek exhaustive metrics into ski areas.
 Such skiers meld observations on their own experiences with the data-driven insights provided by OpenSkiStats to create mental models on what factors of a ski area matter most to them and how these factors interact with conditions in search of the ultimate experience.
 
+Open source is critical for longevity and preservation.
+_collecting examples of ski infrastructure that have been lost_
+
+- FATMAP, see [reddit](https://www.reddit.com/r/skiing/comments/1ey3prk/is_there_anything_that_does_what_fatmap_did/)
+- OpenSnow API prior to paywall
+
+
 ## Methods
 
 ::: {#fig-dartmouth-rose-nne}

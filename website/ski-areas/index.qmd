@@ -14,9 +14,10 @@ format:
 Explore statistics on all named ski areas in the world with at least 3 runs and 50 meters of cumulative vertical drop across their runs.
 The underlying data is provided by [OpenSkiMap](https://openskimap.org) and [OpenStreetMap](https://www.openstreetmap.org) with statistics computed by <https://github.com/dhimmel/openskistats>.
 
-::: {.callout-warning}
-This project is currently under heavy development.
-Methods and results are still preliminary and subject to change.
+::: {.callout-caution}
+OpenSkiStats is a work in progress.
+Methods and results are subject to change.
+Feedback is welcome via [GitHub issues](https://github.com/dhimmel/openskistats/issues/new).
 :::
 
 ::: {.column-screen-inset}
