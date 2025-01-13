@@ -29,7 +29,8 @@ from openskistats.models import SkiRunDifficulty
 We present OpenSkiStats, the first open, global, and continuously updating resource of downhill skiing summary statistics.
 The initial focus of OpenSkiStats is to provide spatial statistics of ski areas and their runs, in particular, the orientation of ski runs.
 Data is sourced from OpenSkiMap, a project to extract and visualize skiing related features from the crowd-sourced OpenStreetMap.
-OpenSkiMap provides a resource of `{python} var("openskimap__ski_areas__counts__02_downhill", ",")` downhill ski areas in XX countries and `{python} var("openskimap__runs__counts__03_downhill", ",")` downhill ski runs comprised of XX segments.
+<!-- FIXME: should we switch to only showing equipped operating ski areas and in bounds runs? -->
+OpenSkiMap provides a resource of `{python} var("openskimap__ski_areas__counts__02_downhill", ",")` downhill ski areas in `{python} var("openskimap__countries__counts__ski_areas_04_downhill_operating_1_lift", ",")` countries and `{python} var("openskimap__runs__counts__03_downhill", ",")` downhill ski runs comprised of XX segments.
 
 ## Introduction
 
@@ -271,7 +272,7 @@ Open source is critical for longevity and preservation.
 _collecting examples of ski infrastructure that have been lost_
 
 - FATMAP, see [reddit](https://www.reddit.com/r/skiing/comments/1ey3prk/is_there_anything_that_does_what_fatmap_did/)
-- OpenSnow API prior to paywall
+- Google Maps, see [reddit](https://www.reddit.com/r/skiing/comments/1gt6s6x/ski_resort_maps_will_no_longer_be_shown_on_google/)
 
 
 ## Methods
