@@ -278,14 +278,8 @@ _collecting examples of ski infrastructure that have been lost_
 
 ## Methods
 
-::: {#fig-dartmouth-rose-nne}
-![](../images/rose_nne.svg)
-
-Dartmouth Skiway rose with the NNE petal highlighted.
-:::
-
 ::: {#fig-dartmouth-coordinates}
-![](../images/segments_highlight_nne.svg)
+![](../images/dartmouth_nne_light.svg)
 
 Dartmouth Skiway rose with the NNE petal highlighted.
 :::
