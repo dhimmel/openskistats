@@ -372,6 +372,7 @@ rose_nne_light <- dartmouth |>
 
 ggsave(
   file.path(img_dir, "dartmouth_nne_light.svg"),
+  height = 6, width = 8,
   cowplot::ggdraw(segs_nne_light) +
     cowplot::draw_plot(rose_nne_light, .25, 0, .6, .6)
 )
