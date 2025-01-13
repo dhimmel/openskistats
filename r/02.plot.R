@@ -425,6 +425,8 @@ region <- region_raw |>
     \(x) dplyr::filter(x, num_bins == ngroups_us)
   )
 
+# US state layout slightly modified from 
+# https://erdavis.com/2022/02/09/how-i-made-the-viral-map/
 layout <- c(
   area(1, 1),
   area(1, 11),
