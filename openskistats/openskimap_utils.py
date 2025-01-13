@@ -193,6 +193,14 @@ def load_downhill_runs_from_download_pl() -> pl.DataFrame:
             x.model_dump()
             for x in _structure_coordinates(_clean_coordinates(coordinates))
         ]
+        # do we ever need to reverse the elevation profile (e.g. if run coordinates are reversed)?
+        if elev_profile := run_properties["elevationProfile"]:
+            assert elev_profile["resolution"] == 25
+            row["run_elevation_profile"] = [
+                round(x, 2) for x in elev_profile["heights"]
+            ]
+        else:
+            row["run_elevation_profile"] = None
         rows.append(row)
     set_variables(
         openskimap__runs__counts__02_linestring=len(rows),

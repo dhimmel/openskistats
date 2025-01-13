@@ -298,6 +298,12 @@ class RunModel(Model):  # type: ignore [misc]
             "Ascending runs are reversed to ensure all runs are descending.",
         ),
     ]
+    run_elevation_profile: Annotated[
+        list[float] | None,
+        Field(
+            description="Elevation in meters of the run at every 25 meter increment of horizontal distance.",
+        ),
+    ]
 
 
 class BearingStatsModel(Model):  # type: ignore [misc]
