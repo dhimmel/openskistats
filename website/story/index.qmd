@@ -21,6 +21,10 @@ format:
       narrative-text-color-sidebar: "#e2e2e2"
       section-background-color: "#002B36"
       narrative-overlay-max-width: "700px"
+    # this include-in-header is not inherited from the project _quarto.yml,
+    # likely because the format is different
+    include-in-header:
+      - ../common/matomo.html
 title-block-banner: false
 ---
 
