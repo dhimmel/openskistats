@@ -121,7 +121,11 @@ List of related webpages not yet mentioned in the manuscript:
 - https://mapsynergy.com/ and https://mapsynergy.maps.arcgis.com/apps/dashboards/44d9c8422f3c4cc898642d75392337db
 - https://snowbrains.com/inconsistencies-in-classification-of-ski-slope-difficulty-ratings/
 - https://steepseeker.com/
+
+## Publicity
+
 - [Closeread Prize Submission: Which way do you ski?](https://forum.posit.co/t/which-way-do-you-ski-closeread-prize/196451)
+- https://www.reddit.com/r/skiing/comments/1i03r3c/which_way_do_you_ski_introducing_openskistats/
 
 ## Wild Ideas
 
