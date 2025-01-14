@@ -370,19 +370,29 @@ def _clean_coordinates(
     ensure_downhill: bool = True,
 ) -> list[tuple[float, float, float]]:
     """
-    Sanitize run LineString coordinates to remove floating point errors and ensure downhill runs.
+    Sanitize run LineString coordinates to remove floating point errors,
+    remove adjacent overlapping (lat, lon) coordinates to prevent problems from zero-length segments,
+    and ensure downhill runs if `ensure_downhill` is True.,
     NOTE: longitude comes before latitude in GeoJSON and osmnx, which is different than GPS coordinates.
     """
-    # Round coordinates to undo floating point errors.
-    # https://github.com/russellporter/openskimap.org/issues/137
     clean_coords = []
+    prior_coord = None
     for lon, lat, ele in coordinates:
         if ele < min_elevation:
             # remove extreme negative elevations
             # https://github.com/russellporter/openskimap.org/issues/141
             continue
-        # TODO: consider extreme slope filtering
-        clean_coords.append((round(lon, 7), round(lat, 7), round(ele, 2)))
+        # Round coordinates to undo floating point errors.
+        # https://github.com/russellporter/openskimap.org/issues/137
+        lon_lat_coord = round(lon, 7), round(lat, 7)
+        lon_round, lat_round = lon_lat_coord
+        if lon_lat_coord == prior_coord:
+            logging.info(
+                f"Adjacent overlapping coordinates found at <https://www.openstreetmap.org/edit/#map=24/{lat_round}/{lon_round}>."
+            )
+            continue
+        prior_coord = lon_lat_coord
+        clean_coords.append((lon_round, lat_round, round(ele, 2)))
     if not clean_coords:
         return clean_coords
     if ensure_downhill and (clean_coords[0][2] < clean_coords[-1][2]):
