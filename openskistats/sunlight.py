@@ -177,7 +177,7 @@ def write_dartmouth_skiway_solar_irradiance() -> pl.DataFrame:
         load_run_segments_pl(
             run_filters=[
                 pl.col("ski_area_ids").list.contains(
-                    "74e0060a96e0399ace1b1e5ef5af1e5197a19752"  # Dartmouth Skiway
+                    "61f381343fb56ded4e7f3742e56090e4453b66bf"  # Dartmouth Skiway
                 )
             ]
         )

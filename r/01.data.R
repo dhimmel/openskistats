@@ -6,7 +6,7 @@ img_data_dir <- "../data/images/data"
 runs <- arrow::read_parquet(file.path(data_dir, "runs.parquet"))
 dartmouth <- runs |>
   tidyr::unnest(ski_area_ids) |>
-  dplyr::filter(ski_area_ids == "74e0060a96e0399ace1b1e5ef5af1e5197a19752") |>
+  dplyr::filter(ski_area_ids == "61f381343fb56ded4e7f3742e56090e4453b66bf") |>
   dplyr::select(run_id, run_name, run_difficulty, run_coordinates_clean)
 dart <- dartmouth |>
   dplyr::mutate(run_coordinates_clean = purrr::map(run_coordinates_clean, ~ dplyr::select(.x, -segment_hash))) |>

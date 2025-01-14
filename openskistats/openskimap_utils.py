@@ -401,6 +401,7 @@ def _clean_coordinates(
     return clean_coords
 
 
+# FIXME: ids are fragile, using the name as the identifier would be more robust
 test_ski_area_ids = [
     "8896cde00150e73de1f1237320c88767c91ce099",  # Whaleback Mountain
     "dc24f332f3117625dc09479b5d10cbb31a592be4",  # Storrs Hill Ski Area
