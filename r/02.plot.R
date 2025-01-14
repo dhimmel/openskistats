@@ -425,33 +425,39 @@ region <- region_raw |>
     \(x) dplyr::filter(x, num_bins == ngroups_us)
   )
 
-# US state layout slightly modified from 
-# https://erdavis.com/2022/02/09/how-i-made-the-viral-map/
+# US state layout slightly modified from NPR: move HI and AK in, switch MA and RI.
+# Four corners are preserved. Redditors should be satisfied.
+# https://blog.apps.npr.org/2015/05/11/hex-tile-maps.html
+# This blog post has a good analysis but ignores the US perimeter shape:
+# https://kristw.medium.com/whose-grid-map-is-better-quality-metrics-for-grid-map-layouts-e3d6075d9e80
+
+
 layout <- c(
   area(1, 1),
   area(1, 11),
   area(2, 10, 2, 10), area(2, 11),
-  area(3, 1), area(3, 2), area(3, 3), area(3, 4), area(3, 5),
-  area(3, 7), area(3, 9), area(3, 10), area(3, 11),
+  area(3, 1), area(3, 2), area(3, 3), area(3, 4), area(3, 5), 
+  area(3, 6), area(3, 7), area(3, 8), area(3, 9), area(3, 10), area(3, 11),
   area(4, 1), area(4, 2), area(4, 3), area(4, 4), area(4, 5),
   area(4, 6), area(4, 7), area(4, 8), area(4, 9), area(4, 10),
   area(5, 1), area(5, 2), area(5, 3), area(5, 4), area(5, 5),
   area(5, 6), area(5, 7), area(5, 8), area(5, 9), area(5, 10),
   area(6, 2), area(6, 3), area(6, 4), area(6, 5), area(6, 6),
-  area(6, 7), area(6, 8), area(6, 9), area(6, 10),
-  area(7, 3), area(7, 4), area(7, 5), area(7, 6), area(7, 7), area(7, 8),
-  area(8, 1), area(8, 3), area(8, 9)
+  area(6, 7), area(6, 8), area(6, 9), 
+  area(7, 4), area(7, 5), area(7, 6), area(7, 7), area(7, 8),
+  area(8, 1), area(8, 4), area(8, 9)
 )
 
 layout_title <- c(area(1, 3, 2, 9), layout)
 
 state_names <- c(
   "AK",
-  "ME", "VT", "NH", "WA", "ID", "MT", "ND", "MN", "MI", "NY", "MA", "RI",
-  "OR", "UT", "WY", "SD", "IA", "WI", "OH", "PA", "NJ", "CT",
-  "CA", "NV", "CO", "NE", "IL", "IN", "WV", "VA", "MD", "DE",
-  "AZ", "NM", "KS", "MO", "KY", "TN", "SC", "NC", "DC",
-  "OK", "LA", "AR", "MS", "AL", "GA",
+  "ME", "VT", "NH", "WA", "ID", "MT", "ND", "MN", 
+  "IL", "WI", "MI", "NY", "MA", "RI",
+  "OR", "NV", "WY", "SD", "IA", "IN", "OH", "PA", "NJ", "CT",
+  "CA", "UT", "CO", "NE", "MO", "KY", "WV", "VA", "MD", "DE",
+  "AZ", "NM", "KS", "AR", "TN", "NC", "SC", "DC",
+  "OK", "LA", "MS", "AL", "GA",
   "HI", "TX", "FL"
 )
 
