@@ -133,7 +133,7 @@ plot_rose <- function(
   if (!empty_rose) {
     p <- p + geom_col(fill = rose_pink, width = 360 / ngr, color = text_light, linewidth = 0.2)
   } else {
-    p <- p + geom_col(fill = NA)
+    p <- p + geom_col(fill = NA, width = 360 / ngr)
   }
   p <- p +
     annotate(
@@ -150,6 +150,7 @@ plot_rose <- function(
     theme(
       # plot.margin=grid::unit(c(-35,-35, -35, -35), "mm"),
       panel.background = element_rect(fill = aesthetics$circle_fill),
+      axis.text.x = element_text(size = size_x, color = aesthetics$anno_color),
       plot.title = element_blank()
     )
   p
@@ -161,11 +162,12 @@ plot_rose <- function(
 #'
 #' @return ggplot2 object of an empty rose
 rose_empty <- function(ski_area_name, aesthetics) {
-  dat <- data.frame(bin_center = c(0, 360), bin_count = c(1, 1))
+  dat <- dartmouth
+  xmarks <- if (ski_area_name == "FL") c("N", "E", "", "W") else NULL
   plot_rose(
     dat, ski_area_name,
     type = "us", aesthetics = aesthetics,
-    empty_rose = TRUE, labels = NULL
+    empty_rose = TRUE, labels = xmarks
   ) +
     theme(
       plot.background = element_blank(),
