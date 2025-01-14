@@ -7,7 +7,7 @@ import plotnine as pn
 import polars as pl
 from matplotlib.colors import TwoSlopeNorm
 
-from openskistats.analyze import load_runs_pl
+from openskistats.analyze import load_run_segments_pl, load_runs_pl
 from openskistats.bearing import (
     cut_bearings_pl,
     get_cut_bearing_bins_df,
@@ -68,15 +68,14 @@ class RunLatitudeBearingHistogram:
         return self.get_latitude_bins_df().join(bearing_bins, how="cross")
 
     def load_and_filter_runs_pl(self) -> pl.LazyFrame:
+        # filter for on-piste runs within a ski area
+        # FIXME: remove freeride filter
+        run_filters = [
+            pl.col("ski_area_ids").list.len() > 0,
+            pl.col("run_difficulty").ne_missing(pl.lit("freeride")),
+        ]
         return (
-            load_runs_pl()
-            # filter for on-piste runs within a ski area
-            .filter(pl.col("ski_area_ids").list.len() > 0)
-            .filter(pl.col("run_difficulty").ne_missing(pl.lit("freeride")))
-            .select("run_id", "run_coordinates_clean")
-            .explode("run_coordinates_clean")
-            .unnest("run_coordinates_clean")
-            .filter(pl.col("segment_hash").is_not_null())
+            load_run_segments_pl(run_filters=run_filters)
             .with_columns(
                 latitude_abs=pl.col("latitude").abs(),
                 hemisphere=pl_hemisphere(),

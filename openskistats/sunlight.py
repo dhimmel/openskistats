@@ -171,18 +171,16 @@ def get_clearsky(
 
 
 def write_dartmouth_skiway_solar_irradiance() -> pl.DataFrame:
-    from openskistats.analyze import load_runs_pl
+    from openskistats.analyze import load_run_segments_pl
 
     skiway_df = (
-        load_runs_pl()
-        .filter(
-            pl.col("ski_area_ids").list.contains(
-                "74e0060a96e0399ace1b1e5ef5af1e5197a19752"
-            )
-        )  # Dartmouth Skiway
-        .select("run_id", "run_coordinates_clean")
-        .explode("run_coordinates_clean")
-        .unnest("run_coordinates_clean")
+        load_run_segments_pl(
+            run_filters=[
+                pl.col("ski_area_ids").list.contains(
+                    "74e0060a96e0399ace1b1e5ef5af1e5197a19752"  # Dartmouth Skiway
+                )
+            ]
+        )
         .with_columns(
             solar_irradiance=pl.when(pl.col("segment_hash").is_not_null())
             .then(pl.struct("latitude", "longitude", "elevation", "slope", "bearing"))
@@ -313,6 +311,7 @@ def load_solar_irradiation_cache_pl(skip_cache: bool = False) -> pl.DataFrame:
         )
     logging.info(f"Loading solar irradiation cache from {path=}.")
     return (
+        # NOTE: could use load_run_segments_pl if we allow custom paths
         pl.scan_parquet(source=path)
         .select("run_id", "run_coordinates_clean")
         .explode("run_coordinates_clean")
