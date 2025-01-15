@@ -219,12 +219,10 @@ def plot_orientation(  # noqa: C901
         ax.set_title(
             title,
             y=title_y,
-            fontdict={
-                # fallback font families for more character support https://matplotlib.org/stable/users/explain/text/fonts.html
-                "family": ["DejaVu Sans", "Noto Sans CJK JP"],
-                "size": title_font_size,
-                "weight": "bold",
-            },
+            # fallback font families for more character support https://matplotlib.org/stable/users/explain/text/fonts.html
+            family=["DejaVu Sans", "Noto Sans CJK JP"],
+            size=title_font_size,
+            weight="bold",
             pad=13,
         )
     return fig, ax
@@ -389,11 +387,11 @@ def subplot_orientations(
             ax=ax,
             max_bin_count=max_bin_count,
             title=name,
+            title_font_size=18,
             area=True,
             color="#D4A0A7",
             margin_text=margin_text or None,
         )
-        ax.title.set_size(18)
         ax.yaxis.grid(False)
         if free_y and "bearing_mean" in group_info:
             _plot_mean_bearing_as_snowflake(
