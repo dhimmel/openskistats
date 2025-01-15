@@ -401,10 +401,10 @@ def _clean_coordinates(
     return clean_coords
 
 
-# FIXME: ids are fragile, using the name as the identifier would be more robust
-test_ski_area_ids = [
-    "8896cde00150e73de1f1237320c88767c91ce099",  # Whaleback Mountain
-    "dc24f332f3117625dc09479b5d10cbb31a592be4",  # Storrs Hill Ski Area
+# ids are fragile, use the name instead as it's more stable
+test_ski_area_names = [
+    "Whaleback Mountain",  # id at ToW: 8896cde00150e73de1f1237320c88767c91ce099
+    "Storrs Hill Ski Area",  # id at ToW: dc24f332f3117625dc09479b5d10cbb31a592be4
 ]
 
 
@@ -414,10 +414,14 @@ def generate_openskimap_test_data() -> None:
         "features": [
             x
             for x in load_openskimap_geojson("ski_areas")
-            if x["properties"]["id"] in test_ski_area_ids
+            if x["properties"]["name"] in test_ski_area_names
         ],
     }
-    assert len(test_ski_areas["features"]) == len(test_ski_area_ids)
+    assert len(test_ski_areas["features"]) == len(test_ski_area_names)
+    test_ski_area_ids: list[str] = [
+        ski_area["properties"]["id"]  # type: ignore [index]
+        for ski_area in test_ski_areas["features"]
+    ]
 
     def filter_by_ski_areas_property(
         features: list[dict[str, Any]],
