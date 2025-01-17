@@ -2,12 +2,15 @@ import logging
 import os
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from functools import cached_property, lru_cache
 from pathlib import Path
 from time import perf_counter
 from typing import Any, Literal
 
+import matplotlib.pyplot as plt
+import numpy as np
+import numpy.typing as npt
 import pandas as pd
 import polars as pl
 import pvlib
@@ -373,3 +376,84 @@ def get_solar_location_band(
         )
         .sort("sun_azimuth_bin_center")
     )
+
+
+@dataclass
+class SlopeByBearingPlots:
+    latitude: float = 43.785237
+    longitude: float = -72.09891
+    elevation: float = 280.24
+
+    def get_clearsky(self) -> dict[str, Any]:
+        return get_clearsky(  # type: ignore [no-any-return]
+            latitude=43.785237,
+            longitude=-72.09891,
+            elevation=280.24,
+            ski_season=SkiSeasonDatetimes("north", "solstice"),
+        ).row(
+            by_predicate=pl.col.datetime
+            == datetime.fromisoformat("2024-12-21 20:00:00Z"),
+            named=True,
+        )
+
+    def get_grids(
+        self,
+    ) -> tuple[
+        npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]
+    ]:
+        clearsky_info = self.get_clearsky()
+        slopes = np.arange(0, 90, 1)
+        bearings = np.arange(0, 360, 1)
+        slope_grid, bearing_grid = np.meshgrid(
+            slopes,
+            bearings,
+            indexing="ij",
+        )
+        irradiance_cells = []
+        for bearing in bearings:
+            irradiance = pvlib.irradiance.get_total_irradiance(
+                surface_tilt=slopes,
+                surface_azimuth=bearing,
+                solar_zenith=clearsky_info["sun_apparent_zenith"],
+                solar_azimuth=clearsky_info["sun_azimuth"],
+                dni=clearsky_info["dni"],  # diffuse normal irradiance
+                ghi=clearsky_info["ghi"],  # global horizontal irradiance
+                dhi=clearsky_info["dhi"],  # direct horizontal irradiance
+                surface_type="snow",
+            )["poa_global"]
+            irradiance_cells.append(irradiance)
+        irradiance_grid = np.array(irradiance_cells)
+        return slope_grid, bearing_grid, irradiance_grid.transpose()
+
+    def plot(self) -> plt.Figure:
+        slope_grid, bearing_grid, irradiance_grid = self.get_grids()
+        fig, ax = plt.subplots(subplot_kw={"projection": "polar"})
+        quad_mesh = ax.pcolormesh(
+            np.deg2rad(bearing_grid),
+            slope_grid,
+            irradiance_grid,
+            shading="nearest",
+            cmap="coolwarm",
+        )
+        colorbar = plt.colorbar(quad_mesh, ax=ax, location="left", aspect=35, pad=0.053)
+        colorbar.outline.set_visible(False)
+        colorbar.ax.tick_params(labelsize=8)
+        ax.set_theta_zero_location("N")
+        ax.set_theta_direction("clockwise")
+        ax.grid(visible=False)
+        # # TODO: reuse code in plot
+        ax.set_xticks(ax.get_xticks())
+        xticklabels = ["N", "", "E", "", "S", "", "W", ""]
+        ax.set_xticklabels(labels=xticklabels)
+        ax.tick_params(axis="x", which="major", pad=-2)
+        # y-tick labeling
+        slope_ticks = np.arange(0, 60, 10)
+        ax.set_yticks(slope_ticks)
+        ax.tick_params(axis="y", which="major", length=5, width=1)
+        ax.set_yticklabels(
+            [f"{r}°" if r in {0, 50} else "" for r in slope_ticks],
+            rotation=0,
+            fontsize=7,
+        )
+        ax.set_rlabel_position(225)
+        return fig
