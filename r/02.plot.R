@@ -227,7 +227,7 @@ dartmouth_segs <- arrow::read_parquet(file.path(img_data_dir, "dartmouth_segs.pa
 hemi <- arrow::read_parquet(file.path(img_data_dir, "hemisphere_roses.parquet")) |>
   tidyr::unnest(bearings)
 
-dart <- arrow::read_parquet(file.path(img_data_dir, "dartmouth_runs.parquet")) |>
+dart <- arrow::read_parquet(file.path(img_data_dir, "skiway_run_coordinates.parquet")) |>
   dplyr::group_by(run_id) |>
   dplyr::mutate(winslow = (m * longitude) + b < latitude) |>
   dplyr::arrange(index)

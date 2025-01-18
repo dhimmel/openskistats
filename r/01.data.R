@@ -3,15 +3,7 @@ data_dir <- "../data"
 img_data_dir <- "../data/images/data"
 
 ## dartmouth_runs -----------------------------------------------------------
-runs <- arrow::read_parquet(file.path(data_dir, "runs.parquet"))
-dartmouth <- runs |>
-  tidyr::unnest(ski_area_ids) |>
-  dplyr::filter(ski_area_ids == "61f381343fb56ded4e7f3742e56090e4453b66bf") |>
-  dplyr::select(run_id, run_name, run_difficulty, run_coordinates_clean)
-dart <- dartmouth |>
-  dplyr::mutate(run_coordinates_clean = purrr::map(run_coordinates_clean, ~ dplyr::select(.x, -segment_hash))) |>
-  tidyr::unnest(run_coordinates_clean)
-arrow::write_parquet(dart, file.path(img_data_dir, "dartmouth_runs.parquet"))
+dart <- arrow::read_parquet(file.path(img_data_dir, "skiway_run_coordinates.parquet"))
 
 ## ----dartmouth_segs---------------------------------------------------------
 n_groups <- 32 # number of spokes
