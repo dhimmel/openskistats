@@ -13,7 +13,7 @@ from openskistats.bearing import (
     get_cut_bearing_bins_df,
 )
 from openskistats.models import SkiRunDifficulty
-from openskistats.plot import NARROW_SPACE
+from openskistats.plot import NARROW_SPACE, _add_polar_y_ticks
 from openskistats.utils import (
     pl_condense_run_difficulty,
     pl_flip_bearing,
@@ -275,28 +275,7 @@ def plot_bearing_by_latitude_bin() -> plt.Figure:
     xticklabels = ["Poleward", "", "E", "", "Equatorward", "", "W", ""]
     ax.set_xticklabels(labels=xticklabels)
     ax.tick_params(axis="x", which="major", pad=-2)
-    # y-tick labeling
-    latitude_ticks = np.arange(0, 91, 10)
-    ax.set_yticks(latitude_ticks)
-    ax.tick_params(axis="y", which="major", length=5, width=1)
-    ax.set_yticklabels(
-        [f"{r}°" if r in {0, 90} else "" for r in latitude_ticks],
-        rotation=0,
-        fontsize=7,
-    )
-    ax.set_rlabel_position(225)
-
-    # Draw custom radial arcs for y-ticks
-    for radius in latitude_ticks:
-        theta_start = np.deg2rad(220)
-        theta_end = np.deg2rad(230)
-        theta = np.linspace(theta_start, theta_end, 100)
-        ax.plot(
-            theta,
-            np.full_like(theta, radius),
-            linewidth=1 if radius < 90 else 2,
-            color="black",
-        )
+    _add_polar_y_ticks(ax=ax, arc_color="black")
 
     return fig
 
