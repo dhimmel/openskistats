@@ -258,30 +258,57 @@ def analyze_all_ski_areas_polars(skip_runs: bool = False) -> None:
     set_variables(**get_ski_area_comparable_counts())
 
 
-def load_runs_pl(run_filters: list[pl.Expr] | None = None) -> pl.LazyFrame:
+def load_runs_pl(
+    run_filters: list[pl.Expr] | None = None,
+    ski_area_filters: list[pl.Expr] | None = None,
+) -> pl.LazyFrame:
+    """
+    When ski_area_filters is provided, ski area metrics are loaded and ski_area_ids
+    are exploded in the runs table, such that the runs table is filtered to only selected ski areas.
+    A new ski_area_id column is added to the runs table that becomes part of the primary key.
+    """
     path = get_runs_parquet_path()
     logging.info(f"Loading runs metrics from {path}")
-    return pl.scan_parquet(source=path).filter(*_prepare_pl_filters(run_filters))
+    df = pl.scan_parquet(source=path)
+    df = df.filter(*_prepare_pl_filters(run_filters))
+    if ski_area_filters:
+        ski_areas = (
+            load_ski_areas_pl(ski_area_filters=ski_area_filters)
+            .select("ski_area_id")
+            .lazy()
+        )
+        df = (
+            df.explode("ski_area_ids")
+            .rename({"ski_area_ids": "ski_area_id"})
+            .join(ski_areas, on="ski_area_id", how="semi", maintain_order="left")
+        )
+    return df
 
 
-def load_run_coordinates_pl(run_filters: list[pl.Expr] | None = None) -> pl.LazyFrame:
+def load_run_coordinates_pl(
+    run_filters: list[pl.Expr] | None = None,
+    ski_area_filters: list[pl.Expr] | None = None,
+) -> pl.LazyFrame:
     """Load run_id with coordinates exploded and unnested for a flat table of run-coordinate pairs."""
     return (
-        load_runs_pl(run_filters=run_filters)
+        load_runs_pl(run_filters=run_filters, ski_area_filters=ski_area_filters)
         .select("run_id", "run_coordinates_clean")
         .explode("run_coordinates_clean")
         .unnest("run_coordinates_clean")
     )
 
 
-def load_run_segments_pl(run_filters: list[pl.Expr] | None = None) -> pl.LazyFrame:
+def load_run_segments_pl(
+    run_filters: list[pl.Expr] | None = None,
+    ski_area_filters: list[pl.Expr] | None = None,
+) -> pl.LazyFrame:
     """
     Load run_id with coordinates exploded, unnested, and filtered to segments,
     for a flat table of run-segment pairs.
     """
-    return load_run_coordinates_pl(run_filters=run_filters).filter(
-        pl.col("segment_hash").is_not_null()
-    )
+    return load_run_coordinates_pl(
+        run_filters=run_filters, ski_area_filters=ski_area_filters
+    ).filter(pl.col("segment_hash").is_not_null())
 
 
 def load_lifts_pl() -> pl.DataFrame:
