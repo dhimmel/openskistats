@@ -315,6 +315,37 @@ def _plot_mean_bearing_as_snowflake(
     )
 
 
+def _add_polar_y_ticks(
+    ax: PolarAxes,
+    arc_center: float = 225.0,
+    arc_width: float = 10.0,
+    arc_color: str = "white",
+) -> None:
+    # y-tick labeling
+    y_ticks = np.arange(0, 91, 10)
+    ax.set_yticks(y_ticks)
+    # ax.tick_params(axis="y", which="major", length=5, width=1)
+    ax.set_yticklabels(
+        [f"{r}°" if r in {0, 90} else "" for r in y_ticks],
+        rotation=0,
+        fontsize=7,
+        color=arc_color,
+    )
+    ax.set_rlabel_position(arc_center)
+    # Draw custom radial arcs for y-ticks
+    for radius in y_ticks:
+        theta_start = np.deg2rad(arc_center - arc_width / 2)
+        theta_end = np.deg2rad(arc_center + arc_width / 2)
+        theta = np.linspace(theta_start, theta_end, 100)
+        ax.plot(
+            theta,
+            np.full_like(theta, radius),
+            linewidth=1 if radius < 90 else 2,
+            color=arc_color,
+        )
+    ax.set_rlim(0, 90)
+
+
 def subplot_orientations(
     groups_pl: pl.DataFrame,
     grouping_col: str,

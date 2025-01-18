@@ -433,7 +433,7 @@ class SlopeByBearingPlots:
             slope_grid,
             irradiance_grid,
             shading="nearest",
-            cmap="coolwarm",
+            cmap="inferno",
         )
         colorbar = plt.colorbar(quad_mesh, ax=ax, location="left", aspect=35, pad=0.053)
         colorbar.outline.set_visible(False)
@@ -447,15 +447,9 @@ class SlopeByBearingPlots:
         ax.set_xticklabels(labels=xticklabels)
         ax.tick_params(axis="x", which="major", pad=-2)
         # y-tick labeling
-        slope_ticks = np.arange(0, 60, 10)
-        ax.set_yticks(slope_ticks)
-        ax.tick_params(axis="y", which="major", length=5, width=1)
-        ax.set_yticklabels(
-            [f"{r}°" if r in {0, 50} else "" for r in slope_ticks],
-            rotation=0,
-            fontsize=7,
-        )
-        ax.set_rlabel_position(225)
+        from openskistats.plot import _add_polar_y_ticks
+
+        _add_polar_y_ticks(ax=ax)
         return fig
 
 
@@ -508,13 +502,14 @@ class LatitudeByBearingPlots:
 
     def plot(self) -> plt.Figure:
         latitude_grid, bearing_grid, irradiance_grid = self.get_grids()
+        # can use _get_fig_ax to support existing subplots
         fig, ax = plt.subplots(subplot_kw={"projection": "polar"})
         quad_mesh = ax.pcolormesh(
             np.deg2rad(bearing_grid),
             latitude_grid,
             irradiance_grid.transpose(),
             shading="nearest",
-            cmap="viridis",
+            cmap="inferno",
         )
         colorbar = plt.colorbar(quad_mesh, ax=ax, location="left", aspect=35, pad=0.053)
         colorbar.outline.set_visible(False)
@@ -527,14 +522,7 @@ class LatitudeByBearingPlots:
         xticklabels = ["N", "", "E", "", "S", "", "W", ""]
         ax.set_xticklabels(labels=xticklabels)
         ax.tick_params(axis="x", which="major", pad=-2)
-        # y-tick labeling
-        slope_ticks = np.arange(0, 60, 10)
-        ax.set_yticks(slope_ticks)
-        ax.tick_params(axis="y", which="major", length=5, width=1)
-        ax.set_yticklabels(
-            [f"{r}°" if r in {0, 50} else "" for r in slope_ticks],
-            rotation=0,
-            fontsize=7,
-        )
-        ax.set_rlabel_position(225)
+        from openskistats.plot import _add_polar_y_ticks
+
+        _add_polar_y_ticks(ax=ax)
         return fig
