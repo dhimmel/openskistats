@@ -29,6 +29,11 @@ jobs:
     - uses: ./.github/workflows/setup-quarto
     - name: install fonts
       run: sudo apt-get install --yes --quiet fonts-dejavu-core fonts-noto-cjk
+    - name: Process inputs
+      id: inputs
+      run: |
+        echo "refresh_cache=${{ inputs.refresh_cache == 'true' || github.event_name == 'schedule' }}" >> "$GITHUB_OUTPUT"
+        echo "solar_segment_count=${{ inputs.solar_segment_count || 300000 }}" >> "$GITHUB_OUTPUT"
     # GitHub will remove any cache entries that have not been accessed in over 7 days
     - name: Restore OpenSkiMap Cache
       id: restore-openskimap
@@ -36,25 +41,14 @@ jobs:
       with:
         path: data/openskimap
         key: openskimap
-        lookup-only: ${{ toJSON(inputs.refresh_cache) }}
-    - name: Debug Inputs
-      run: |
-        echo "refresh_cache: ${{ inputs.refresh_cache }}"
-        echo "refresh_cache json: ${{ toJSON(inputs.refresh_cache) }}"
-        echo "cache miss: ${{ steps.restore-openskimap.outputs.cache-hit != 'true' }}"
-        echo "cache-hit: ${{ steps.restore-openskimap.outputs.cache-hit }}"
-        echo "cache-hit json: ${{ toJSON(steps.restore-openskimap.outputs.cache-hit) }}"
-        echo "solar_segment_count: ${{ inputs.solar_segment_count }}"
-        echo "solar_segment_count json: ${{ toJSON(inputs.solar_segment_count) }}"
-        echo "OPENSKISTATS_SOLAR_SEGMENT_COUNT: ${{ inputs.solar_segment_count || 300000 }}"
-        echo "OPENSKISTATS_SOLAR_SEGMENT_COUNT json: ${{ toJSON(inputs.solar_segment_count || 300000) }}"
+        lookup-only: ${{ steps.inputs.outputs.refresh_cache }}
     - name: Download OpenSkiMap
       id: download-openskimap
       # confusing behavior where inputs.refresh_cache acts like a string not a boolean
       # https://stackoverflow.com/questions/76292948/github-action-boolean-input-with-default-value
       # https://github.com/actions/runner/issues/1483
-      if: toJSON(inputs.refresh_cache) || steps.restore-openskimap.outputs.cache-hit != 'true'
       # the step if condition stopped working around 2025-01-03, so use bash condition to skip the download if files exist
+      if: steps.inputs.outputs.refresh_cache == 'true' || steps.restore-openskimap.outputs.cache-hit != 'true'
       run: |
         if [ ! -f "data/openskimap/runs.geojson.xz" ]; then
           uv run openskistats download
@@ -69,7 +63,7 @@ jobs:
         key: openskimap
     - name: Python Analysis
       env:
-        OPENSKISTATS_SOLAR_SEGMENT_COUNT: ${{ inputs.solar_segment_count || 300000 }}
+        OPENSKISTATS_SOLAR_SEGMENT_COUNT: ${{ steps.inputs.outputs.solar_segment_count }}
       run: |
         uv run openskistats analyze
         uv run openskistats validate
