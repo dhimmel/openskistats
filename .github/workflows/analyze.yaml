@@ -19,6 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      # actions write permission to attempt to workaround
+      # Unable to reserve cache... another job may be creating this cache
+      # https://github.com/actions/stale/issues/1090
+      actions: write
     # default timeout of 360 minutes is the max supported by GitHub-hosted runners,
     # which is too short to compute all solar irradiation values
     timeout-minutes: 360
