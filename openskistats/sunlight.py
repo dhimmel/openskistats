@@ -400,26 +400,25 @@ class SlopeByBearingPlots:
         clearsky_info = self.get_clearsky()
         slopes = np.arange(0, 90, 1)
         bearings = np.arange(0, 360, 1)
-        slope_grid, bearing_grid = np.meshgrid(
-            slopes,
+        bearing_grid, slope_grid = np.meshgrid(
             bearings,
+            slopes,
             indexing="ij",
         )
-        irradiance_cells = []
-        for bearing in bearings:
+        irradiance_grid = np.zeros(shape=(len(bearings), len(slopes)))
+        for i, bearing in enumerate(bearings):
             irradiance = pvlib.irradiance.get_total_irradiance(
                 surface_tilt=slopes,
                 surface_azimuth=bearing,
                 solar_zenith=clearsky_info["sun_apparent_zenith"],
                 solar_azimuth=clearsky_info["sun_azimuth"],
-                dni=clearsky_info["dni"],  # diffuse normal irradiance
-                ghi=clearsky_info["ghi"],  # global horizontal irradiance
-                dhi=clearsky_info["dhi"],  # direct horizontal irradiance
+                dni=clearsky_info["dni"],
+                ghi=clearsky_info["ghi"],
+                dhi=clearsky_info["dhi"],
                 surface_type="snow",
             )["poa_global"]
-            irradiance_cells.append(irradiance)
-        irradiance_grid = np.array(irradiance_cells)
-        return slope_grid, bearing_grid, irradiance_grid.transpose()
+            irradiance_grid[i, :] = irradiance
+        return slope_grid, bearing_grid, irradiance_grid
 
     def plot(self) -> plt.Figure:
         slope_grid, bearing_grid, irradiance_grid = self.get_grids()
@@ -475,26 +474,26 @@ class LatitudeByBearingPlots:
     ]:
         latitudes = np.arange(0, 90, 1)
         bearings = np.arange(0, 360, 1)
-        latitude_grid, bearing_grid = np.meshgrid(
-            latitudes,
+        bearing_grid, latitude_grid = np.meshgrid(
             bearings,
+            latitudes,
             indexing="ij",
         )
-        irradiance_grid = np.zeros(shape=(len(latitudes), len(bearings)))
-        for i, latitude in enumerate(latitudes):
+        irradiance_grid = np.zeros(shape=(len(bearings), len(latitudes)))
+        for j, latitude in enumerate(latitudes):
             clearsky_info = self.get_clearsky(latitude=float(latitude))
-            for j, bearing in enumerate(bearings):
+            for i, bearing in enumerate(bearings):
                 irradiance_grid[i, j] = pvlib.irradiance.get_total_irradiance(
                     surface_tilt=self.slope,
                     surface_azimuth=bearing,
                     solar_zenith=clearsky_info["sun_apparent_zenith"],
                     solar_azimuth=clearsky_info["sun_azimuth"],
-                    dni=clearsky_info["dni"],  # diffuse normal irradiance
-                    ghi=clearsky_info["ghi"],  # global horizontal irradiance
-                    dhi=clearsky_info["dhi"],  # direct horizontal irradiance
+                    dni=clearsky_info["dni"],
+                    ghi=clearsky_info["ghi"],
+                    dhi=clearsky_info["dhi"],
                     surface_type="snow",
                 )["poa_global"]
-        return latitude_grid, bearing_grid, irradiance_grid.transpose()
+        return latitude_grid, bearing_grid, irradiance_grid
 
     def plot(self) -> plt.Figure:
         latitude_grid, bearing_grid, irradiance_grid = self.get_grids()
@@ -503,7 +502,7 @@ class LatitudeByBearingPlots:
         quad_mesh = ax.pcolormesh(
             np.deg2rad(bearing_grid),
             latitude_grid,
-            irradiance_grid.transpose(),
+            irradiance_grid,
             shading="nearest",
             cmap="inferno",
         )
