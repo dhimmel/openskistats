@@ -30,9 +30,9 @@ jobs:
     - name: install fonts
       run: sudo apt-get install --yes --quiet fonts-dejavu-core fonts-noto-cjk
     # GitHub will remove any cache entries that have not been accessed in over 7 days
-    - name: Cache OpenSkiMap
-      id: cache-openskimap
-      uses: actions/cache@v4
+    - name: Restore OpenSkiMap Cache
+      id: restore-openskimap
+      uses: actions/cache/restore@v4
       with:
         path: data/openskimap
         key: openskimap
@@ -41,24 +41,32 @@ jobs:
       run: |
         echo "refresh_cache: ${{ inputs.refresh_cache }}"
         echo "refresh_cache json: ${{ toJSON(inputs.refresh_cache) }}"
-        echo "cache miss: ${{ steps.cache-openskimap.outputs.cache-hit != 'true' }}"
-        echo "cache-hit: ${{ steps.cache-openskimap.outputs.cache-hit }}"
-        echo "cache-hit json: ${{ toJSON(steps.cache-openskimap.outputs.cache-hit) }}"
+        echo "cache miss: ${{ steps.restore-openskimap.outputs.cache-hit != 'true' }}"
+        echo "cache-hit: ${{ steps.restore-openskimap.outputs.cache-hit }}"
+        echo "cache-hit json: ${{ toJSON(steps.restore-openskimap.outputs.cache-hit) }}"
         echo "solar_segment_count: ${{ inputs.solar_segment_count }}"
         echo "solar_segment_count json: ${{ toJSON(inputs.solar_segment_count) }}"
         echo "OPENSKISTATS_SOLAR_SEGMENT_COUNT: ${{ inputs.solar_segment_count || 300000 }}"
         echo "OPENSKISTATS_SOLAR_SEGMENT_COUNT json: ${{ toJSON(inputs.solar_segment_count || 300000) }}"
     - name: Download OpenSkiMap
+      id: download-openskimap
       # confusing behavior where inputs.refresh_cache acts like a string not a boolean
       # https://stackoverflow.com/questions/76292948/github-action-boolean-input-with-default-value
       # https://github.com/actions/runner/issues/1483
-      if: toJSON(inputs.refresh_cache) || steps.cache-openskimap.outputs.cache-hit != 'true'
+      if: toJSON(inputs.refresh_cache) || steps.restore-openskimap.outputs.cache-hit != 'true'
       # the step if condition stopped working around 2025-01-03, so use bash condition to skip the download if files exist
       run: |
         if [ ! -f "data/openskimap/runs.geojson.xz" ]; then
           uv run openskistats download
+          echo "downloaded=true" >> "$GITHUB_OUTPUT"
         fi
       shell: bash
+    - name: Save OpenSkiMap Cache
+      if: steps.download-openskimap.outputs.downloaded == 'true'
+      uses: actions/cache/save@v4
+      with:
+        path: data/openskimap
+        key: openskimap
     - name: Python Analysis
       env:
         OPENSKISTATS_SOLAR_SEGMENT_COUNT: ${{ inputs.solar_segment_count || 300000 }}
