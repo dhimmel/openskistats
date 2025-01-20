@@ -16,6 +16,7 @@ import polars as pl
 import pvlib
 import requests
 from matplotlib.colorbar import Colorbar
+from osmnx.plot import _get_fig_ax
 from rich.progress import Progress
 
 from openskistats.utils import (
@@ -463,12 +464,14 @@ class SlopeByBearingPlots(SolarPolarPlot):
             irradiance_grid[i, :] = irradiance
         return slope_grid, bearing_grid, irradiance_grid
 
-    def plot(self) -> plt.Figure:
+    def plot(
+        self, fig: plt.Figure | None = None, ax: plt.Axes | None = None
+    ) -> plt.Figure:
+        fig, ax = _get_fig_ax(ax=ax, figsize=(3, 3), bgcolor=None, polar=True)
         slope_grid, bearing_grid, irradiance_grid = self.get_grids()
-        # can use _get_fig_ax to support existing subplots
-        fig, ax = plt.subplots(subplot_kw={"projection": "polar"})
         self._create_polar_mesh(ax, bearing_grid, irradiance_grid, slope_grid)
         self._setup_polar_plot(ax)
+        ax.set_title("Slope Analysis")
         return fig
 
 
@@ -519,9 +522,32 @@ class LatitudeByBearingPlots(SolarPolarPlot):
                 )["poa_global"]
         return latitude_grid, bearing_grid, irradiance_grid
 
-    def plot(self) -> plt.Figure:
+    def plot(
+        self, fig: plt.Figure | None = None, ax: plt.Axes | None = None
+    ) -> plt.Figure:
+        fig, ax = _get_fig_ax(ax=ax, figsize=(3, 3), bgcolor=None, polar=True)
         latitude_grid, bearing_grid, irradiance_grid = self.get_grids()
-        fig, ax = plt.subplots(subplot_kw={"projection": "polar"})
         self._create_polar_mesh(ax, bearing_grid, irradiance_grid, latitude_grid)
         self._setup_polar_plot(ax)
+        ax.set_title("Latitude Analysis")
         return fig
+
+
+def create_combined_solar_plots() -> plt.Figure:
+    """Create a combined figure with slope and latitude solar plots."""
+    fig, (ax1, ax2) = plt.subplots(
+        nrows=2,
+        ncols=1,
+        subplot_kw={"projection": "polar"},
+        figsize=(10, 5),
+    )
+
+    slope_plot = SlopeByBearingPlots()
+    latitude_plot = LatitudeByBearingPlots()
+
+    slope_plot.plot(fig=fig, ax=ax1)
+    latitude_plot.plot(fig=fig, ax=ax2)
+
+    # Adjust layout to prevent overlap
+    plt.tight_layout()
+    return fig
