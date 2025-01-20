@@ -15,6 +15,7 @@ import pandas as pd
 import polars as pl
 import pvlib
 import requests
+from matplotlib.colorbar import Colorbar
 from rich.progress import Progress
 
 from openskistats.utils import (
@@ -375,7 +376,49 @@ def get_solar_location_band(
 
 
 @dataclass
-class SlopeByBearingPlots:
+class SolarPolarPlot:
+    """Base class for solar polar plots with shared functionality."""
+
+    def _setup_polar_plot(self, ax: plt.Axes, colorbar: bool = True) -> Colorbar | None:
+        """Configure polar plot with standard formatting."""
+        ax.set_theta_zero_location("N")
+        ax.set_theta_direction("clockwise")
+        ax.grid(visible=False)
+        ax.set_xticks(ax.get_xticks())
+        ax.set_xticklabels(labels=["N", "", "E", "", "S", "", "W", ""])
+        ax.tick_params(axis="x", which="major", pad=-2)
+
+        from openskistats.plot import _add_polar_y_ticks
+
+        _add_polar_y_ticks(ax=ax)
+
+        cb = None
+        if colorbar:
+            quad_mesh = ax.collections[0]  # Get the last added pcolormesh
+            cb = plt.colorbar(quad_mesh, ax=ax, location="left", aspect=35, pad=0.053)
+            cb.outline.set_visible(False)
+            cb.ax.tick_params(labelsize=8)
+        return cb
+
+    def _create_polar_mesh(
+        self,
+        ax: plt.Axes,
+        bearing_grid: npt.NDArray[np.float64],
+        value_grid: npt.NDArray[np.float64],
+        radius_grid: npt.NDArray[np.float64],
+    ) -> None:
+        """Create polar mesh plot with standard formatting."""
+        ax.pcolormesh(
+            np.deg2rad(bearing_grid),
+            radius_grid,
+            value_grid,
+            shading="nearest",
+            cmap="inferno",
+        )
+
+
+@dataclass
+class SlopeByBearingPlots(SolarPolarPlot):
     latitude: float = 43.785237
     longitude: float = -72.09891
     elevation: float = 280.24
@@ -422,34 +465,15 @@ class SlopeByBearingPlots:
 
     def plot(self) -> plt.Figure:
         slope_grid, bearing_grid, irradiance_grid = self.get_grids()
+        # can use _get_fig_ax to support existing subplots
         fig, ax = plt.subplots(subplot_kw={"projection": "polar"})
-        quad_mesh = ax.pcolormesh(
-            np.deg2rad(bearing_grid),
-            slope_grid,
-            irradiance_grid,
-            shading="nearest",
-            cmap="inferno",
-        )
-        colorbar = plt.colorbar(quad_mesh, ax=ax, location="left", aspect=35, pad=0.053)
-        colorbar.outline.set_visible(False)
-        colorbar.ax.tick_params(labelsize=8)
-        ax.set_theta_zero_location("N")
-        ax.set_theta_direction("clockwise")
-        ax.grid(visible=False)
-        # # TODO: reuse code in plot
-        ax.set_xticks(ax.get_xticks())
-        xticklabels = ["N", "", "E", "", "S", "", "W", ""]
-        ax.set_xticklabels(labels=xticklabels)
-        ax.tick_params(axis="x", which="major", pad=-2)
-        # y-tick labeling
-        from openskistats.plot import _add_polar_y_ticks
-
-        _add_polar_y_ticks(ax=ax)
+        self._create_polar_mesh(ax, bearing_grid, irradiance_grid, slope_grid)
+        self._setup_polar_plot(ax)
         return fig
 
 
 @dataclass
-class LatitudeByBearingPlots:
+class LatitudeByBearingPlots(SolarPolarPlot):
     # NEXT: Irradiation over entire day, with 3 slopes
     longitude: float = -72.09891
     elevation: float = 280.24
@@ -497,27 +521,7 @@ class LatitudeByBearingPlots:
 
     def plot(self) -> plt.Figure:
         latitude_grid, bearing_grid, irradiance_grid = self.get_grids()
-        # can use _get_fig_ax to support existing subplots
         fig, ax = plt.subplots(subplot_kw={"projection": "polar"})
-        quad_mesh = ax.pcolormesh(
-            np.deg2rad(bearing_grid),
-            latitude_grid,
-            irradiance_grid,
-            shading="nearest",
-            cmap="inferno",
-        )
-        colorbar = plt.colorbar(quad_mesh, ax=ax, location="left", aspect=35, pad=0.053)
-        colorbar.outline.set_visible(False)
-        colorbar.ax.tick_params(labelsize=8)
-        ax.set_theta_zero_location("N")
-        ax.set_theta_direction("clockwise")
-        ax.grid(visible=False)
-        # # TODO: reuse code in plot
-        ax.set_xticks(ax.get_xticks())
-        xticklabels = ["N", "", "E", "", "S", "", "W", ""]
-        ax.set_xticklabels(labels=xticklabels)
-        ax.tick_params(axis="x", which="major", pad=-2)
-        from openskistats.plot import _add_polar_y_ticks
-
-        _add_polar_y_ticks(ax=ax)
+        self._create_polar_mesh(ax, bearing_grid, irradiance_grid, latitude_grid)
+        self._setup_polar_plot(ax)
         return fig
