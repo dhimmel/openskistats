@@ -88,7 +88,10 @@ def collapse_solar_irradiance(
     """Aggregate solar irradiance to solar irradiation."""
 
     def get_irradiation(df: pl.DataFrame) -> float:
-        return 24 * float(df["poa_global"].mean()) / 1_000
+        mean = df["poa_global"].mean()
+        if mean is None:
+            return -10_000.0  # sentinel value for missing data
+        return 24 * float(mean) / 1_000
 
     return {
         "solar_irradiation_season": get_irradiation(irrad_df),
@@ -415,6 +418,7 @@ class SolarPolarPlot:
             value_grid,
             shading="nearest",
             cmap="inferno",
+            vmin=0,
         )
 
 
@@ -423,27 +427,29 @@ class SlopeByBearingPlots(SolarPolarPlot):
     latitude: float = 43.785237
     longitude: float = -72.09891
     elevation: float = 280.24
-    datetime: datetime = datetime.fromisoformat("2024-12-21 09:00:00-05:00")
+    # when datetime is None, plot the entire season.
+    # If datetime is not None, plot the solar irradiance at that date and time.
+    date_time: datetime | None = None
 
-    def get_clearsky(self) -> dict[str, Any]:
-        return get_clearsky(  # type: ignore [no-any-return]
+    def get_clearsky(self) -> pl.DataFrame:
+        df = get_clearsky(
             latitude=self.latitude,
             longitude=self.longitude,
             elevation=self.elevation,
             ski_season=SkiSeasonDatetimes("north", "solstice"),
-        ).row(
-            by_predicate=pl.col.datetime.eq(self.datetime.astimezone(UTC)),
-            named=True,
         )
+        if self.date_time:
+            df = df.filter(pl.col("datetime").eq(self.date_time.astimezone(UTC)))
+        return df
 
     def get_grids(
         self,
     ) -> tuple[
         npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]
     ]:
-        clearsky_info = self.get_clearsky()
-        slopes = np.arange(0, 90, 1)
-        bearings = np.arange(0, 360, 1)
+        clearsky_df = self.get_clearsky()
+        slopes = np.arange(0, 90, 5)
+        bearings = np.arange(0, 360, 10)
         bearing_grid, slope_grid = np.meshgrid(
             bearings,
             slopes,
@@ -451,17 +457,28 @@ class SlopeByBearingPlots(SolarPolarPlot):
         )
         irradiance_grid = np.zeros(shape=(len(bearings), len(slopes)))
         for i, bearing in enumerate(bearings):
-            irradiance = pvlib.irradiance.get_total_irradiance(
-                surface_tilt=slopes,
-                surface_azimuth=bearing,
-                solar_zenith=clearsky_info["sun_apparent_zenith"],
-                solar_azimuth=clearsky_info["sun_azimuth"],
-                dni=clearsky_info["dni"],
-                ghi=clearsky_info["ghi"],
-                dhi=clearsky_info["dhi"],
-                surface_type="snow",
-            )["poa_global"]
-            irradiance_grid[i, :] = irradiance
+            for j, slope in enumerate(slopes):
+                irrad_df = (
+                    pvlib.irradiance.get_total_irradiance(
+                        surface_tilt=slope,
+                        surface_azimuth=bearing,
+                        solar_zenith=clearsky_df["sun_apparent_zenith"].to_pandas(),
+                        solar_azimuth=clearsky_df["sun_azimuth"].to_pandas(),
+                        dni=clearsky_df["dni"].to_pandas(),
+                        ghi=clearsky_df["ghi"].to_pandas(),
+                        dhi=clearsky_df["dhi"].to_pandas(),
+                        surface_type="snow",
+                    )
+                    .pipe(pl.from_pandas)
+                    .with_columns(is_solstice=pl.lit(False))
+                )
+                if self.date_time:
+                    (irradiance_grid[i, j],) = irrad_df.get_column("poa_global")
+                else:
+                    irradiance_grid[i, j] = (
+                        collapse_solar_irradiance(irrad_df)["solar_irradiation_season"]
+                        * 1_000
+                    )
         return slope_grid, bearing_grid, irradiance_grid
 
     def plot(
@@ -544,15 +561,18 @@ def create_combined_solar_plots() -> plt.Figure:
     # Create axes for our plots (some cells will remain empty)
     ax1 = fig.add_subplot(gs[0, 0], projection="polar")  # Morning slope
     ax2 = fig.add_subplot(gs[0, 1], projection="polar")  # Afternoon slope
-    ax3 = fig.add_subplot(gs[1, 0], projection="polar")  # Latitude analysis
+    ax3 = fig.add_subplot(gs[0, 2], projection="polar")
+    ax4 = fig.add_subplot(gs[1, 0], projection="polar")  # Latitude analysis
 
     # Create plot instances with different times for slope analysis
     morning_slope = SlopeByBearingPlots(
-        datetime=datetime.fromisoformat("2024-12-21 09:00:00-05:00")
+        date_time=datetime.fromisoformat("2024-12-21 09:00:00-05:00")
     )
     afternoon_slope = SlopeByBearingPlots(
-        datetime=datetime.fromisoformat("2024-12-21 15:30:00-05:00")
+        date_time=datetime.fromisoformat("2024-12-21 15:30:00-05:00")
     )
+    season_slope = SlopeByBearingPlots(date_time=None)
+
     latitude_plot = LatitudeByBearingPlots()
 
     # Plot morning slope analysis
@@ -563,9 +583,13 @@ def create_combined_solar_plots() -> plt.Figure:
     afternoon_slope.plot(fig=fig, ax=ax2)
     ax2.set_title("Slope Analysis (15:30 EST)")
 
+    # Plot season slope analysis
+    season_slope.plot(fig=fig, ax=ax3)
+    ax3.set_title("Season Slope")
+
     # Plot latitude analysis
-    latitude_plot.plot(fig=fig, ax=ax3)
-    ax3.set_title("Latitude Analysis")
+    latitude_plot.plot(fig=fig, ax=ax4)
+    ax4.set_title("Latitude Analysis")
 
     # Adjust layout to prevent overlap
     plt.tight_layout()
