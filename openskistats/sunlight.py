@@ -541,21 +541,19 @@ class SlopeByBearingPlots(SolarPolarPlot):
 
 @dataclass
 class LatitudeByBearingPlots(SolarPolarPlot):
-    # NEXT: Irradiation over entire day, with 3 slopes
     longitude: float = -72.09891
     elevation: float = 280.24
     slope: float = 15.0
+    date_time: datetime = datetime.fromisoformat("2024-12-21 09:00:00-05:00")
 
     def get_clearsky(self, latitude: float) -> dict[str, Any]:
         return get_clearsky(  # type: ignore [no-any-return]
             latitude=latitude,
             longitude=self.longitude,
             elevation=self.elevation,
-            ski_season=SkiSeasonDatetimes("north", "solstice"),
+            ski_season=SkiSeasonDatetimes("north", "season"),
         ).row(
-            by_predicate=pl.col.datetime.eq(
-                datetime.fromisoformat("2024-12-21 09:00:00-05:00").astimezone(UTC)
-            ),
+            by_predicate=pl.col.datetime.eq(self.date_time.astimezone(UTC)),
             named=True,
         )
 
@@ -606,37 +604,46 @@ def create_combined_solar_plots() -> plt.Figure:
     gs = plt.GridSpec(2, 3, figure=fig)
 
     # Create axes for our plots (some cells will remain empty)
-    ax1 = fig.add_subplot(gs[0, 0], projection="polar")  # Morning slope
-    ax2 = fig.add_subplot(gs[0, 1], projection="polar")  # Afternoon slope
+    ax1 = fig.add_subplot(gs[0, 0], projection="polar")
+    ax2 = fig.add_subplot(gs[0, 1], projection="polar")
     ax3 = fig.add_subplot(gs[0, 2], projection="polar")
-    ax4 = fig.add_subplot(gs[1, 0], projection="polar")  # Latitude analysis
+    ax4 = fig.add_subplot(gs[1, 0], projection="polar")
+    ax5 = fig.add_subplot(gs[1, 1], projection="polar")
 
     # Create plot instances with different times for slope analysis
     morning_slope = SlopeByBearingPlots(
         date_time=datetime.fromisoformat("2024-12-21 09:00:00-05:00")
     )
     afternoon_slope = SlopeByBearingPlots(
-        date_time=datetime.fromisoformat("2024-12-21 15:30:00-05:00")
+        date_time=datetime.fromisoformat("2025-03-31 15:30:00-05:00")
     )
     season_slope = SlopeByBearingPlots(date_time=None)
 
-    latitude_plot = LatitudeByBearingPlots()
+    latitude_morning = LatitudeByBearingPlots(
+        date_time=datetime.fromisoformat("2024-12-21 09:00:00-05:00")
+    )
+    latitude_afternoon = LatitudeByBearingPlots(
+        date_time=datetime.fromisoformat("2025-03-31 15:30:00-05:00")
+    )
 
     # Plot morning slope analysis
     morning_slope.plot(fig=fig, ax=ax1)
-    ax1.set_title("Slope Analysis (9:00 EST)")
+    ax1.set_title("Winter Solstice Morning")
 
     # Plot afternoon slope analysis
     afternoon_slope.plot(fig=fig, ax=ax2)
-    ax2.set_title("Slope Analysis (15:30 EST)")
+    ax2.set_title("Season Close Afternoon")
 
     # Plot season slope analysis
     season_slope.plot(fig=fig, ax=ax3)
-    ax3.set_title("Season Slope")
+    ax3.set_title("Season Average")
 
     # Plot latitude analysis
-    latitude_plot.plot(fig=fig, ax=ax4)
-    ax4.set_title("Latitude Analysis")
+    latitude_morning.plot(fig=fig, ax=ax4)
+    ax4.set_title("Latitude Analysis (9:00 EST)")
+
+    latitude_afternoon.plot(fig=fig, ax=ax5)
+    ax5.set_title("Latitude Analysis (15:30 EST)")
 
     # Adjust layout to prevent overlap
     plt.tight_layout()
