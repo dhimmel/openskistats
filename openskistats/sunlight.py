@@ -436,20 +436,26 @@ class SlopeByBearingPlots(SolarPolarPlot):
             latitude=self.latitude,
             longitude=self.longitude,
             elevation=self.elevation,
-            ski_season=SkiSeasonDatetimes("north", "solstice"),
+            ski_season=SkiSeasonDatetimes("north", "season"),
         )
         if self.date_time:
             df = df.filter(pl.col("datetime").eq(self.date_time.astimezone(UTC)))
         return df
 
-    def get_grids(
+    def get_slopes_range(self) -> npt.NDArray[np.float64]:
+        return np.arange(0, 90, 5, dtype=np.float64)
+
+    def get_bearings_range(self) -> npt.NDArray[np.float64]:
+        return np.arange(0, 360, 10, dtype=np.float64)
+
+    def _get_grids_season(
         self,
     ) -> tuple[
         npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]
     ]:
         clearsky_df = self.get_clearsky()
-        slopes = np.arange(0, 90, 5)
-        bearings = np.arange(0, 360, 10)
+        slopes = self.get_slopes_range()
+        bearings = self.get_bearings_range()
         bearing_grid, slope_grid = np.meshgrid(
             bearings,
             slopes,
@@ -480,6 +486,47 @@ class SlopeByBearingPlots(SolarPolarPlot):
                         * 1_000
                     )
         return slope_grid, bearing_grid, irradiance_grid
+
+    def _get_grids_datetime(
+        self,
+    ) -> tuple[
+        npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]
+    ]:
+        clearsky_df = self.get_clearsky()
+        clearsky_info = clearsky_df.row(
+            by_predicate=pl.lit(True),
+            named=True,
+        )
+        slopes = self.get_slopes_range()
+        bearings = self.get_bearings_range()
+        bearing_grid, slope_grid = np.meshgrid(
+            bearings,
+            slopes,
+            indexing="ij",
+        )
+        irradiance_grid = np.zeros(shape=(len(bearings), len(slopes)))
+        for i, bearing in enumerate(bearings):
+            irradiance = pvlib.irradiance.get_total_irradiance(
+                surface_tilt=slopes,
+                surface_azimuth=bearing,
+                solar_zenith=clearsky_info["sun_apparent_zenith"],
+                solar_azimuth=clearsky_info["sun_azimuth"],
+                dni=clearsky_info["dni"],
+                ghi=clearsky_info["ghi"],
+                dhi=clearsky_info["dhi"],
+                surface_type="snow",
+            )["poa_global"]
+            irradiance_grid[i, :] = irradiance
+        return slope_grid, bearing_grid, irradiance_grid
+
+    def get_grids(
+        self,
+    ) -> tuple[
+        npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]
+    ]:
+        if self.date_time:
+            return self._get_grids_datetime()
+        return self._get_grids_season()
 
     def plot(
         self, fig: plt.Figure | None = None, ax: plt.Axes | None = None
