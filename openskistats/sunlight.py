@@ -481,10 +481,9 @@ class SlopeByBearingPlots(SolarPolarPlot):
                 if self.date_time:
                     irradiance_grid[i, j] = irrad_df.get_column("poa_global").item()
                 else:
-                    irradiance_grid[i, j] = (
-                        collapse_solar_irradiance(irrad_df)["solar_irradiation_season"]
-                        * 1_000
-                    )
+                    irradiance_grid[i, j] = collapse_solar_irradiance(irrad_df)[
+                        "solar_irradiation_season"
+                    ]
         return slope_grid, bearing_grid, irradiance_grid
 
     def _get_grids_datetime(
@@ -585,12 +584,9 @@ class LatitudeByBearingPlots(SolarPolarPlot):
                 if self.date_time:
                     irradiance_grid[i, j] = irrad_df.get_column("poa_global").item()
                 else:
-                    irradiance_grid[i, j] = (
-                        irrad_df.with_columns(is_solstice=pl.lit(False)).pipe(
-                            collapse_solar_irradiance
-                        )["solar_irradiation_season"]
-                        * 1_000
-                    )
+                    irradiance_grid[i, j] = irrad_df.with_columns(
+                        is_solstice=pl.lit(False)
+                    ).pipe(collapse_solar_irradiance)["solar_irradiation_season"]
 
         return latitude_grid, bearing_grid, irradiance_grid
 
@@ -607,11 +603,7 @@ class LatitudeByBearingPlots(SolarPolarPlot):
 def create_combined_solar_plots() -> plt.Figure:
     """Create a combined figure with multiple solar plots arranged in a 2x3 grid."""
     fig = plt.figure(figsize=(15, 10))
-
-    # Create 2x3 grid of subplots
-    gs = plt.GridSpec(2, 3, figure=fig)
-
-    # Create axes for our plots (some cells will remain empty)
+    gs = plt.GridSpec(nrows=2, ncols=3, figure=fig)
     ax1 = fig.add_subplot(gs[0, 0], projection="polar")
     ax2 = fig.add_subplot(gs[0, 1], projection="polar")
     ax3 = fig.add_subplot(gs[0, 2], projection="polar")
@@ -619,40 +611,29 @@ def create_combined_solar_plots() -> plt.Figure:
     ax5 = fig.add_subplot(gs[1, 1], projection="polar")
     ax6 = fig.add_subplot(gs[1, 2], projection="polar")
 
-    # Create plot instances with different times for slope analysis
-    morning_slope = SlopeByBearingPlots(
-        date_time=datetime.fromisoformat("2024-12-21 09:00:00-05:00")
-    )
-    afternoon_slope = SlopeByBearingPlots(
-        date_time=datetime.fromisoformat("2025-03-31 15:30:00-05:00")
-    )
-    season_slope = SlopeByBearingPlots(date_time=None)
+    datetime_solstice_morning = datetime.fromisoformat("2024-12-21 09:00:00-05:00")
+    datetime_closing_afternoon = datetime.fromisoformat("2025-03-31 15:30:00-05:00")
 
-    latitude_morning = LatitudeByBearingPlots(
-        date_time=datetime.fromisoformat("2024-12-21 09:00:00-05:00")
-    )
-    latitude_afternoon = LatitudeByBearingPlots(
-        date_time=datetime.fromisoformat("2025-03-31 15:30:00-05:00")
-    )
+    slope_morning = SlopeByBearingPlots(date_time=datetime_solstice_morning)
+    slope_afternoon = SlopeByBearingPlots(date_time=datetime_closing_afternoon)
+    slope_season = SlopeByBearingPlots(date_time=None)
+
+    latitude_morning = LatitudeByBearingPlots(date_time=datetime_solstice_morning)
+    latitude_afternoon = LatitudeByBearingPlots(date_time=datetime_closing_afternoon)
     latitude_season = LatitudeByBearingPlots(date_time=None)
 
-    # Plot morning slope analysis
-    morning_slope.plot(fig=fig, ax=ax1)
+    slope_morning.plot(fig=fig, ax=ax1)
     ax1.set_title("Winter Solstice Morning")
 
-    # Plot afternoon slope analysis
-    afternoon_slope.plot(fig=fig, ax=ax2)
+    slope_afternoon.plot(fig=fig, ax=ax2)
     ax2.set_title("Season Close Afternoon")
 
-    # Plot season slope analysis
-    season_slope.plot(fig=fig, ax=ax3)
+    slope_season.plot(fig=fig, ax=ax3)
     ax3.set_title("Season Average")
 
-    # Plot latitude analysis
     latitude_morning.plot(fig=fig, ax=ax4)
     latitude_afternoon.plot(fig=fig, ax=ax5)
     latitude_season.plot(fig=fig, ax=ax6)
 
-    # Adjust layout to prevent overlap
     plt.tight_layout()
     return fig
