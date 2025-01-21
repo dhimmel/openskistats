@@ -615,15 +615,23 @@ class LatitudeByBearingPlots(SolarPolarPlot):
 
 def create_combined_solar_plots() -> plt.Figure:
     """Create a combined figure with multiple solar plots arranged in a 2x3 grid."""
-    fig = plt.figure(figsize=(17, 10))
+    # Create main figure with two subfigures side by side
+    fig = plt.figure(figsize=(17, 10), constrained_layout=True)
+    subfigs = fig.subfigures(nrows=1, ncols=2, width_ratios=[2, 1])
 
-    gs = plt.GridSpec(nrows=2, ncols=3, figure=fig)
-    ax1 = fig.add_subplot(gs[0, 0], projection="polar")
-    ax2 = fig.add_subplot(gs[0, 1], projection="polar")
-    ax3 = fig.add_subplot(gs[0, 2], projection="polar")
-    ax4 = fig.add_subplot(gs[1, 0], projection="polar")
-    ax5 = fig.add_subplot(gs[1, 1], projection="polar")
-    ax6 = fig.add_subplot(gs[1, 2], projection="polar")
+    # Left subfigure for instant irradiance plots (4 plots)
+    subfig_instant = subfigs[0]
+    gs_instant = subfig_instant.add_gridspec(nrows=2, ncols=2)
+    ax1 = subfig_instant.add_subplot(gs_instant[0, 0], projection="polar")
+    ax2 = subfig_instant.add_subplot(gs_instant[0, 1], projection="polar")
+    ax4 = subfig_instant.add_subplot(gs_instant[1, 0], projection="polar")
+    ax5 = subfig_instant.add_subplot(gs_instant[1, 1], projection="polar")
+
+    # Right subfigure for season average plots (2 plots)
+    subfig_season = subfigs[1]
+    gs_season = subfig_season.add_gridspec(nrows=2, ncols=1)
+    ax3 = subfig_season.add_subplot(gs_season[0, 0], projection="polar")
+    ax6 = subfig_season.add_subplot(gs_season[1, 0], projection="polar")
 
     datetime_solstice_morning = datetime.fromisoformat("2024-12-21 09:00:00-05:00")
     datetime_closing_afternoon = datetime.fromisoformat("2025-03-31 15:30:00-05:00")
@@ -640,35 +648,36 @@ def create_combined_solar_plots() -> plt.Figure:
     max_value_instant = max(itemgetter(0, 1, 3, 4)(max_values))
     max_value_season = max(itemgetter(2, 5)(max_values))
 
-    # Plot and capture meshes
+    # Plot instant irradiance plots
     _, mesh1 = plotters[0].plot(fig=fig, ax=ax1, vmax=max_value_instant)
     ax1.set_title("Winter Solstice Morning")
     _, mesh2 = plotters[1].plot(fig=fig, ax=ax2, vmax=max_value_instant)
     ax2.set_title("Season Close Afternoon")
-    _, mesh3 = plotters[2].plot(fig=fig, ax=ax3, vmax=max_value_season)
-    ax3.set_title("Season Average")
     _, mesh4 = plotters[3].plot(fig=fig, ax=ax4, vmax=max_value_instant)
     _, mesh5 = plotters[4].plot(fig=fig, ax=ax5, vmax=max_value_instant)
+
+    # Plot season average plots
+    _, mesh3 = plotters[2].plot(fig=fig, ax=ax3, vmax=max_value_season)
+    ax3.set_title("Season Average")
     _, mesh6 = plotters[5].plot(fig=fig, ax=ax6, vmax=max_value_season)
 
-    fig.colorbar(
+    # Add colorbars to each subfigure
+    subfig_instant.colorbar(
         mesh1,
         ax=[ax1, ax2, ax4, ax5],
         label="Instant Irradiance (W/m²)",
-        cmap="inferno",
-        location="left",
+        location="right",
         pad=0.05,
         aspect=40,
-    ).ax.yaxis.set_label_position("left")
+    )
 
-    fig.colorbar(
+    subfig_season.colorbar(
         mesh3,
         ax=[ax3, ax6],
         label="Daily Irradiation (kWh/m²)",
-        cmap="cividis",
         location="right",
-        pad=0.15,
+        pad=0.05,
         aspect=40,
-    ).ax.yaxis.set_label_position("right")
+    )
 
     return fig
