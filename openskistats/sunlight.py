@@ -396,7 +396,7 @@ class SolarPolarPlot:
         vmax: float | None = None,
     ) -> tuple[plt.Figure, QuadMesh]:
         fig, ax = _get_fig_ax(ax=ax, figsize=(3, 3), bgcolor=None, polar=True)
-        radial_grid, bearing_grid, irradiance_grid = self.grids
+        radial_grid, bearing_grid, irradiance_grid = self.get_grids()
         mesh = self._create_polar_mesh(
             ax,
             bearing_grid,
@@ -447,8 +447,7 @@ class SolarPolarPlot:
             vmax=vmax,
         )
 
-    @property
-    def grids(
+    def get_grids(
         self,
     ) -> tuple[
         npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]
@@ -549,8 +548,8 @@ class SlopeByBearingPlots(SolarPolarPlot):
             irradiance_grid[i, :] = irradiance
         return slope_grid, bearing_grid, irradiance_grid
 
-    @cached_property
-    def grids(
+    @lru_cache(maxsize=20)  # noqa: B019
+    def get_grids(
         self,
     ) -> tuple[
         npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]
@@ -577,8 +576,8 @@ class LatitudeByBearingPlots(SolarPolarPlot):
             df = df.filter(pl.col.datetime.eq(self.date_time.astimezone(UTC)))
         return df
 
-    @cached_property
-    def grids(
+    @lru_cache(maxsize=20)  # noqa: B019
+    def get_grids(
         self,
     ) -> tuple[
         npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]
@@ -640,7 +639,7 @@ def create_combined_solar_plots() -> plt.Figure:
         LatitudeByBearingPlots(date_time=datetime_closing_afternoon),
         LatitudeByBearingPlots(date_time=None),
     ]
-    max_values = [plotter.grids[2].max() for plotter in plotters]
+    max_values = [plotter.get_grids()[2].max() for plotter in plotters]
     max_value_instant = max(itemgetter(0, 1, 3, 4)(max_values))
     max_value_season = max(itemgetter(2, 5)(max_values))
 
@@ -655,11 +654,16 @@ def create_combined_solar_plots() -> plt.Figure:
     _, mesh5 = plotters[4].plot(fig=fig, ax=ax5, vmax=max_value_instant)
     _, mesh6 = plotters[5].plot(fig=fig, ax=ax6, vmax=max_value_season)
 
-    # Add shared colorbars in the outer columns
-    cax1 = fig.add_axes([0.08, 0.1, 0.02, 0.8])  # Left side
-    cax2 = fig.add_axes([0.92, 0.1, 0.02, 0.8])  # Right side
-
-    plt.colorbar(mesh1, cax=cax1, label="Instant Irradiance (W/m²)", cmap="inferno")
-    plt.colorbar(mesh3, cax=cax2, label="Daily Irradiation (kWh/m²)", cmap="cividis")
-
+    fig.colorbar(
+        mesh1,
+        ax=[ax1, ax2, ax4, ax5],
+        label="Instant Irradiance (W/m²)",
+        cmap="inferno",
+    )
+    fig.colorbar(
+        mesh3,
+        ax=[ax3, ax6],
+        label="Daily Irradiation (kWh/m²)",
+        cmap="cividis",
+    )
     return fig
