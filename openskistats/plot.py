@@ -321,6 +321,7 @@ def _add_polar_y_ticks(
     arc_width: float = 10.0,
     arc_color: str = "white",
     title: str | None = None,
+    label_ticks_at: tuple[int, ...] = (0, 90),
 ) -> None:
     """Add radial ticks and optional title to polar plot.
 
@@ -341,7 +342,7 @@ def _add_polar_y_ticks(
     y_ticks = np.arange(0, 91, 10)
     ax.set_yticks(y_ticks)
     ax.set_yticklabels(
-        [f"{r}°" if r in {0, 90} else "" for r in y_ticks],
+        [f"{r}°" if r in label_ticks_at else "" for r in y_ticks],
         rotation=0,
         fontsize=7,
         color=arc_color,

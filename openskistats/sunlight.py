@@ -24,6 +24,7 @@ from rich.progress import Progress
 from openskistats.utils import (
     get_data_directory,
     get_hemisphere,
+    get_images_directory,
     running_in_ci,
     running_in_test,
 )
@@ -389,6 +390,12 @@ class SolarPolarPlot:
     # If datetime is not None, plot the solar irradiance at that date and time.
     date_time: datetime | None = None
 
+    def get_bearings_range(self) -> npt.NDArray[np.float64]:
+        return np.arange(0, 360, 4, dtype=np.float64)
+
+    def get_y_range(self) -> npt.NDArray[np.float64]:
+        return np.arange(0, 90, 2, dtype=np.float64)
+
     def plot(
         self,
         fig: plt.Figure | None = None,
@@ -415,7 +422,6 @@ class SolarPolarPlot:
         ax.set_xticks(ax.get_xticks())
         ax.set_xticklabels(labels=["N", "", "E", "", "S", "", "W", ""])
         ax.tick_params(axis="x", which="major", pad=-2)
-
         from openskistats.plot import _add_polar_y_ticks
 
         _add_polar_y_ticks(
@@ -424,7 +430,9 @@ class SolarPolarPlot:
             arc_width=10,
             arc_color="white",
             title="Slope" if isinstance(self, SlopeByBearingPlots) else "Latitude",
+            label_ticks_at=(0, 40, 80),
         )
+        ax.set_rlabel_position(320)
 
         cb = None
         if colorbar:
@@ -479,10 +487,7 @@ class SlopeByBearingPlots(SolarPolarPlot):
         return df
 
     def get_slopes_range(self) -> npt.NDArray[np.float64]:
-        return np.arange(0, 90, 5, dtype=np.float64)
-
-    def get_bearings_range(self) -> npt.NDArray[np.float64]:
-        return np.arange(0, 360, 10, dtype=np.float64)
+        return self.get_y_range()
 
     def _get_grids_season(
         self,
@@ -588,8 +593,8 @@ class LatitudeByBearingPlots(SolarPolarPlot):
     ) -> tuple[
         npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]
     ]:
-        latitudes = np.arange(0, 90, 5)
-        bearings = np.arange(0, 360, 10)
+        bearings = self.get_bearings_range()
+        latitudes = self.get_y_range()
         bearing_grid, latitude_grid = np.meshgrid(
             bearings,
             latitudes,
@@ -685,5 +690,9 @@ def create_combined_solar_plots() -> plt.Figure:
         pad=0.05,
         aspect=40,
     )
+
+    path = get_images_directory().joinpath("solar_irradiance_simulation_grids.png")
+    logging.info(f"Saving figure to {path}.")
+    fig.savefig(path, dpi=300, bbox_inches="tight")
 
     return fig
