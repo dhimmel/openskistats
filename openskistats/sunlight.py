@@ -442,7 +442,7 @@ class SolarPolarPlot:
             radial_grid,
             value_grid,
             shading="nearest",
-            cmap="inferno" if self.date_time else "magma",
+            cmap="inferno" if self.date_time else "cividis",
             vmin=0,
             vmax=vmax,
         )
@@ -619,7 +619,7 @@ def create_combined_solar_plots() -> plt.Figure:
     fig = plt.figure(figsize=(15, 10))
 
     # Create GridSpec with space for colorbars
-    gs = plt.GridSpec(nrows=2, ncols=5, width_ratios=[0.1, 1, 1, 1, 0.1], figure=fig)
+    gs = plt.GridSpec(nrows=2, ncols=5, width_ratios=[0.05, 1, 1, 1, 0.05], figure=fig)
 
     # Create polar axes, skipping colorbar columns (0 and 4)
     ax1 = fig.add_subplot(gs[0, 1], projection="polar")
@@ -659,8 +659,7 @@ def create_combined_solar_plots() -> plt.Figure:
     cax1 = fig.add_axes([0.08, 0.1, 0.02, 0.8])  # Left side
     cax2 = fig.add_axes([0.92, 0.1, 0.02, 0.8])  # Right side
 
-    # Create colorbars using one mesh from each group
-    plt.colorbar(mesh1, cax=cax1, label="Instant Irradiance (W/m²)")
-    plt.colorbar(mesh3, cax=cax2, label="Daily Irradiation (kWh/m²)")
+    plt.colorbar(mesh1, cax=cax1, label="Instant Irradiance (W/m²)", cmap="inferno")
+    plt.colorbar(mesh3, cax=cax2, label="Daily Irradiation (kWh/m²)", cmap="cividis")
 
     return fig
