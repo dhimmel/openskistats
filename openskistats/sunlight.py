@@ -622,7 +622,7 @@ class LatitudeByBearingPlots(SolarPolarPlot):
 def create_combined_solar_plots() -> plt.Figure:
     """Create a combined figure with multiple solar plots arranged in a 2x3 grid."""
     # Create main figure with two subfigures side by side
-    fig = plt.figure(figsize=(9.5, 5), constrained_layout=True)
+    fig = plt.figure(figsize=(9.4, 5), constrained_layout=True)
     subfigs = fig.subfigures(nrows=1, ncols=2, width_ratios=[2, 1])
 
     # Left subfigure for instant irradiance plots (4 plots)
