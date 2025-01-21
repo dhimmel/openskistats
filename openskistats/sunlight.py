@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import UTC, date, datetime, timedelta
 from functools import cached_property, lru_cache
+from operator import itemgetter
 from pathlib import Path
 from time import perf_counter
 from typing import Any, Literal
@@ -380,9 +381,27 @@ def get_solar_location_band(
     )
 
 
-@dataclass
+@dataclass(frozen=True)
 class SolarPolarPlot:
     """Base class for solar polar plots with shared functionality."""
+
+    def plot(
+        self,
+        fig: plt.Figure | None = None,
+        ax: plt.Axes | None = None,
+        vmax: float | None = None,
+    ) -> plt.Figure:
+        fig, ax = _get_fig_ax(ax=ax, figsize=(3, 3), bgcolor=None, polar=True)
+        radial_grid, bearing_grid, irradiance_grid = self.grids
+        self._create_polar_mesh(
+            ax,
+            bearing_grid,
+            radial_grid,
+            irradiance_grid,
+            vmax=vmax,
+        )
+        self._setup_polar_plot(ax, colorbar=False)
+        return fig
 
     def _setup_polar_plot(self, ax: plt.Axes, colorbar: bool = True) -> Colorbar | None:
         """Configure polar plot with standard formatting."""
@@ -409,14 +428,14 @@ class SolarPolarPlot:
         self,
         ax: plt.Axes,
         bearing_grid: npt.NDArray[np.float64],
+        radial_grid: npt.NDArray[np.float64],
         value_grid: npt.NDArray[np.float64],
-        radius_grid: npt.NDArray[np.float64],
         vmax: float | None = None,
     ) -> QuadMesh:
         """Create polar mesh plot with standard formatting."""
         return ax.pcolormesh(
             np.deg2rad(bearing_grid),
-            radius_grid,
+            radial_grid,
             value_grid,
             shading="nearest",
             cmap="inferno",
@@ -424,8 +443,16 @@ class SolarPolarPlot:
             vmax=vmax,
         )
 
+    @property
+    def grids(
+        self,
+    ) -> tuple[
+        npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]
+    ]:
+        raise NotImplementedError
 
-@dataclass
+
+@dataclass(frozen=True)
 class SlopeByBearingPlots(SolarPolarPlot):
     latitude: float = 43.785237
     longitude: float = -72.09891
@@ -521,7 +548,8 @@ class SlopeByBearingPlots(SolarPolarPlot):
             irradiance_grid[i, :] = irradiance
         return slope_grid, bearing_grid, irradiance_grid
 
-    def get_grids(
+    @cached_property
+    def grids(
         self,
     ) -> tuple[
         npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]
@@ -530,17 +558,8 @@ class SlopeByBearingPlots(SolarPolarPlot):
             return self._get_grids_datetime()
         return self._get_grids_season()
 
-    def plot(
-        self, fig: plt.Figure | None = None, ax: plt.Axes | None = None
-    ) -> plt.Figure:
-        fig, ax = _get_fig_ax(ax=ax, figsize=(3, 3), bgcolor=None, polar=True)
-        slope_grid, bearing_grid, irradiance_grid = self.get_grids()
-        self._create_polar_mesh(ax, bearing_grid, irradiance_grid, slope_grid)
-        self._setup_polar_plot(ax, colorbar=False)
-        return fig
 
-
-@dataclass
+@dataclass(frozen=True)
 class LatitudeByBearingPlots(SolarPolarPlot):
     longitude: float = -72.09891
     elevation: float = 280.24
@@ -558,7 +577,8 @@ class LatitudeByBearingPlots(SolarPolarPlot):
             df = df.filter(pl.col.datetime.eq(self.date_time.astimezone(UTC)))
         return df
 
-    def get_grids(
+    @cached_property
+    def grids(
         self,
     ) -> tuple[
         npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]
@@ -593,15 +613,6 @@ class LatitudeByBearingPlots(SolarPolarPlot):
 
         return latitude_grid, bearing_grid, irradiance_grid
 
-    def plot(
-        self, fig: plt.Figure | None = None, ax: plt.Axes | None = None
-    ) -> plt.Figure:
-        fig, ax = _get_fig_ax(ax=ax, figsize=(3, 3), bgcolor=None, polar=True)
-        latitude_grid, bearing_grid, irradiance_grid = self.get_grids()
-        self._create_polar_mesh(ax, bearing_grid, irradiance_grid, latitude_grid)
-        self._setup_polar_plot(ax, colorbar=False)
-        return fig
-
 
 def create_combined_solar_plots() -> plt.Figure:
     """Create a combined figure with multiple solar plots arranged in a 2x3 grid."""
@@ -617,26 +628,26 @@ def create_combined_solar_plots() -> plt.Figure:
     datetime_solstice_morning = datetime.fromisoformat("2024-12-21 09:00:00-05:00")
     datetime_closing_afternoon = datetime.fromisoformat("2025-03-31 15:30:00-05:00")
 
-    slope_morning = SlopeByBearingPlots(date_time=datetime_solstice_morning)
-    slope_afternoon = SlopeByBearingPlots(date_time=datetime_closing_afternoon)
-    slope_season = SlopeByBearingPlots(date_time=None)
-
-    latitude_morning = LatitudeByBearingPlots(date_time=datetime_solstice_morning)
-    latitude_afternoon = LatitudeByBearingPlots(date_time=datetime_closing_afternoon)
-    latitude_season = LatitudeByBearingPlots(date_time=None)
-
-    slope_morning.plot(fig=fig, ax=ax1)
+    plotters = [
+        SlopeByBearingPlots(date_time=datetime_solstice_morning),
+        SlopeByBearingPlots(date_time=datetime_closing_afternoon),
+        SlopeByBearingPlots(date_time=None),
+        LatitudeByBearingPlots(date_time=datetime_solstice_morning),
+        LatitudeByBearingPlots(date_time=datetime_closing_afternoon),
+        LatitudeByBearingPlots(date_time=None),
+    ]
+    max_values = [plotter.grids[2].max() for plotter in plotters]
+    max_value_instant = max(itemgetter(0, 1, 3, 4)(max_values))
+    max_value_season = max(itemgetter(2, 5)(max_values))
+    plotters[0].plot(fig=fig, ax=ax1, vmax=max_value_instant)
     ax1.set_title("Winter Solstice Morning")
-
-    slope_afternoon.plot(fig=fig, ax=ax2)
+    plotters[1].plot(fig=fig, ax=ax2, vmax=max_value_instant)
     ax2.set_title("Season Close Afternoon")
-
-    slope_season.plot(fig=fig, ax=ax3)
+    plotters[2].plot(fig=fig, ax=ax3, vmax=max_value_season)
     ax3.set_title("Season Average")
-
-    latitude_morning.plot(fig=fig, ax=ax4)
-    latitude_afternoon.plot(fig=fig, ax=ax5)
-    latitude_season.plot(fig=fig, ax=ax6)
+    plotters[3].plot(fig=fig, ax=ax4, vmax=max_value_instant)
+    plotters[4].plot(fig=fig, ax=ax5, vmax=max_value_instant)
+    plotters[5].plot(fig=fig, ax=ax6, vmax=max_value_season)
 
     plt.tight_layout()
     return fig
