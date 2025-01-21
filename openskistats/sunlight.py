@@ -615,18 +615,15 @@ class LatitudeByBearingPlots(SolarPolarPlot):
 
 def create_combined_solar_plots() -> plt.Figure:
     """Create a combined figure with multiple solar plots arranged in a 2x3 grid."""
-    fig = plt.figure(figsize=(15, 10))
+    fig = plt.figure(figsize=(17, 10))
 
-    # Create GridSpec with space for colorbars
-    gs = plt.GridSpec(nrows=2, ncols=5, width_ratios=[0.05, 1, 1, 1, 0.05], figure=fig)
-
-    # Create polar axes, skipping colorbar columns (0 and 4)
-    ax1 = fig.add_subplot(gs[0, 1], projection="polar")
-    ax2 = fig.add_subplot(gs[0, 2], projection="polar")
-    ax3 = fig.add_subplot(gs[0, 3], projection="polar")
-    ax4 = fig.add_subplot(gs[1, 1], projection="polar")
-    ax5 = fig.add_subplot(gs[1, 2], projection="polar")
-    ax6 = fig.add_subplot(gs[1, 3], projection="polar")
+    gs = plt.GridSpec(nrows=2, ncols=3, figure=fig)
+    ax1 = fig.add_subplot(gs[0, 0], projection="polar")
+    ax2 = fig.add_subplot(gs[0, 1], projection="polar")
+    ax3 = fig.add_subplot(gs[0, 2], projection="polar")
+    ax4 = fig.add_subplot(gs[1, 0], projection="polar")
+    ax5 = fig.add_subplot(gs[1, 1], projection="polar")
+    ax6 = fig.add_subplot(gs[1, 2], projection="polar")
 
     datetime_solstice_morning = datetime.fromisoformat("2024-12-21 09:00:00-05:00")
     datetime_closing_afternoon = datetime.fromisoformat("2025-03-31 15:30:00-05:00")
@@ -659,11 +656,19 @@ def create_combined_solar_plots() -> plt.Figure:
         ax=[ax1, ax2, ax4, ax5],
         label="Instant Irradiance (W/m²)",
         cmap="inferno",
-    )
+        location="left",
+        pad=0.05,
+        aspect=40,
+    ).ax.yaxis.set_label_position("left")
+
     fig.colorbar(
         mesh3,
         ax=[ax3, ax6],
         label="Daily Irradiation (kWh/m²)",
         cmap="cividis",
-    )
+        location="right",
+        pad=0.15,
+        aspect=40,
+    ).ax.yaxis.set_label_position("right")
+
     return fig
