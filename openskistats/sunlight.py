@@ -385,15 +385,19 @@ def get_solar_location_band(
 class SolarPolarPlot:
     """Base class for solar polar plots with shared functionality."""
 
+    # when datetime is None, plot the entire season.
+    # If datetime is not None, plot the solar irradiance at that date and time.
+    date_time: datetime | None = None
+
     def plot(
         self,
         fig: plt.Figure | None = None,
         ax: plt.Axes | None = None,
         vmax: float | None = None,
-    ) -> plt.Figure:
+    ) -> tuple[plt.Figure, QuadMesh]:
         fig, ax = _get_fig_ax(ax=ax, figsize=(3, 3), bgcolor=None, polar=True)
         radial_grid, bearing_grid, irradiance_grid = self.grids
-        self._create_polar_mesh(
+        mesh = self._create_polar_mesh(
             ax,
             bearing_grid,
             radial_grid,
@@ -401,7 +405,7 @@ class SolarPolarPlot:
             vmax=vmax,
         )
         self._setup_polar_plot(ax, colorbar=False)
-        return fig
+        return fig, mesh
 
     def _setup_polar_plot(self, ax: plt.Axes, colorbar: bool = True) -> Colorbar | None:
         """Configure polar plot with standard formatting."""
@@ -438,7 +442,7 @@ class SolarPolarPlot:
             radial_grid,
             value_grid,
             shading="nearest",
-            cmap="inferno",
+            cmap="inferno" if self.date_time else "magma",
             vmin=0,
             vmax=vmax,
         )
@@ -457,9 +461,6 @@ class SlopeByBearingPlots(SolarPolarPlot):
     latitude: float = 43.785237
     longitude: float = -72.09891
     elevation: float = 280.24
-    # when datetime is None, plot the entire season.
-    # If datetime is not None, plot the solar irradiance at that date and time.
-    date_time: datetime | None = None
 
     def get_clearsky(self) -> pl.DataFrame:
         df = get_clearsky(
@@ -564,7 +565,6 @@ class LatitudeByBearingPlots(SolarPolarPlot):
     longitude: float = -72.09891
     elevation: float = 280.24
     slope: float = 15.0
-    date_time: datetime | None = None
 
     def get_clearsky(self, latitude: float) -> pl.DataFrame:
         df = get_clearsky(
@@ -617,13 +617,17 @@ class LatitudeByBearingPlots(SolarPolarPlot):
 def create_combined_solar_plots() -> plt.Figure:
     """Create a combined figure with multiple solar plots arranged in a 2x3 grid."""
     fig = plt.figure(figsize=(15, 10))
-    gs = plt.GridSpec(nrows=2, ncols=3, figure=fig)
-    ax1 = fig.add_subplot(gs[0, 0], projection="polar")
-    ax2 = fig.add_subplot(gs[0, 1], projection="polar")
-    ax3 = fig.add_subplot(gs[0, 2], projection="polar")
-    ax4 = fig.add_subplot(gs[1, 0], projection="polar")
-    ax5 = fig.add_subplot(gs[1, 1], projection="polar")
-    ax6 = fig.add_subplot(gs[1, 2], projection="polar")
+
+    # Create GridSpec with space for colorbars
+    gs = plt.GridSpec(nrows=2, ncols=5, width_ratios=[0.1, 1, 1, 1, 0.1], figure=fig)
+
+    # Create polar axes, skipping colorbar columns (0 and 4)
+    ax1 = fig.add_subplot(gs[0, 1], projection="polar")
+    ax2 = fig.add_subplot(gs[0, 2], projection="polar")
+    ax3 = fig.add_subplot(gs[0, 3], projection="polar")
+    ax4 = fig.add_subplot(gs[1, 1], projection="polar")
+    ax5 = fig.add_subplot(gs[1, 2], projection="polar")
+    ax6 = fig.add_subplot(gs[1, 3], projection="polar")
 
     datetime_solstice_morning = datetime.fromisoformat("2024-12-21 09:00:00-05:00")
     datetime_closing_afternoon = datetime.fromisoformat("2025-03-31 15:30:00-05:00")
@@ -639,15 +643,24 @@ def create_combined_solar_plots() -> plt.Figure:
     max_values = [plotter.grids[2].max() for plotter in plotters]
     max_value_instant = max(itemgetter(0, 1, 3, 4)(max_values))
     max_value_season = max(itemgetter(2, 5)(max_values))
-    plotters[0].plot(fig=fig, ax=ax1, vmax=max_value_instant)
-    ax1.set_title("Winter Solstice Morning")
-    plotters[1].plot(fig=fig, ax=ax2, vmax=max_value_instant)
-    ax2.set_title("Season Close Afternoon")
-    plotters[2].plot(fig=fig, ax=ax3, vmax=max_value_season)
-    ax3.set_title("Season Average")
-    plotters[3].plot(fig=fig, ax=ax4, vmax=max_value_instant)
-    plotters[4].plot(fig=fig, ax=ax5, vmax=max_value_instant)
-    plotters[5].plot(fig=fig, ax=ax6, vmax=max_value_season)
 
-    plt.tight_layout()
+    # Plot and capture meshes
+    _, mesh1 = plotters[0].plot(fig=fig, ax=ax1, vmax=max_value_instant)
+    ax1.set_title("Winter Solstice Morning")
+    _, mesh2 = plotters[1].plot(fig=fig, ax=ax2, vmax=max_value_instant)
+    ax2.set_title("Season Close Afternoon")
+    _, mesh3 = plotters[2].plot(fig=fig, ax=ax3, vmax=max_value_season)
+    ax3.set_title("Season Average")
+    _, mesh4 = plotters[3].plot(fig=fig, ax=ax4, vmax=max_value_instant)
+    _, mesh5 = plotters[4].plot(fig=fig, ax=ax5, vmax=max_value_instant)
+    _, mesh6 = plotters[5].plot(fig=fig, ax=ax6, vmax=max_value_season)
+
+    # Add shared colorbars in the outer columns
+    cax1 = fig.add_axes([0.08, 0.1, 0.02, 0.8])  # Left side
+    cax2 = fig.add_axes([0.92, 0.1, 0.02, 0.8])  # Right side
+
+    # Create colorbars using one mesh from each group
+    plt.colorbar(mesh1, cax=cax1, label="Instant Irradiance (W/m²)")
+    plt.colorbar(mesh3, cax=cax2, label="Daily Irradiation (kWh/m²)")
+
     return fig
