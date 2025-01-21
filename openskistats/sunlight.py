@@ -15,6 +15,7 @@ import pandas as pd
 import polars as pl
 import pvlib
 import requests
+from matplotlib.collections import QuadMesh
 from matplotlib.colorbar import Colorbar
 from osmnx.plot import _get_fig_ax
 from rich.progress import Progress
@@ -410,15 +411,17 @@ class SolarPolarPlot:
         bearing_grid: npt.NDArray[np.float64],
         value_grid: npt.NDArray[np.float64],
         radius_grid: npt.NDArray[np.float64],
-    ) -> None:
+        vmax: float | None = None,
+    ) -> QuadMesh:
         """Create polar mesh plot with standard formatting."""
-        ax.pcolormesh(
+        return ax.pcolormesh(
             np.deg2rad(bearing_grid),
             radius_grid,
             value_grid,
             shading="nearest",
             cmap="inferno",
             vmin=0,
+            vmax=vmax,
         )
 
 
@@ -533,7 +536,7 @@ class SlopeByBearingPlots(SolarPolarPlot):
         fig, ax = _get_fig_ax(ax=ax, figsize=(3, 3), bgcolor=None, polar=True)
         slope_grid, bearing_grid, irradiance_grid = self.get_grids()
         self._create_polar_mesh(ax, bearing_grid, irradiance_grid, slope_grid)
-        self._setup_polar_plot(ax)
+        self._setup_polar_plot(ax, colorbar=False)
         return fig
 
 
@@ -596,7 +599,7 @@ class LatitudeByBearingPlots(SolarPolarPlot):
         fig, ax = _get_fig_ax(ax=ax, figsize=(3, 3), bgcolor=None, polar=True)
         latitude_grid, bearing_grid, irradiance_grid = self.get_grids()
         self._create_polar_mesh(ax, bearing_grid, irradiance_grid, latitude_grid)
-        self._setup_polar_plot(ax)
+        self._setup_polar_plot(ax, colorbar=False)
         return fig
 
 
