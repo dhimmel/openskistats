@@ -418,7 +418,13 @@ class SolarPolarPlot:
 
         from openskistats.plot import _add_polar_y_ticks
 
-        _add_polar_y_ticks(ax=ax)
+        _add_polar_y_ticks(
+            ax=ax,
+            arc_center=315,
+            arc_width=10,
+            arc_color="white",
+            title="Slope" if isinstance(self, SlopeByBearingPlots) else "Latitude",
+        )
 
         cb = None
         if colorbar:
@@ -616,7 +622,7 @@ class LatitudeByBearingPlots(SolarPolarPlot):
 def create_combined_solar_plots() -> plt.Figure:
     """Create a combined figure with multiple solar plots arranged in a 2x3 grid."""
     # Create main figure with two subfigures side by side
-    fig = plt.figure(figsize=(17, 10), constrained_layout=True)
+    fig = plt.figure(figsize=(9.5, 5), constrained_layout=True)
     subfigs = fig.subfigures(nrows=1, ncols=2, width_ratios=[2, 1])
 
     # Left subfigure for instant irradiance plots (4 plots)
@@ -652,20 +658,20 @@ def create_combined_solar_plots() -> plt.Figure:
     _, mesh1 = plotters[0].plot(fig=fig, ax=ax1, vmax=max_value_instant)
     ax1.set_title("Winter Solstice Morning")
     _, mesh2 = plotters[1].plot(fig=fig, ax=ax2, vmax=max_value_instant)
-    ax2.set_title("Season Close Afternoon")
+    ax2.set_title("Closing Day Afternoon")
     _, mesh4 = plotters[3].plot(fig=fig, ax=ax4, vmax=max_value_instant)
     _, mesh5 = plotters[4].plot(fig=fig, ax=ax5, vmax=max_value_instant)
 
     # Plot season average plots
     _, mesh3 = plotters[2].plot(fig=fig, ax=ax3, vmax=max_value_season)
-    ax3.set_title("Season Average")
+    ax3.set_title("Entire Season")
     _, mesh6 = plotters[5].plot(fig=fig, ax=ax6, vmax=max_value_season)
 
     # Add colorbars to each subfigure
     subfig_instant.colorbar(
         mesh1,
         ax=[ax1, ax2, ax4, ax5],
-        label="Instant Irradiance (W/m²)",
+        label="Instantaneous Irradiance (W/m²)",
         location="right",
         pad=0.05,
         aspect=40,
@@ -674,7 +680,7 @@ def create_combined_solar_plots() -> plt.Figure:
     subfig_season.colorbar(
         mesh3,
         ax=[ax3, ax6],
-        label="Daily Irradiation (kWh/m²)",
+        label="Average Daily Irradiation (kW/m²/day)",
         location="right",
         pad=0.05,
         aspect=40,

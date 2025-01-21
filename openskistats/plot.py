@@ -320,11 +320,26 @@ def _add_polar_y_ticks(
     arc_center: float = 225.0,
     arc_width: float = 10.0,
     arc_color: str = "white",
+    title: str | None = None,
 ) -> None:
+    """Add radial ticks and optional title to polar plot.
+
+    Parameters
+    ----------
+    ax : PolarAxes
+        The matplotlib polar axes to add ticks to
+    arc_center : float
+        Center angle in degrees for the tick arcs
+    arc_width : float
+        Width of the tick arcs in degrees
+    arc_color : str
+        Color for the ticks and labels
+    title : str | None
+        Optional title for the radial axis
+    """
     # y-tick labeling
     y_ticks = np.arange(0, 91, 10)
     ax.set_yticks(y_ticks)
-    # ax.tick_params(axis="y", which="major", length=5, width=1)
     ax.set_yticklabels(
         [f"{r}°" if r in {0, 90} else "" for r in y_ticks],
         rotation=0,
@@ -332,6 +347,7 @@ def _add_polar_y_ticks(
         color=arc_color,
     )
     ax.set_rlabel_position(arc_center)
+
     # Draw custom radial arcs for y-ticks
     for radius in y_ticks:
         theta_start = np.deg2rad(arc_center - arc_width / 2)
@@ -344,6 +360,19 @@ def _add_polar_y_ticks(
             color=arc_color,
         )
     ax.set_rlim(0, 90)
+
+    # Add radial axis title if provided
+    if title:
+        ax.text(
+            x=np.deg2rad(270),
+            y=45,
+            s=title,
+            rotation=0,
+            color=arc_color,
+            fontsize=10,
+            ha="center",
+            va="center",
+        )
 
 
 def subplot_orientations(
