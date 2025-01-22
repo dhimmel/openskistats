@@ -324,6 +324,14 @@ When averaging irradiation across segments, like when aggregating to the level o
 Some shortcomings of these estimates are that they do not account for cloud cover, shadowing due to vegetation, and shadowing due to topography both on a micro (fine topographic variation like boulders, cliffs, moguls, etcetera) and macro scale (higher terrain like ridges or summits that block sunlight).
 We specify a surface type of snow in `pvlib`, which sets an albedo of 65%, i.e. snow reflects 65% of incoming light.
 
+
+::: {#fig-sunlight-simulation}
+![](https://github.com/dhimmel/openskistats/raw/2470924f8fa517a42cf5b36e50b4faf3fe86a4c5/assets/solar_irradiance_simulation_grids.png)
+
+**The effect of slope, latitude, and orientation on solar irradiance.**
+:::
+
+
 ## References
 
 ::: {#refs}
