@@ -391,10 +391,10 @@ class SolarPolarPlot:
     date_time: datetime | None = None
 
     def get_bearings_range(self) -> npt.NDArray[np.float64]:
-        return np.arange(0, 360, 4, dtype=np.float64)
+        return np.arange(0, 360, 1, dtype=np.float64)
 
     def get_y_range(self) -> npt.NDArray[np.float64]:
-        return np.arange(0, 90, 2, dtype=np.float64)
+        return np.arange(0, 90, 1, dtype=np.float64)
 
     def plot(
         self,
