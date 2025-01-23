@@ -333,6 +333,14 @@ We specify a surface type of snow in `pvlib`, which sets an albedo of 65%, i.e. 
 ![](https://github.com/dhimmel/openskistats/raw/2470924f8fa517a42cf5b36e50b4faf3fe86a4c5/assets/solar_irradiance_simulation_grids.png)
 
 **The effect of slope, latitude, and orientation on solar irradiance.**
+Polar plots show how solar irradiance varies for a hypothetical ski run segment by its orientation (angular coordinate) and its slope (top row radial coordinate) or latitude (bottom row radial coordinate).
+The first column estimates solar irradiance at 09:00 on the winter solstice.
+The second column estimates solar irradiance at 15:30 on March 31, closing day of a typical 120 day ski season.
+The third column shows the average solar irradiation over the entire season.
+Fixed geographic inputs --- latitude, longitude, and elevation --- correspond to those of the Dartmouth Skiway in New Hampshire, USA.
+For the latitude-varying plots, a fixed slope of 15° is used.
+The latitude-varying plots illustrate the effect of non-linear turbidity variation by latitude.
+The radial coordinate spans the complete theoretical range from 0--90° (only showing the northern hemisphere in the case of latitude), even though skiing rarely occurs on sustained slopes exceeding 35° and outside of the 30--70°N latitude band.
 :::
 
 
