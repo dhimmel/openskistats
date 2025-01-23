@@ -108,7 +108,7 @@ class RunLatitudeBearingHistogram:
         latitude_lower_bound, latitude_upper_bound = sorted(
             [latitude_lower_bound, latitude_upper_bound]
         )
-        return float(
+        metric_df = (
             self.load_and_filter_runs_pl()
             .with_columns(
                 latitude_in_window=pl.col.latitude.is_between(
@@ -124,9 +124,10 @@ class RunLatitudeBearingHistogram:
             )
             .collect()
             .filter(pl.col("latitude_in_window"))
-            .select("combined_vertical_prop")
-            .item()
         )
+        if metric_df.is_empty():
+            return 0.0
+        return float(metric_df.select("combined_vertical_prop").item())
 
     def _get_agg_metrics(self) -> list[pl.Expr]:
         return [

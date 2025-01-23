@@ -491,6 +491,9 @@ def set_latitude_metrics() -> None:
 
     rlbh = RunLatitudeBearingHistogram()
     set_variables(
+        latitude__between_35_50__combined_vertical_prop=rlbh.get_combined_vertical_prop_in_latitude_range(
+            35, 50
+        ),
         latitude__between_40_50__combined_vertical_prop=rlbh.get_combined_vertical_prop_in_latitude_range(
             40, 50
         ),
