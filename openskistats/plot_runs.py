@@ -72,7 +72,7 @@ class RunLatitudeBearingHistogram:
         # FIXME: remove freeride filter
         run_filters = [
             pl.col("ski_area_ids").list.len() > 0,
-            pl.col("run_difficulty").ne_missing(pl.lit("freeride")),
+            # pl.col("run_difficulty").ne_missing(pl.lit("freeride")),
         ]
         return (
             load_run_segments_pl(run_filters=run_filters)
@@ -94,6 +94,38 @@ class RunLatitudeBearingHistogram:
                     num_bins=self.num_bearing_bins, bearing_col="bearing_poleward"
                 ).alias("bearing_bin_index"),
             )
+        )
+
+    def get_combined_vertical_prop_in_latitude_range(
+        self, latitude_lower_bound: float, latitude_upper_bound: float
+    ) -> float:
+        """
+        Get the proportion of skiable vert (combined vertical drop) that is within a given latitude range
+        (inclusive/closed on both ends).
+        The latitude range is not absolute, i.e. use negative latitude for southern hemisphere.
+        While this is not a class/static method, the output should be invariant across instances.
+        """
+        latitude_lower_bound, latitude_upper_bound = sorted(
+            [latitude_lower_bound, latitude_upper_bound]
+        )
+        return float(
+            self.load_and_filter_runs_pl()
+            .with_columns(
+                latitude_in_window=pl.col.latitude.is_between(
+                    latitude_lower_bound, latitude_upper_bound
+                )
+            )
+            .group_by("latitude_in_window")
+            .agg(*self._get_agg_metrics())
+            .with_columns(
+                combined_vertical_prop=pl.col("combined_vertical").truediv(
+                    pl.sum("combined_vertical")
+                )
+            )
+            .collect()
+            .filter(pl.col("latitude_in_window"))
+            .select("combined_vertical_prop")
+            .item()
         )
 
     def _get_agg_metrics(self) -> list[pl.Expr]:

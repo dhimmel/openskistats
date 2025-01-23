@@ -256,6 +256,7 @@ def analyze_all_ski_areas_polars(skip_runs: bool = False) -> None:
     logging.info(f"Writing {ski_area_metrics_path}")
     ski_area_metrics_df.write_parquet(ski_area_metrics_path)
     set_variables(**get_ski_area_comparable_counts())
+    set_latitude_metrics()
     _create_data_inputs_for_r()
 
 
@@ -483,6 +484,20 @@ def bearing_dists_by_hemisphere() -> pl.DataFrame:
         .to_dicts()[0]
     )
     return dists
+
+
+def set_latitude_metrics() -> None:
+    from openskistats.plot_runs import RunLatitudeBearingHistogram
+
+    rlbh = RunLatitudeBearingHistogram()
+    set_variables(
+        latitude__between_40_50__combined_vertical_prop=rlbh.get_combined_vertical_prop_in_latitude_range(
+            40, 50
+        ),
+        latitude__between_45_58__combined_vertical_prop=rlbh.get_combined_vertical_prop_in_latitude_range(
+            45, 48
+        ),
+    )
 
 
 def bearing_dists_by_status() -> pl.DataFrame:
