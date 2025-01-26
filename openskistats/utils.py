@@ -125,3 +125,9 @@ def oxford_join(
     if len(head) == 1:
         return f"{head[0]} {final_sep_extra}{final}"
     return f"{sep.join(head)}{sep}{final_sep_extra}{final}"
+
+
+def get_request_headers() -> dict[str, str]:
+    return {
+        "From": "https://github.com/dhimmel/openskistats",
+    }

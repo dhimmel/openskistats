@@ -11,6 +11,7 @@ from openskistats.analyze import (
     ski_rose_the_world,
 )
 from openskistats.models import RunModel, SkiAreaModel
+from openskistats.nesh.timelines import NewEnglandSkiHistoryTimelineScraper
 from openskistats.openskimap_utils import (
     download_openskimap_geojsons,
     generate_openskimap_test_data,
@@ -25,6 +26,15 @@ class Commands:
     def download() -> None:
         """Download latest OpenSkiMap source data."""
         download_openskimap_geojsons()
+
+    @staticmethod
+    @cli.command(name="nesh_timelines")  # type: ignore [misc]
+    def nesh_timelines() -> None:
+        """
+        Scrape New England Ski History Timelines and save as JSON in the repository source code tree.
+        This command is intended to be rerun infrequently and always manually.
+        """
+        NewEnglandSkiHistoryTimelineScraper.scrape_all_seasons()
 
     @staticmethod
     @cli.command(name="analyze")  # type: ignore [misc]

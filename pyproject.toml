@@ -15,6 +15,7 @@ license = {file = "LICENSE.md"}
 repository = "https://github.com/dhimmel/openskistats"
 requires-python = ">= 3.12"
 dependencies = [
+    "beautifulsoup4>=4.12.3",
     "folium>=0.19.3",
     "great-tables >= 0.13.0", # https://github.com/machow/reactable-py/issues/29
     "jupyter >= 1.1.1",

@@ -15,7 +15,12 @@ import polars as pl
 import requests
 
 from openskistats.models import OpenSkiMapStatus, RunCoordinateModel, SkiRunUsage
-from openskistats.utils import get_data_directory, get_repo_directory, running_in_test
+from openskistats.utils import (
+    get_data_directory,
+    get_repo_directory,
+    get_request_headers,
+    running_in_test,
+)
 from openskistats.variables import set_variables
 
 
@@ -68,9 +73,7 @@ def download_openskimap_geojson(
     path = get_openskimap_path(name)
     path.parent.mkdir(exist_ok=True)
     logging.info(f"Downloading {url} to {path}")
-    headers = {
-        "From": "https://github.com/dhimmel/openskistats",
-    }
+    headers = get_request_headers()
     response = requests.get(url, allow_redirects=True, headers=headers)
     response.raise_for_status()
     with lzma.open(path, "wb") as write_file:
