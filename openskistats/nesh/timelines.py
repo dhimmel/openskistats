@@ -147,10 +147,28 @@ def read_nesh_timelines() -> pl.DataFrame:
         )
         .drop("opening", "closing")
         .with_columns(
-            season_duration=pl.col("closing_date").sub("opening_date").dt.total_days()
+            season_duration=pl.col("closing_date").sub("opening_date").dt.total_days(),
+            skimap_url=pl.col("ski_area_page").replace_strict(nesh_to_skimap),
         )
     )
     return df
+
+
+def read_nesh_timelines_skimap_key() -> pl.DataFrame:
+    return (
+        read_nesh_timelines()
+        .filter(pl.col("skimap_url").is_not_null())
+        .group_by("skimap_url", "season")
+        .agg(
+            pl.min("opening_date"),
+            pl.max("closing_date"),
+            pl.col("ski_area_page").alias("nesh_sources"),
+        )
+        .with_columns(
+            season_duration=pl.col("closing_date").sub("opening_date").dt.total_days(),
+        )
+        .sort("skimap_url", "season")
+    )
 
 
 nesh_to_skimap = {
