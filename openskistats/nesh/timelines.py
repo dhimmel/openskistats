@@ -18,6 +18,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, ClassVar, Literal
 
+import polars as pl
 import requests
 from bs4 import BeautifulSoup
 
@@ -130,3 +131,23 @@ class NewEnglandSkiHistoryTimelineScraper:
         json_str = json.dumps(rows, indent=2, ensure_ascii=False)
         cls.JSON_PATH.write_text(json_str + "\n")
         return rows
+
+
+def read_nesh_timelines() -> pl.DataFrame:
+    df = (
+        pl.read_json(NewEnglandSkiHistoryTimelineScraper.JSON_PATH)
+        .pivot(
+            index=["ski_area_name", "season", "state", "ski_area_page"],
+            on="moment",
+            values="date_iso",
+            maintain_order=True,
+        )
+        .with_columns(
+            pl.col("opening", "closing").cast(pl.Date).name.suffix("_date"),
+        )
+        .drop("opening", "closing")
+        .with_columns(
+            season_duration=pl.col("closing_date").sub("opening_date").dt.total_days()
+        )
+    )
+    return df
