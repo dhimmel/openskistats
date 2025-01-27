@@ -24,6 +24,9 @@ from bs4 import BeautifulSoup
 
 from openskistats.utils import get_request_headers
 
+SEASON_ORIGIN_MONTH = 9
+SEASON_ORIGIN_DAY = 1
+
 
 @dataclass(frozen=True)
 class NewEnglandSkiHistoryTimelineScraper:
@@ -169,6 +172,40 @@ def read_nesh_timelines_skimap_key() -> pl.DataFrame:
         )
         .sort("skimap_url", "season")
     )
+
+
+def _nesh_timeline_aggregators() -> list[pl.Expr]:
+    season_origin_date_col = pl.date(
+        year=pl.col.season,
+        month=SEASON_ORIGIN_MONTH,
+        day=SEASON_ORIGIN_DAY,
+    )
+    return [
+        pl.col("opening_date")
+        .sub(season_origin_date_col)
+        .dt.total_days()
+        .mean()
+        .alias("opening_date_offset_mean"),
+        pl.col("closing_date")
+        .sub(season_origin_date_col)
+        .dt.total_days()
+        .mean()
+        .alias("closing_date_offset_mean"),
+        pl.col("opening_date")
+        .to_physical()
+        .mean()
+        .cast(pl.Date)
+        .alias("opening_date_mean"),
+        pl.col("closing_date")
+        .to_physical()
+        .mean()
+        .cast(pl.Date)
+        .alias("closing_date_mean"),
+        pl.col.season_duration.mean().alias("season_duration_mean"),
+        pl.col.opening_date.count().alias("opening_date_count"),
+        pl.col.closing_date.count().alias("closing_date_count"),
+        pl.col.season_duration.count().alias("season_duration_count"),
+    ]
 
 
 nesh_to_skimap = {

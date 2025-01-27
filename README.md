@@ -121,6 +121,7 @@ List of related webpages not yet mentioned in the manuscript:
 - https://mapsynergy.com/ and https://mapsynergy.maps.arcgis.com/apps/dashboards/44d9c8422f3c4cc898642d75392337db
 - https://snowbrains.com/inconsistencies-in-classification-of-ski-slope-difficulty-ratings/
 - https://steepseeker.com/
+- https://bestsnow.net/
 - https://www.zrankings.com/
 
 ## Publicity & Users
