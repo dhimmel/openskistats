@@ -28,6 +28,24 @@ SEASON_ORIGIN_MONTH = 9
 SEASON_ORIGIN_DAY = 1
 
 
+def get_date_offset_breaks_and_labels() -> tuple[list[int], list[str]]:
+    """
+    Get offset breaks used for axis major plotting breaks,
+    which are the number of days into the ski season in the Northern Hemisphere.
+    Also return offset labels, which are the month and day of the first day of each month.
+    Assumes a non-leap year.
+    """
+    offset_breaks = [0]
+    offset_labels = []
+    for month_offset in range(12):
+        month = (SEASON_ORIGIN_MONTH - 1 + month_offset) % 12 + 1
+        _, days_in_month = calendar.monthrange(2025, month)  # 2025 is not a leap year
+        offset_breaks.append(offset_breaks[-1] + days_in_month)
+        offset_labels.append(calendar.month_abbr[month] + " 1")
+    offset_breaks.pop()
+    return offset_breaks, offset_labels
+
+
 @dataclass(frozen=True)
 class NewEnglandSkiHistoryTimelineScraper:
     season: int
