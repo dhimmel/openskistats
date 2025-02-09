@@ -46,12 +46,16 @@ jobs:
       with:
         path: data/openskimap
         key: openskimap
+        restore-keys: openskimap-
     - name: Download OpenSkiMap
       id: download-openskimap
       # confusing behavior where inputs.refresh_cache acts like a string not a boolean
       # https://stackoverflow.com/questions/76292948/github-action-boolean-input-with-default-value
       # https://github.com/actions/runner/issues/1483
       # the step if condition stopped working around 2025-01-03, so use bash condition to skip the download if files exist
+      # NOTE: Do not rely on steps.restore-openskimap.outputs.cache-hit because
+      # "For a partial key match via restore-keys or a cache miss, it will be set to false" as per
+      # https://github.com/actions/cache/blob/36f1e144e1c8edb0a652766b484448563d8baf46/restore/README.md#L22
       if: steps.inputs.outputs.refresh_cache == 'true' || steps.restore-openskimap.outputs.cache-hit != 'true'
       run: |
         if [ ! -f "data/openskimap/runs.geojson.xz" ]; then
@@ -64,7 +68,9 @@ jobs:
       uses: actions/cache/save@v4
       with:
         path: data/openskimap
-        key: openskimap
+        # overwriting the cache key is not permitted, hence append the run_id on save
+        # https://github.com/actions/cache/issues/342#issuecomment-673371329
+        key: openskimap-${{ github.run_id }}
     - name: Python Analysis
       env:
         OPENSKISTATS_SOLAR_SEGMENT_COUNT: ${{ steps.inputs.outputs.solar_segment_count }}
