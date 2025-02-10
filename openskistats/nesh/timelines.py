@@ -18,6 +18,8 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, ClassVar, Literal
 
+import numpy as np
+import plotnine as pn
 import polars as pl
 import requests
 from bs4 import BeautifulSoup
@@ -224,6 +226,51 @@ def _nesh_timeline_aggregators() -> list[pl.Expr]:
         pl.col.closing_date.count().alias("closing_date_count"),
         pl.col.season_duration.count().alias("season_duration_count"),
     ]
+
+
+def nesh_timelines_season_summary() -> pl.DataFrame:
+    return (
+        read_nesh_timelines_skimap_key()
+        .group_by("season")
+        .agg(
+            *_nesh_timeline_aggregators(),
+        )
+    )
+
+
+def nesh_timelines_season_summary_plot() -> pn.ggplot:
+    df = nesh_timelines_season_summary()
+    date_offset_breaks, date_offset_labels = get_date_offset_breaks_and_labels()
+    return (
+        pn.ggplot(
+            df,
+            pn.aes(
+                x="season",
+                ymin="opening_date_offset_mean",
+                ymax="closing_date_offset_mean",
+            ),
+        )
+        + pn.geom_linerange(mapping=pn.aes(color="season_duration_count"), size=1.3)
+        + pn.geom_point(
+            mapping=pn.aes(y="opening_date_offset_mean", color="opening_date_count"),
+            stroke=0,
+            size=2.5,
+        )
+        + pn.geom_point(
+            mapping=pn.aes(y="closing_date_offset_mean", color="closing_date_count"),
+            stroke=0,
+            size=2.5,
+        )
+        + pn.scale_x_continuous(breaks=np.arange(1930, 2050, 10), name="")
+        + pn.scale_y_continuous(
+            breaks=date_offset_breaks,
+            labels=date_offset_labels,
+            name="Mean Opening to Closing Date",
+        )
+        + pn.scale_color_cmap(cmap_name="Blues", name="Ski Areas", trans="sqrt")
+        + pn.theme_bw()
+        + pn.theme(figure_size=(10, 5))
+    )
 
 
 nesh_to_skimap = {
