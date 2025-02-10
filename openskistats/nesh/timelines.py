@@ -250,26 +250,33 @@ def nesh_timelines_season_summary_plot() -> pn.ggplot:
                 ymax="closing_date_offset_mean",
             ),
         )
-        + pn.geom_linerange(mapping=pn.aes(color="season_duration_count"), size=1.3)
+        + pn.geom_linerange(
+            mapping=pn.aes(color="season_duration_count"), size=1.3, na_rm=True
+        )
         + pn.geom_point(
             mapping=pn.aes(y="opening_date_offset_mean", color="opening_date_count"),
             stroke=0,
             size=2.5,
+            na_rm=True,
         )
         + pn.geom_point(
             mapping=pn.aes(y="closing_date_offset_mean", color="closing_date_count"),
             stroke=0,
             size=2.5,
+            na_rm=True,
         )
         + pn.scale_x_continuous(breaks=np.arange(1930, 2050, 10), name="")
         + pn.scale_y_continuous(
             breaks=date_offset_breaks,
             labels=date_offset_labels,
-            name="Mean Opening to Closing Date",
+            name="",
         )
-        + pn.scale_color_cmap(cmap_name="Blues", name="Ski Areas", trans="sqrt")
+        + pn.scale_color_cmap(cmap_name="Purples", name="Ski Areas", trans="sqrt")
+        + pn.ggtitle(
+            "Mean opening & closing dates by season for ski areas in New England Ski History"
+        )
         + pn.theme_bw()
-        + pn.theme(figure_size=(10, 5))
+        + pn.theme(figure_size=(10, 4))
     )
 
 
