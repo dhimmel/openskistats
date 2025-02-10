@@ -173,7 +173,7 @@ def plot_orientation(  # noqa: C901
         cum_value = np.zeros_like(bin_centers, dtype=np.float64)
         cum_radii = np.zeros_like(bin_centers, dtype=np.float64)
         for group_color, group_bin_counts in color_to_bin_counts.items():
-            cum_value = cum_value + group_bin_counts  # type: ignore [assignment]
+            cum_value = cum_value + group_bin_counts
             group_radii = (
                 np.sqrt(cum_value * num_bins / np.pi) - cum_radii
                 if area
@@ -254,15 +254,15 @@ def _generate_margin_text(group_info: dict[str, Any]) -> dict[MarginTextLocation
     margin_text = {}
     if {"ski_areas_count", "run_count", "lift_count"}.issubset(group_info):
         margin_text[MarginTextLocation.top_left] = (
-            f"{group_info["ski_areas_count"]:,} ski areas\n{group_info["run_count"]:,} runs\n{group_info["lift_count"]:,} lifts"
+            f"{group_info['ski_areas_count']:,} ski areas\n{group_info['run_count']:,} runs\n{group_info['lift_count']:,} lifts"
         )
     elif {"run_count", "lift_count"}.issubset(group_info):
         margin_text[MarginTextLocation.top_left] = (
-            f"{group_info["run_count"]:,} runs\n{group_info["lift_count"]:,} lifts"
+            f"{group_info['run_count']:,} runs\n{group_info['lift_count']:,} lifts"
         )
     if "combined_vertical" in group_info:
         margin_text[MarginTextLocation.top_right] = (
-            f"{group_info["combined_vertical"]:,.0f}{NARROW_SPACE}m\nskiable\nvert"
+            f"{group_info['combined_vertical']:,.0f}{NARROW_SPACE}m\nskiable\nvert"
         )
     if {"poleward_affinity", "eastward_affinity"}.issubset(group_info):
         margin_text[MarginTextLocation.bottom_left] = (

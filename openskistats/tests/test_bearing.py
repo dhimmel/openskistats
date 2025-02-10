@@ -201,6 +201,6 @@ def test_get_bearing_summary_stats_repeated_aggregation() -> None:
         "poleward_affinity",
         "eastward_affinity",
     ]:
-        assert single_pass[key] == pytest.approx(
-            double_pass[key]
-        ), f"value mismatch for {key}"
+        assert single_pass[key] == pytest.approx(double_pass[key]), (
+            f"value mismatch for {key}"
+        )
