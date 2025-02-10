@@ -24,6 +24,7 @@ import polars as pl
 import requests
 from bs4 import BeautifulSoup
 
+from openskistats.analyze import load_ski_areas_pl
 from openskistats.utils import get_request_headers
 
 SEASON_ORIGIN_MONTH = 9
@@ -277,6 +278,49 @@ def nesh_timelines_season_summary_plot() -> pn.ggplot:
         )
         + pn.theme_bw()
         + pn.theme(figure_size=(10, 4))
+    )
+
+
+def nesh_season_duration_vs_poleward_plot() -> pn.ggplot:
+    """
+    Create a scatter plot comparing ski areas' poleward affinity versus their mean season duration.
+    """
+    # Get the mean season duration for each ski area
+    nesh_metrics = (
+        read_nesh_timelines()
+        .filter(pl.col("season") > 2010)
+        .group_by("skimap_url")
+        .agg(*_nesh_timeline_aggregators())
+    )
+
+    # Load ski area metrics for poleward affinity
+    ski_areas = (
+        load_ski_areas_pl()
+        .explode("ski_area_sources")
+        .rename({"ski_area_sources": "skimap_url"})
+        .select("ski_area_id", "ski_area_name", "skimap_url", "poleward_affinity")
+        .join(nesh_metrics, on="skimap_url", how="inner")
+    )
+
+    # Create the scatter plot
+    return (
+        pn.ggplot(
+            ski_areas,
+            pn.aes(
+                x="season_duration_mean",
+                y="poleward_affinity",
+            ),
+        )
+        + pn.geom_smooth(method="lm", color="red", se=True)
+        + pn.geom_point(alpha=0.6)
+        + pn.scale_x_continuous(name="Mean Season Duration (days)")
+        + pn.scale_y_continuous(
+            name="Poleward Affinity",
+            labels=lambda x: [f"{v:.0%}" for v in x],
+            limits=(-1, 1),
+        )
+        + pn.theme_bw()
+        + pn.theme(figure_size=(5, 3.2))
     )
 
 
