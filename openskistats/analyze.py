@@ -719,12 +719,13 @@ def _create_ski_area_rose(
     ski_area_name = info["ski_area_name"]
     color_convention = info["osm_run_convention"]
 
-    # metadata uses terms from https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+    # supported metadata keys listed at
+    # https://matplotlib.org/stable/api/backend_svg_api.html#matplotlib.backends.backend_svg.FigureCanvasSVG.print_svg
     common_metadata = {
         "Title": f"Ski Rose for {ski_area_name}",
         "Creator": "https://github.com/dhimmel/openskistats",
         "Source": f"https://openskimap.org/?obj={ski_area_id}",
-        "License": "https://creativecommons.org/licenses/by/4.0/",
+        "Rights": "https://creativecommons.org/licenses/by/4.0/",
     }
 
     # plot and save preview rose
