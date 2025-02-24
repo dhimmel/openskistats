@@ -117,6 +117,7 @@ class SkiAreaSubsetPlot:
         return [
             "Les Trois Vallées",  # biggest
             "Dartmouth Skiway",  # bimodal
+            # "ニセコユナイテッド, Niseko United",  # japan coloring convention
             "Killington Resort",  # eastfacing
             "Mt. Bachelor",  # difficulty by orientation
             "Olos Ski Resort",  # darkest resort in the world
@@ -152,5 +153,6 @@ class SkiAreaSubsetPlot:
             grouping_col="ski_area_name",
             sort_groups=False,
             plot_solar_band=True,
+            color_convention=None,
         )
         return fig

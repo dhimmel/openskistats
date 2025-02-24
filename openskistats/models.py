@@ -36,6 +36,13 @@ class SkiRunConvention(StrEnum):
     europe = "europe"
     japan = "japan"
 
+    def display_name(self) -> str:
+        return self.value.replace("_", " ").title()
+
+    @classmethod
+    def display_names(cls) -> dict["SkiRunConvention", str]:
+        return {convention: convention.display_name() for convention in cls}
+
 
 @dataclass
 class _SkiRunColors:

@@ -581,6 +581,7 @@ def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
         )
         figures[name] = fig
     from openskistats.plot_runs import (
+        DifficultyByConventionRunMetrics,
         RunLatitudeBearingHistogram,
         plot_bearing_by_latitude_bin,
         plot_run_difficulty_histograms_by_slope,
@@ -600,6 +601,9 @@ def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
     )
     figures["slope_by_difficulty_distributions_condensed"] = (
         plot_run_difficulty_histograms_by_slope(condense_difficulty=True).draw()
+    )
+    figures["difficulty_by_convention_run_counts"] = (
+        DifficultyByConventionRunMetrics.plot_difficulty_by_convention().draw()
     )
     lorenz_plot, gini_plot = plot_ski_area_metric_ecdfs()
     figures["ski_area_lorenz_curves"] = lorenz_plot.draw()
