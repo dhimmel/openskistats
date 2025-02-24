@@ -660,7 +660,8 @@ def create_ski_area_roses(overwrite: bool = False) -> None:
     directory = get_data_directory().joinpath("webapp", "ski-areas")
     directory_preview = directory.joinpath("roses-preview")
     directory_full = directory.joinpath("roses-full")
-    for _directory in directory_preview, directory_full:
+    directory_openskimap = directory.joinpath("roses-openskimap")
+    for _directory in directory_preview, directory_full, directory_openskimap:
         _directory.mkdir(exist_ok=True, parents=True)
     ski_areas_pl = load_ski_areas_pl(
         ski_area_filters=get_display_ski_area_filters()
@@ -676,6 +677,7 @@ def create_ski_area_roses(overwrite: bool = False) -> None:
         ski_area_id = info["ski_area_id"]
         preview_path = directory_preview.joinpath(f"{ski_area_id}.svg")
         full_path = directory_full.joinpath(f"{ski_area_id}.svg")
+        openskimap_path = directory_openskimap.joinpath(f"{ski_area_id}.svg")
         if not overwrite and full_path.exists():
             continue
         tasks.append(
@@ -684,6 +686,7 @@ def create_ski_area_roses(overwrite: bool = False) -> None:
                 "bearing_pl": bearings_pl.filter(pl.col("ski_area_id") == ski_area_id),
                 "preview_path": preview_path,
                 "full_path": full_path,
+                "openskimap_path": openskimap_path,
             }
         )
     logging.info(f"Creating roses for {len(tasks):,} ski areas concurrently...")
@@ -705,12 +708,24 @@ def create_ski_area_roses(overwrite: bool = False) -> None:
 
 
 def _create_ski_area_rose(
-    info: dict[str, Any], bearing_pl: pl.DataFrame, preview_path: Path, full_path: Path
+    info: dict[str, Any],
+    bearing_pl: pl.DataFrame,
+    preview_path: Path,
+    full_path: Path,
+    openskimap_path: Path,
 ) -> None:
     """Create a preview and a full rose for a ski area."""
     ski_area_id = info["ski_area_id"]
     ski_area_name = info["ski_area_name"]
     color_convention = info["osm_run_convention"]
+
+    # metadata uses terms from https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+    common_metadata = {
+        "Title": f"Ski Rose for {ski_area_name}",
+        "Creator": "https://github.com/dhimmel/openskistats",
+        "Source": f"https://openskimap.org/?obj={ski_area_id}",
+        "License": "https://creativecommons.org/licenses/by/4.0/",
+    }
 
     # plot and save preview rose
     bearing_preview_pl = bearing_pl.filter(pl.col("num_bins") == 8)
@@ -735,9 +750,8 @@ def _create_ski_area_rose(
         pad_inches=0.02,
         transparent=True,
         metadata={
-            "Title": f"Preview Ski Rose for {ski_area_name}",
-            "Description": f"An 8-bin histogram of downhill ski trail orientations generated from <https://openskimap.org/?obj={ski_area_id}>.",
-            "Creator": "https://github.com/dhimmel/openskistats",
+            **common_metadata,
+            "Description": "An 8-bin histogram of downhill ski run orientations.",
         },
     )
     matplotlib.pyplot.close(fig)
@@ -766,6 +780,10 @@ def _create_ski_area_rose(
         elevation=info["min_elevation"],
     )
     logging.info(f"Writing {full_path}")
+    full_rose_metadata = {
+        **common_metadata,
+        "Description": "A 32-bin stacked histogram of downhill ski run orientations colored by difficulty.",
+    }
     fig.savefig(
         full_path,
         format="svg",
@@ -773,12 +791,25 @@ def _create_ski_area_rose(
         # pad_inches=0.02,
         facecolor="#FFFFFF",
         transparent=False,
-        metadata={
-            "Title": f"Ski Rose for {ski_area_name}",
-            "Description": f"A 32-bin histogram of downhill ski trail orientations generated from <https://openskimap.org/?obj={ski_area_id}>.",
-            "Creator": "https://github.com/dhimmel/openskistats",
-        },
+        metadata=full_rose_metadata,
     )
+
+    # create a reduced text version for OpenSkiMap embeds
+    # https://github.com/dhimmel/openskistats/issues/49
+    ax.set_title("")
+    for text in ax.texts:
+        text.remove()
+    logging.info(f"Writing {openskimap_path}")
+    fig.savefig(
+        openskimap_path,
+        format="svg",
+        bbox_inches="tight",
+        pad_inches=0.005,
+        facecolor="#FFFFFF",
+        transparent=False,
+        metadata=full_rose_metadata,
+    )
+
     matplotlib.pyplot.close(fig)
 
 
