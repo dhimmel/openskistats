@@ -399,12 +399,18 @@ def aggregate_ski_areas_pl(
             vertical_drop=pl.max("max_elevation") - pl.min("min_elevation"),
             latitude=pl.mean("latitude"),
             longitude=pl.mean("longitude"),
+            osm_run_convention=pl.col("osm_run_convention").unique().drop_nulls(),
             _bearing_stats=pl.struct(
                 pl.col("bearing_mean").alias("bearing"),
                 "bearing_magnitude_cum",
                 "bearing_alignment",
                 "hemisphere",
             ).map_batches(_get_bearing_summary_stats_pl, returns_scalar=True),
+        )
+        .with_columns(
+            osm_run_convention=pl.when(pl.col("osm_run_convention").list.len() == 1)
+            .then(pl.col("osm_run_convention").list.first())
+            .otherwise(None)
         )
         .unnest("_bearing_stats")
         .join(bearings_pl, on=group_by)
@@ -700,6 +706,7 @@ def _create_ski_area_rose(
     """Create a preview and a full rose for a ski area."""
     ski_area_id = info["ski_area_id"]
     ski_area_name = info["ski_area_name"]
+    color_convention = info["osm_run_convention"]
 
     # plot and save preview rose
     bearing_preview_pl = bearing_pl.filter(pl.col("num_bins") == 8)
@@ -736,7 +743,9 @@ def _create_ski_area_rose(
     fig, ax = plot_orientation(
         bin_counts=bearing_full_pl.get_column("bin_count").to_numpy(),
         bin_centers=bearing_full_pl.get_column("bin_center").to_numpy(),
-        color_to_bin_counts=get_difficulty_color_to_bearing_bin_counts(bearing_full_pl),
+        color_to_bin_counts=get_difficulty_color_to_bearing_bin_counts(
+            bearing_full_pl, convention=color_convention
+        ),
         title=ski_area_name,
         title_font_size=16,
         margin_text=_generate_margin_text(info),
