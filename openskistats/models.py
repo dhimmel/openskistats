@@ -3,6 +3,7 @@ See some OpenSkiMap schemas at
 https://github.com/russellporter/openskidata-format
 """
 
+from dataclasses import dataclass
 from enum import StrEnum
 from typing import Annotated, Literal
 
@@ -34,6 +35,36 @@ class SkiRunConvention(StrEnum):
     north_america = "north_america"
     europe = "europe"
     japan = "japan"
+
+
+@dataclass
+class _SkiRunColors:
+    green: str
+    blue: str
+    red: str
+    black: str
+    orange: str
+    gray: str
+
+
+# from https://github.com/russellporter/openskidata-format/blob/e421ef0a0814437c362611e07cb43c32bac4172c/src/Run.ts#L87-L92
+ski_run_colors_bright = _SkiRunColors(
+    green="#00a80e",
+    blue="#005aa8",
+    red="#f8161a",
+    black="#000000",
+    orange="#ff9100",
+    gray="#595959",
+)
+
+ski_run_colors_subtle = _SkiRunColors(
+    green="#badbb8",
+    blue="#a1a1d8",
+    red="#ff8c8e",
+    black="#828282",
+    orange="#e5c47e",
+    gray="#d9d9d9",
+)
 
 
 class SkiRunDifficulty(StrEnum):
@@ -76,35 +107,53 @@ class SkiRunDifficulty(StrEnum):
 
     @classmethod
     def colormap(
-        cls, condense: bool = False, subtle: bool = True
+        cls,
+        condense: bool = False,
+        subtle: bool = True,
+        convention: SkiRunConvention = SkiRunConvention.north_america,
     ) -> "dict[SkiRunDifficulty, str]":
         """
-        Difficulty to color mapping based on North American conventions.
-        https://www.nsaa.org/NSAA/Safety/Trail_Signage/NSAA/Safety/Trail_Signage.aspx
+        Difficulty to color mapping according to the local convention.
+        See:
+        <https://github.com/russellporter/openskidata-format/blob/e421ef0a0814437c362611e07cb43c32bac4172c/src/Run.ts#L113-L166>
+        <https://www.nsaa.org/NSAA/Safety/Trail_Signage/NSAA/Safety/Trail_Signage.aspx>
         """
-        colormap = (
-            {
-                cls.novice: "#badbb8",
-                cls.easy: "#badbb8",
-                cls.intermediate: "#a1a1d8",
-                cls.advanced: "#828282",
-                cls.expert: "#828282",
-                cls.extreme: "#828282",
-                cls.freeride: "#828282",  # considered "#e5c47e"
-                cls.other: "#d9d9d9",
+        colors = ski_run_colors_subtle if subtle else ski_run_colors_bright
+        if convention == SkiRunConvention.north_america:
+            colormap = {
+                cls.novice: colors.green,
+                cls.easy: colors.green,
+                cls.intermediate: colors.blue,
+                cls.advanced: colors.black,
+                cls.expert: colors.black,
+                cls.extreme: colors.orange,
+                cls.freeride: colors.orange,
+                cls.other: colors.gray,
             }
-            if subtle
-            else {
-                cls.novice: "#60A45C",
-                cls.easy: "#60A45C",
-                cls.intermediate: "#3E7DBF",
-                cls.advanced: "#000000",
-                cls.expert: "#000000",
-                cls.extreme: "#000000",
-                cls.freeride: "#000000",  # considered "#DEB251"
-                cls.other: "#bfbfbf",
+        elif convention == SkiRunConvention.europe:
+            colormap = {
+                cls.novice: colors.green,
+                cls.easy: colors.blue,
+                cls.intermediate: colors.red,
+                cls.advanced: colors.black,
+                cls.expert: colors.black,
+                cls.extreme: colors.orange,
+                cls.freeride: colors.orange,
+                cls.other: colors.gray,
             }
-        )
+        elif convention == SkiRunConvention.japan:
+            colormap = {
+                cls.novice: colors.green,
+                cls.easy: colors.green,
+                cls.intermediate: colors.red,
+                cls.advanced: colors.black,
+                cls.expert: colors.black,
+                cls.extreme: colors.orange,
+                cls.freeride: colors.orange,
+                cls.other: colors.gray,
+            }
+        else:
+            raise ValueError(f"Unsupported run coloring convention: {convention}")
         if condense:
             colormap = {
                 key: value
@@ -113,9 +162,13 @@ class SkiRunDifficulty(StrEnum):
             }
         return colormap
 
-    def color(self, subtle: bool = False) -> str:
+    def color(
+        self,
+        subtle: bool = True,
+        convention: SkiRunConvention = SkiRunConvention.north_america,
+    ) -> str:
         """Get the color for the difficulty level."""
-        return self.colormap(subtle=subtle)[self]
+        return self.colormap(subtle=subtle, convention=convention)[self]
 
     @classmethod
     def markdown_description(cls, mode: Literal["phrase", "list"] = "phrase") -> str:

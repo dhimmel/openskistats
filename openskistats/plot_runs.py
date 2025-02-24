@@ -12,7 +12,7 @@ from openskistats.bearing import (
     cut_bearings_pl,
     get_cut_bearing_bins_df,
 )
-from openskistats.models import SkiRunDifficulty
+from openskistats.models import SkiRunConvention, SkiRunDifficulty
 from openskistats.plot import NARROW_SPACE, _add_polar_y_ticks
 from openskistats.utils import (
     pl_condense_run_difficulty,
@@ -315,6 +315,7 @@ def plot_bearing_by_latitude_bin() -> plt.Figure:
 
 def plot_run_difficulty_histograms_by_slope(
     condense_difficulty: bool = False,
+    convention: SkiRunConvention = SkiRunConvention.north_america,
 ) -> pn.ggplot:
     difficulty_col = (
         "run_difficulty_condensed" if condense_difficulty else "run_difficulty"
@@ -364,7 +365,9 @@ def plot_run_difficulty_histograms_by_slope(
             )
         )
     )
-    colormap = SkiRunDifficulty.colormap(condense=condense_difficulty, subtle=True)
+    colormap = SkiRunDifficulty.colormap(
+        condense=condense_difficulty, subtle=True, convention=convention
+    )
     return (
         pn.ggplot(
             data=run_stats,
