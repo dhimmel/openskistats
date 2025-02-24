@@ -25,6 +25,17 @@ class OpenSkiMapStatus(StrEnum):
     abandoned = "abandoned"
 
 
+class SkiRunConvention(StrEnum):
+    """
+    Convention for the ski run difficulty coloring.
+    See <https://github.com/russellporter/openskidata-format/blob/e421ef0a0814437c362611e07cb43c32bac4172c/src/Run.ts#L113>.
+    """
+
+    north_america = "north_america"
+    europe = "europe"
+    japan = "japan"
+
+
 class SkiRunDifficulty(StrEnum):
     """
     https://wiki.openstreetmap.org/wiki/Key:piste:difficulty
@@ -277,7 +288,7 @@ class RunModel(Model):  # type: ignore [misc]
         Field(description="OpenSkiMap difficulty rating for the run."),
     ]
     run_convention: Annotated[
-        Literal["north_america", "europe", "japan"] | None,
+        SkiRunConvention | None,
         Field(description="OpenSkiMap convention for the run."),
     ]
     ski_area_ids: Annotated[
@@ -424,7 +435,7 @@ class SkiAreaModel(Model):  # type: ignore [misc]
         ),
     ]
     osm_run_convention: Annotated[
-        Literal["japan", "europe", "north_america"],
+        SkiRunConvention,
         Field(description="OpenSkiMap convention for the runs in the ski area."),
     ]
     osm_status: OpenSkiMapStatus | None = Field(
