@@ -407,8 +407,8 @@ def _clean_coordinates(
 
 # ids are fragile, use the name instead as it's more stable
 test_ski_area_names = [
-    "Whaleback Mountain",  # id at ToW: 8896cde00150e73de1f1237320c88767c91ce099
-    "Storrs Hill Ski Area",  # id at ToW: dc24f332f3117625dc09479b5d10cbb31a592be4
+    "Whaleback Mountain",
+    "Storrs Hill Ski Area",
 ]
 
 

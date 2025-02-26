@@ -24,43 +24,43 @@ openskimap:
       01_raw_by_geometry:
         LineString: 5
     download:
-      checksum_sha256: bb31f5fc7ae7754a40b7684e1268fdd46d8ec03a83dbe8e4b2a03671e78d324f
-      compressed_size_mb: 6.950000762939453
-      content_size_mb: 99.65091800689697
-      downloaded: '2025-01-14T20:31:51+00:00'
-      last_modified: '2025-01-14T02:34:53+00:00'
+      checksum_sha256: d2e4bd3e1df35e99a3060cf64e0ad8f5d7e4fb09df0359f1213b57d57a95604e
+      compressed_size_mb: 7.10198974609375
+      content_size_mb: 102.71067810058594
+      downloaded: '2025-02-26T14:47:10+00:00'
+      last_modified: '2025-02-26T02:29:27+00:00'
       relative_path: data/openskimap/lifts.geojson.xz
       url: https://tiles.openskimap.org/geojson/lifts.geojson
   runs:
     coordinates:
       counts:
-        01_raw: 346
-        02_clean: 346
-        03_downhill_raw: 344
-        04_downhill_clean: 344
+        01_raw: 363
+        02_clean: 363
+        03_downhill_raw: 361
+        04_downhill_clean: 361
     counts:
-      01_raw: 43
+      01_raw: 42
       01_raw_by_geometry:
-        LineString: 39
+        LineString: 38
         Polygon: 4
-      02_linestring: 39
-      03_downhill: 38
+      02_linestring: 38
+      03_downhill: 37
     distance:
       3d:
-        04_downhill_clean: 9845.30078125
+        04_downhill_clean: 9118.8466796875
       vertical:
-        04_downhill_clean: 1793.500244140625
+        04_downhill_clean: 1650.550048828125
     download:
-      checksum_sha256: 881f6cae0da5db71cb3fa3c54a31f355c1aa8101cb0e48f8fc154323c2272141
-      compressed_size_mb: 93.12430191040039
-      content_size_mb: 901.8432960510254
-      downloaded: '2025-01-14T20:32:31+00:00'
-      last_modified: '2025-01-14T02:34:56+00:00'
+      checksum_sha256: 4137147093fee5b727a9b6dfcacdce7659bfc27ca2eb27a095edfa068e25cd8d
+      compressed_size_mb: 94.94682693481445
+      content_size_mb: 940.734941482544
+      downloaded: '2025-02-26T14:47:56+00:00'
+      last_modified: '2025-02-26T02:29:31+00:00'
       relative_path: data/openskimap/runs.geojson.xz
       url: https://tiles.openskimap.org/geojson/runs.geojson
     segments:
       counts:
-        04_downhill_clean: 306
+        04_downhill_clean: 324
   ski_areas:
     counts:
       01_raw: 2
@@ -71,10 +71,10 @@ openskimap:
       04_downhill_operating_1_lift_us: 2
       05_downhill_operating_5_lift: 0
     download:
-      checksum_sha256: 50cda86fbbfab74b1987114b2c118db4b96ba027413c348c10c30d61ca91b0b8
-      compressed_size_mb: 2.4207916259765625
-      content_size_mb: 15.78530216217041
-      downloaded: '2025-01-14T20:32:23+00:00'
-      last_modified: '2025-01-14T02:34:53+00:00'
+      checksum_sha256: b634ccfc5e8f6d708e222e5e31dec3ef5f867e0705e7098c0274699c645c0258
+      compressed_size_mb: 2.4881973266601562
+      content_size_mb: 16.38451862335205
+      downloaded: '2025-02-26T14:47:45+00:00'
+      last_modified: '2025-02-26T02:29:27+00:00'
       relative_path: data/openskimap/ski_areas.geojson.xz
       url: https://tiles.openskimap.org/geojson/ski_areas.geojson
