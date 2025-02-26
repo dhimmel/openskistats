@@ -542,6 +542,11 @@ class SkiAreaModel(Model):  # type: ignore [misc]
             ],
         ),
     ]
+    wikidata_id: str | None = Field(
+        description="Wikidata identifier for the ski area. "
+        "See <https://github.com/dhimmel/openskistats/issues/10> and <https://github.com/russellporter/openskimap.org/issues/153>.",
+        examples=["Q5225725"],
+    )
     run_count: int = Field(
         description="Number of downhill runs in the ski area with supported geometries.",
         default=0,

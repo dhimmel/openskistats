@@ -330,6 +330,7 @@ def load_downhill_ski_areas_from_download_pl() -> pl.DataFrame:
                 )
             )
             .alias("ski_area_sources"),
+            pl.col("wikidata_id"),
         )
         .join(lift_metrics, on="ski_area_id", how="left")
     )
