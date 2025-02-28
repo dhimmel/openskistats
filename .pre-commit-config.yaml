@@ -11,7 +11,7 @@ repos:
       - id: check-case-conflict
       - id: check-yaml
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.9.5
+    rev: v0.9.9
     hooks:
       # Run the linter.
       - id: ruff
@@ -29,6 +29,6 @@ repos:
           - pytest
           - types-PyYAML
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: '0.5.29'
+    rev: '0.6.3'
     hooks:
       - id: uv-lock
