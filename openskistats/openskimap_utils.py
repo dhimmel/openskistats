@@ -307,7 +307,6 @@ def load_downhill_ski_areas_from_download_pl() -> pl.DataFrame:
         .select(
             "ski_area_id",
             "ski_area_name",
-            pl.col("generated").alias("osm_is_generated"),
             pl.col("runConvention").alias("osm_run_convention"),
             pl.col("status").alias("osm_status"),
             pl.col("activities").alias("ski_area_uses"),
