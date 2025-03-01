@@ -6,7 +6,6 @@
         "activities": [
           "downhill"
         ],
-        "generated": false,
         "id": "28cb013693827a90d778603d8bb6bc0cfd3999c0",
         "location": {
           "iso3166_1Alpha2": "US",
@@ -360,7 +359,6 @@
         "activities": [
           "downhill"
         ],
-        "generated": false,
         "id": "dc24f332f3117625dc09479b5d10cbb31a592be4",
         "location": {
           "iso3166_1Alpha2": "US",

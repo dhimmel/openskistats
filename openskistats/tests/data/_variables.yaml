@@ -24,11 +24,11 @@ openskimap:
       01_raw_by_geometry:
         LineString: 5
     download:
-      checksum_sha256: d2e4bd3e1df35e99a3060cf64e0ad8f5d7e4fb09df0359f1213b57d57a95604e
-      compressed_size_mb: 7.10198974609375
-      content_size_mb: 102.71067810058594
-      downloaded: '2025-02-26T14:47:10+00:00'
-      last_modified: '2025-02-26T02:29:27+00:00'
+      checksum_sha256: b695fdbf709a15b6909bb2c3ca726dee99f63717852eb8d5aeef730cdc81d4fc
+      compressed_size_mb: 5.458866119384766
+      content_size_mb: 63.92586708068848
+      downloaded: '2025-03-01T11:24:15+00:00'
+      last_modified: '2025-03-01T02:22:18+00:00'
       relative_path: data/openskimap/lifts.geojson.xz
       url: https://tiles.openskimap.org/geojson/lifts.geojson
   runs:
@@ -51,11 +51,11 @@ openskimap:
       vertical:
         04_downhill_clean: 1650.550048828125
     download:
-      checksum_sha256: 4137147093fee5b727a9b6dfcacdce7659bfc27ca2eb27a095edfa068e25cd8d
-      compressed_size_mb: 94.94682693481445
-      content_size_mb: 940.734941482544
-      downloaded: '2025-02-26T14:47:56+00:00'
-      last_modified: '2025-02-26T02:29:31+00:00'
+      checksum_sha256: 763f071a10609a66c865f6d480fc7050f6e893bed0af3c964ac35df8c893b85a
+      compressed_size_mb: 89.75365829467773
+      content_size_mb: 690.972375869751
+      downloaded: '2025-03-01T11:24:36+00:00'
+      last_modified: '2025-03-01T02:22:22+00:00'
       relative_path: data/openskimap/runs.geojson.xz
       url: https://tiles.openskimap.org/geojson/runs.geojson
     segments:
@@ -71,10 +71,10 @@ openskimap:
       04_downhill_operating_1_lift_us: 2
       05_downhill_operating_5_lift: 0
     download:
-      checksum_sha256: b634ccfc5e8f6d708e222e5e31dec3ef5f867e0705e7098c0274699c645c0258
-      compressed_size_mb: 2.4881973266601562
-      content_size_mb: 16.38451862335205
-      downloaded: '2025-02-26T14:47:45+00:00'
-      last_modified: '2025-02-26T02:29:27+00:00'
+      checksum_sha256: e08b9ed3652dcc3b3e107fc887158cc30ea8f9fc4d8c8c3d5b968ade95a6e31a
+      compressed_size_mb: 2.4895973205566406
+      content_size_mb: 16.203779220581055
+      downloaded: '2025-03-01T11:24:29+00:00'
+      last_modified: '2025-03-01T02:22:18+00:00'
       relative_path: data/openskimap/ski_areas.geojson.xz
       url: https://tiles.openskimap.org/geojson/ski_areas.geojson

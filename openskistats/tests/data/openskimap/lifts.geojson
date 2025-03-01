@@ -16,15 +16,18 @@
         "duration": null,
         "bubble": null,
         "heating": null,
-        "color": "hsl(0, 82%, 42%)",
+        "detachable": null,
         "skiAreas": [
           {
+            "type": "Feature",
             "properties": {
+              "id": "dc24f332f3117625dc09479b5d10cbb31a592be4",
+              "name": "Storrs Hill Ski Area",
               "activities": [
                 "downhill"
               ],
-              "generated": false,
-              "id": "dc24f332f3117625dc09479b5d10cbb31a592be4",
+              "type": "skiArea",
+              "status": "operating",
               "location": {
                 "iso3166_1Alpha2": "US",
                 "iso3166_2": "US-NH",
@@ -35,61 +38,8 @@
                     "locality": "Lebanon"
                   }
                 }
-              },
-              "name": "Storrs Hill Ski Area",
-              "runConvention": "north_america",
-              "sources": [
-                {
-                  "type": "openstreetmap",
-                  "id": "way/1090626629"
-                },
-                {
-                  "type": "skimap.org",
-                  "id": 4118
-                }
-              ],
-              "status": "operating",
-              "type": "skiArea",
-              "websites": [
-                "https://skistorrshill.com/"
-              ],
-              "wikidata_id": null,
-              "statistics": {
-                "runs": {
-                  "byActivity": {
-                    "downhill": {
-                      "byDifficulty": {
-                        "other": {
-                          "count": 5,
-                          "lengthInKm": 1.2642494231961585,
-                          "minElevation": 161.75,
-                          "maxElevation": 257.67,
-                          "combinedElevationChange": 231.46000000000004
-                        }
-                      }
-                    }
-                  },
-                  "minElevation": 161.75,
-                  "maxElevation": 257.67
-                },
-                "lifts": {
-                  "byType": {
-                    "drag_lift": {
-                      "count": 1,
-                      "lengthInKm": 0.40465585678911375,
-                      "minElevation": 165.73999999999998,
-                      "maxElevation": 256.67,
-                      "combinedElevationChange": 90.93000000000004
-                    }
-                  },
-                  "minElevation": 165.73999999999998,
-                  "maxElevation": 256.67
-                },
-                "maxElevation": 256.67,
-                "minElevation": 165.73999999999998
               }
             },
-            "type": "Feature",
             "geometry": {
               "coordinates": [
                 [
@@ -189,7 +139,6 @@
             "id": "way/169342919"
           }
         ],
-        "location": null,
         "websites": [],
         "wikidata_id": null,
         "id": "163027d67df79943aa11ad91948b07006568e41f"
@@ -255,15 +204,18 @@
         "duration": 360,
         "bubble": false,
         "heating": false,
-        "color": "hsl(0, 82%, 42%)",
+        "detachable": null,
         "skiAreas": [
           {
+            "type": "Feature",
             "properties": {
+              "id": "28cb013693827a90d778603d8bb6bc0cfd3999c0",
+              "name": "Whaleback Mountain",
               "activities": [
                 "downhill"
               ],
-              "generated": false,
-              "id": "28cb013693827a90d778603d8bb6bc0cfd3999c0",
+              "type": "skiArea",
+              "status": "operating",
               "location": {
                 "iso3166_1Alpha2": "US",
                 "iso3166_2": "US-NH",
@@ -274,103 +226,8 @@
                     "locality": "Enfield"
                   }
                 }
-              },
-              "name": "Whaleback Mountain",
-              "runConvention": "north_america",
-              "sources": [
-                {
-                  "type": "openstreetmap",
-                  "id": "way/252782489"
-                },
-                {
-                  "type": "skimap.org",
-                  "id": 1078
-                }
-              ],
-              "status": "operating",
-              "type": "skiArea",
-              "websites": [
-                "http://www.whaleback.com/"
-              ],
-              "wikidata_id": "Q7990522",
-              "statistics": {
-                "runs": {
-                  "byActivity": {
-                    "downhill": {
-                      "byDifficulty": {
-                        "easy": {
-                          "count": 13,
-                          "lengthInKm": 3.6284686706477816,
-                          "minElevation": 349.11,
-                          "maxElevation": 542.42,
-                          "combinedElevationChange": 522.11
-                        },
-                        "intermediate": {
-                          "count": 15,
-                          "lengthInKm": 3.0013481898853085,
-                          "minElevation": 351.11,
-                          "maxElevation": 542.4499999999999,
-                          "combinedElevationChange": 569.1400000000001
-                        },
-                        "expert": {
-                          "count": 2,
-                          "lengthInKm": 0.6797466817611819,
-                          "minElevation": 349.11,
-                          "maxElevation": 500.46999999999997,
-                          "combinedElevationChange": 250.52999999999992
-                        },
-                        "advanced": {
-                          "count": 3,
-                          "lengthInKm": 0.4648757526003677,
-                          "minElevation": 350.92999999999995,
-                          "maxElevation": 433.62,
-                          "combinedElevationChange": 94.09000000000009
-                        }
-                      }
-                    }
-                  },
-                  "minElevation": 349.11,
-                  "maxElevation": 542.4499999999999
-                },
-                "lifts": {
-                  "byType": {
-                    "chair_lift": {
-                      "count": 1,
-                      "lengthInKm": 0.7273941693040148,
-                      "minElevation": 350.92999999999995,
-                      "maxElevation": 542.4499999999999,
-                      "combinedElevationChange": 191.49
-                    },
-                    "t-bar": {
-                      "count": 1,
-                      "lengthInKm": 0.2373224496214283,
-                      "minElevation": 356.02,
-                      "maxElevation": 405.65000000000003,
-                      "combinedElevationChange": 49.63000000000005
-                    },
-                    "rope_tow": {
-                      "count": 1,
-                      "lengthInKm": 0.07296626871682102,
-                      "minElevation": 351.53,
-                      "maxElevation": 362.90999999999997,
-                      "combinedElevationChange": 11.379999999999995
-                    },
-                    "magic_carpet": {
-                      "count": 1,
-                      "lengthInKm": 0.02654795614045931,
-                      "minElevation": 352.92999999999995,
-                      "maxElevation": 358.31,
-                      "combinedElevationChange": 5.380000000000052
-                    }
-                  },
-                  "minElevation": 350.92999999999995,
-                  "maxElevation": 542.4499999999999
-                },
-                "maxElevation": 542.4499999999999,
-                "minElevation": 350.92999999999995
               }
             },
-            "type": "Feature",
             "geometry": {
               "coordinates": [
                 [
@@ -618,7 +475,6 @@
             "id": "way/252693149"
           }
         ],
-        "location": null,
         "websites": [],
         "wikidata_id": null,
         "id": "41014dd60dd2af503da8d75d377e9ed248082fb1"
@@ -714,15 +570,18 @@
         "duration": null,
         "bubble": null,
         "heating": null,
-        "color": "hsl(0, 82%, 42%)",
+        "detachable": null,
         "skiAreas": [
           {
+            "type": "Feature",
             "properties": {
+              "id": "28cb013693827a90d778603d8bb6bc0cfd3999c0",
+              "name": "Whaleback Mountain",
               "activities": [
                 "downhill"
               ],
-              "generated": false,
-              "id": "28cb013693827a90d778603d8bb6bc0cfd3999c0",
+              "type": "skiArea",
+              "status": "operating",
               "location": {
                 "iso3166_1Alpha2": "US",
                 "iso3166_2": "US-NH",
@@ -733,103 +592,8 @@
                     "locality": "Enfield"
                   }
                 }
-              },
-              "name": "Whaleback Mountain",
-              "runConvention": "north_america",
-              "sources": [
-                {
-                  "type": "openstreetmap",
-                  "id": "way/252782489"
-                },
-                {
-                  "type": "skimap.org",
-                  "id": 1078
-                }
-              ],
-              "status": "operating",
-              "type": "skiArea",
-              "websites": [
-                "http://www.whaleback.com/"
-              ],
-              "wikidata_id": "Q7990522",
-              "statistics": {
-                "runs": {
-                  "byActivity": {
-                    "downhill": {
-                      "byDifficulty": {
-                        "easy": {
-                          "count": 13,
-                          "lengthInKm": 3.6284686706477816,
-                          "minElevation": 349.11,
-                          "maxElevation": 542.42,
-                          "combinedElevationChange": 522.11
-                        },
-                        "intermediate": {
-                          "count": 15,
-                          "lengthInKm": 3.0013481898853085,
-                          "minElevation": 351.11,
-                          "maxElevation": 542.4499999999999,
-                          "combinedElevationChange": 569.1400000000001
-                        },
-                        "expert": {
-                          "count": 2,
-                          "lengthInKm": 0.6797466817611819,
-                          "minElevation": 349.11,
-                          "maxElevation": 500.46999999999997,
-                          "combinedElevationChange": 250.52999999999992
-                        },
-                        "advanced": {
-                          "count": 3,
-                          "lengthInKm": 0.4648757526003677,
-                          "minElevation": 350.92999999999995,
-                          "maxElevation": 433.62,
-                          "combinedElevationChange": 94.09000000000009
-                        }
-                      }
-                    }
-                  },
-                  "minElevation": 349.11,
-                  "maxElevation": 542.4499999999999
-                },
-                "lifts": {
-                  "byType": {
-                    "chair_lift": {
-                      "count": 1,
-                      "lengthInKm": 0.7273941693040148,
-                      "minElevation": 350.92999999999995,
-                      "maxElevation": 542.4499999999999,
-                      "combinedElevationChange": 191.49
-                    },
-                    "t-bar": {
-                      "count": 1,
-                      "lengthInKm": 0.2373224496214283,
-                      "minElevation": 356.02,
-                      "maxElevation": 405.65000000000003,
-                      "combinedElevationChange": 49.63000000000005
-                    },
-                    "rope_tow": {
-                      "count": 1,
-                      "lengthInKm": 0.07296626871682102,
-                      "minElevation": 351.53,
-                      "maxElevation": 362.90999999999997,
-                      "combinedElevationChange": 11.379999999999995
-                    },
-                    "magic_carpet": {
-                      "count": 1,
-                      "lengthInKm": 0.02654795614045931,
-                      "minElevation": 352.92999999999995,
-                      "maxElevation": 358.31,
-                      "combinedElevationChange": 5.380000000000052
-                    }
-                  },
-                  "minElevation": 350.92999999999995,
-                  "maxElevation": 542.4499999999999
-                },
-                "maxElevation": 542.4499999999999,
-                "minElevation": 350.92999999999995
               }
             },
-            "type": "Feature",
             "geometry": {
               "coordinates": [
                 [
@@ -1077,7 +841,6 @@
             "id": "way/255618835"
           }
         ],
-        "location": null,
         "websites": [],
         "wikidata_id": null,
         "id": "a535c2a3cdb81792c3233d46669a15b34d2cccae"
@@ -1113,15 +876,18 @@
         "duration": null,
         "bubble": null,
         "heating": null,
-        "color": "hsl(0, 82%, 42%)",
+        "detachable": null,
         "skiAreas": [
           {
+            "type": "Feature",
             "properties": {
+              "id": "28cb013693827a90d778603d8bb6bc0cfd3999c0",
+              "name": "Whaleback Mountain",
               "activities": [
                 "downhill"
               ],
-              "generated": false,
-              "id": "28cb013693827a90d778603d8bb6bc0cfd3999c0",
+              "type": "skiArea",
+              "status": "operating",
               "location": {
                 "iso3166_1Alpha2": "US",
                 "iso3166_2": "US-NH",
@@ -1132,103 +898,8 @@
                     "locality": "Enfield"
                   }
                 }
-              },
-              "name": "Whaleback Mountain",
-              "runConvention": "north_america",
-              "sources": [
-                {
-                  "type": "openstreetmap",
-                  "id": "way/252782489"
-                },
-                {
-                  "type": "skimap.org",
-                  "id": 1078
-                }
-              ],
-              "status": "operating",
-              "type": "skiArea",
-              "websites": [
-                "http://www.whaleback.com/"
-              ],
-              "wikidata_id": "Q7990522",
-              "statistics": {
-                "runs": {
-                  "byActivity": {
-                    "downhill": {
-                      "byDifficulty": {
-                        "easy": {
-                          "count": 13,
-                          "lengthInKm": 3.6284686706477816,
-                          "minElevation": 349.11,
-                          "maxElevation": 542.42,
-                          "combinedElevationChange": 522.11
-                        },
-                        "intermediate": {
-                          "count": 15,
-                          "lengthInKm": 3.0013481898853085,
-                          "minElevation": 351.11,
-                          "maxElevation": 542.4499999999999,
-                          "combinedElevationChange": 569.1400000000001
-                        },
-                        "expert": {
-                          "count": 2,
-                          "lengthInKm": 0.6797466817611819,
-                          "minElevation": 349.11,
-                          "maxElevation": 500.46999999999997,
-                          "combinedElevationChange": 250.52999999999992
-                        },
-                        "advanced": {
-                          "count": 3,
-                          "lengthInKm": 0.4648757526003677,
-                          "minElevation": 350.92999999999995,
-                          "maxElevation": 433.62,
-                          "combinedElevationChange": 94.09000000000009
-                        }
-                      }
-                    }
-                  },
-                  "minElevation": 349.11,
-                  "maxElevation": 542.4499999999999
-                },
-                "lifts": {
-                  "byType": {
-                    "chair_lift": {
-                      "count": 1,
-                      "lengthInKm": 0.7273941693040148,
-                      "minElevation": 350.92999999999995,
-                      "maxElevation": 542.4499999999999,
-                      "combinedElevationChange": 191.49
-                    },
-                    "t-bar": {
-                      "count": 1,
-                      "lengthInKm": 0.2373224496214283,
-                      "minElevation": 356.02,
-                      "maxElevation": 405.65000000000003,
-                      "combinedElevationChange": 49.63000000000005
-                    },
-                    "rope_tow": {
-                      "count": 1,
-                      "lengthInKm": 0.07296626871682102,
-                      "minElevation": 351.53,
-                      "maxElevation": 362.90999999999997,
-                      "combinedElevationChange": 11.379999999999995
-                    },
-                    "magic_carpet": {
-                      "count": 1,
-                      "lengthInKm": 0.02654795614045931,
-                      "minElevation": 352.92999999999995,
-                      "maxElevation": 358.31,
-                      "combinedElevationChange": 5.380000000000052
-                    }
-                  },
-                  "minElevation": 350.92999999999995,
-                  "maxElevation": 542.4499999999999
-                },
-                "maxElevation": 542.4499999999999,
-                "minElevation": 350.92999999999995
               }
             },
-            "type": "Feature",
             "geometry": {
               "coordinates": [
                 [
@@ -1476,7 +1147,6 @@
             "id": "way/255618836"
           }
         ],
-        "location": null,
         "websites": [],
         "wikidata_id": null,
         "id": "75370913b15570dc785502e0c10ea779b4ff7c35"
@@ -1512,15 +1182,18 @@
         "duration": 210,
         "bubble": null,
         "heating": null,
-        "color": "hsl(0, 82%, 42%)",
+        "detachable": null,
         "skiAreas": [
           {
+            "type": "Feature",
             "properties": {
+              "id": "28cb013693827a90d778603d8bb6bc0cfd3999c0",
+              "name": "Whaleback Mountain",
               "activities": [
                 "downhill"
               ],
-              "generated": false,
-              "id": "28cb013693827a90d778603d8bb6bc0cfd3999c0",
+              "type": "skiArea",
+              "status": "operating",
               "location": {
                 "iso3166_1Alpha2": "US",
                 "iso3166_2": "US-NH",
@@ -1531,103 +1204,8 @@
                     "locality": "Enfield"
                   }
                 }
-              },
-              "name": "Whaleback Mountain",
-              "runConvention": "north_america",
-              "sources": [
-                {
-                  "type": "openstreetmap",
-                  "id": "way/252782489"
-                },
-                {
-                  "type": "skimap.org",
-                  "id": 1078
-                }
-              ],
-              "status": "operating",
-              "type": "skiArea",
-              "websites": [
-                "http://www.whaleback.com/"
-              ],
-              "wikidata_id": "Q7990522",
-              "statistics": {
-                "runs": {
-                  "byActivity": {
-                    "downhill": {
-                      "byDifficulty": {
-                        "easy": {
-                          "count": 13,
-                          "lengthInKm": 3.6284686706477816,
-                          "minElevation": 349.11,
-                          "maxElevation": 542.42,
-                          "combinedElevationChange": 522.11
-                        },
-                        "intermediate": {
-                          "count": 15,
-                          "lengthInKm": 3.0013481898853085,
-                          "minElevation": 351.11,
-                          "maxElevation": 542.4499999999999,
-                          "combinedElevationChange": 569.1400000000001
-                        },
-                        "expert": {
-                          "count": 2,
-                          "lengthInKm": 0.6797466817611819,
-                          "minElevation": 349.11,
-                          "maxElevation": 500.46999999999997,
-                          "combinedElevationChange": 250.52999999999992
-                        },
-                        "advanced": {
-                          "count": 3,
-                          "lengthInKm": 0.4648757526003677,
-                          "minElevation": 350.92999999999995,
-                          "maxElevation": 433.62,
-                          "combinedElevationChange": 94.09000000000009
-                        }
-                      }
-                    }
-                  },
-                  "minElevation": 349.11,
-                  "maxElevation": 542.4499999999999
-                },
-                "lifts": {
-                  "byType": {
-                    "chair_lift": {
-                      "count": 1,
-                      "lengthInKm": 0.7273941693040148,
-                      "minElevation": 350.92999999999995,
-                      "maxElevation": 542.4499999999999,
-                      "combinedElevationChange": 191.49
-                    },
-                    "t-bar": {
-                      "count": 1,
-                      "lengthInKm": 0.2373224496214283,
-                      "minElevation": 356.02,
-                      "maxElevation": 405.65000000000003,
-                      "combinedElevationChange": 49.63000000000005
-                    },
-                    "rope_tow": {
-                      "count": 1,
-                      "lengthInKm": 0.07296626871682102,
-                      "minElevation": 351.53,
-                      "maxElevation": 362.90999999999997,
-                      "combinedElevationChange": 11.379999999999995
-                    },
-                    "magic_carpet": {
-                      "count": 1,
-                      "lengthInKm": 0.02654795614045931,
-                      "minElevation": 352.92999999999995,
-                      "maxElevation": 358.31,
-                      "combinedElevationChange": 5.380000000000052
-                    }
-                  },
-                  "minElevation": 350.92999999999995,
-                  "maxElevation": 542.4499999999999
-                },
-                "maxElevation": 542.4499999999999,
-                "minElevation": 350.92999999999995
               }
             },
-            "type": "Feature",
             "geometry": {
               "coordinates": [
                 [
@@ -1875,7 +1453,6 @@
             "id": "way/654539996"
           }
         ],
-        "location": null,
         "websites": [],
         "wikidata_id": null,
         "id": "4c53e569a9086308b6e757794d588ff04f2c658b"
