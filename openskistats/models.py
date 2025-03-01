@@ -26,7 +26,7 @@ class OpenSkiMapStatus(StrEnum):
     abandoned = "abandoned"
 
 
-class SkiRunConvention(StrEnum):
+class RunDifficultyConvention(StrEnum):
     """
     Convention for the ski run difficulty coloring.
     See <https://github.com/russellporter/openskidata-format/blob/e421ef0a0814437c362611e07cb43c32bac4172c/src/Run.ts#L113>.
@@ -40,7 +40,7 @@ class SkiRunConvention(StrEnum):
         return self.value.replace("_", " ").title()
 
     @classmethod
-    def display_names(cls) -> dict["SkiRunConvention", str]:
+    def display_names(cls) -> dict["RunDifficultyConvention", str]:
         return {convention: convention.display_name() for convention in cls}
 
 
@@ -117,7 +117,7 @@ class SkiRunDifficulty(StrEnum):
         cls,
         condense: bool = False,
         subtle: bool = True,
-        convention: SkiRunConvention = SkiRunConvention.north_america,
+        convention: RunDifficultyConvention = RunDifficultyConvention.north_america,
     ) -> "dict[SkiRunDifficulty, str]":
         """
         Difficulty to color mapping according to the local convention.
@@ -126,7 +126,7 @@ class SkiRunDifficulty(StrEnum):
         <https://www.nsaa.org/NSAA/Safety/Trail_Signage/NSAA/Safety/Trail_Signage.aspx>
         """
         colors = ski_run_colors_subtle if subtle else ski_run_colors_bright
-        if convention == SkiRunConvention.north_america:
+        if convention == RunDifficultyConvention.north_america:
             colormap = {
                 cls.novice: colors.green,
                 cls.easy: colors.green,
@@ -137,7 +137,7 @@ class SkiRunDifficulty(StrEnum):
                 cls.freeride: colors.orange,
                 cls.other: colors.gray,
             }
-        elif convention == SkiRunConvention.europe:
+        elif convention == RunDifficultyConvention.europe:
             colormap = {
                 cls.novice: colors.green,
                 cls.easy: colors.blue,
@@ -148,7 +148,7 @@ class SkiRunDifficulty(StrEnum):
                 cls.freeride: colors.orange,
                 cls.other: colors.gray,
             }
-        elif convention == SkiRunConvention.japan:
+        elif convention == RunDifficultyConvention.japan:
             colormap = {
                 cls.novice: colors.green,
                 cls.easy: colors.green,
@@ -172,7 +172,7 @@ class SkiRunDifficulty(StrEnum):
     def color(
         self,
         subtle: bool = True,
-        convention: SkiRunConvention = SkiRunConvention.north_america,
+        convention: RunDifficultyConvention = RunDifficultyConvention.north_america,
     ) -> str:
         """Get the color for the difficulty level."""
         return self.colormap(subtle=subtle, convention=convention)[self]
@@ -347,9 +347,9 @@ class RunModel(Model):  # type: ignore [misc]
         SkiRunDifficulty | None,
         Field(description="OpenSkiMap difficulty rating for the run."),
     ]
-    run_convention: Annotated[
-        SkiRunConvention | None,
-        Field(description="OpenSkiMap convention for the run."),
+    run_difficulty_convention: Annotated[
+        RunDifficultyConvention | None,
+        Field(description="OpenSkiMap convention for the run difficulty."),
     ]
     ski_area_ids: Annotated[
         list[str] | None,
@@ -495,8 +495,10 @@ class SkiAreaModel(Model):  # type: ignore [misc]
         ),
     ]
     osm_run_convention: Annotated[
-        SkiRunConvention,
-        Field(description="OpenSkiMap convention for the runs in the ski area."),
+        RunDifficultyConvention,
+        Field(
+            description="OpenSkiMap difficulty convention that determines how runs are colored."
+        ),
     ]
     osm_status: OpenSkiMapStatus | None = Field(
         description="Operating status of the ski area according to OpenSkiMap. "

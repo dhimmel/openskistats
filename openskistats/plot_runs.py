@@ -14,7 +14,7 @@ from openskistats.bearing import (
     get_cut_bearing_bins_df,
 )
 from openskistats.models import (
-    SkiRunConvention,
+    RunDifficultyConvention,
     SkiRunDifficulty,
     ski_run_colors_bright,
     ski_run_colors_subtle,
@@ -321,7 +321,7 @@ def plot_bearing_by_latitude_bin() -> plt.Figure:
 
 def plot_run_difficulty_histograms_by_slope(
     condense_difficulty: bool = False,
-    convention: SkiRunConvention = SkiRunConvention.north_america,
+    convention: RunDifficultyConvention = RunDifficultyConvention.north_america,
 ) -> pn.ggplot:
     difficulty_col = (
         "run_difficulty_condensed" if condense_difficulty else "run_difficulty"
@@ -436,30 +436,32 @@ class DifficultyByConventionRunMetrics:
                 pl.col("run_difficulty")
                 .fill_null(SkiRunDifficulty.other)
                 .cast(pl.Enum(SkiRunDifficulty)),
-                pl.col("run_convention").cast(pl.Enum(SkiRunConvention)),
+                pl.col("run_difficulty_convention").cast(
+                    pl.Enum(RunDifficultyConvention)
+                ),
             )
-            .group_by("run_difficulty", "run_convention")
+            .group_by("run_difficulty", "run_difficulty_convention")
             .agg(
                 # FIXME: use standard aggregation functions
                 pl.count("run_id").alias("runs_count"),
                 pl.col("combined_vertical").sum().alias("combined_vertical"),
             )
             .collect()
-            # get convention colors for run_convention, run_difficulty pair
+            # get convention colors for run_difficulty_convention, run_difficulty pair
             .with_columns(
                 run_difficulty_color_subtle=pl.struct(
-                    "run_convention", "run_difficulty"
+                    "run_difficulty_convention", "run_difficulty"
                 ).map_elements(
                     lambda x: SkiRunDifficulty[x["run_difficulty"]].color(
-                        subtle=True, convention=x["run_convention"]
+                        subtle=True, convention=x["run_difficulty_convention"]
                     ),
                     return_dtype=pl.String,
                 ),
                 run_difficulty_color_bright=pl.struct(
-                    "run_convention", "run_difficulty"
+                    "run_difficulty_convention", "run_difficulty"
                 ).map_elements(
                     lambda x: SkiRunDifficulty[x["run_difficulty"]].color(
-                        subtle=False, convention=x["run_convention"]
+                        subtle=False, convention=x["run_difficulty_convention"]
                     ),
                     return_dtype=pl.String,
                 ),
@@ -473,14 +475,16 @@ class DifficultyByConventionRunMetrics:
                 data=cls.get_difficulty_by_convention_metrics(),
                 mapping=pn.aes(
                     y="run_difficulty",
-                    x="run_convention",
+                    x="run_difficulty_convention",
                     fill="run_difficulty_color_subtle",
                     color="run_difficulty_color_bright",
                     size="runs_count",
                 ),
             )
             + pn.geom_point(stat="identity")
-            + pn.scale_x_discrete(labels=SkiRunConvention.display_names(), name="")
+            + pn.scale_x_discrete(
+                labels=RunDifficultyConvention.display_names(), name=""
+            )
             + pn.scale_y_discrete(limits=list(reversed(SkiRunDifficulty)), name="")
             + pn.scale_fill_identity(guide=None)
             + pn.scale_color_identity(guide=None)

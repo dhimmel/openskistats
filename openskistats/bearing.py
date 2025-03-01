@@ -8,8 +8,8 @@ from osmnx.distance import great_circle
 
 from openskistats.models import (
     BearingStatsModel,
+    RunDifficultyConvention,
     SkiAreaBearingDistributionModel,
-    SkiRunConvention,
     SkiRunDifficulty,
 )
 
@@ -280,7 +280,7 @@ def get_bearing_histogram(
 
 def get_difficulty_color_to_bearing_bin_counts(
     bearing_pl: pl.DataFrame,
-    convention: SkiRunConvention = SkiRunConvention.north_america,
+    convention: RunDifficultyConvention = RunDifficultyConvention.north_america,
 ) -> dict[str, pl.Series]:
     return (  # type: ignore [no-any-return]
         bearing_pl.select(

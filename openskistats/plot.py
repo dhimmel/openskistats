@@ -15,7 +15,7 @@ from matplotlib.text import Text as MplText
 from osmnx.plot import _get_fig_ax
 
 from openskistats.bearing import get_difficulty_color_to_bearing_bin_counts
-from openskistats.models import SkiRunConvention
+from openskistats.models import RunDifficultyConvention
 from openskistats.sunlight import get_solar_location_band
 
 SUBPLOT_FIGSIZE = 4.0
@@ -386,7 +386,8 @@ def subplot_orientations(
     suptitle: str | None = None,
     sort_groups: bool = True,
     plot_solar_band: bool = False,
-    color_convention: SkiRunConvention | None = SkiRunConvention.north_america,
+    color_convention: RunDifficultyConvention
+    | None = RunDifficultyConvention.north_america,
 ) -> plt.Figure:
     """
     Plot orientations from multiple graphs in a grid.
@@ -451,7 +452,7 @@ def subplot_orientations(
                 group_dist_pl,
                 convention=color_convention
                 or group_info["osm_run_convention"]
-                or SkiRunConvention.north_america,
+                or RunDifficultyConvention.north_america,
             ),
             ax=ax,
             max_bin_count=max_bin_count,

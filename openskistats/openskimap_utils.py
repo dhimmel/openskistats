@@ -181,7 +181,7 @@ def load_downhill_runs_from_download_pl() -> pl.DataFrame:
         row["run_uses"] = run_properties["uses"]
         row["run_status"] = run_properties["status"]
         row["run_difficulty"] = run_properties["difficulty"]
-        row["run_convention"] = run_properties["convention"]
+        row["run_difficulty_convention"] = run_properties["difficultyConvention"]
         row["ski_area_ids"] = sorted(
             ski_area["properties"]["id"] for ski_area in run_properties["skiAreas"]
         )
