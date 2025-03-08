@@ -203,7 +203,7 @@ def load_downhill_runs_from_download_pl() -> pl.DataFrame:
             # It is not a great solution to just filter the missing elevation values,
             # especially without changing the resolution.
             row["run_elevation_profile"] = [
-                round(x, 2) for x in elev_profile["heights"] if x is not None
+                round(float(x), 2) for x in elev_profile["heights"] if x is not None
             ]
         else:
             row["run_elevation_profile"] = None
