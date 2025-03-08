@@ -296,6 +296,16 @@ OpenSkiMap extracts run difficulties from OpenStreetMap according to the [`piste
 We condense difficulties into a simplified set as follows:
 `{python} Markdown(SkiRunDifficulty.markdown_description(mode="phrase") + ".")`
 
+::: {#fig-difficulty-by-convention-run-counts}
+![](../images/difficulty_by_convention_run_counts.svg)
+
+**Counts of runs by difficulty level and coloring convention.**
+All downhill ski runs in the world tabulated by their difficulty and the locale specific coloring convention.
+This figure serves as a legend for the three main coloring conventions for ski run difficulty.
+For example, an intermediate run is colored blue in North America, while it is colored red in Europe and Japan.
+:::
+
+
 ::::: {#fig-slope-by-difficulty layout="[50,50]"}
 ::: {#fig-slope-by-difficulty-full}
 ![](../images/slope_by_difficulty_distributions_full.svg)
