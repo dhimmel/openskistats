@@ -368,7 +368,7 @@ def get_ski_area_to_runs(
 
 
 def _clean_coordinates(
-    coordinates: list[tuple[float, float, float]],
+    coordinates: list[tuple[float, float, float | None]],
     min_elevation: float = -100.0,
     ensure_downhill: bool = True,
 ) -> list[tuple[float, float, float]]:
@@ -376,11 +376,14 @@ def _clean_coordinates(
     Sanitize run LineString coordinates to remove floating point errors,
     remove adjacent overlapping (lat, lon) coordinates to prevent problems from zero-length segments,
     and ensure downhill runs if `ensure_downhill` is True.,
+    Removes coordinates with missing or bad elevation data.
     NOTE: longitude comes before latitude in GeoJSON and osmnx, which is different than GPS coordinates.
     """
     clean_coords = []
     prior_coord = None
     for lon, lat, ele in coordinates:
+        if ele is None:
+            continue
         if ele < min_elevation:
             # remove extreme negative elevations
             # https://github.com/russellporter/openskimap.org/issues/141
