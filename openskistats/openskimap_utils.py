@@ -189,18 +189,21 @@ def load_downhill_runs_from_download_pl() -> pl.DataFrame:
             openskimap_source_to_url(**source) for source in run_properties["sources"]
         )
         coordinates = run["geometry"]["coordinates"]
-        row["run_coordinates_raw"] = [
-            x.model_dump() for x in _structure_coordinates(coordinates)
-        ]
+        row["run_coordinates_raw_count"] = len(coordinates)
         row["run_coordinates_clean"] = [
             x.model_dump()
             for x in _structure_coordinates(_clean_coordinates(coordinates))
         ]
+        row["run_coordinates_filter_count"] = len(coordinates) - len(
+            row["run_coordinates_clean"]
+        )
         # do we ever need to reverse the elevation profile (e.g. if run coordinates are reversed)?
         if elev_profile := run_properties["elevationProfile"]:
             assert elev_profile["resolution"] == 25
+            # It is not a great solution to just filter the missing elevation values,
+            # especially without changing the resolution.
             row["run_elevation_profile"] = [
-                round(x, 2) for x in elev_profile["heights"]
+                round(x, 2) for x in elev_profile["heights"] if x is not None
             ]
         else:
             row["run_elevation_profile"] = None
@@ -208,7 +211,7 @@ def load_downhill_runs_from_download_pl() -> pl.DataFrame:
     set_variables(
         openskimap__runs__counts__02_linestring=len(rows),
         openskimap__runs__coordinates__counts__01_raw=sum(
-            len(row["run_coordinates_raw"]) for row in rows
+            row["run_coordinates_raw_count"] for row in rows
         ),
         openskimap__runs__coordinates__counts__02_clean=sum(
             len(row["run_coordinates_clean"]) for row in rows
@@ -218,13 +221,13 @@ def load_downhill_runs_from_download_pl() -> pl.DataFrame:
     set_variables(
         openskimap__runs__counts__03_downhill=len(rows),
         openskimap__runs__coordinates__counts__03_downhill_raw=sum(
-            len(row["run_coordinates_raw"]) for row in rows
+            row["run_coordinates_raw_count"] for row in rows
         ),
         openskimap__runs__coordinates__counts__04_downhill_clean=sum(
             len(row["run_coordinates_clean"]) for row in rows
         ),
     )
-    return pl.DataFrame(rows, strict=False).drop("run_coordinates_raw")
+    return pl.DataFrame(rows, strict=False).drop("run_coordinates_raw_count")
 
 
 def load_lifts_from_download_pl() -> pl.DataFrame:

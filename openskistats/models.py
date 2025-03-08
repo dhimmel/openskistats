@@ -361,6 +361,13 @@ class RunModel(Model):  # type: ignore [misc]
             description="List of sources for the run from OpenSkiMap.",
         ),
     ]
+    run_coordinates_filter_count: Annotated[
+        int,
+        Field(
+            description="Number of coordinates removed from the run during filtering. "
+            "Coordinates with missing or bad elevation data are filtered out.",
+        ),
+    ]
     run_coordinates_clean: Annotated[
         list[RunCoordinateSegmentModel] | None,
         Field(
