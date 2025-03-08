@@ -303,6 +303,9 @@ We condense difficulties into a simplified set as follows:
 All downhill ski runs in the world tabulated by their difficulty and the locale specific coloring convention.
 This figure serves as a legend for the three main coloring conventions for ski run difficulty.
 For example, an intermediate run is colored blue in North America, while it is colored red in Europe and Japan.
+This visualization helps answer a practical question:
+if you happened to be transported to the top a random ski run anywhere in the world,
+both what difficulty level can you expect and what color would the trail signage use to indicate the difficulty?
 :::
 
 
