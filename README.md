@@ -131,6 +131,7 @@ List of related webpages not yet mentioned in the manuscript:
 - [2025-01-12 Reddit r/dataisbeautiful](https://www.reddit.com/r/dataisbeautiful/comments/1i0fmb2/oc_which_way_do_you_ski_orientations_metrics_for/)
 - [2025-01-15 Maps Mania Blog Post](https://googlemapsmania.blogspot.com/2025/01/global-ski-slope-orientations.html)
 - [2025-01-24 AnyChart DataViz Weekly](https://www.anychart.com/blog/2025/01/24/compeling-fresh-data-visualizations/)
+- [Italian Ski Forums](https://www.skiforum.it/board/index.php?threads/104961/post-2665811)
 
 ## Wild Ideas
 
