@@ -384,7 +384,14 @@ def _clean_coordinates(
     """
     clean_coords = []
     prior_coord = None
-    for lon, lat, ele in coordinates:
+    for coord in coordinates:
+        if len(coord) != 3:
+            logging.warning(
+                f"Skipping coordinate with unexpected length {len(coord)}, "
+                f"expecting length 3 for (lon, lat, ele): {coord}"
+            )
+            continue
+        lon, lat, ele = coord
         if ele is None:
             continue
         if ele < min_elevation:
