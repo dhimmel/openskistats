@@ -227,7 +227,9 @@ def load_downhill_runs_from_download_pl() -> pl.DataFrame:
             len(row["run_coordinates_clean"]) for row in rows
         ),
     )
-    return pl.DataFrame(rows, strict=False).drop("run_coordinates_raw_count")
+    return pl.DataFrame(rows, strict=False, infer_schema_length=None).drop(
+        "run_coordinates_raw_count"
+    )
 
 
 def load_lifts_from_download_pl() -> pl.DataFrame:
@@ -268,7 +270,7 @@ def load_lifts_from_download_pl() -> pl.DataFrame:
             else None
         )
         rows.append(row)
-    return pl.DataFrame(rows, strict=False)
+    return pl.DataFrame(rows, strict=False, infer_schema_length=None)
 
 
 def load_ski_areas_from_download_pl() -> pl.DataFrame:
@@ -276,6 +278,7 @@ def load_ski_areas_from_download_pl() -> pl.DataFrame:
         data=[x["properties"] for x in load_openskimap_geojson("ski_areas")],
         separator="__",
         strict=False,
+        infer_schema_length=None,
     ).rename(mapping={"id": "ski_area_id", "name": "ski_area_name"})
 
 
@@ -386,7 +389,8 @@ def _clean_coordinates(
     prior_coord = None
     for coord in coordinates:
         if len(coord) != 3:
-            logging.warning(
+            # https://github.com/russellporter/openskimap.org/issues/160
+            logging.debug(
                 f"Skipping coordinate with unexpected length {len(coord)}, "
                 f"expecting length 3 for (lon, lat, ele): {coord}"
             )
