@@ -388,13 +388,10 @@ def _clean_coordinates(
     clean_coords = []
     prior_coord = None
     for coord in coordinates:
-        if len(coord) != 3:
+        if len(coord) == 2:
+            # missing elevation is coded as a (lon, lat) pair without elevation
             # https://github.com/russellporter/openskimap.org/issues/160
-            logging.debug(
-                f"Skipping coordinate with unexpected length {len(coord)}, "
-                f"expecting length 3 for (lon, lat, ele): {coord}"
-            )
-            continue
+            coord = (*coord, None)
         lon, lat, ele = coord
         if ele is None:
             continue
