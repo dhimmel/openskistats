@@ -1,0 +1,82 @@
+hemisphere:
+  north_over_south:
+    combined_distance: 43.555599212646484
+    combined_vertical: 40.81209945678711
+    coordinate_count: 43.4226
+    lift_count: 45.1753
+    run_count: 43.307
+    segment_count: 43.4309
+    ski_areas_count: 62.2712
+latitude:
+  between_35_50:
+    combined_vertical_prop: 0.8518025875091553
+  between_40_50:
+    combined_vertical_prop: 0.7336763739585876
+  between_45_58:
+    combined_vertical_prop: 0.4339786469936371
+openskimap:
+  countries:
+    counts:
+      ski_areas_04_downhill_operating_1_lift: 69
+  lifts:
+    counts:
+      01_raw: 31977
+      01_raw_by_geometry:
+        LineString: 31977
+    download:
+      checksum_sha256: db77921cfee85971a1f822764cea5ca5851638835c47853f5111f34f5362c57a
+      compressed_size_mb: 5.014312744140625
+      content_size_mb: 61.333760261535645
+      downloaded: '2025-08-09T10:06:01+00:00'
+      last_modified: '2025-08-08T22:46:11+00:00'
+      relative_path: data/openskimap/lifts.geojson.xz
+      url: https://tiles.openskimap.org/geojson/lifts.geojson
+  runs:
+    coordinates:
+      counts:
+        01_raw: 6193478
+        02_clean: 6193403
+        03_downhill_raw: 1319548
+        04_downhill_clean: 1319548
+    counts:
+      01_raw: 212112
+      01_raw_by_geometry:
+        LineString: 200226
+        Polygon: 11886
+      02_linestring: 200226
+      03_downhill: 90474
+    distance:
+      3d:
+        04_downhill_clean: 52079320.0
+      vertical:
+        04_downhill_clean: 10755202.0
+    download:
+      checksum_sha256: 22a6f0ee9c2640f19def6184874e0ebca73b59b3143ce34b461db014717f5eae
+      compressed_size_mb: 71.6984748840332
+      content_size_mb: 619.1873188018799
+      downloaded: '2025-08-09T10:06:19+00:00'
+      last_modified: '2025-08-08T22:46:12+00:00'
+      relative_path: data/openskimap/runs.geojson.xz
+      url: https://tiles.openskimap.org/geojson/runs.geojson
+    segments:
+      counts:
+        04_downhill_clean: 1229074
+  ski_areas:
+    counts:
+      01_raw: 11767
+      01_raw_by_geometry:
+        MultiPolygon: 25
+        Point: 9176
+        Polygon: 2566
+      02_downhill: 6781
+      04_downhill_operating_1_lift: 5018
+      04_downhill_operating_1_lift_us: 518
+      05_downhill_operating_5_lift: 1603
+    download:
+      checksum_sha256: 1988aa6a6a16784f3adf818392a9459d69dca9dc56ebbfce5060394d5e2e5c72
+      compressed_size_mb: 2.339649200439453
+      content_size_mb: 15.462996482849121
+      downloaded: '2025-08-09T10:06:13+00:00'
+      last_modified: '2025-08-08T22:46:11+00:00'
+      relative_path: data/openskimap/ski_areas.geojson.xz
+      url: https://tiles.openskimap.org/geojson/ski_areas.geojson
