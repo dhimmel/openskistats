@@ -1,0 +1,29 @@
+{
+  "lifts": {
+    "url": "https://tiles.openskimap.org/geojson/lifts.geojson",
+    "relative_path": "data/openskimap/lifts.geojson.xz",
+    "last_modified": "2025-10-17T22:51:00+00:00",
+    "downloaded": "2025-10-18T10:06:01+00:00",
+    "content_size_mb": 59.7421989440918,
+    "compressed_size_mb": 5.069408416748047,
+    "checksum_sha256": "8eddb8d474a1ace094372667af2b2201816c80c6c3cf10abb8893e8129e8ede8"
+  },
+  "ski_areas": {
+    "url": "https://tiles.openskimap.org/geojson/ski_areas.geojson",
+    "relative_path": "data/openskimap/ski_areas.geojson.xz",
+    "last_modified": "2025-10-17T22:51:00+00:00",
+    "downloaded": "2025-10-18T10:06:12+00:00",
+    "content_size_mb": 14.776623725891113,
+    "compressed_size_mb": 2.3193092346191406,
+    "checksum_sha256": "684e925991c03c45327fae6410c0012349f85007b089006cc7c1b6e17bc9aa80"
+  },
+  "runs": {
+    "url": "https://tiles.openskimap.org/geojson/runs.geojson",
+    "relative_path": "data/openskimap/runs.geojson.xz",
+    "last_modified": "2025-10-17T22:51:01+00:00",
+    "downloaded": "2025-10-18T10:06:17+00:00",
+    "content_size_mb": 619.7655544281006,
+    "compressed_size_mb": 76.91617965698242,
+    "checksum_sha256": "309e114aa47a4ef8b7ce0d8adb1677d015ce88a2481e612a10990b11aced584e"
+  }
+}
