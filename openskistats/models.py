@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from enum import StrEnum
 from typing import Annotated, Literal
 
+from annotationlib import get_annotations
 from patito import Field, Model
 
 
@@ -647,7 +648,8 @@ class SkiAreaModel(Model):  # type: ignore [misc]
         ),
     ]
     for field_name in BearingStatsModel.model_fields:
-        __annotations__[field_name] = BearingStatsModel.__annotations__[field_name]
+        # this method breaks in python 3.14 because of PEP 649 & PEP 749: Deferred evaluation of annotations
+        __annotations__[field_name] = get_annotations(BearingStatsModel)[field_name]
     del field_name
     bearings: list[SkiAreaBearingDistributionModel] | None = Field(
         description="Bearing histogram/distribution of the ski area.",
