@@ -59,7 +59,7 @@ jobs:
       if: steps.inputs.outputs.refresh_cache == 'true' || steps.restore-openskimap.outputs.cache-hit != 'true'
       run: |
         if [ ! -f "data/openskimap/runs.geojson.xz" ]; then
-          uv run openskistats download
+          pixi run openskistats download
           echo "downloaded=true" >> "$GITHUB_OUTPUT"
         fi
       shell: bash
@@ -75,9 +75,9 @@ jobs:
       env:
         OPENSKISTATS_SOLAR_SEGMENT_COUNT: ${{ steps.inputs.outputs.solar_segment_count }}
       run: |
-        uv run openskistats analyze
-        uv run openskistats validate
-        uv run openskistats visualize
+        pixi run openskistats analyze
+        pixi run openskistats validate
+        pixi run openskistats visualize
       shell: bash
     - name: Make story plots
       working-directory: r/
@@ -85,7 +85,7 @@ jobs:
         Rscript 01.data.R
         Rscript 02.plot.R
     - name: Quarto Render
-      run: uv run quarto render website
+      run: pixi run quarto render website
     - name: Publish data
       uses: peaceiris/actions-gh-pages@v4
       if: github.ref == 'refs/heads/main'

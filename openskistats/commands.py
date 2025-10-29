@@ -75,9 +75,6 @@ class Commands:
 
     @staticmethod
     def command() -> None:
-        """
-        Run like `uv run ski_bearings`
-        """
         logging.basicConfig()
         logging.getLogger().setLevel(logging.INFO)
         cli()
