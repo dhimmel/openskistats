@@ -41,7 +41,7 @@ pixi install
 pre-commit install
 ```
 
-[Install quarto](https://quarto.org/docs/get-started/) and extensions:
+Install the [quarto](https://quarto.org) extensions:
 
 ```shell
 # install quarto story extension
