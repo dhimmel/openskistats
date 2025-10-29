@@ -16,7 +16,7 @@ from openskistats.bearing import get_bearing_summary_stats
 @contextlib.contextmanager
 def suppress_user_warning(
     category: type[Warning] = UserWarning, message: str = ""
-) -> Generator[None, None, None]:
+) -> Generator[None]:
     with warnings.catch_warnings():
         warnings.filterwarnings(action="ignore", message=message, category=category)
         yield

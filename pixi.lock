@@ -4485,7 +4485,7 @@ packages:
 - pypi: ./
   name: openskistats
   version: 0.1.0
-  sha256: f1aa93f81d2c3fab7a556ade31f47916818c750021ea3089fbcc6a27f4cac28b
+  sha256: 4dece9d621a4b702677073c6aebfd58fc50e9906ff692190d306d29b03f3f88c
   requires_python: ==3.13.*
   editable: true
 - conda: https://conda.anaconda.org/conda-forge/linux-64/openssl-3.5.4-h26f9b46_0.conda

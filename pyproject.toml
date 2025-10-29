@@ -78,7 +78,7 @@ production = { features = ["r"], solve-group = "default" }
 openskistats = "openskistats.commands:Commands.command"
 
 [tool.ruff]
-target-version = "py312"
+target-version = "py313"
 line-length = 88
 
 [tool.ruff.lint]
