@@ -161,7 +161,8 @@ def cut_bearings_pl(num_bins: int, bearing_col: str = "bearing") -> pl.Expr:
             # <https://github.com/gboeing/osmnx/blob/v2.0.0/osmnx/bearing.py#L240-L296>
             left_closed=True,
         )
-        .cast(pl.Int16)
+        .cast(pl.Utf8)
+        .str.to_integer(dtype=pl.Int16)
         .alias("bin_index")
     )
 
