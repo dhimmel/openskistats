@@ -28,9 +28,8 @@ jobs:
     timeout-minutes: 360
     steps:
     - uses: actions/checkout@v4
-    - uses: ./.github/workflows/setup-python
     - uses: ./.github/workflows/setup-r  
-    - uses: ./.github/workflows/setup-quarto
+    - uses: ./.github/workflows/setup-python
     - name: install fonts
       run: sudo apt-get install --yes --quiet fonts-dejavu-core fonts-noto-cjk
     - name: Process inputs
