@@ -1,5 +1,6 @@
 /.quarto/
 /_site/
+**/*.quarto_ipynb
 *.quarto_ipynb
 story/index_files
 _extensions
