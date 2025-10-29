@@ -9,7 +9,7 @@
   "constraints": {
     "pixi": ">=0.40.0"
   },
-  "enabledManagers": ["pixi", "pep621", "pre-commit"],
+  "enabledManagers": ["pixi", "pep621", "pre-commit", "github-actions"],
   "lockFileMaintenance": {
     "enabled": true,
   },
@@ -21,7 +21,16 @@
       "matchDatasources": ["pypi", "conda"],
       "matchManagers": ["pixi", "pep621", "pre-commit"],
       "groupName": "pixi dependencies",
-      "groupSlug": "pixi-deps"
+      "groupSlug": "pixi-deps",
+    },
+    {
+      "matchManagers": ["pep621", "pixi"],
+      "rangeStrategy": "pin"
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "groupName": "github actions",
+      "groupSlug": "github-actions",
     },
   ],
 }
