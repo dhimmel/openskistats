@@ -2,6 +2,10 @@
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+
 [project]
 name = "openskistats"
 version = "0.1.0"
@@ -12,8 +16,7 @@ authors = [
 ]
 readme = "README.md"
 license = {file = "LICENSE.md"}
-repository = "https://github.com/dhimmel/openskistats"
-requires-python = ">= 3.12"
+requires-python = "==3.12.*"
 dependencies = [
     "beautifulsoup4>=4.12.3",
     "folium>=0.19.3",
@@ -41,6 +44,15 @@ dev = [
     "pre-commit >= 3.8.0",
     "pytest >= 7.4.4",
 ]
+
+[tool.pixi.dependencies]
+quarto = "==1.8.25"
+
+[project.urls]
+"Homepage" = "https://openskistats.org"
+"Repository" = "https://github.com/dhimmel/openskistats"
+"Issues" = "https://github.com/dhimmel/openskistats/issues"
+
 
 [project.scripts]
 openskistats = "openskistats.commands:Commands.command"

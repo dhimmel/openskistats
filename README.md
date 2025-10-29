@@ -25,7 +25,7 @@ The following commands are one method of installation on macOS:
 brew install imagemagick@6
 
 # install the fallback font if you don't have it
-# otherwise uv run openskistats visualize will warn:
+# otherwise openskistats visualize will warn:
 # WARNING:matplotlib.font_manager:findfont: Font family 'Noto Sans CJK JP' not found.
 brew install --cask font-noto-sans-cjk
 ```
@@ -34,8 +34,8 @@ For initial Python setup, first [install uv](https://docs.astral.sh/uv/getting-s
 Then run the following commands:
 
 ```shell
-# install the uv environment in uv.lock
-uv sync --extra=dev
+# install the pixi environment in pixi.lock
+pixi install
 
 # install the pre-commit git hooks
 pre-commit install
@@ -62,11 +62,11 @@ Rscript -e "setwd('r'); renv::restore()"
 
 For commands that require access to the python environment,
 which includes those beginning with `openskistats` and `quarto`,
-you can activate the `uv` environment any of the following ways:
+you can activate the `pixi` environment any of the following ways:
 
 - configure your IDE to activate the venv automatically, e.g. via "Python: Select Interpreter" [in](https://code.visualstudio.com/docs/python/environments) Visual Studio Code.
-- prefix the command with `uv run`, e.g. `uv run openskistats --help`
-- [activate](https://docs.astral.sh/uv/pip/environments/#using-a-virtual-environment) the venv like `source .venv/bin/activate`
+- prefix the command with `pixi run`, e.g. `pixi run openskistats --help`
+- [activate](https://pixi.sh/dev/workspace/environment/#activation) the environment via `pixi shell`
 
 To execute the Python analysis, run the following commands:
 
