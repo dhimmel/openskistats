@@ -27,8 +27,7 @@ jobs:
     # which is too short to compute all solar irradiation values
     timeout-minutes: 360
     steps:
-    - uses: actions/checkout@v4
-    - uses: ./.github/workflows/setup-r  
+    - uses: actions/checkout@v5
     - uses: ./.github/workflows/setup-python
     - name: install fonts
       run: sudo apt-get install --yes --quiet fonts-dejavu-core fonts-noto-cjk

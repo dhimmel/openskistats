@@ -1,8 +1,0 @@
-name: Setup R
-description: Common steps for installing R and project dependencies
-runs:
-  using: "composite"
-  steps:
-    - name: Install system packages for R
-      shell: bash
-      run: sudo apt-get install --yes --quiet libmagick++-dev libpoppler-cpp-dev

@@ -19,6 +19,8 @@ license = {file = "LICENSE.md"}
 requires-python = "==3.12.*"
 
 [tool.pixi.dependencies]
+imagemagick = ">=7.1.1_47,<8"
+poppler = ">=25.2.0,<26"
 quarto = "==1.8.25"
 r-arrow = "==18.1.0"
 r-base = "==4.4.2"
