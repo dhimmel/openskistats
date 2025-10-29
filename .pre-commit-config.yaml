@@ -2,7 +2,7 @@ default_language_version:
   python: python3.12
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-merge-conflict
       - id: debug-statements
@@ -11,7 +11,7 @@ repos:
       - id: check-case-conflict
       - id: check-yaml
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.9.9
+    rev: v0.14.2
     hooks:
       # Run the linter.
       - id: ruff
@@ -21,7 +21,7 @@ repos:
       - id: ruff-format
         types_or: [ python, jupyter ]
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.15.0
+    rev: v1.18.2
     hooks:
       - id: mypy
         additional_dependencies:
@@ -29,6 +29,6 @@ repos:
           - pytest
           - types-PyYAML
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: '0.6.3'
+    rev: '0.9.5'
     hooks:
       - id: uv-lock
