@@ -48,6 +48,11 @@ dev = [
 [tool.pixi.dependencies]
 quarto = "==1.8.25"
 
+[tool.pixi.environments]
+default = { features = ["dev"], solve-group = "default" }
+production = { solve-group = "default" }
+
+
 [project.urls]
 "Homepage" = "https://openskistats.org"
 "Repository" = "https://github.com/dhimmel/openskistats"
