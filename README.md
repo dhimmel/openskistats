@@ -22,15 +22,13 @@ whose installation and presence varies by platform.
 The following commands are one method of installation on macOS:
 
 ```shell
-brew install imagemagick@6
-
 # install the fallback font if you don't have it
 # otherwise openskistats visualize will warn:
 # WARNING:matplotlib.font_manager:findfont: Font family 'Noto Sans CJK JP' not found.
 brew install --cask font-noto-sans-cjk
 ```
 
-For initial Python setup, first [install uv](https://docs.astral.sh/uv/getting-started/installation/).
+For initial Python setup, first [install pixi](https://pixi.sh/latest/installation/).
 Then run the following commands:
 
 ```shell
