@@ -16,7 +16,7 @@ authors = [
 ]
 readme = "README.md"
 license = {file = "LICENSE.md"}
-requires-python = "==3.12.*"
+requires-python = "==3.13.*"
 
 [tool.pixi.dependencies]
 quarto = "==1.8.25"
@@ -97,7 +97,7 @@ select = [
 ]
 
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.13"
 strict = true
 pretty = true
 show_error_context = true

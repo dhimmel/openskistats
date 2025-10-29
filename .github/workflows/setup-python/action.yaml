@@ -5,7 +5,7 @@ runs:
   steps:
     - uses: actions/setup-python@v5
       with:
-        python-version: "3.12"
+        python-version: "3.13"
     - uses: astral-sh/setup-uv@v3
     - uses: prefix-dev/setup-pixi@v0.9.0
     - run: pixi install --all
