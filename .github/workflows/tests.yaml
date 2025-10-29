@@ -12,5 +12,5 @@ jobs:
     - name: Python tests
       run: pixi run pytest --color=yes
     - name: R tests
-      run: Rscript -e "packageVersion('arrow')"
+      run: pixi run Rscript -e "packageVersion('arrow')"
       working-directory: r/

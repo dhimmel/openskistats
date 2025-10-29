@@ -48,14 +48,11 @@ Install the [quarto](https://quarto.org) extensions:
 (cd website/story && quarto add --no-prompt https://github.com/qmd-lab/closeread/archive/e3645070dd668004056ae508d2d25d05baca5ad1.zip)
 ```
 
-Install [R](https://cran.r-project.org/) and the `renv` environment:
+Check that [R](https://cran.r-project.org/) is installed:
 
 ```shell
 # Check that R is installed by running:
 R --version
-
-# Install the R environment by restoring the project's dependencies in the `renv.lock` file:
-Rscript -e "setwd('r'); renv::restore()"
 ```
 
 ### Execution
