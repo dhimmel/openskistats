@@ -1,0 +1,27 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "schedule": ["* 10 * * 1"],
+  "timezone": "America/New_York",
+  // Ensure Renovate installs and uses a supported Pixi version so it can
+  // regenerate pixi.lock during updates. See:
+  // https://docs.renovatebot.com/modules/manager/pixi/
+  "constraints": {
+    "pixi": ">=0.40.0"
+  },
+  "enabledManagers": ["pixi", "pep621", "pre-commit"],
+  "lockFileMaintenance": {
+    "enabled": true,
+  },
+  "pre-commit": {
+    "enabled": true,
+  },
+  "packageRules": [
+    {
+      "matchDatasources": ["pypi", "conda"],
+      "matchManagers": ["pixi", "pep621", "pre-commit"],
+      "groupName": "pixi dependencies",
+      "groupSlug": "pixi-deps"
+    },
+  ],
+}

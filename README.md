@@ -53,6 +53,8 @@ Check that [R](https://cran.r-project.org/) is installed:
 R --version
 ```
 
+[Renovate](https://developer.mend.io/github/dhimmel/openskistats) automates dependency updates and is configured in [`renovate.json5`](.github/renovate.json5).
+
 ### Execution
 
 For commands that require access to the python environment,
