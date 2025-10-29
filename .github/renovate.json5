@@ -31,7 +31,11 @@
       "matchManagers": ["github-actions"],
       "groupName": "github actions",
       "groupSlug": "github-actions",
-      // "excludeDepTypes": ["python-version"],
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "matchDepTypes": ["python-version"],
+      "enabled": false
     },
   ],
 }
