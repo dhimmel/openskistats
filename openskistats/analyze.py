@@ -109,7 +109,7 @@ def process_and_export_lifts() -> None:
         .group_by("lift_id")
         .agg(
             **_aggregate_run_coordinates_exprs,
-            lift_coordinates=pl.struct(pl.exclude("lift_id")),
+            lift_coordinates=pl.struct(pl.exclude("lift_id")).implode(),
         )
         .collect()
     )
@@ -149,7 +149,7 @@ def process_and_export_runs() -> None:
         .agg(
             **_aggregate_run_coordinates_exprs,
             **_aggregate_run_segment_sunlight_exprs,
-            run_coordinates_clean=pl.struct(pl.exclude("run_id")),
+            run_coordinates_clean=pl.struct(pl.exclude("run_id")).implode(),
         )
     )
     runs_df = (
@@ -232,7 +232,7 @@ def analyze_all_ski_areas_polars(skip_runs: bool = False) -> None:
                     bearings=x.struct.field("bearing").to_numpy(),
                     weights=x.struct.field("distance_vertical_drop").to_numpy(),
                     difficulties=x.struct.field("run_difficulty_condensed").to_numpy(),
-                ).to_struct(),
+                ).to_dicts(),
                 returns_scalar=True,
             ),
         )
@@ -380,7 +380,7 @@ def aggregate_ski_areas_pl(
             group_by=group_by, ski_area_filters=ski_area_filters
         )
         .group_by(*group_by)
-        .agg(bearings=pl.struct(pl.exclude(group_by)))
+        .agg(bearings=pl.struct(pl.exclude(group_by)).implode())
     )
     return (
         load_ski_areas_pl(ski_area_filters=ski_area_filters)
