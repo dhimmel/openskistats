@@ -2,28 +2,28 @@
   "lifts": {
     "url": "https://tiles.openskimap.org/geojson/lifts.geojson",
     "relative_path": "data/openskimap/lifts.geojson.xz",
-    "last_modified": "2025-03-01T02:22:18+00:00",
-    "downloaded": "2025-03-01T11:24:15+00:00",
-    "content_size_mb": 63.92586708068848,
-    "compressed_size_mb": 5.458866119384766,
-    "checksum_sha256": "b695fdbf709a15b6909bb2c3ca726dee99f63717852eb8d5aeef730cdc81d4fc"
+    "last_modified": "2025-11-01T23:52:26+00:00",
+    "downloaded": "2025-11-02T16:04:10+00:00",
+    "content_size_mb": 61.87503528594971,
+    "compressed_size_mb": 5.1480865478515625,
+    "checksum_sha256": "a48576b525c82ca9f294c7c777824c7efb683eb9ae46e39555cc24b13dba279f"
   },
   "ski_areas": {
     "url": "https://tiles.openskimap.org/geojson/ski_areas.geojson",
     "relative_path": "data/openskimap/ski_areas.geojson.xz",
-    "last_modified": "2025-03-01T02:22:18+00:00",
-    "downloaded": "2025-03-01T11:24:29+00:00",
-    "content_size_mb": 16.203779220581055,
-    "compressed_size_mb": 2.4895973205566406,
-    "checksum_sha256": "e08b9ed3652dcc3b3e107fc887158cc30ea8f9fc4d8c8c3d5b968ade95a6e31a"
+    "last_modified": "2025-11-01T23:52:26+00:00",
+    "downloaded": "2025-11-02T16:04:26+00:00",
+    "content_size_mb": 15.543346405029297,
+    "compressed_size_mb": 2.3693084716796875,
+    "checksum_sha256": "619369fb58602a9b705b76a19429173b64684aca0fdfce7b845463d7845540e9"
   },
   "runs": {
     "url": "https://tiles.openskimap.org/geojson/runs.geojson",
     "relative_path": "data/openskimap/runs.geojson.xz",
-    "last_modified": "2025-03-01T02:22:22+00:00",
-    "downloaded": "2025-03-01T11:24:36+00:00",
-    "content_size_mb": 690.972375869751,
-    "compressed_size_mb": 89.75365829467773,
-    "checksum_sha256": "763f071a10609a66c865f6d480fc7050f6e893bed0af3c964ac35df8c893b85a"
+    "last_modified": "2025-11-01T23:52:28+00:00",
+    "downloaded": "2025-11-02T16:04:33+00:00",
+    "content_size_mb": 639.0371694564819,
+    "compressed_size_mb": 77.66794967651367,
+    "checksum_sha256": "6fc7158255336caae20915a5a22c6b9d16fb1a9fb1f71587739dac3bbd689639"
   }
 }
