@@ -327,7 +327,8 @@ def load_downhill_ski_areas_from_download_pl() -> pl.DataFrame:
             pl.col("sources")
             .list.eval(
                 pl.element().map_elements(
-                    lambda x: openskimap_source_to_url(
+                    # kwargs due to https://github.com/pola-rs/polars/issues/24840
+                    lambda x, **kwargs: openskimap_source_to_url(
                         type=x["type"],
                         id=x["id"],
                     ),
