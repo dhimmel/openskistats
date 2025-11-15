@@ -19,6 +19,9 @@ license = {file = "LICENSE.md"}
 requires-python = "==3.14.*"
 
 [tool.pixi.dependencies]
+# pyogrio not explicitly imported, but required to prevent a build failure with Python 3.14:
+# No such file or directory: 'gdal-config'
+pyogrio = "==0.11.1"
 quarto = "==1.8.26"
 
 [tool.pixi.pypi-dependencies]
