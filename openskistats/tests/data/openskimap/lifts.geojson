@@ -10,6 +10,7 @@
         "name": null,
         "oneway": null,
         "ref": null,
+        "refFRCAIRN": null,
         "description": null,
         "occupancy": null,
         "capacity": null,
@@ -27,18 +28,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Lebanon"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -140,7 +130,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null,
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Lebanon"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ],
         "id": "163027d67df79943aa11ad91948b07006568e41f"
       },
       "geometry": {
@@ -198,6 +201,7 @@
         "name": "Sky Lift",
         "oneway": true,
         "ref": null,
+        "refFRCAIRN": null,
         "description": null,
         "occupancy": 2,
         "capacity": null,
@@ -215,18 +219,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -476,7 +469,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null,
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ],
         "id": "41014dd60dd2af503da8d75d377e9ed248082fb1"
       },
       "geometry": {
@@ -564,6 +570,7 @@
         "name": "Magic Carpet",
         "oneway": null,
         "ref": null,
+        "refFRCAIRN": null,
         "description": null,
         "occupancy": null,
         "capacity": null,
@@ -581,18 +588,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -842,7 +838,8 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null,
+        "wikidataID": null,
+        "places": [],
         "id": "a535c2a3cdb81792c3233d46669a15b34d2cccae"
       },
       "geometry": {
@@ -870,6 +867,7 @@
         "name": "Rope Tow",
         "oneway": null,
         "ref": null,
+        "refFRCAIRN": null,
         "description": null,
         "occupancy": null,
         "capacity": null,
@@ -887,18 +885,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -1148,7 +1135,8 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null,
+        "wikidataID": null,
+        "places": [],
         "id": "75370913b15570dc785502e0c10ea779b4ff7c35"
       },
       "geometry": {
@@ -1176,6 +1164,7 @@
         "name": "T-Bar",
         "oneway": true,
         "ref": null,
+        "refFRCAIRN": null,
         "description": null,
         "occupancy": 2,
         "capacity": null,
@@ -1193,18 +1182,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -1454,7 +1432,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null,
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ],
         "id": "4c53e569a9086308b6e757794d588ff04f2c658b"
       },
       "geometry": {

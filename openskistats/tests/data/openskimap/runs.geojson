@@ -28,18 +28,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Lebanon"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -142,7 +131,8 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null,
+        "wikidataID": null,
+        "places": [],
         "elevationProfile": null,
         "id": "6cccd829a8a538b586df0cfab268a7800089bfa7"
       },
@@ -271,18 +261,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Lebanon"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -385,7 +364,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null,
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Lebanon"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ],
         "elevationProfile": null,
         "id": "bd65c063f8c7a448e056240a0d23de8e3327e176"
       },
@@ -624,18 +616,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Lebanon"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -738,7 +719,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null,
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Lebanon"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ],
         "elevationProfile": null,
         "id": "ebd7074489a5b70baecd86fe6d01d1d03df81b80"
       },
@@ -937,18 +931,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Lebanon"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -1051,7 +1034,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null,
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Lebanon"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ],
         "elevationProfile": null,
         "id": "a91a0fb6390946f945d9a6119526b81e8737952e"
       },
@@ -1222,18 +1218,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -1513,7 +1498,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -1630,18 +1628,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -1914,7 +1901,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -2026,18 +2026,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -2312,7 +2301,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -2434,18 +2436,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -2710,7 +2701,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -2797,18 +2801,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -3103,7 +3096,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -3305,18 +3311,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -3581,7 +3576,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -3668,18 +3676,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -3952,7 +3949,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -4089,18 +4099,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -4369,7 +4368,8 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": []
       },
       "geometry": {
         "type": "LineString",
@@ -4506,18 +4506,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -4785,7 +4774,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -4867,18 +4869,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -5146,7 +5137,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -5223,18 +5227,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -5495,7 +5488,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -5562,18 +5568,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -5841,7 +5836,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -5918,18 +5926,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -6191,7 +6188,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -6258,18 +6268,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -6534,7 +6533,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -6611,18 +6623,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -6887,7 +6888,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -6959,18 +6973,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -7239,7 +7242,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -7311,18 +7327,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -7598,7 +7603,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -7720,18 +7738,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -7993,7 +8000,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -8080,18 +8100,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -8351,7 +8360,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -8423,18 +8445,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -8708,7 +8719,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -8820,18 +8844,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -9097,7 +9110,8 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": []
       },
       "geometry": {
         "type": "LineString",
@@ -9144,18 +9158,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -9419,7 +9422,8 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": []
       },
       "geometry": {
         "type": "LineString",
@@ -9466,18 +9470,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -9736,7 +9729,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -9813,18 +9819,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -10089,7 +10084,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -10166,18 +10174,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -10439,7 +10436,8 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": []
       },
       "geometry": {
         "type": "LineString",
@@ -10506,18 +10504,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -10776,7 +10763,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -10823,18 +10823,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Lebanon"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -10961,7 +10950,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Lebanon"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -11083,18 +11085,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Lebanon"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -11219,7 +11210,8 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": []
       },
       "geometry": {
         "type": "LineString",
@@ -11356,18 +11348,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Lebanon"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -11487,7 +11468,8 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": []
       },
       "geometry": {
         "type": "LineString",
@@ -11584,18 +11566,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Lebanon"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -11706,7 +11677,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Lebanon"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -11758,18 +11742,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Lebanon"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -11882,7 +11855,8 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": []
       },
       "geometry": {
         "type": "LineString",
@@ -11929,18 +11903,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -12202,7 +12165,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -12274,18 +12250,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -12543,7 +12508,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -12590,18 +12568,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -12859,7 +12826,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -12906,18 +12886,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -13180,7 +13149,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -13247,18 +13229,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -13516,7 +13487,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -13568,18 +13552,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -13839,7 +13812,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",
@@ -13886,18 +13872,7 @@
                 "downhill"
               ],
               "type": "skiArea",
-              "status": "operating",
-              "location": {
-                "iso3166_2": "US-NH",
-                "localized": {
-                  "en": {
-                    "region": "New Hampshire",
-                    "country": "United States",
-                    "locality": "Enfield"
-                  }
-                },
-                "iso3166_1Alpha2": "US"
-              }
+              "status": "operating"
             },
             "geometry": {
               "type": "Polygon",
@@ -14160,7 +14135,20 @@
           }
         ],
         "websites": [],
-        "wikidata_id": null
+        "wikidataID": null,
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ]
       },
       "geometry": {
         "type": "LineString",

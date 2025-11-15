@@ -2,28 +2,28 @@
   "lifts": {
     "url": "https://tiles.openskimap.org/geojson/lifts.geojson",
     "relative_path": "data/openskimap/lifts.geojson.xz",
-    "last_modified": "2025-11-01T23:52:26+00:00",
-    "downloaded": "2025-11-02T16:04:10+00:00",
-    "content_size_mb": 61.87503528594971,
-    "compressed_size_mb": 5.1480865478515625,
-    "checksum_sha256": "a48576b525c82ca9f294c7c777824c7efb683eb9ae46e39555cc24b13dba279f"
+    "last_modified": "2025-11-15T01:14:08+00:00",
+    "downloaded": "2025-11-15T19:01:28+00:00",
+    "content_size_mb": 58.781609535217285,
+    "compressed_size_mb": 4.977809906005859,
+    "checksum_sha256": "7cab9d41a775ce7202530f8226684e16447c32f623cc0e6d2d1d47df55f34131"
   },
   "ski_areas": {
     "url": "https://tiles.openskimap.org/geojson/ski_areas.geojson",
     "relative_path": "data/openskimap/ski_areas.geojson.xz",
-    "last_modified": "2025-11-01T23:52:26+00:00",
-    "downloaded": "2025-11-02T16:04:26+00:00",
-    "content_size_mb": 15.543346405029297,
-    "compressed_size_mb": 2.3693084716796875,
-    "checksum_sha256": "619369fb58602a9b705b76a19429173b64684aca0fdfce7b845463d7845540e9"
+    "last_modified": "2025-11-15T01:14:08+00:00",
+    "downloaded": "2025-11-15T19:01:54+00:00",
+    "content_size_mb": 15.516261100769043,
+    "compressed_size_mb": 2.2239990234375,
+    "checksum_sha256": "97de1ad1297b2f4d7862180e7e6e158f4ff550bce7edf1a3b57cc7b64da53f27"
   },
   "runs": {
     "url": "https://tiles.openskimap.org/geojson/runs.geojson",
     "relative_path": "data/openskimap/runs.geojson.xz",
-    "last_modified": "2025-11-01T23:52:28+00:00",
-    "downloaded": "2025-11-02T16:04:33+00:00",
-    "content_size_mb": 639.0371694564819,
-    "compressed_size_mb": 77.66794967651367,
-    "checksum_sha256": "6fc7158255336caae20915a5a22c6b9d16fb1a9fb1f71587739dac3bbd689639"
+    "last_modified": "2025-11-15T01:14:10+00:00",
+    "downloaded": "2025-11-15T19:02:04+00:00",
+    "content_size_mb": 616.5050497055054,
+    "compressed_size_mb": 77.5869026184082,
+    "checksum_sha256": "16a777f5ad954bf8e119330df3cbdf5a3f9ad4e0cafd99562a6ead8a08ff2e1a"
   }
 }

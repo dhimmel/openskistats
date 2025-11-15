@@ -3,172 +3,22 @@
   "features": [
     {
       "properties": {
-        "id": "dc24f332f3117625dc09479b5d10cbb31a592be4",
-        "name": "Storrs Hill Ski Area",
-        "type": "skiArea",
-        "status": "operating",
-        "sources": [
-          {
-            "id": "way/1090626629",
-            "type": "openstreetmap"
-          },
-          {
-            "id": 4118,
-            "type": "skimap.org"
-          }
-        ],
-        "location": {
-          "iso3166_2": "US-NH",
-          "localized": {
-            "en": {
-              "region": "New Hampshire",
-              "country": "United States",
-              "locality": "Lebanon"
-            }
-          },
-          "iso3166_1Alpha2": "US"
-        },
-        "websites": [
-          "https://skistorrshill.com/"
-        ],
-        "activities": [
-          "downhill"
-        ],
-        "statistics": {
-          "runs": {
-            "byActivity": {
-              "downhill": {
-                "byDifficulty": {
-                  "other": {
-                    "count": 5,
-                    "lengthInKm": 1.2642494231961583,
-                    "maxElevation": 268,
-                    "minElevation": 164,
-                    "combinedElevationChange": 255
-                  }
-                }
-              }
-            },
-            "maxElevation": 268,
-            "minElevation": 164
-          },
-          "lifts": {
-            "byType": {
-              "drag_lift": {
-                "count": 1,
-                "lengthInKm": 0.40465585678911375,
-                "maxElevation": 268,
-                "minElevation": 169,
-                "combinedElevationChange": 99
-              }
-            },
-            "maxElevation": 268,
-            "minElevation": 169
-          },
-          "maxElevation": 268,
-          "minElevation": 169
-        },
-        "wikidata_id": null,
-        "runConvention": "north_america"
-      },
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -72.2528541,
-              43.636689
-            ],
-            [
-              -72.25350879999998,
-              43.6366286
-            ],
-            [
-              -72.2533251,
-              43.6362611
-            ],
-            [
-              -72.2528507,
-              43.6355914
-            ],
-            [
-              -72.25261350000002,
-              43.63513930000002
-            ],
-            [
-              -72.25277059999996,
-              43.63453000000001
-            ],
-            [
-              -72.2531948,
-              43.6340344
-            ],
-            [
-              -72.2535857,
-              43.633647499999995
-            ],
-            [
-              -72.25388629999998,
-              43.6332365
-            ],
-            [
-              -72.25392640000003,
-              43.6328472
-            ],
-            [
-              -72.2537026,
-              43.632129100000014
-            ],
-            [
-              -72.25288079999997,
-              43.63133850000001
-            ],
-            [
-              -72.2522628,
-              43.6310411
-            ],
-            [
-              -72.2518151,
-              43.631067699999996
-            ],
-            [
-              -72.2510802,
-              43.632530500000016
-            ],
-            [
-              -72.25092660000003,
-              43.6334202
-            ],
-            [
-              -72.25035199999998,
-              43.63452280000001
-            ],
-            [
-              -72.2502017,
-              43.634941
-            ],
-            [
-              -72.25179179999998,
-              43.635528500000014
-            ],
-            [
-              -72.25226950000003,
-              43.63568090000001
-            ],
-            [
-              -72.2528541,
-              43.636689
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "properties": {
         "id": "28cb013693827a90d778603d8bb6bc0cfd3999c0",
         "name": "Whaleback Mountain",
         "type": "skiArea",
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Enfield"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ],
         "status": "operating",
         "sources": [
           {
@@ -180,17 +30,6 @@
             "type": "skimap.org"
           }
         ],
-        "location": {
-          "iso3166_2": "US-NH",
-          "localized": {
-            "en": {
-              "region": "New Hampshire",
-              "country": "United States",
-              "locality": "Enfield"
-            }
-          },
-          "iso3166_1Alpha2": "US"
-        },
         "websites": [
           "http://www.whaleback.com/"
         ],
@@ -204,7 +43,7 @@
                 "byDifficulty": {
                   "easy": {
                     "count": 13,
-                    "lengthInKm": 3.628468670647781,
+                    "lengthInKm": 3.6284686706477816,
                     "maxElevation": 548,
                     "minElevation": 344,
                     "combinedElevationChange": 537
@@ -218,14 +57,14 @@
                   },
                   "advanced": {
                     "count": 3,
-                    "lengthInKm": 0.4648757526003676,
+                    "lengthInKm": 0.4648757526003677,
                     "maxElevation": 444,
                     "minElevation": 345,
                     "combinedElevationChange": 100
                   },
                   "intermediate": {
                     "count": 15,
-                    "lengthInKm": 3.0013481898853085,
+                    "lengthInKm": 3.001348189885309,
                     "maxElevation": 546,
                     "minElevation": 347,
                     "combinedElevationChange": 578
@@ -273,7 +112,7 @@
           "maxElevation": 545,
           "minElevation": 345
         },
-        "wikidata_id": "Q7990522",
+        "wikidataID": "Q7990522",
         "runConvention": "north_america"
       },
       "type": "Feature",
@@ -512,6 +351,171 @@
             [
               -72.1845005,
               43.6042407
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "properties": {
+        "id": "dc24f332f3117625dc09479b5d10cbb31a592be4",
+        "name": "Storrs Hill Ski Area",
+        "type": "skiArea",
+        "places": [
+          {
+            "iso3166_2": "US-NH",
+            "localized": {
+              "en": {
+                "region": "New Hampshire",
+                "country": "United States",
+                "locality": "Lebanon"
+              }
+            },
+            "iso3166_1Alpha2": "US"
+          }
+        ],
+        "status": "operating",
+        "sources": [
+          {
+            "id": "way/1090626629",
+            "type": "openstreetmap"
+          },
+          {
+            "id": 4118,
+            "type": "skimap.org"
+          }
+        ],
+        "websites": [
+          "https://skistorrshill.com/"
+        ],
+        "activities": [
+          "downhill"
+        ],
+        "statistics": {
+          "runs": {
+            "byActivity": {
+              "downhill": {
+                "byDifficulty": {
+                  "other": {
+                    "count": 5,
+                    "lengthInKm": 1.2642494231961583,
+                    "maxElevation": 268,
+                    "minElevation": 164,
+                    "combinedElevationChange": 255
+                  }
+                }
+              }
+            },
+            "maxElevation": 268,
+            "minElevation": 164
+          },
+          "lifts": {
+            "byType": {
+              "drag_lift": {
+                "count": 1,
+                "lengthInKm": 0.40465585678911375,
+                "maxElevation": 268,
+                "minElevation": 169,
+                "combinedElevationChange": 99
+              }
+            },
+            "maxElevation": 268,
+            "minElevation": 169
+          },
+          "maxElevation": 268,
+          "minElevation": 169
+        },
+        "wikidataID": null,
+        "runConvention": "north_america"
+      },
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -72.2528541,
+              43.636689
+            ],
+            [
+              -72.25350879999998,
+              43.6366286
+            ],
+            [
+              -72.2533251,
+              43.6362611
+            ],
+            [
+              -72.2528507,
+              43.6355914
+            ],
+            [
+              -72.25261350000002,
+              43.63513930000002
+            ],
+            [
+              -72.25277059999996,
+              43.63453000000001
+            ],
+            [
+              -72.2531948,
+              43.6340344
+            ],
+            [
+              -72.2535857,
+              43.633647499999995
+            ],
+            [
+              -72.25388629999998,
+              43.6332365
+            ],
+            [
+              -72.25392640000003,
+              43.6328472
+            ],
+            [
+              -72.2537026,
+              43.632129100000014
+            ],
+            [
+              -72.25288079999997,
+              43.63133850000001
+            ],
+            [
+              -72.2522628,
+              43.6310411
+            ],
+            [
+              -72.2518151,
+              43.631067699999996
+            ],
+            [
+              -72.2510802,
+              43.632530500000016
+            ],
+            [
+              -72.25092660000003,
+              43.6334202
+            ],
+            [
+              -72.25035199999998,
+              43.63452280000001
+            ],
+            [
+              -72.2502017,
+              43.634941
+            ],
+            [
+              -72.25179179999998,
+              43.635528500000014
+            ],
+            [
+              -72.25226950000003,
+              43.63568090000001
+            ],
+            [
+              -72.2528541,
+              43.636689
             ]
           ]
         ]
