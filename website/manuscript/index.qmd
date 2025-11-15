@@ -190,7 +190,7 @@ At Mt. Bachelor, one can ski a stratovolcano
 where beginner terrain is primarily northeast facing,
 while the advanced terrain is primarily northwest facing.
 The authors joke that should someone be a fast learner, they could stay in the sun all day at Mt. Bachelor by starting in the beginner eastern terrain in the morning and progressing to the advanced western terrain in the afternoon.
-Olos Ski Resort of Finland is the darkest ski resort in the world due to its 67.9°N latitude, north-facing orientation, and sloping terrain as calculated by our solar irradiation estimator.
+Olos of Finland is the darkest ski resort in the world due to its 67.9°N latitude, north-facing orientation, and sloping terrain as calculated by our solar irradiation estimator.
 Etna Sud Nicolosi of Italy is the sunniest ski resort in the world due to its 37.7°N latitude and south-facing orientation.
 Jackson Hole is the the most southward (i.e. equatorward) facing ski resort in the United States with over 12,000 m in total skiable vert.
 Narvikfjellet of Norway is the northernmost ski resort (≥ 5 lifts) in the world at 68.4°N,
