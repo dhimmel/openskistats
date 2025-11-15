@@ -40,7 +40,7 @@ class RunDifficultyConvention(StrEnum):
         return self.value.replace("_", " ").title()
 
     @classmethod
-    def display_names(cls) -> dict["RunDifficultyConvention", str]:
+    def display_names(cls) -> dict[RunDifficultyConvention, str]:
         return {convention: convention.display_name() for convention in cls}
 
 
@@ -89,7 +89,7 @@ class SkiRunDifficulty(StrEnum):
     other = "other"
 
     @classmethod
-    def condense(cls) -> "dict[SkiRunDifficulty, SkiRunDifficulty]":
+    def condense(cls) -> dict[SkiRunDifficulty, SkiRunDifficulty]:
         """Map to a condensed set of difficulty levels."""
         return {
             cls.novice: cls.easy,
@@ -103,7 +103,7 @@ class SkiRunDifficulty(StrEnum):
         }
 
     @classmethod
-    def condensed_values(cls) -> "list[SkiRunDifficulty]":
+    def condensed_values(cls) -> list[SkiRunDifficulty]:
         """Get the condensed set of difficulty levels."""
         return [
             cls.easy,
@@ -118,7 +118,7 @@ class SkiRunDifficulty(StrEnum):
         condense: bool = False,
         subtle: bool = True,
         convention: RunDifficultyConvention = RunDifficultyConvention.north_america,
-    ) -> "dict[SkiRunDifficulty, str]":
+    ) -> dict[SkiRunDifficulty, str]:
         """
         Difficulty to color mapping according to the local convention.
         See:
