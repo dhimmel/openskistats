@@ -306,21 +306,29 @@ def load_downhill_ski_areas_from_download_pl() -> pl.DataFrame:
         .group_by("ski_area_id")
         .agg(pl.col("lift_id").n_unique().alias("lift_count"))
     )
+    _place_col = pl.col("places").list.first()
     ski_area_df = (
         load_ski_areas_from_download_pl()
         .filter(pl.col("type") == "skiArea")
         .filter(pl.col("activities").list.contains(SkiRunUsage.downhill))
+        .with_columns(
+            _place_col.struct.field("localized")
+            .struct.field("en")
+            .alias("_location__localized__en")
+        )
         .select(
             "ski_area_id",
             "ski_area_name",
             pl.col("runConvention").alias("osm_run_convention"),
             pl.col("status").alias("osm_status"),
             pl.col("activities").alias("ski_area_uses"),
-            pl.col("location__localized__en__country").alias("country"),
-            pl.col("location__localized__en__region").alias("region"),
-            pl.col("location__localized__en__locality").alias("locality"),
-            pl.col("location__iso3166_1Alpha2").alias("country_code"),
-            pl.col("location__iso3166_2").alias("country_subdiv_code"),
+            pl.col("_location__localized__en").struct.field("country").alias("country"),
+            pl.col("_location__localized__en").struct.field("region").alias("region"),
+            pl.col("_location__localized__en")
+            .struct.field("locality")
+            .alias("locality"),
+            _place_col.struct.field("iso3166_1Alpha2").alias("country_code"),
+            _place_col.struct.field("iso3166_2").alias("country_subdiv_code"),
             pl.col("websites").alias("ski_area_websites"),
             # sources can have inconsistently typed nested column 'id' as string or int
             # map_elements on struct, see https://github.com/pola-rs/polars/issues/16452#issuecomment-2549487549
@@ -336,7 +344,7 @@ def load_downhill_ski_areas_from_download_pl() -> pl.DataFrame:
                 )
             )
             .alias("ski_area_sources"),
-            pl.col("wikidata_id"),
+            pl.col("wikidataID").alias("wikidata_id"),
         )
         .join(lift_metrics, on="ski_area_id", how="left")
     )
