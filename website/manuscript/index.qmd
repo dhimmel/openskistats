@@ -92,8 +92,8 @@ Examples include [OpenRailwayMap](https://www.openrailwaymap.org/) for railroads
 OpenSkiMap is created and maintained by Russell Porter, with much of its code openly [available](https://github.com/russellporter/openskimap.org).
 OpenSkiMap releases refined datasets of ski areas, runs, and lifts as GeoJSON downloads that update daily.
 Since OpenStreetMap does not include granular elevation data,
-OpenSkiMap incorporates the USGS Shuttle Radar Topography Mission [digital elevation data](https://www.usgs.gov/centers/eros/science/usgs-eros-archive-digital-elevation-shuttle-radar-topography-mission-srtm-1).
-<!-- TODO: cite specific SRTM identifier for the dataset used, perhaps https://doi.org/10.5066/F7PR7TFT -->
+OpenSkiMap incorporates [TerrainRGB](https://github.com/acalcutt/terrain_merged), which merges elevation data from multiple providers.
+Global coverage is provided by the Japan Aerospace Exploration Agency (JAXA) AW3D30 [@jaxa-aw3d30].
 
 The founding motivation of this study was to examine trends in ski trail orientations.
 The orientation of a ski trail is a major influencer of sunlight exposure.
