@@ -485,7 +485,7 @@ class SkiAreaBearingDistributionModel(Model):  # type: ignore [misc]
     )
 
 
-class SkiAreaModel(Model):  # type: ignore [misc]
+class SkiAreaBaseModel(Model):  # type: ignore [misc]
     ski_area_id: str = Field(
         unique=True,
         description="Unique OpenSkiMap identifier for a ski area.",
@@ -646,9 +646,11 @@ class SkiAreaModel(Model):  # type: ignore [misc]
             f"{_solar_irradiation_description}",
         ),
     ]
-    for field_name in BearingStatsModel.model_fields:
-        __annotations__[field_name] = BearingStatsModel.__annotations__[field_name]
-    del field_name
+
+
+class SkiAreaModel(BearingStatsModel, SkiAreaBaseModel):
+    # Fields start with inherited superclasses (reverse order) and then include the fields defined below.
+    # See https://github.com/pydantic/pydantic/issues/1010
     bearings: list[SkiAreaBearingDistributionModel] | None = Field(
         description="Bearing histogram/distribution of the ski area.",
     )
