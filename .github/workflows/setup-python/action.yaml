@@ -3,9 +3,9 @@ description: Common steps for installing python and project dependencies
 runs:
   using: "composite"
   steps:
-    - uses: actions/setup-python@v6
-      with:
-        python-version: "3.14"
+    # - uses: actions/setup-python@v6
+    #   with:
+    #     python-version: "3.14"
     - uses: prefix-dev/setup-pixi@v0.9.3
-    - run: pixi install --all
-      shell: bash
+      with:
+        activate-environment: true
