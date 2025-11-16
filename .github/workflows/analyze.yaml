@@ -27,8 +27,12 @@ jobs:
     # which is too short to compute all solar irradiation values
     timeout-minutes: 360
     steps:
-    - uses: actions/checkout@v5
-    - uses: ./.github/workflows/setup-python
+    - name: Checkout
+      uses: actions/checkout@v5
+    - name: Setup Pixi
+      uses: prefix-dev/setup-pixi@v0.9.3
+      with:
+        activate-environment: true
     - name: install fonts
       run: sudo apt-get install --yes --quiet fonts-dejavu-core fonts-noto-cjk
     - name: Process inputs
@@ -76,7 +80,6 @@ jobs:
         openskistats analyze
         openskistats validate
         openskistats visualize
-      shell: bash
     - name: Make story plots
       working-directory: r/
       run: |
