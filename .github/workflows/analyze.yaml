@@ -33,8 +33,11 @@ jobs:
       uses: prefix-dev/setup-pixi@v0.9.3
       with:
         activate-environment: true
-    - name: install fonts
+    - name: Install fonts
       run: sudo apt-get install --yes --quiet fonts-dejavu-core fonts-noto-cjk
+    - name: Install quarto extensions
+      working-directory: ./website/story/
+      run: quarto add --no-prompt https://github.com/qmd-lab/closeread/archive/e3645070dd668004056ae508d2d25d05baca5ad1.zip
     - name: Process inputs
       id: inputs
       run: |
