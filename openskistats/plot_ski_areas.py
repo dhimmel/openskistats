@@ -120,7 +120,7 @@ class SkiAreaSubsetPlot:
             # "ニセコユナイテッド, Niseko United",  # japan coloring convention
             "Killington Resort",  # eastfacing
             "Mt. Bachelor",  # difficulty by orientation
-            "Olos",  # darkest resort in the world
+            "Olos Ski Resort",  # darkest resort in the world
             "Etna Sud/Nicolosi",  # sunniest
             "Jackson Hole",  # southfacing
             "Narvik",  # northernmost ski resort, https://www.openstreetmap.org/relation/12567328 should be Narvikfjellet
