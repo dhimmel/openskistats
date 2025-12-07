@@ -24,6 +24,7 @@ class OpenSkiMapStatus(StrEnum):
     operating = "operating"
     disused = "disused"
     abandoned = "abandoned"
+    never_opened = "never_opened"
 
 
 class RunDifficultyConvention(StrEnum):
