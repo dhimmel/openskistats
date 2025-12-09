@@ -21,25 +21,25 @@ requires-python = "==3.14.*"
 [tool.pixi.dependencies]
 # pyogrio not explicitly imported, but required to prevent a build failure with Python 3.14:
 # No such file or directory: 'gdal-config'
-pyogrio = "==0.11.1"
+pyogrio = "==0.12.1"
 quarto = "==1.8.26"
 
 [tool.pixi.pypi-dependencies]
 openskistats = { path = ".", editable = true }
-beautifulsoup4 = "==4.14.2"
+beautifulsoup4 = "==4.14.3"
 folium = "==0.20.0"
 # https://github.com/machow/reactable-py/issues/29
 great-tables = "==0.20.0" 
 jupyter = "==1.1.1"
 matplotlib = "==3.10.7"
 mizani = "==0.14.3"
-networkx = "==3.5"
+networkx = "==3.6.1"
 numpy = "==2.3.4"
-osmnx = "==2.0.6"
+osmnx = "==2.0.7"
 patito = "==0.8.5"
-plotly = "==6.4.0"
+plotly = "==6.5.0"
 plotnine = "==0.15.1"
-polars= "==1.35.2"
+polars= "==1.36.0"
 pvlib= "==0.13.1"
 pyarrow = "==22.0.0"
 reactable = "==0.1.6"
@@ -48,12 +48,12 @@ rich= "==14.2.0"
 typer = "==0.20.0"
 
 [tool.pixi.feature.dev.pypi-dependencies]
-pre-commit = "==4.4.0"
+pre-commit = "==4.5.0"
 pytest = "==8.4.2"
 
 [tool.pixi.feature.r.dependencies]
 imagemagick = "==7.1.2_8"
-poppler = "==25.11.0"
+poppler = "==25.12.0"
 r-arrow = "==18.1.0"
 r-base = "==4.5.2"
 r-cowplot = "==1.2.0"
