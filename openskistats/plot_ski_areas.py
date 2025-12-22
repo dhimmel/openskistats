@@ -123,7 +123,7 @@ class SkiAreaSubsetPlot:
             "Olos Ski Resort",  # darkest resort in the world
             "Etna Sud/Nicolosi",  # sunniest
             "Jackson Hole",  # southfacing
-            "Narvik",  # northernmost ski resort, https://www.openstreetmap.org/relation/12567328 should be Narvikfjellet
+            "Narvikfjellet Ski Resort",  # northernmost ski resort, https://www.openstreetmap.org/relation/12567328 should be Narvikfjellet
             "Cerro Castor",  # southernmost ski area/resort
         ]
 
@@ -143,6 +143,13 @@ class SkiAreaSubsetPlot:
             "ski_area_name"
         ].to_list():
             raise ValueError(f"Unmatched ski area names: {unmatched_names}")
+        if empty_ski_areas := ski_areas.filter(
+            pl.col("combined_vertical").fill_null(0) <= 5
+        )["ski_area_name"].to_list():
+            # https://github.com/dhimmel/openskistats/issues/64
+            raise ValueError(
+                f"Ski areas with insufficient combined vertical: {empty_ski_areas}"
+            )
         return ski_areas
 
     @classmethod
