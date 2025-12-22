@@ -28,7 +28,7 @@ jobs:
     timeout-minutes: 360
     steps:
     - name: Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
     - name: Setup Pixi
       uses: prefix-dev/setup-pixi@v0.9.3
       with:
@@ -47,7 +47,7 @@ jobs:
     - name: Restore OpenSkiMap Cache
       id: restore-openskimap
       if: ${{ steps.inputs.outputs.refresh_cache != 'true' }}
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@v5
       with:
         path: data/openskimap
         key: openskimap
@@ -70,7 +70,7 @@ jobs:
       shell: bash
     - name: Save OpenSkiMap Cache
       if: steps.download-openskimap.outputs.downloaded == 'true'
-      uses: actions/cache/save@v4
+      uses: actions/cache/save@v5
       with:
         path: data/openskimap
         # overwriting the cache key is not permitted, hence append the run_id on save
