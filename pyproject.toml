@@ -104,7 +104,6 @@ python_version = "3.14"
 strict = true
 pretty = true
 show_error_context = true
-plugins = "numpy.typing.mypy_plugin"
 
 # https://mypy.readthedocs.io/en/stable/config_file.html#using-a-pyproject-toml-file
 [[tool.mypy.overrides]]

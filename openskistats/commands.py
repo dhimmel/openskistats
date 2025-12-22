@@ -22,13 +22,13 @@ cli = typer.Typer(pretty_exceptions_show_locals=False)
 
 class Commands:
     @staticmethod
-    @cli.command(name="download")  # type: ignore [misc]
+    @cli.command(name="download")  # type: ignore [untyped-decorator]
     def download() -> None:
         """Download latest OpenSkiMap source data."""
         download_openskimap_geojsons()
 
     @staticmethod
-    @cli.command(name="nesh_timelines")  # type: ignore [misc]
+    @cli.command(name="nesh_timelines")  # type: ignore [untyped-decorator]
     def nesh_timelines() -> None:
         """
         Scrape New England Ski History Timelines and save as JSON in the repository source code tree.
@@ -37,7 +37,7 @@ class Commands:
         NewEnglandSkiHistoryTimelineScraper.scrape_all_seasons()
 
     @staticmethod
-    @cli.command(name="analyze")  # type: ignore [misc]
+    @cli.command(name="analyze")  # type: ignore [untyped-decorator]
     def analyze(
         skip_runs: Annotated[bool, typer.Option("--skip-runs")] = False,
     ) -> None:
@@ -45,7 +45,7 @@ class Commands:
         analyze_all_ski_areas_polars(skip_runs=skip_runs)
 
     @staticmethod
-    @cli.command(name="validate")  # type: ignore [misc]
+    @cli.command(name="validate")  # type: ignore [untyped-decorator]
     def validate() -> None:
         """Validate ski area metadata and metrics."""
         runs_df = load_runs_pl().collect()
@@ -57,7 +57,7 @@ class Commands:
         logging.info("SkiAreaModel.validate success.")
 
     @staticmethod
-    @cli.command(name="visualize")  # type: ignore [misc]
+    @cli.command(name="visualize")  # type: ignore [untyped-decorator]
     def visualize(
         overwrite: Annotated[bool, typer.Option("--overwrite")] = False,
     ) -> None:
@@ -66,7 +66,7 @@ class Commands:
         create_ski_area_roses(overwrite=overwrite)
 
     @staticmethod
-    @cli.command(name="generate_test_data")  # type: ignore [misc]
+    @cli.command(name="generate_test_data")  # type: ignore [untyped-decorator]
     def generate_test_data() -> None:
         """
         Generate test data for ski area metadata and metrics.
