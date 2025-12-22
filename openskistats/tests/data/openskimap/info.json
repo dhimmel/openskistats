@@ -2,28 +2,28 @@
   "lifts": {
     "url": "https://tiles.openskimap.org/geojson/lifts.geojson",
     "relative_path": "data/openskimap/lifts.geojson.xz",
-    "last_modified": "2025-11-15T01:14:08+00:00",
-    "downloaded": "2025-11-15T19:01:28+00:00",
-    "content_size_mb": 58.781609535217285,
-    "compressed_size_mb": 4.977809906005859,
-    "checksum_sha256": "7cab9d41a775ce7202530f8226684e16447c32f623cc0e6d2d1d47df55f34131"
+    "last_modified": "2025-12-21T23:39:50+00:00",
+    "downloaded": "2025-12-22T15:17:20+00:00",
+    "content_size_mb": 66.21786785125732,
+    "compressed_size_mb": 5.539646148681641,
+    "checksum_sha256": "cfb7c94efa6fe690831c501b072bf0472a0de43667e47368bae6ce31ad57e362"
   },
   "ski_areas": {
     "url": "https://tiles.openskimap.org/geojson/ski_areas.geojson",
     "relative_path": "data/openskimap/ski_areas.geojson.xz",
-    "last_modified": "2025-11-15T01:14:08+00:00",
-    "downloaded": "2025-11-15T19:01:54+00:00",
-    "content_size_mb": 15.516261100769043,
-    "compressed_size_mb": 2.2239990234375,
-    "checksum_sha256": "97de1ad1297b2f4d7862180e7e6e158f4ff550bce7edf1a3b57cc7b64da53f27"
+    "last_modified": "2025-12-21T23:39:50+00:00",
+    "downloaded": "2025-12-22T15:17:34+00:00",
+    "content_size_mb": 16.809635162353516,
+    "compressed_size_mb": 2.512542724609375,
+    "checksum_sha256": "8c37568035358275c02d403ae02112e743c23a6f8e248b5fa878331042926b7e"
   },
   "runs": {
     "url": "https://tiles.openskimap.org/geojson/runs.geojson",
     "relative_path": "data/openskimap/runs.geojson.xz",
-    "last_modified": "2025-11-15T01:14:10+00:00",
-    "downloaded": "2025-11-15T19:02:04+00:00",
-    "content_size_mb": 616.5050497055054,
-    "compressed_size_mb": 77.5869026184082,
-    "checksum_sha256": "16a777f5ad954bf8e119330df3cbdf5a3f9ad4e0cafd99562a6ead8a08ff2e1a"
+    "last_modified": "2025-12-21T23:39:52+00:00",
+    "downloaded": "2025-12-22T15:17:41+00:00",
+    "content_size_mb": 675.4040069580078,
+    "compressed_size_mb": 86.63050079345703,
+    "checksum_sha256": "2f8eca34cd7f2899bfa20bec987f823b68026cfb2ff50c7c3e51b7a9ff5b2e80"
   }
 }

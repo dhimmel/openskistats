@@ -31,7 +31,7 @@
           }
         ],
         "websites": [
-          "http://www.whaleback.com/"
+          "https://www.whaleback.com/"
         ],
         "activities": [
           "downhill"
@@ -44,73 +44,73 @@
                   "easy": {
                     "count": 13,
                     "lengthInKm": 3.6284686706477816,
-                    "maxElevation": 548,
-                    "minElevation": 344,
-                    "combinedElevationChange": 537
+                    "maxElevation": 548.8,
+                    "minElevation": 344.7,
+                    "combinedElevationChange": 536.3999999999999
                   },
                   "expert": {
                     "count": 2,
                     "lengthInKm": 0.6797466817611819,
-                    "maxElevation": 505,
+                    "maxElevation": 505.7,
                     "minElevation": 347,
-                    "combinedElevationChange": 267
+                    "combinedElevationChange": 265.09999999999997
                   },
                   "advanced": {
                     "count": 3,
-                    "lengthInKm": 0.4648757526003677,
-                    "maxElevation": 444,
-                    "minElevation": 345,
-                    "combinedElevationChange": 100
+                    "lengthInKm": 0.4648757526003676,
+                    "maxElevation": 445.5,
+                    "minElevation": 344.8,
+                    "combinedElevationChange": 109.19999999999999
                   },
                   "intermediate": {
                     "count": 15,
-                    "lengthInKm": 3.001348189885309,
-                    "maxElevation": 546,
-                    "minElevation": 347,
-                    "combinedElevationChange": 578
+                    "lengthInKm": 3.0013481898853085,
+                    "maxElevation": 546.2,
+                    "minElevation": 347.7,
+                    "combinedElevationChange": 565.6000000000001
                   }
                 }
               }
             },
-            "maxElevation": 548,
-            "minElevation": 344
+            "maxElevation": 548.8,
+            "minElevation": 344.7
           },
           "lifts": {
             "byType": {
               "t-bar": {
                 "count": 1,
                 "lengthInKm": 0.2373224496214283,
-                "maxElevation": 411,
-                "minElevation": 345,
-                "combinedElevationChange": 66
+                "maxElevation": 415.8,
+                "minElevation": 346.8,
+                "combinedElevationChange": 69
               },
               "rope_tow": {
                 "count": 1,
                 "lengthInKm": 0.07296626871682102,
-                "maxElevation": 359,
-                "minElevation": 346,
-                "combinedElevationChange": 13
+                "maxElevation": 360.5,
+                "minElevation": 345.3,
+                "combinedElevationChange": 15.199999999999989
               },
               "chair_lift": {
                 "count": 1,
                 "lengthInKm": 0.7273941693040148,
-                "maxElevation": 545,
-                "minElevation": 345,
-                "combinedElevationChange": 199
+                "maxElevation": 545.6,
+                "minElevation": 345.4,
+                "combinedElevationChange": 198.89999999999998
               },
               "magic_carpet": {
                 "count": 1,
                 "lengthInKm": 0.02654795614045931,
-                "maxElevation": 348,
-                "minElevation": 345,
-                "combinedElevationChange": 3
+                "maxElevation": 347.5,
+                "minElevation": 345.5,
+                "combinedElevationChange": 2
               }
             },
-            "maxElevation": 545,
-            "minElevation": 345
+            "maxElevation": 545.6,
+            "minElevation": 345.3
           },
-          "maxElevation": 545,
-          "minElevation": 345
+          "maxElevation": 545.6,
+          "minElevation": 345.3
         },
         "wikidataID": "Q7990522",
         "runConvention": "north_america"
@@ -399,31 +399,31 @@
                   "other": {
                     "count": 5,
                     "lengthInKm": 1.2642494231961583,
-                    "maxElevation": 268,
-                    "minElevation": 164,
-                    "combinedElevationChange": 255
+                    "maxElevation": 269.9,
+                    "minElevation": 164.1,
+                    "combinedElevationChange": 252.60000000000002
                   }
                 }
               }
             },
-            "maxElevation": 268,
-            "minElevation": 164
+            "maxElevation": 269.9,
+            "minElevation": 164.1
           },
           "lifts": {
             "byType": {
               "drag_lift": {
                 "count": 1,
                 "lengthInKm": 0.40465585678911375,
-                "maxElevation": 268,
-                "minElevation": 169,
-                "combinedElevationChange": 99
+                "maxElevation": 269.3,
+                "minElevation": 171.7,
+                "combinedElevationChange": 97.60000000000002
               }
             },
-            "maxElevation": 268,
-            "minElevation": 169
+            "maxElevation": 269.3,
+            "minElevation": 171.7
           },
-          "maxElevation": 268,
-          "minElevation": 169
+          "maxElevation": 269.3,
+          "minElevation": 171.7
         },
         "wikidataID": null,
         "runConvention": "north_america"
