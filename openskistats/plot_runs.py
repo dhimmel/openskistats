@@ -366,7 +366,9 @@ def plot_run_difficulty_histograms_by_slope(
         )
         .with_columns(
             label=pl.struct("runs_count", "combined_vertical").map_elements(
-                lambda x: f"{x['runs_count']:,} runs\n{x['combined_vertical'] / 1_000:,.0f}{NARROW_SPACE}km vert",
+                lambda x: (
+                    f"{x['runs_count']:,} runs\n{x['combined_vertical'] / 1_000:,.0f}{NARROW_SPACE}km vert"
+                ),
                 return_dtype=pl.String,
             )
         )
