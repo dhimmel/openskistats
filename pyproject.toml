@@ -48,7 +48,7 @@ rich= "==14.2.0"
 typer = "==0.20.1"
 
 [tool.pixi.feature.dev.pypi-dependencies]
-pre-commit = "==4.5.1"
+prek = "==0.3.3"
 pytest = "==9.0.2"
 
 [tool.pixi.feature.r.dependencies]

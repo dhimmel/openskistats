@@ -36,7 +36,7 @@ Then run the following commands:
 pixi install
 
 # install the pre-commit git hooks
-pre-commit install
+prek install
 ```
 
 Install the [quarto](https://quarto.org) extensions:
@@ -82,7 +82,7 @@ openskistats visualize
 pytest
 
 # run the full pre-commit suite
-pre-commit run --all
+prek run --all-files
 ```
 
 To execute the R analysis, run the following command:
