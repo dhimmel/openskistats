@@ -97,9 +97,9 @@ jobs:
         publish_branch: data
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./data
-        # it's not clear how exclude_assets works
+        # exclude_assets patterns are relative to publish_dir and use @actions/glob
         # https://github.com/peaceiris/actions-gh-pages/blob/ababa3d330af34b07419f6bc9f4a6b817ed7930b/src/git-utils.ts#L21-L39
-        exclude_assets: "data/website,data/openskistats"
+        exclude_assets: "openskimap,openskistats,website"
         force_orphan: true
         # remove the unnecessary .nojekyll file
         enable_jekyll: true
