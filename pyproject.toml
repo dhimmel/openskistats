@@ -54,7 +54,7 @@ pytest = "==9.0.2"
 [tool.pixi.feature.r.dependencies]
 imagemagick = "==7.1.2_8"
 poppler = "==26.02.0"
-r-arrow = "==23.0.0"
+r-arrow = "==22.0.0"
 r-base = "==4.5.2"
 r-cowplot = "==1.2.0"
 r-curl = "==7.0.0"
