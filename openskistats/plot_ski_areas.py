@@ -113,36 +113,43 @@ class SkiAreaSubsetPlot:
     @classmethod
     def get_ski_area_names(self) -> list[str]:
         if running_in_test():
-            return ["Storrs Hill Ski Area"]
+            return ["Storrs Hill"]
         return [
             "Les Trois Vallées",  # biggest
             "Dartmouth Skiway",  # bimodal
             # "ニセコユナイテッド, Niseko United",  # japan coloring convention
             "Killington Resort",  # eastfacing
             "Mt. Bachelor",  # difficulty by orientation
-            "Olos Ski Resort",  # darkest resort in the world
+            "Olos",  # darkest resort in the world
             "Etna Sud/Nicolosi",  # sunniest
             "Jackson Hole",  # southfacing
-            "Narvikfjellet Ski Resort",  # northernmost ski resort, https://www.openstreetmap.org/relation/12567328 should be Narvikfjellet
+            "Narvikfjellet",  # northernmost ski resort, https://www.openstreetmap.org/relation/12567328 should be Narvikfjellet
             "Cerro Castor",  # southernmost ski area/resort
         ]
 
     @classmethod
     def get_ski_areas_df(cls) -> pl.DataFrame:
-        ski_areas = (
-            pl.Series(name="ski_area_name", values=cls.get_ski_area_names())
+        query_df = (
+            pl.Series(name="query_name", values=cls.get_ski_area_names())
             .to_frame()
-            .join(
-                load_ski_areas_pl(),
-                on="ski_area_name",
-                how="left",
-                maintain_order="left",
-            )
+            .with_row_index("query_order")
         )
-        if unmatched_names := ski_areas.filter(pl.col("ski_area_id").is_null())[
-            "ski_area_name"
+        ski_areas = (
+            query_df.join(load_ski_areas_pl(), how="cross")
+            # startswith for fuzzy matching when upstream renames, e.g. "Jackson Hole" → "Jackson Hole Mountain Resort"
+            .filter(pl.col("ski_area_name").str.starts_with(pl.col("query_name")))
+            .sort(
+                "query_order",
+                pl.col("ski_area_name") != pl.col("query_name"),
+            )
+            .unique(subset=["query_name"], keep="first")
+            .sort("query_order")
+        )
+        if unmatched := query_df.join(ski_areas, on="query_name", how="anti")[
+            "query_name"
         ].to_list():
-            raise ValueError(f"Unmatched ski area names: {unmatched_names}")
+            raise ValueError(f"Unmatched ski area names: {unmatched}")
+        ski_areas = ski_areas.drop("query_name", "query_order")
         if empty_ski_areas := ski_areas.filter(
             pl.col("combined_vertical").fill_null(0) <= 5
         )["ski_area_name"].to_list():

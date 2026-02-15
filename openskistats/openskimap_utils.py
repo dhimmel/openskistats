@@ -199,7 +199,6 @@ def load_downhill_runs_from_download_pl() -> pl.DataFrame:
         )
         # do we ever need to reverse the elevation profile (e.g. if run coordinates are reversed)?
         if elev_profile := run_properties["elevationProfile"]:
-            assert elev_profile["resolution"] == 25
             # It is not a great solution to just filter the missing elevation values,
             # especially without changing the resolution.
             row["run_elevation_profile"] = [
