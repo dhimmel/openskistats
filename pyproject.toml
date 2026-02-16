@@ -61,12 +61,18 @@ r-curl = "==7.0.0"
 r-dplyr = "==1.2.0"
 r-ggimage = "==0.3.5"
 r-ggplot2 = "==4.0.2"
+# r-lifecycle, r-rlang, r-vctrs are transitive deps pinned explicitly because
+# conda metadata doesn't capture R's runtime version requirements accurately,
+# causing namespace version conflicts at runtime.
+r-lifecycle = "==1.0.5"
 r-patchwork = "==1.3.2"
+r-rlang = "==1.1.7"
 r-showtext = "==0.9_7"
 r-styler = "==1.11.0"
 r-svglite = "==2.2.2"
 r-sysfonts = "==0.8.9"
 r-tidyr = "==1.3.2"
+r-vctrs = "==0.7.1"
 
 [tool.pixi.environments]
 default = { features = ["dev", "r"], solve-group = "default" }
