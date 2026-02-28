@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Manuscript – OpenSkiStats</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<link href="../common/snowflake.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-4cad563b89d51a7306807a9bca28adc0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<!-- Matomo -->
+<script type="text/javascript">
+  var _paq = window._paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://piwik.dhimmel.com/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '11']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<noscript></noscript></head><body class="nav-fixed quarto-light"><p><img src="https://piwik.dhimmel.com/matomo.php?idsite=11&amp;rec=1" style="border:0;" alt=""></p>
+<!-- End Matomo Code -->
+
+
+<link rel="stylesheet" href="../common/style.css">
+
+
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">OpenSkiStats</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../ski-areas/"> 
+<span class="menu-text">Ski Areas</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../story/"> 
+<span class="menu-text">Story</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../manuscript/"> 
+<span class="menu-text">Manuscript</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/dhimmel/openskistats"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#main-text" id="toc-main-text" class="nav-link" data-scroll-target="#main-text">Main text</a></li>
+  <li><a href="#data-completeness" id="toc-data-completeness" class="nav-link" data-scroll-target="#data-completeness">Data completeness</a>
+  <ul class="collapse">
+  <li><a href="#number-of-ski-areas" id="toc-number-of-ski-areas" class="nav-link" data-scroll-target="#number-of-ski-areas">Number of Ski Areas</a></li>
+  </ul></li>
+  <li><a href="#ski-area-influence" id="toc-ski-area-influence" class="nav-link" data-scroll-target="#ski-area-influence">Ski area influence</a></li>
+  <li><a href="#orientation-findings" id="toc-orientation-findings" class="nav-link" data-scroll-target="#orientation-findings">Orientation findings</a></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
+  <ul class="collapse">
+  <li><a href="#run-difficulty" id="toc-run-difficulty" class="nav-link" data-scroll-target="#run-difficulty">Run Difficulty</a></li>
+  <li><a href="#sunlight" id="toc-sunlight" class="nav-link" data-scroll-target="#sunlight">Sunlight</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">OpenSkiStats: a global webapp of geospatial ski area metrics reveals the orientation of alpine skiing</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This manuscript is an incomplete in-progress draft.</p>
+</div>
+</div>
+<section id="abstract" class="level2">
+<h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
+<p>We present OpenSkiStats, the first open, global, and continuously updating resource of downhill skiing summary statistics. The initial focus of OpenSkiStats is to provide spatial statistics of ski areas and their runs, in particular, the orientation of ski runs. Data is sourced from OpenSkiMap, a project to extract and visualize skiing related features from the crowd-sourced OpenStreetMap. <!-- FIXME: should we switch to only showing equipped operating ski areas and in bounds runs? --> OpenSkiMap provides a resource of 6,935 downhill ski areas in 70 countries and 94,690 downhill ski runs comprised of XX segments.</p>
+</section>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>There are an estimated 135 million alpine skiers worldwide, resulting in 350-380 million visits to ski areas per year <span class="citation" data-cites="vanat-2022">[<a href="#ref-vanat-2022" role="doc-biblioref">1</a>]</span>. Mountain tourism is estimated to drive up to 16% of international tourist arrivals worldwide (~375 million in 2019) <span class="citation" data-cites="unwto-mountain-tourism">[<a href="#ref-unwto-mountain-tourism" role="doc-biblioref">2</a>]</span>. In the United States, outdoor recreation accounted for 2.3% of the gross domestic product in 2023 by adding $639.5 billion in value to the economy. $3.9 billion directly <span class="citation" data-cites="bea-outdoor-rec">[<a href="#ref-bea-outdoor-rec" role="doc-biblioref">3</a>]</span></p>
+<p>In the United States, outdoor recreation generated $1.2 trillion in economic output or 2.3% of the gross domestic product in 2023 <span class="citation" data-cites="bea-outdoor-rec">[<a href="#ref-bea-outdoor-rec" role="doc-biblioref">3</a>, Table 10]</span>. $3.9 billion in value added is directly <span class="citation" data-cites="bea-outdoor-rec">[<a href="#ref-bea-outdoor-rec" role="doc-biblioref">3</a>, Table 2]</span></p>
+<!-- tbl2 
+Table 2. Outdoor Recreation Value Added by Activity
+[Millions of current dollars]
+https://www.bea.gov/sites/default/files/2024-11/orsa1124-national_0.xlsx
+2,131 + 1,733 = 3,864
+
+See also https://recreationroundtable.org/news/new-data-shows-outdoor-recreation-is-a-1-2-trillion-economic-engine-supporting-5-million-american-jobs/
+-->
+<p>Existing scholarly literature related to downhill skiing is limited and primarily focuses on economics <span class="citation" data-cites="futile-snowmaking">[<a href="#ref-futile-snowmaking" role="doc-biblioref">4</a>]</span>, health impacts, avalanche science <span class="citation" data-cites="avalanche-risk-slabs">[<a href="#ref-avalanche-risk-slabs" role="doc-biblioref">5</a>]</span>, environmental sustainability <span class="citation" data-cites="ski-resort-sustainability apennines-winter dark-tourism">[<a href="#ref-ski-resort-sustainability" role="doc-biblioref">6</a>,<a href="#ref-apennines-winter" role="doc-biblioref">7</a>,<a href="#ref-dark-tourism" role="doc-biblioref">8</a>]</span>, the threat from climate change <span class="citation" data-cites="climate-change-europe climate-change-alps climate-change-usnf climate-change-mountain-tourism climate-change-us-ski">[<a href="#ref-climate-change-europe" role="doc-biblioref">9</a>,<a href="#ref-climate-change-alps" role="doc-biblioref">10</a>,<a href="#ref-climate-change-usnf" role="doc-biblioref">11</a>,<a href="#ref-climate-change-mountain-tourism" role="doc-biblioref">12</a>,<a href="#ref-climate-change-us-ski" role="doc-biblioref">13</a>]</span>, or ski trail routing algorithms <span class="citation" data-cites="skivis osm-ski-routing">[<a href="#ref-skivis" role="doc-biblioref">14</a>,<a href="#ref-osm-ski-routing" role="doc-biblioref">15</a>]</span>. We present one of the first scholarly accounts of the spatial metrics of ski areas on a global scale.</p>
+<p>An open and global database and analysis of ski areas will help inform skiers, while providing insights to industry stakeholders. There are a variety of existing resources that compile information of ski areas. Both <a href="https://www.onthesnow.com/">OnTheSnow</a> and <a href="https://opensnow.com/">OpenSnow</a> contain a global database of ski areas and metrics, with a focus on snow and weather conditions. However, neither makes their source code or data openly available. Stuart Winchester maintains several manually curated tables of ski areas, which are discussed in articles on the <a href="https://www.stormskiing.com/">Storm Skiing Journal and Podcast</a>. Laurent Vanat reports on aggregate ski areas metrics in his annual <a href="https://www.vanat.ch/ski-resorts-english"><em>International Report on Snow &amp; Mountain Tourism</em></a>. Other resources focus on specific regions including <a href="https://www.newenglandskihistory.com/">New England Ski History</a>, Wikipedia’s <a href="https://en.wikipedia.org/wiki/Comparison_of_North_American_ski_resorts">Comparison of North American ski resorts</a>, and <a href="https://verticalfeet.com/">Vertical Feet</a>. Other resources focus primarily on ski lifts, including <a href="https://liftie.info/">Liftie</a> (<a href="https://github.com/pirxpilot/liftie">open source</a>) and <a href="https://liftblog.com/">Lift Blog</a>. <a href="https://skimap.org/">Skimap.org</a> compiles official trial maps produced by ski areas.</p>
+<p>Here we base our analysis on OpenStreetMap and OpenSkiMap.</p>
+<p>OpenStreetMap is a collaborative map of the world available under an open license. Since its launch in 20024, geospatial data has been continuously contributed by a global community of volunteers and companies <span class="citation" data-cites="osm-haklay">[<a href="#ref-osm-haklay" role="doc-biblioref">16</a>]</span>. The platform’s crowdsourced nature ensures frequent updates and granular detail, with contributors adding information on features such as roads, buildings, natural landscapes, and, crucially for this study, ski areas and their trials and lifts. Individual users often contribute to specific domains. For example, study author Daniel Himmelstein previously helped complete and align the Long Trail, a long-distance hiking trail in Vermont <span class="citation" data-cites="osm-long-trail">[<a href="#ref-osm-long-trail" role="doc-biblioref">17</a>]</span>. Meanwhile, the company Amazon <a href="https://wiki.openstreetmap.org/wiki/Organised_Editing/Activities/Amazon">contributed</a> missing roads, driveways, and vehicle routing restrictions to aid in their delivery operations. This mosaic of interests has resulted in an exceptionally broad and diverse collection of volunteered geographic information, albeit with varying levels of detail by region. This breadth along with OpenStreetMap’s open license and availability have made it an invaluable tool for extracting and analyzing spatial data across a range of scientific disciplines <span class="citation" data-cites="osm-science">[<a href="#ref-osm-science" role="doc-biblioref">18</a>]</span>.</p>
+<p>OpenStreetMap provides its own general purpose <a href="https://www.openstreetmap.org">frontend</a> to view a rendered maps of the world. Specialized frontends have arisen to refine, analyze, and render maps for particular applications. Examples include <a href="https://www.openrailwaymap.org/">OpenRailwayMap</a> for railroads, <a href="https://www.opencyclemap.org/">OpenCycleMap</a> for bicycling, <a href="https://hiking.waymarkedtrails.org/">Waymarked Trails</a> for hiking routes, <a href="https://openseamap.org/">OpenSeaMap</a> for seafaring and nautical pursuits, <a href="https://wheelmap.org/">Wheelmap</a> for wheelchair accessibility, and <a href="https://openinframap.org">Open Infrastructure Map</a> for electrical and telecommunication transmission. <a href="https://opensnowmap.org">OpenSnowMap</a> and <a href="https://openskimap.org">OpenSkiMap</a> display both nordic and alpine skiing information.</p>
+<p><a href="https://openskimap.org">OpenSkiMap</a> refines data from OpenStreetMap along with Skimap.org to create an interactive map of the world that highlights ski areas, runs, and lifts along with associated metadata like run difficulty. OpenSkiMap is created and maintained by Russell Porter, with much of its code openly <a href="https://github.com/russellporter/openskimap.org">available</a>. OpenSkiMap releases refined datasets of ski areas, runs, and lifts as GeoJSON downloads that update daily. Since OpenStreetMap does not include granular elevation data, OpenSkiMap incorporates <a href="https://github.com/acalcutt/terrain_merged">TerrainRGB</a>, which merges elevation data from multiple providers. Global coverage is provided by the Japan Aerospace Exploration Agency (JAXA) AW3D30 <span class="citation" data-cites="jaxa-aw3d30">[<a href="#ref-jaxa-aw3d30" role="doc-biblioref">19</a>]</span>.</p>
+<p>The founding motivation of this study was to examine trends in ski trail orientations. The orientation of a ski trail is a major influencer of sunlight exposure. On a local level, orientation affects weather patterns and climate, although in less generalizable ways than it does sunlight. We were unable to find a systematic analysis of or database containing ski trial orientations. In 2006, Alpine Zone Forum user Jonni <a href="https://forums.alpinezone.com/threads/mountain-slopes-facing-side.11630/#post-126389" title="Mountain Slopes-Facing Side. Alpine Zone Forum post by Jonni on 2006-12-03">compiled</a> a manual and qualitative list of the primary orientation for 37 ski areas in Vermont, Maine, and New Hampshire. Hence, we set out to create a global, continuously updating, open, and accessible resource for browsing ski areas and their orientations.</p>
+<p>A second motivation was Geoff Boeing’s analysis — first by <a href="https://geoffboeing.com/2018/07/comparing-city-street-orientations/" title="Comparing US City Street Orientations">blog</a> and later publication <span class="citation" data-cites="street-orientation">[<a href="#ref-street-orientation" role="doc-biblioref">20</a>]</span> — of city street orientations from OpenStreetMap. Boeing tabulated street segments by their orientation into polar histograms (i.e.&nbsp;roses) to show whether a city’s roads were neatly arranged into a grid like Manhattan or a spaghetti mess like Boston. Boeing released the modular code underlying his analysis in the osmnx Python package <span class="citation" data-cites="osmnx osmnx-joss">[<a href="#ref-osmnx" role="doc-biblioref">21</a>,<a href="#ref-osmnx-joss" role="doc-biblioref">22</a>]</span>, which we use sometimes directly and other times as a reference. Boeing’s street roses take inspiration from wind roses, which summarize the direction of wind <span class="citation" data-cites="wind-rose-bias">[<a href="#ref-wind-rose-bias" role="doc-biblioref">23</a>]</span>. Wind roses themselves take inspiration from the compass rose, an ancient visualization steeped in tradition and symbolism <span class="citation" data-cites="compass-rose compass-rose-symbolism">[<a href="#ref-compass-rose" role="doc-biblioref">24</a>,<a href="#ref-compass-rose-symbolism" role="doc-biblioref">25</a>]</span>. <!-- 32-wind compass rose --></p>
+</section>
+<section id="main-text" class="level2">
+<h2 class="anchored" data-anchor-id="main-text">Main text</h2>
+<p>Run counts: (with segments and points)</p>
+<ul>
+<li>geometry filter</li>
+<li>downhill filter</li>
+<li>coordinate filter (remove elevation voids)</li>
+<li>vertical drop filter</li>
+<li>downhill ski area</li>
+<li>ski resort</li>
+</ul>
+<p>Ski area counts (potentially lifts as well?)</p>
+<ul>
+<li>downhill in uses</li>
+<li>operating</li>
+<li>named filter</li>
+<li>resort filter</li>
+</ul>
+</section>
+<section id="data-completeness" class="level2">
+<h2 class="anchored" data-anchor-id="data-completeness">Data completeness</h2>
+<section id="number-of-ski-areas" class="level3">
+<h3 class="anchored" data-anchor-id="number-of-ski-areas">Number of Ski Areas</h3>
+<p>OpenSkiMap contained 12,111 ski areas with 6,935 of those assigned a downhill usage.</p>
+<p>Laurent Vanat’s <em>2022 International Report on Snow &amp; Mountain Tourism</em> compiled primarily national level data to report on global ski area metrics <span class="citation" data-cites="vanat-2022">[<a href="#ref-vanat-2022" role="doc-biblioref">1</a>]</span>. Vanat identified 5,764 ski areas worldwide, when limiting to “equipped outdoor ski areas covered with snow”, which excludes “indoor facilities, mountaineering-only areas, and other types of facilities such as dry slopes.” The 1,945 ski areas with 5 or more lifts qualified as a ski resort, of which 52 were deemed as <em>major</em> based on a threshold of “1 million skier visits per winter season”. OpenSkiMap contained 5,110 operating downhill ski areas with one or more lifts (i.e.&nbsp;equipped) and 1,639 with 5 or more lifts. This equates to 89% and 84% of Vanat’s respective counts. Vanat identified “68 countries offering equipped outdoor ski areas covered with snow” compared to 70 in our analysis.</p>
+<p>Stuart Winchester identified 505 active ski areas in the United States as of 2023 <span class="citation" data-cites="storm-skiing-505-ski-areas">[<a href="#ref-storm-skiing-505-ski-areas" role="doc-biblioref">26</a>]</span>. Winchester required ski areas to have one or more lifts, a snow surface, operated for at least 1 day in the last season, excluding areas operating solely for personal use. OpenSkiMap contains 524 downhill, equipped, operating ski areas in the United States.</p>
+<p>We observe a striking difference in the amount of skiing infrastructure between the northern and southern hemispheres. The northern hemisphere is home to 41 times the combined vertical drop, 44 times the number of runs, 46 times the number of lifts, and 64 times the number of ski areas than the southern hemisphere.</p>
+<p>Skiing is further concentrated in the northern hemisphere within a narrow latitude band (<a href="#fig-latitude" class="quarto-xref">Figure&nbsp;4 (b)</a>). 73.1% of the world’s skiable vert is located between 40–50°N and 43.1% is between 45–58°N.</p>
+</section>
+</section>
+<section id="ski-area-influence" class="level2">
+<h2 class="anchored" data-anchor-id="ski-area-influence">Ski area influence</h2>
+<div id="fig-ski-area-metric-dists" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ski-area-metric-dists-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-ski-area-metric-dists" style="flex-basis: 60.0%;justify-content: flex-start;">
+<div id="fig-ski-area-metric-lorenz" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-ski-area-metric-lorenz-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../images/ski_area_lorenz_curves.svg" class="img-fluid figure-img" data-ref-parent="fig-ski-area-metric-dists">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-ski-area-metric-lorenz-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Lorenz curves show each ski area’s share of the total for a variety of metrics.
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-ski-area-metric-dists" style="flex-basis: 40.0%;justify-content: flex-start;">
+<div id="fig-ski-area-metric-gini" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-ski-area-metric-gini-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../images/ski_area_gini_bars.svg" class="img-fluid figure-img" data-ref-parent="fig-ski-area-metric-dists">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-ski-area-metric-gini-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Gini coefficients showing concentration of metrics.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-ski-area-metric-dists-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="orientation-findings" class="level2">
+<h2 class="anchored" data-anchor-id="orientation-findings">Orientation findings</h2>
+<div class="{#fig-ski-area-roses&quot;}">
+<p><img src="../images/select_ski_area_roses.svg" class="img-fluid"></p>
+<p><strong>Roses for select ski areas.</strong> Roses for 9 ski area from around the world show a range of orientation distributions. Les Trois Vallées of France is the largest ski area in the world. The Dartmouth Skiway of the United States shows a bimodal distribution due to its two peaks. Killington Resort is primarily east facing with a slight northern preference due to the direction of the spine of the Green Mountain. At Mt. Bachelor, one can ski a stratovolcano where beginner terrain is primarily northeast facing, while the advanced terrain is primarily northwest facing. The authors joke that should someone be a fast learner, they could stay in the sun all day at Mt. Bachelor by starting in the beginner eastern terrain in the morning and progressing to the advanced western terrain in the afternoon. Olos of Finland is the darkest ski resort in the world due to its 67.9°N latitude, north-facing orientation, and sloping terrain as calculated by our solar irradiation estimator. Etna Sud Nicolosi of Italy is the sunniest ski resort in the world due to its 37.7°N latitude and south-facing orientation. Jackson Hole is the the most southward (i.e.&nbsp;equatorward) facing ski resort in the United States with over 12,000 m in total skiable vert. Narvikfjellet of Norway is the northernmost ski resort (≥ 5 lifts) in the world at 68.4°N, while Cerro Castor of Argentina is the southernmost at 54.7°S. Notice how the sun’s path changes by hemisphere.</p>
+</div>
+<div id="fig-hemisphere-roses" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hemisphere-roses-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../images/hemisphere_roses.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hemisphere-roses-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Ski roses by hemisphere
+</figcaption>
+</figure>
+</div>
+<div id="fig-us-roses" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-us-roses-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../images/us_roses_light.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-us-roses-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Ski roses for US states.
+</figcaption>
+</figure>
+</div>
+<div id="fig-latitude-panel" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-latitude-panel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-latitude-panel" style="flex-basis: 75.0%;justify-content: flex-start;">
+<div id="fig-eye" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-eye-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../images/bearing_by_latitude_eye.svg" class="img-fluid figure-img" data-ref-parent="fig-latitude-panel">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-eye-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) <strong>The eye of skiing</strong>: A 2-dimensional polar histogram showing skiable vert by orientation (angular coordinate) and absolute latitude (radial coordinate). Orientations for ski run segments in the southern hemisphere undergo a hemispherical flip, such that a due west bearing remains due west, while a due south bearing becomes due north. Hence, orientation axis labels use the terms poleward and equatorward. Each 2D histogram bin’s fill color represents enrichment of observed combined skiable vert over an equal distribution of orientation within an absolute latitude band. Several processing steps help highlight the trends in the data: latitude bands without at least XX in combined vert are removed; a uniform prior is applied to orientations; and extreme enrichment values are clipped. Ski runs closer to the equator demonstrate a greater northeast preference.
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-latitude-panel" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div id="fig-latitude" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-latitude-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../images/latitude_histogram.svg" class="img-fluid figure-img" data-ref-parent="fig-latitude-panel">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-latitude-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) <strong>Skiable vert by latitude</strong>: The histogram shows the combined skiable vert across all ski run segments for each absolute latitude bin, split by hemisphere. Downhill skiing is remarkably concentrated in both the northern hemisphere and around 45 degrees north!
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-latitude-panel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Latitude insights of ski runs and their association with orientation.
+</figcaption>
+</figure>
+</div>
+<p>Deduplication of effort: OpenStreetMap used by Strava, mapy.cz, mapbox, komoot, REGRID etc. Single place to curate the world’s ski areas</p>
+<p>We extract all segments comprising ski runs</p>
+<p>Orientation versus aspect</p>
+<p>Aspect applies to polygons and lines. Most polygon runs also have a line run Orientation only applies to lines In the absence of trees, aspect would be a better indicator of sun exposure. However, with shading of trees, orientation could be a better indicator of sun exposure Weighting by vertical drop along a segment, likely brings orientation closer to aspect under the assumption that steeper trails are more likely to descend along the fall line. Orientation was more readily available because it just requires the coordinates of the run (latitude, longitude, elevation), which OpenSkiMap includes, and does not require computation on adjacent terrain. Ski trails that traverse the fall line are often graded, would the resolution of aspect measurements be sufficient Orientation might be more relevant for skiers ???</p>
+<p>Weighting segments by vertical drop. Downhill skiing is the art of descent. On flat terrain, the is no terrain shading based on topography</p>
+<p>Topographic shadowing versus vegetative shadowing</p>
+<p>From https://www.bromley.com/about/:</p>
+<blockquote class="blockquote">
+<p>Bromley is the only major ski area in New England with a southern exposure, giving our guests sun-drenched smiles!</p>
+</blockquote>
+</section>
+<section id="discussion" class="level2">
+<h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
+<p>Warren Miller once said, “The best place in the world to ski is where you’re skiing that day.” Miller’s quote is a useful reprise against decision paralysis or a fear of missing out by stressing that getting out and skiing somewhere along with a positive attitude are the necessary ingredients to a positive experience. Yet, it is undeniable that conditions and logistics make a big impact on the experience. Furthermore, each day skiing represents a large investment in terms of time and the cost of lift tickets, gear, and travel. Accordingly, OpenSkiStats serves the large contingent of savvy skiers who seek exhaustive metrics into ski areas. Such skiers meld observations on their own experiences with the data-driven insights provided by OpenSkiStats to create mental models on what factors of a ski area matter most to them and how these factors interact with conditions in search of the ultimate experience.</p>
+<p>Open infrastructure for skiing. Open source is critical for longevity and preservation. <em>collecting examples of ski infrastructure that have been lost</em></p>
+<ul>
+<li>FATMAP, see <a href="https://www.reddit.com/r/skiing/comments/1ey3prk/is_there_anything_that_does_what_fatmap_did/">reddit</a></li>
+<li>Google Maps, see <a href="https://www.reddit.com/r/skiing/comments/1gt6s6x/ski_resort_maps_will_no_longer_be_shown_on_google/">reddit</a></li>
+</ul>
+</section>
+<section id="methods" class="level2">
+<h2 class="anchored" data-anchor-id="methods">Methods</h2>
+<div id="fig-dartmouth-coordinates" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dartmouth-coordinates-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../images/dartmouth_nne_light.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dartmouth-coordinates-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Dartmouth Skiway rose with the NNE petal highlighted.
+</figcaption>
+</figure>
+</div>
+<section id="run-difficulty" class="level3">
+<h3 class="anchored" data-anchor-id="run-difficulty">Run Difficulty</h3>
+<p>Difficulty assigned by ski area.</p>
+<p>OpenSkiMap extracts run difficulties from OpenStreetMap according to the <a href="https://wiki.openstreetmap.org/wiki/Key:piste:difficulty"><code>piste:difficulty</code></a> key. We condense difficulties into a simplified set as follows: <span style="background-color: #badbb8">easy</span> combines novice and easy; <span style="background-color: #a1a1d8">intermediate</span> combines intermediate; <span style="background-color: #828282">advanced</span> combines advanced, expert, extreme, and freeride; and <span style="background-color: #d9d9d9">other</span> combines other and <em>missing</em>.</p>
+<div id="fig-difficulty-by-convention-run-counts" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-difficulty-by-convention-run-counts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../images/difficulty_by_convention_run_counts.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-difficulty-by-convention-run-counts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: <strong>Counts of runs by difficulty level and coloring convention.</strong> All downhill ski runs in the world tabulated by their difficulty and the locale specific coloring convention. This figure serves as a legend for the three main coloring conventions for ski run difficulty. For example, an intermediate run is colored blue in North America, while it is colored red in Europe and Japan. This visualization helps answer a practical question: if you happened to be transported to the top a random ski run anywhere in the world, both what difficulty level can you expect and what color would the trail signage use to indicate the difficulty?
+</figcaption>
+</figure>
+</div>
+<div id="fig-slope-by-difficulty" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-slope-by-difficulty-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-slope-by-difficulty" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-slope-by-difficulty-full" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-slope-by-difficulty-full-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../images/slope_by_difficulty_distributions_full.svg" class="img-fluid figure-img" data-ref-parent="fig-slope-by-difficulty">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-slope-by-difficulty-full-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) <strong>All difficulty levels.</strong>
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-slope-by-difficulty" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-slope-by-difficulty-condensed" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-slope-by-difficulty-condensed-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../images/slope_by_difficulty_distributions_condensed.svg" class="img-fluid figure-img" data-ref-parent="fig-slope-by-difficulty">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-slope-by-difficulty-condensed-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) <strong>Condensed difficulty levels.</strong>
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-slope-by-difficulty-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Distribution of slope by run difficulty. See OpenStreetMap <code>piste:difficulty</code> key.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="sunlight" class="level3">
+<h3 class="anchored" data-anchor-id="sunlight">Sunlight</h3>
+<p>Solar irradiance is computed at the level of a run segment, as defined by its latitude, longitude, elevation, bearing, and slope. The segment is treated as a plane, analogous to a solar panel allowing us to use the <code>pvlib</code> photovoltaic modeling library for these calculations <span class="citation" data-cites="joss-pvlib-2023">[<a href="#ref-joss-pvlib-2023" role="doc-biblioref">27</a>]</span>. The Ineichen and Perez model with Linke turbidity estimates diffuse normal irradiance, global horizontal irradiance, and direct horizontal irradiance, under the assumption of a clear sky. We compute irradiance at 15 minute intervals for the duration of a typical 120 day ski season — December 1 to March 31 in the northern hemisphere and May 31 to September 28 in the southern hemisphere for the 2024 ski season. We average the irradiance over the ski season to compute solar irradiation in kilowatt-hours per square meter per day (kW/m²/day) along the segment. When averaging irradiation across segments, like when aggregating to the level of a run or ski area, we weight by the vertical drop of the segment.</p>
+<p>Some shortcomings of these estimates are that they do not account for cloud cover, shadowing due to vegetation, and shadowing due to topography both on a micro (fine topographic variation like boulders, cliffs, moguls, etcetera) and macro scale (higher terrain like ridges or summits that block sunlight). We specify a surface type of snow in <code>pvlib</code>, which sets an albedo of 65%, i.e.&nbsp;snow reflects 65% of incoming light.</p>
+<div id="fig-sunlight-simulation" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sunlight-simulation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://github.com/dhimmel/openskistats/raw/2470924f8fa517a42cf5b36e50b4faf3fe86a4c5/assets/solar_irradiance_simulation_grids.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sunlight-simulation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: <strong>The effect of slope, latitude, and orientation on solar irradiance.</strong> Polar plots show how solar irradiance varies for a hypothetical ski run segment by its orientation (angular coordinate) and its slope (top row radial coordinate) or latitude (bottom row radial coordinate). The first column estimates solar irradiance at 09:00 on the winter solstice. The second column estimates solar irradiance at 15:30 on March 31, closing day of a typical 120 day ski season. The third column shows the average solar irradiation over the entire season. Fixed geographic inputs — latitude, longitude, and elevation — correspond to those of the Dartmouth Skiway in New Hampshire, USA. For the latitude-varying plots, a fixed slope of 15° is used. The latitude-varying plots illustrate the effect of non-linear turbidity variation by latitude. The radial coordinate spans the complete theoretical range from 0–90° (only showing the northern hemisphere in the case of latitude), even though skiing rarely occurs on sustained slopes exceeding 35° and outside of the 30–70°N latitude band.
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<div id="refs" class="references csl-bib-body" role="list">
+<div id="ref-vanat-2022" class="csl-entry" role="listitem">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline"><strong>2022 International Report on Snow &amp; Mountain Tourism: Overview of the key industry figures for ski resorts</strong> <div class="csl-block">Laurent Vanat</div> <em>TheBookEdition.com</em> (2022-04) <a href="https://www.vanat.ch/international-report-on-snow-mountain-tourism">https://www.vanat.ch/international-report-on-snow-mountain-tourism</a> <div class="csl-block">ISBN: 9782970102892</div></div>
+</div>
+<div id="ref-unwto-mountain-tourism" class="csl-entry" role="listitem">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline"><strong>Understanding and Quantifying Mountain Tourism</strong> <div class="csl-block">World Tourism Organization (UNWTO)</div> (2023-04-25) <a href="https://doi.org/g8vpzg">https://doi.org/g8vpzg</a> <div class="csl-block">DOI: <a href="https://doi.org/10.18111/9789284424023">10.18111/9789284424023</a> · ISBN: 9789284424023</div></div>
+</div>
+<div id="ref-bea-outdoor-rec" class="csl-entry" role="listitem">
+<div class="csl-left-margin">3. </div><div class="csl-right-inline"><strong>Outdoor Recreation Satellite Account, U.S. and States, 2023</strong> <div class="csl-block">U.S. Bureau of Economic Analysis</div> (2024-11-20) <a href="https://www.bea.gov/news/2024/outdoor-recreation-satellite-account-us-and-states-2023">https://www.bea.gov/news/2024/outdoor-recreation-satellite-account-us-and-states-2023</a></div>
+</div>
+<div id="ref-futile-snowmaking" class="csl-entry" role="listitem">
+<div class="csl-left-margin">4. </div><div class="csl-right-inline"><strong>Is Snowmaking Growth (F)Utile? A Dynamic Panel Data Analysis of Ski Resorts’ Profitability Under Climate Change</strong> <div class="csl-block">Jonathan Cognard, Lucas Berard-Chenu, Yves Schaeffer, Hugues François</div> <em>Elsevier BV</em> (2023-03-06) <a href="https://doi.org/g8wppb">https://doi.org/g8wppb</a> <div class="csl-block">DOI: <a href="https://doi.org/10.2139/ssrn.4379897">10.2139/ssrn.4379897</a></div></div>
+</div>
+<div id="ref-avalanche-risk-slabs" class="csl-entry" role="listitem">
+<div class="csl-left-margin">5. </div><div class="csl-right-inline"><strong>SLABS: An improved probabilistic method to assess the avalanche risk on backcountry ski tours</strong> <div class="csl-block">Bart Degraeuwe, Günter Schmudlach, Kurt Winkler, Jochen Köhler</div> <em>Cold Regions Science and Technology</em> (2024-05) <a href="https://doi.org/g8wppc">https://doi.org/g8wppc</a> <div class="csl-block">DOI: <a href="https://doi.org/10.1016/j.coldregions.2024.104169">10.1016/j.coldregions.2024.104169</a></div></div>
+</div>
+<div id="ref-ski-resort-sustainability" class="csl-entry" role="listitem">
+<div class="csl-left-margin">6. </div><div class="csl-right-inline"><strong>Determinants of sustainability of ski resorts: do size and altitude matter?</strong> <div class="csl-block">Kir Kuščer, Larry Dwyer</div> <em>European Sport Management Quarterly</em> (2018-11-28) <a href="https://doi.org/gf6pxw">https://doi.org/gf6pxw</a> <div class="csl-block">DOI: <a href="https://doi.org/10.1080/16184742.2018.1550097">10.1080/16184742.2018.1550097</a></div></div>
+</div>
+<div id="ref-apennines-winter" class="csl-entry" role="listitem">
+<div class="csl-left-margin">7. </div><div class="csl-right-inline"><strong>Winter is coming for ski resorts: Insights from the Apennines (Italy)</strong> <div class="csl-block">Giuliano Bonanomi, Mara Gherardelli, Sabrina Spigno, Mohamed Idbella</div> <em>Journal of Mountain Science</em> (2024-11) <a href="https://doi.org/g8vcnc">https://doi.org/g8vcnc</a> <div class="csl-block">DOI: <a href="https://doi.org/10.1007/s11629-023-8539-y">10.1007/s11629-023-8539-y</a></div></div>
+</div>
+<div id="ref-dark-tourism" class="csl-entry" role="listitem">
+<div class="csl-left-margin">8. </div><div class="csl-right-inline"><strong>Dark tourism, ecocide and Alpine ski resorts: the Alps, Europe</strong> <div class="csl-block">Oliver Smith</div> <em>50 Dark Destinations</em> (2023-03-14) <a href="https://doi.org/g8wpn9">https://doi.org/g8wpn9</a> <div class="csl-block">DOI: <a href="https://doi.org/10.56687/9781447362210-050">10.56687/9781447362210-050</a></div></div>
+</div>
+<div id="ref-climate-change-europe" class="csl-entry" role="listitem">
+<div class="csl-left-margin">9. </div><div class="csl-right-inline"><strong>Climate change exacerbates snow-water-energy challenges for European ski tourism</strong> <div class="csl-block">Hugues François, Raphaëlle Samacoïts, David Neil Bird, Judith Köberl, Franz Prettenthaler, Samuel Morin</div> <em>Nature Climate Change</em> (2023-08-28) <a href="https://doi.org/gsnhbv">https://doi.org/gsnhbv</a> <div class="csl-block">DOI: <a href="https://doi.org/10.1038/s41558-023-01759-5">10.1038/s41558-023-01759-5</a></div></div>
+</div>
+<div id="ref-climate-change-alps" class="csl-entry" role="listitem">
+<div class="csl-left-margin">10. </div><div class="csl-right-inline"><strong>Vulnerability of ski tourism towards internal climate variability and climate change in the Swiss Alps</strong> <div class="csl-block">Fabian Willibald, Sven Kotlarski, Pirmin Philipp Ebner, Mathias Bavay, Christoph Marty, Fabian V Trentini, Ralf Ludwig, Adrienne Grêt-Regamey</div> <em>Science of The Total Environment</em> (2021-08) <a href="https://doi.org/gvzmqw">https://doi.org/gvzmqw</a> <div class="csl-block">DOI: <a href="https://doi.org/10.1016/j.scitotenv.2021.147054">10.1016/j.scitotenv.2021.147054</a> · PMID: <a href="https://www.ncbi.nlm.nih.gov/pubmed/33894612">33894612</a></div></div>
+</div>
+<div id="ref-climate-change-usnf" class="csl-entry" role="listitem">
+<div class="csl-left-margin">11. </div><div class="csl-right-inline"><strong>Potential Effects of Climate on Downhill Skiing and Snowboarding Demand and Value at U.S. National Forests</strong> <div class="csl-block">Binod P Chapagain, Neelam C Poudyal, JM Bowker, Ashley E Askew, Donald BK English, Donald G Hodges</div> <em>The Journal of Park and Recreation Administration</em> (2018) <a href="https://doi.org/gg2qq8">https://doi.org/gg2qq8</a> <div class="csl-block">DOI: <a href="https://doi.org/10.18666/jpra-2018-v36-i2-8365">10.18666/jpra-2018-v36-i2-8365</a></div></div>
+</div>
+<div id="ref-climate-change-mountain-tourism" class="csl-entry" role="listitem">
+<div class="csl-left-margin">12. </div><div class="csl-right-inline"><strong>Impacts of climate change on mountain tourism: a review</strong> <div class="csl-block">Robert Steiger, Natalie Knowles, Katharina Pöll, Michelle Rutty</div> <em>Journal of Sustainable Tourism</em> (2022-08-19) <a href="https://doi.org/gth869">https://doi.org/gth869</a> <div class="csl-block">DOI: <a href="https://doi.org/10.1080/09669582.2022.2112204">10.1080/09669582.2022.2112204</a></div></div>
+</div>
+<div id="ref-climate-change-us-ski" class="csl-entry" role="listitem">
+<div class="csl-left-margin">13. </div><div class="csl-right-inline"><strong>How climate change is damaging the US ski industry</strong> <div class="csl-block">Daniel Scott, Robert Steiger</div> <em>Current Issues in Tourism</em> (2024-02-13) <a href="https://doi.org/g8wrts">https://doi.org/g8wrts</a> <div class="csl-block">DOI: <a href="https://doi.org/10.1080/13683500.2024.2314700">10.1080/13683500.2024.2314700</a></div></div>
+</div>
+<div id="ref-skivis" class="csl-entry" role="listitem">
+<div class="csl-left-margin">14. </div><div class="csl-right-inline"><strong>SkiVis: Visual Exploration and Route Planning in Ski Resorts</strong> <div class="csl-block">Julius Rauscher, Raphael Buchmüller, Daniel A Keim, Matthias Miller</div> <em>IEEE Transactions on Visualization and Computer Graphics</em> (2023) <a href="https://doi.org/g8qtfb">https://doi.org/g8qtfb</a> <div class="csl-block">DOI: <a href="https://doi.org/10.1109/tvcg.2023.3326940">10.1109/tvcg.2023.3326940</a> · PMID: <a href="https://www.ncbi.nlm.nih.gov/pubmed/37874714">37874714</a></div></div>
+</div>
+<div id="ref-osm-ski-routing" class="csl-entry" role="listitem">
+<div class="csl-left-margin">15. </div><div class="csl-right-inline"><strong>OSM Ski Resort Routing</strong> <div class="csl-block">Wenzel Friedsam, Robin Hieber, Alexander Kharitonov, Tobias Rupp</div> <em>Proceedings of the 29th International Conference on Advances in Geographic Information Systems</em> (2021-11-02) <a href="https://doi.org/g8qtf6">https://doi.org/g8qtf6</a> <div class="csl-block">DOI: <a href="https://doi.org/10.1145/3474717.3483628">10.1145/3474717.3483628</a></div></div>
+</div>
+<div id="ref-osm-haklay" class="csl-entry" role="listitem">
+<div class="csl-left-margin">16. </div><div class="csl-right-inline"><strong>OpenStreetMap: User-Generated Street Maps</strong> <div class="csl-block">Mordechai Haklay, Patrick Weber</div> <em>IEEE Pervasive Computing</em> (2008-10-17) <a href="https://doi.org/b24hbq">https://doi.org/b24hbq</a> <div class="csl-block">DOI: <a href="https://doi.org/10.1109/mprv.2008.80">10.1109/mprv.2008.80</a></div></div>
+</div>
+<div id="ref-osm-long-trail" class="csl-entry" role="listitem">
+<div class="csl-left-margin">17. </div><div class="csl-right-inline"><strong>Mapping the Long Trail: the best is now free with OpenStreetMaps</strong> <div class="csl-block">Daniel Himmelstein</div> <em>Satoshi Village</em> (2021-07-01) <a href="https://blog.dhimmel.com/long-trail-maps/">https://blog.dhimmel.com/long-trail-maps/</a></div>
+</div>
+<div id="ref-osm-science" class="csl-entry" role="listitem">
+<div class="csl-left-margin">18. </div><div class="csl-right-inline"><strong>OSM Science—The Academic Study of the OpenStreetMap Project, Data, Contributors, Community, and Applications</strong> <div class="csl-block">AYair Grinberger, Marco Minghini, Levente Juhász, Godwin Yeboah, Peter Mooney</div> <em>ISPRS International Journal of Geo-Information</em> (2022-03-30) <a href="https://doi.org/grqxsf">https://doi.org/grqxsf</a> <div class="csl-block">DOI: <a href="https://doi.org/10.3390/ijgi11040230">10.3390/ijgi11040230</a></div></div>
+</div>
+<div id="ref-jaxa-aw3d30" class="csl-entry" role="listitem">
+<div class="csl-left-margin">19. </div><div class="csl-right-inline"><strong>Updates of <span>“AW3D30”</span> ALOS Global Digital Surface Model with Other Open Access Datasets</strong> <div class="csl-block">J Takaku, T Tadono, M Doutsu, F Ohgushi, H Kai</div> <em>International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences</em> (2020-08-24) <a href="https://doi.org/qdsj">https://doi.org/qdsj</a> <div class="csl-block">DOI: <a href="https://doi.org/10.5194/isprs-archives-XLIII-B4-2020-183-2020">10.5194/isprs-archives-xliii-b4-2020-183-2020</a></div></div>
+</div>
+<div id="ref-street-orientation" class="csl-entry" role="listitem">
+<div class="csl-left-margin">20. </div><div class="csl-right-inline"><strong>Urban spatial order: street network orientation, configuration, and entropy</strong> <div class="csl-block">Geoff Boeing</div> <em>Applied Network Science</em> (2019-08-23) <a href="https://doi.org/gf8srn">https://doi.org/gf8srn</a> <div class="csl-block">DOI: <a href="https://doi.org/10.1007/s41109-019-0189-1">10.1007/s41109-019-0189-1</a></div></div>
+</div>
+<div id="ref-osmnx" class="csl-entry" role="listitem">
+<div class="csl-left-margin">21. </div><div class="csl-right-inline"><strong>OSMnx: New methods for acquiring, constructing, analyzing, and visualizing complex street networks</strong> <div class="csl-block">Geoff Boeing</div> <em>Computers, Environment and Urban Systems</em> (2017-09) <a href="https://doi.org/gbvjxq">https://doi.org/gbvjxq</a> <div class="csl-block">DOI: <a href="https://doi.org/10.1016/j.compenvurbsys.2017.05.004">10.1016/j.compenvurbsys.2017.05.004</a></div></div>
+</div>
+<div id="ref-osmnx-joss" class="csl-entry" role="listitem">
+<div class="csl-left-margin">22. </div><div class="csl-right-inline"><strong>OSMnx: A Python package to work with graph-theoretic OpenStreetMap street networks</strong> <div class="csl-block">Geoff Boeing</div> <em>The Journal of Open Source Software</em> (2017-04-24) <a href="https://doi.org/gghjhn">https://doi.org/gghjhn</a> <div class="csl-block">DOI: <a href="https://doi.org/10.21105/joss.00215">10.21105/joss.00215</a></div></div>
+</div>
+<div id="ref-wind-rose-bias" class="csl-entry" role="listitem">
+<div class="csl-left-margin">23. </div><div class="csl-right-inline"><strong>A Method for Eliminating Directional Bias in Wind Roses</strong> <div class="csl-block">Benjamin Ratner</div> <em>Monthly Weather Review</em> (1950-10) <a href="https://doi.org/c28np6">https://doi.org/c28np6</a> <div class="csl-block">DOI: <a href="https://doi.org/10.1175/1520-0493(1950)078<0185:amfedb>2.0.co;2">10.1175/1520-0493(1950)078&lt;0185:amfedb&gt;2.0.co;2</a></div></div>
+</div>
+<div id="ref-compass-rose" class="csl-entry" role="listitem">
+<div class="csl-left-margin">24. </div><div class="csl-right-inline"><strong>Early Charts and the Origin of the Compass Rose</strong> <div class="csl-block">EGR Taylor</div> <em>Journal of Navigation</em> (1951-10) <a href="https://doi.org/cf9bbr">https://doi.org/cf9bbr</a> <div class="csl-block">DOI: <a href="https://doi.org/10.1017/s0373463300034214">10.1017/s0373463300034214</a></div></div>
+</div>
+<div id="ref-compass-rose-symbolism" class="csl-entry" role="listitem">
+<div class="csl-left-margin">25. </div><div class="csl-right-inline"><strong>Symbolism of Compass Roses on Early Modern Nautical Charts of the Adriatic Sea</strong> <div class="csl-block">Josip Faričić, Ivka Kljajić, Lena Mirošević, Dubravka Mlinarić</div> <em>KN - Journal of Cartography and Geographic Information</em> (2023-02-03) <a href="https://doi.org/g8vcn4">https://doi.org/g8vcn4</a> <div class="csl-block">DOI: <a href="https://doi.org/10.1007/s42489-022-00129-z">10.1007/s42489-022-00129-z</a></div></div>
+</div>
+<div id="ref-storm-skiing-505-ski-areas" class="csl-entry" role="listitem">
+<div class="csl-left-margin">26. </div><div class="csl-right-inline"><strong>There Are 505 Active Ski Areas in America – Here’s a Complete List</strong> <div class="csl-block">Stuart Winchester</div> <em>The Storm Skiing Journal</em> (2023-09-22) <a href="https://www.stormskiing.com/p/there-are-505-active-ski-areas-in">https://www.stormskiing.com/p/there-are-505-active-ski-areas-in</a></div>
+</div>
+<div id="ref-joss-pvlib-2023" class="csl-entry" role="listitem">
+<div class="csl-left-margin">27. </div><div class="csl-right-inline"><strong>pvlib python: 2023 project update</strong> <div class="csl-block">Kevin S Anderson, Clifford W Hansen, William F Holmgren, Adam R Jensen, Mark A Mikofski, Anton Driesse</div> <em>Journal of Open Source Software</em> (2023-12-22) <a href="https://doi.org/g8xqwh">https://doi.org/g8xqwh</a> <div class="csl-block">DOI: <a href="https://doi.org/10.21105/joss.05994">10.21105/joss.05994</a></div></div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/openskistats\.org");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>This website is released under a <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0 License</a>.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
