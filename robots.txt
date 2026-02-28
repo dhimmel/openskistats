@@ -1,0 +1,1 @@
+Sitemap: https://openskistats.org/sitemap.xml
