@@ -6,7 +6,7 @@ run length across elevation bands, colored by difficulty grade.
 """
 
 import textwrap
-from typing import Any
+from typing import Any, Literal
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -22,6 +22,9 @@ from openskistats.utils import (
     pl_condense_run_difficulty,
 )
 
+ElevationMetric = Literal["distance_3d", "distance_vertical_drop"]
+"""Metric for elevation histogram x-axis: 3-D run distance or skiable vertical."""
+
 _DEFAULT_BIN_WIDTH: float = 25.0
 """Default elevation bin width in meters."""
 
@@ -30,11 +33,11 @@ def _get_elevation_segments(ski_area_id: str) -> pl.DataFrame:
     """
     Load run segments for a single ski area with elevation and difficulty data.
 
-    Each segment is assigned to a single elevation bin by its midpoint
-    elevation. This is valid because the vast majority of segments have
-    a vertical span much smaller than the default 25 m bin width:
-    in test data (Whaleback, Storrs Hill), the median vertical span is
-    ~3 m, P95 is ~18 m, and < 3 % of segments exceed 25 m vertically.
+    Returns one row per segment with raw elevation bounds, vertical distance,
+    3-D distance, and vert drop.  Downstream,
+    :func:`get_elevation_histogram_data` splits each segment proportionally
+    across all elevation bins it spans rather than assigning it to a single
+    bin by midpoint.
     """
     from openskistats.analyze import load_runs_pl
 
@@ -50,89 +53,213 @@ def _get_elevation_segments(ski_area_id: str) -> pl.DataFrame:
         .explode("run_coordinates_clean")
         .unnest("run_coordinates_clean")
         .filter(pl.col("segment_hash").is_not_null())
-        .with_columns(
-            # distance_vertical = elevation_lag - elevation, so
-            # midpoint ≈ elevation + distance_vertical / 2
-            elevation_midpoint=pl.col("elevation")
-            + pl.col("distance_vertical").truediv(2),
-        )
         .filter(
-            pl.col("elevation_midpoint").is_not_null(),
+            pl.col("elevation").is_not_null(),
+            pl.col("distance_vertical").is_not_null(),
             pl.col("distance_3d").is_not_null(),
             pl.col("distance_3d") > 0,
         )
         .select(
             "run_difficulty_condensed",
-            "elevation_midpoint",
+            "elevation",
+            "distance_vertical",
             "distance_3d",
+            "distance_vertical_drop",
         )
         .collect()
     )
 
 
+def _split_segment_across_bins(
+    elevation: float,
+    distance_vertical: float,
+    value: float,
+    bin_width: float = _DEFAULT_BIN_WIDTH,
+) -> list[dict[str, float]]:
+    """
+    Split a single segment's metric value proportionally across elevation bins.
+
+    The segment runs from ``elevation`` (upper end, since distance_vertical =
+    elevation_lag - elevation) to ``elevation + distance_vertical``.  Each bin
+    the segment spans receives a fraction of ``value`` equal to the overlap of
+    the segment's vertical extent with that bin divided by the total vertical
+    extent of the segment.
+
+    Flat segments (|distance_vertical| < 1e-6) are assigned entirely to the
+    bin containing ``elevation``.
+
+    Returns a list of ``{"elevation_bin_center": float, "binned_value": float}``
+    dicts, one per bin touched.
+    """
+    span = abs(distance_vertical)
+    if span < 1e-6:
+        bin_lo = np.floor(elevation / bin_width) * bin_width
+        return [
+            {
+                "elevation_bin_center": float(bin_lo + bin_width / 2),
+                "binned_value": float(value),
+            }
+        ]
+    elev_lo = min(elevation, elevation + distance_vertical)
+    elev_hi = max(elevation, elevation + distance_vertical)
+    first_idx = int(np.floor(elev_lo / bin_width))
+    last_idx = int(np.floor(elev_hi / bin_width))
+    results: list[dict[str, float]] = []
+    for i in range(first_idx, last_idx + 1):
+        lo = i * bin_width
+        hi = lo + bin_width
+        overlap = min(elev_hi, hi) - max(elev_lo, lo)
+        if overlap > 0:
+            results.append(
+                {
+                    "elevation_bin_center": float(lo + bin_width / 2),
+                    "binned_value": float(value * overlap / span),
+                }
+            )
+    return results
+
+
 def get_elevation_histogram_data(
     segments: pl.DataFrame,
     bin_width: float = _DEFAULT_BIN_WIDTH,
+    metric: ElevationMetric = "distance_vertical_drop",
 ) -> pl.DataFrame:
     """
-    Bin segments by elevation and aggregate total 3D run length per bin,
+    Bin segments by elevation and aggregate the chosen metric per bin,
     broken down by condensed difficulty.
+
+    Each segment is split proportionally across all elevation bins it spans,
+    so long segments crossing bin boundaries are accurately distributed rather
+    than assigned entirely to a single midpoint bin.
+
+    The default metric is ``distance_vertical_drop`` (skiable vertical), which
+    avoids over-representing low-angle runs relative to steep terrain —
+    consistent with how combined vertical is used elsewhere in the project.
+    Pass ``metric="distance_3d"`` to use 3-D run length instead.
     """
     if segments.is_empty():
         return pl.DataFrame(
             schema={
                 "elevation_bin_center": pl.Float64,
                 "run_difficulty_condensed": pl.String,
-                "distance_3d": pl.Float64,
+                metric: pl.Float64,
             }
         )
 
-    min_elev = segments["elevation_midpoint"].min()
-    max_elev = segments["elevation_midpoint"].max()
-    assert min_elev is not None
-    assert max_elev is not None
-    bin_lower = np.floor(min_elev / bin_width) * bin_width
-    bin_upper = np.ceil(max_elev / bin_width) * bin_width + bin_width
-    breaks = np.arange(bin_lower, bin_upper, bin_width)
+    _split_schema = pl.List(
+        pl.Struct({"elevation_bin_center": pl.Float64, "binned_value": pl.Float64})
+    )
+
+    def _split_segment(row: dict[str, float]) -> list[dict[str, float]]:
+        return _split_segment_across_bins(
+            elevation=row["elevation"],
+            distance_vertical=row["distance_vertical"],
+            value=row["_v"],
+            bin_width=bin_width,
+        )
 
     return (
-        segments.with_columns(
-            elevation_bin_center=pl.col("elevation_midpoint")
-            .cut(breaks=breaks, left_closed=True, include_breaks=True)
-            .struct.field("breakpoint")
-            - bin_width / 2,
+        segments.with_columns(pl.col(metric).alias("_v"))
+        .with_columns(
+            pl.struct("elevation", "distance_vertical", "_v")
+            .map_elements(_split_segment, return_dtype=_split_schema)
+            .alias("_bins")
         )
-        .filter(pl.col("elevation_bin_center").is_not_null())
+        .select("run_difficulty_condensed", "_bins")
+        .explode("_bins")
+        .unnest("_bins")
+        .rename({"binned_value": metric})
+        .filter(pl.col(metric) > 0)
         .group_by("elevation_bin_center", "run_difficulty_condensed")
-        .agg(pl.col("distance_3d").sum())
+        .agg(pl.col(metric).sum())
         .sort("elevation_bin_center", "run_difficulty_condensed")
     )
 
 
 def _compute_median_elevation(segments: pl.DataFrame) -> float | None:
-    """Weighted median elevation: 50 % of total run length above and below."""
+    """Weighted median elevation: 50 % of total 3-D run length above and below."""
     total = segments["distance_3d"].sum()
     if not total or total <= 0:
         return None
-    sorted_segs = segments.sort("elevation_midpoint")
+    sorted_segs = segments.with_columns(
+        elevation_midpoint=pl.col("elevation") + pl.col("distance_vertical") / 2
+    ).sort("elevation_midpoint")
     idx = sorted_segs["distance_3d"].cum_sum().search_sorted(total / 2)
     return float(sorted_segs["elevation_midpoint"][min(idx, len(sorted_segs) - 1)])
 
 
-def _draw_median_elevation_line(ax: plt.Axes, y: float) -> None:
+def get_shared_axis_bounds(
+    ski_area_ids: list[str],
+    bin_width: float = _DEFAULT_BIN_WIDTH,
+    share_y: bool = True,
+    share_x: bool = True,
+    metric: ElevationMetric = "distance_vertical_drop",
+) -> tuple[float | None, float | None, float | None]:
     """
-    Draw a line at the median elevation.
+    Compute shared axis bounds for comparing multiple ski areas.
 
-    TODO: styling TBD — using a simple dotted line for now.
+    Returns ``(y_min, y_max, x_max)`` where:
+
+    - ``y_min`` / ``y_max`` are elevation axis limits snapped to bin
+      boundaries so that bars sit flush across all areas, or ``None`` if
+      ``share_y=False``.
+    - ``x_max`` is the metric axis limit rounded up to a clean boundary
+      (nearest km for ``distance_3d``, nearest 100 m for
+      ``distance_vertical_drop``), or ``None`` if ``share_x=False``.
+
+    Pass all three values directly to :func:`plot_elevation_histogram` or
+    :func:`plot_elevation_histogram_preview` (``None`` values are ignored).
+
+    Parameters
+    ----------
+    share_y:
+        Compute shared elevation (y) axis limits.
+    share_x:
+        Compute shared metric (x) axis limit.
+    metric:
+        Which metric to use for the x-axis; must match the value passed to
+        the plot functions.
     """
-    ax.axhline(
-        y=y,
-        color="#6A0DAD",
-        linewidth=1.0,
-        linestyle=(0, (20, 5)),
-        zorder=4,
-        clip_on=False,
+    elev_mins: list[float] = []
+    elev_maxes: list[float] = []
+    bin_maxes: list[float] = []
+
+    for ski_area_id in ski_area_ids:
+        segments = _get_elevation_segments(ski_area_id)
+        if segments.is_empty():
+            continue
+        if share_y:
+            elev_mins.append(float(segments["elevation"].min()))
+            elev_maxes.append(float(segments["elevation"].max()))
+        if share_x:
+            bin_max = (
+                get_elevation_histogram_data(
+                    segments, bin_width=bin_width, metric=metric
+                )
+                .group_by("elevation_bin_center")
+                .agg(pl.col(metric).sum())[metric]
+                .max()
+            )
+            bin_maxes.append(float(bin_max or 0.0))
+
+    if share_y and not elev_mins:
+        raise ValueError("No elevation data found for the supplied ski_area_ids.")
+    if share_x and not bin_maxes:
+        raise ValueError("No distance data found for the supplied ski_area_ids.")
+
+    y_min = (
+        float(np.floor(min(elev_mins) / bin_width) * bin_width - bin_width / 2)
+        if share_y
+        else None
     )
+    y_max = (
+        float(np.ceil(max(elev_maxes) / bin_width) * bin_width + bin_width / 2)
+        if share_y
+        else None
+    )
+    round_to = 1_000 if metric == "distance_3d" else 100
+    x_max = float(np.ceil(max(bin_maxes) / round_to) * round_to) if share_x else None
+    return y_min, y_max, x_max
 
 
 def plot_elevation_histogram(
@@ -140,6 +267,10 @@ def plot_elevation_histogram(
     bin_width: float = _DEFAULT_BIN_WIDTH,
     convention: RunDifficultyConvention = RunDifficultyConvention.north_america,
     figsize: tuple[float, float] = (4, 4),
+    y_min: float | None = None,
+    y_max: float | None = None,
+    x_max: float | None = None,
+    metric: ElevationMetric = "distance_vertical_drop",
 ) -> Figure:
     """
     Create an elevation distribution histogram for a single ski area.
@@ -154,7 +285,9 @@ def plot_elevation_histogram(
     ).row(0, named=True)
 
     segments = _get_elevation_segments(ski_area_id)
-    histogram = get_elevation_histogram_data(segments, bin_width=bin_width)
+    histogram = get_elevation_histogram_data(
+        segments, bin_width=bin_width, metric=metric
+    )
 
     colormap = SkiRunDifficulty.colormap(
         condense=True, subtle=True, convention=convention
@@ -167,7 +300,7 @@ def plot_elevation_histogram(
         histogram.pivot(
             on="run_difficulty_condensed",
             index="elevation_bin_center",
-            values="distance_3d",
+            values=metric,
         )
         .sort("elevation_bin_center")
         .fill_null(0)
@@ -196,8 +329,12 @@ def plot_elevation_histogram(
         cumulative += values
 
     ax.set_ylabel("Elevation (m)", fontsize=10)
-    ax.set_xlabel("Skiable Distance (km)", fontsize=10)
-    ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x / 1_000:.1f}"))
+    if metric == "distance_3d":
+        ax.set_xlabel("Skiable Distance (km)", fontsize=10)
+        ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x / 1_000:.1f}"))
+    else:
+        ax.set_xlabel("Skiable Vertical (m)", fontsize=10)
+        ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x:,.0f}"))
     ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x:,.0f}"))
 
     ski_area_name = info.get("ski_area_name", "")
@@ -234,15 +371,13 @@ def plot_elevation_histogram(
 
     ax.grid(axis="x", alpha=0.3, zorder=0)
     ax.set_axisbelow(True)
-    ax.set_xlim(left=0)
-    # snap y-axis to bar edges so there is no gap above or below
+    ax.set_xlim(left=0, right=x_max)
+    # snap y-axis to bar edges so there is no gap above or below;
+    # use caller-supplied bounds when provided for cross-area comparison
     ax.set_ylim(
-        elevation_centers[0] - bin_width / 2,
-        elevation_centers[-1] + bin_width / 2,
+        y_min if y_min is not None else elevation_centers[0] - bin_width / 2,
+        y_max if y_max is not None else elevation_centers[-1] + bin_width / 2,
     )
-
-    if median_elev is not None:
-        _draw_median_elevation_line(ax, median_elev)
 
     fig.tight_layout()
     return fig
@@ -252,50 +387,44 @@ def plot_elevation_histogram_preview(
     ski_area_id: str,
     bin_width: float = _DEFAULT_BIN_WIDTH,
     figsize: tuple[float, float] = (1, 1),
+    y_min: float | None = None,
+    y_max: float | None = None,
+    x_max: float | None = None,
+    metric: ElevationMetric = "distance_vertical_drop",
 ) -> Figure:
     """
     Create a compact preview elevation histogram for a single ski area.
 
-    Filled area chart, no title, no legend, no x-axis labels, no median line.
+    Mini histogram with no title, legend, or axis labels.
     Matches the preview rose pattern used in the webapp grid view.
     """
     segments = _get_elevation_segments(ski_area_id)
     histogram = (
-        get_elevation_histogram_data(segments, bin_width=bin_width)
+        get_elevation_histogram_data(segments, bin_width=bin_width, metric=metric)
         .group_by("elevation_bin_center")
-        .agg(pl.col("distance_3d").sum())
+        .agg(pl.col(metric).sum())
         .sort("elevation_bin_center")
     )
     elevation_centers = histogram["elevation_bin_center"].to_numpy()
-    totals = histogram["distance_3d"].to_numpy()
-
-    # pad with zero-width points at bin edges so fill extends to ylim
-    y_padded = np.concatenate(
-        [
-            [elevation_centers[0] - bin_width / 2],
-            elevation_centers,
-            [elevation_centers[-1] + bin_width / 2],
-        ]
-    )
-    x_padded = np.concatenate([[0], totals, [0]])
+    totals = histogram[metric].to_numpy()
 
     fig, ax = plt.subplots(figsize=figsize)
-    ax.fill_betweenx(
-        y=y_padded,
-        x1=0,
-        x2=x_padded,
+    ax.barh(
+        y=elevation_centers,
+        width=totals,
+        height=bin_width,
         color="#D4A0A7",
-        edgecolor="#6b6b6b",
-        linewidth=0.4,
+        edgecolor="none",
         zorder=2,
     )
-    ax.set_xlim(left=0)
+    ax.set_xlim(left=0, right=x_max)
     ax.set_xticks([])
     ax.set_yticks([])
-    # snap y-axis to bar edges so there is no gap above or below
+    # snap y-axis to bar edges so there is no gap above or below;
+    # use caller-supplied bounds when provided for cross-area comparison
     ax.set_ylim(
-        elevation_centers[0] - bin_width / 2,
-        elevation_centers[-1] + bin_width / 2,
+        y_min if y_min is not None else elevation_centers[0] - bin_width / 2,
+        y_max if y_max is not None else elevation_centers[-1] + bin_width / 2,
     )
     # overlay base and peak elevation labels directly on the chart
     y_lo, y_hi = elevation_centers[0], elevation_centers[-1]
