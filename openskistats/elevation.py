@@ -262,6 +262,105 @@ def get_shared_axis_bounds(
     return y_min, y_max, x_max
 
 
+def _plot_elevation_detail(
+    ax: plt.Axes,
+    ski_area_id: str,
+    segments: pl.DataFrame,
+    histogram: pl.DataFrame,
+    bin_width: float,
+    convention: RunDifficultyConvention,
+    metric: ElevationMetric,
+) -> Any:
+    """Plot the full-detail elevation histogram with stacked difficulty bars."""
+    from openskistats.analyze import load_ski_areas_pl
+
+    info: dict[str, Any] = load_ski_areas_pl(
+        ski_area_filters=[pl.col("ski_area_id") == ski_area_id]
+    ).row(0, named=True)
+
+    colormap = SkiRunDifficulty.colormap(
+        condense=True, subtle=True, convention=convention
+    )
+    difficulties = SkiRunDifficulty.condensed_values()
+    elevation_centers = histogram["elevation_bin_center"].unique().sort().to_numpy()
+
+    # pivot so each difficulty is a column aligned to elevation bins
+    pivoted = (
+        histogram.pivot(
+            on="run_difficulty_condensed",
+            index="elevation_bin_center",
+            values=metric,
+        )
+        .sort("elevation_bin_center")
+        .fill_null(0)
+    )
+
+    cumulative = np.zeros(len(elevation_centers), dtype=np.float64)
+    for diff in difficulties:
+        if diff.value not in pivoted.columns:
+            continue
+        values = pivoted[diff.value].to_numpy()
+        if values.sum() == 0:
+            continue
+        ax.barh(
+            y=elevation_centers,
+            width=values,
+            height=bin_width,
+            left=cumulative,
+            color=colormap[diff],
+            edgecolor="#292929",
+            linewidth=0.4,
+            label=diff.value,
+            zorder=2,
+        )
+        cumulative += values
+
+    ax.set_ylabel("Elevation (m)", fontsize=10)
+    if metric == "distance_3d":
+        ax.set_xlabel("Skiable Distance (km)", fontsize=10)
+        ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x / 1_000:.1f}"))
+    else:
+        ax.set_xlabel("Skiable Vertical (m)", fontsize=10)
+        ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x:,.0f}"))
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x:,.0f}"))
+
+    ski_area_name = info.get("ski_area_name", "")
+    if ski_area_name:
+        ax.set_title(
+            "\n".join(textwrap.wrap(ski_area_name, width=30)),
+            fontsize=14,
+            fontweight="bold",
+            pad=10,
+        )
+
+    # bottom-right: vertical drop, elevation range, and median elevation
+    median_elev = _compute_median_elevation(segments)
+    parts = []
+    if (vd := info.get("vertical_drop")) is not None:
+        parts.append(f"{vd:,.0f}{NARROW_SPACE}m vert drop")
+    if (lo := info.get("min_elevation")) is not None and (
+        hi := info.get("max_elevation")
+    ) is not None:
+        parts.append(f"{lo:,.0f}–{hi:,.0f}{NARROW_SPACE}m")
+    if median_elev is not None:
+        parts.append(f"{median_elev:,.0f}{NARROW_SPACE}m median elev")
+    if parts:
+        ax.text(
+            0.97,
+            0.03,
+            "\n".join(parts),
+            transform=ax.transAxes,
+            fontsize=7,
+            color="#95A5A6",
+            va="bottom",
+            ha="right",
+        )
+
+    ax.grid(axis="x", alpha=0.3, zorder=0)
+    ax.set_axisbelow(True)
+    return elevation_centers
+
+
 def plot_elevation_histogram(
     ski_area_id: str,
     bin_width: float = _DEFAULT_BIN_WIDTH,
@@ -308,94 +407,9 @@ def plot_elevation_histogram(
             zorder=2,
         )
     else:
-        from openskistats.analyze import load_ski_areas_pl
-
-        info: dict[str, Any] = load_ski_areas_pl(
-            ski_area_filters=[pl.col("ski_area_id") == ski_area_id]
-        ).row(0, named=True)
-
-        colormap = SkiRunDifficulty.colormap(
-            condense=True, subtle=True, convention=convention
+        elevation_centers = _plot_elevation_detail(
+            ax, ski_area_id, segments, histogram, bin_width, convention, metric
         )
-        difficulties = SkiRunDifficulty.condensed_values()
-        elevation_centers = histogram["elevation_bin_center"].unique().sort().to_numpy()
-
-        # pivot so each difficulty is a column aligned to elevation bins
-        pivoted = (
-            histogram.pivot(
-                on="run_difficulty_condensed",
-                index="elevation_bin_center",
-                values=metric,
-            )
-            .sort("elevation_bin_center")
-            .fill_null(0)
-        )
-
-        cumulative = np.zeros(len(elevation_centers), dtype=np.float64)
-        for diff in difficulties:
-            if diff.value not in pivoted.columns:
-                continue
-            values = pivoted[diff.value].to_numpy()
-            if values.sum() == 0:
-                continue
-            ax.barh(
-                y=elevation_centers,
-                width=values,
-                height=bin_width,
-                left=cumulative,
-                color=colormap[diff],
-                edgecolor="#292929",
-                linewidth=0.4,
-                label=diff.value,
-                zorder=2,
-            )
-            cumulative += values
-
-        ax.set_ylabel("Elevation (m)", fontsize=10)
-        if metric == "distance_3d":
-            ax.set_xlabel("Skiable Distance (km)", fontsize=10)
-            ax.xaxis.set_major_formatter(
-                plt.FuncFormatter(lambda x, _: f"{x / 1_000:.1f}")
-            )
-        else:
-            ax.set_xlabel("Skiable Vertical (m)", fontsize=10)
-            ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x:,.0f}"))
-        ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x:,.0f}"))
-
-        ski_area_name = info.get("ski_area_name", "")
-        if ski_area_name:
-            ax.set_title(
-                "\n".join(textwrap.wrap(ski_area_name, width=30)),
-                fontsize=14,
-                fontweight="bold",
-                pad=10,
-            )
-
-        # bottom-right: vertical drop, elevation range, and median elevation
-        median_elev = _compute_median_elevation(segments)
-        parts = []
-        if (vd := info.get("vertical_drop")) is not None:
-            parts.append(f"{vd:,.0f}{NARROW_SPACE}m vert drop")
-        if (lo := info.get("min_elevation")) is not None and (
-            hi := info.get("max_elevation")
-        ) is not None:
-            parts.append(f"{lo:,.0f}–{hi:,.0f}{NARROW_SPACE}m")
-        if median_elev is not None:
-            parts.append(f"{median_elev:,.0f}{NARROW_SPACE}m median elev")
-        if parts:
-            ax.text(
-                0.97,
-                0.03,
-                "\n".join(parts),
-                transform=ax.transAxes,
-                fontsize=7,
-                color="#95A5A6",
-                va="bottom",
-                ha="right",
-            )
-
-        ax.grid(axis="x", alpha=0.3, zorder=0)
-        ax.set_axisbelow(True)
 
     ax.set_xlim(left=0, right=x_max)
     # snap y-axis to bar edges so there is no gap above or below;
