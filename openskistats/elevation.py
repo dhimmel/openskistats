@@ -132,6 +132,10 @@ def get_elevation_histogram_data(
     so long segments crossing bin boundaries are accurately distributed rather
     than assigned entirely to a single midpoint bin.
 
+    Segments that fit entirely within a single bin are handled with vectorized
+    Polars expressions; only multi-bin segments fall back to Python row-level
+    splitting.
+
     The default metric is ``distance_vertical_drop`` (skiable vertical), which
     avoids over-representing low-angle runs relative to steep terrain —
     consistent with how combined vertical is used elsewhere in the project.
@@ -146,29 +150,67 @@ def get_elevation_histogram_data(
             }
         )
 
-    _split_schema = pl.List(
-        pl.Struct({"elevation_bin_center": pl.Float64, "binned_value": pl.Float64})
+    bw = bin_width
+    # Compute bin indices for the low/high ends of each segment
+    df = segments.with_columns(
+        _elev_lo=pl.min_horizontal(
+            "elevation", pl.col("elevation") + pl.col("distance_vertical")
+        ),
+        _elev_hi=pl.max_horizontal(
+            "elevation", pl.col("elevation") + pl.col("distance_vertical")
+        ),
+    ).with_columns(
+        _first_idx=(pl.col("_elev_lo") / bw).floor().cast(pl.Int64),
+        _last_idx=(pl.col("_elev_hi") / bw).floor().cast(pl.Int64),
     )
 
-    def _split_segment(row: dict[str, float]) -> list[dict[str, float]]:
-        return _split_segment_across_bins(
-            elevation=row["elevation"],
-            distance_vertical=row["distance_vertical"],
-            value=row["_v"],
-            bin_width=bin_width,
+    single = df.filter(pl.col("_first_idx") == pl.col("_last_idx"))
+    multi = df.filter(pl.col("_first_idx") != pl.col("_last_idx"))
+
+    # Single-bin segments: pure Polars, assign full value to the one bin
+    single_result = single.select(
+        "run_difficulty_condensed",
+        (pl.col("_first_idx") * bw + bw / 2).alias("elevation_bin_center"),
+        pl.col(metric).cast(pl.Float64),
+    )
+
+    # Multi-bin segments: fall back to proportional Python split
+    if multi.is_empty():
+        multi_result = pl.DataFrame(
+            schema={
+                "elevation_bin_center": pl.Float64,
+                "run_difficulty_condensed": pl.String,
+                metric: pl.Float64,
+            }
+        )
+    else:
+        _split_schema = pl.List(
+            pl.Struct({"elevation_bin_center": pl.Float64, "binned_value": pl.Float64})
+        )
+
+        def _split_segment(row: dict[str, float]) -> list[dict[str, float]]:
+            return _split_segment_across_bins(
+                elevation=row["elevation"],
+                distance_vertical=row["distance_vertical"],
+                value=row["_v"],
+                bin_width=bin_width,
+            )
+
+        multi_result = (
+            multi.with_columns(pl.col(metric).alias("_v"))
+            .with_columns(
+                pl.struct("elevation", "distance_vertical", "_v")
+                .map_elements(_split_segment, return_dtype=_split_schema)
+                .alias("_bins")
+            )
+            .select("run_difficulty_condensed", "_bins")
+            .explode("_bins")
+            .unnest("_bins")
+            .rename({"binned_value": metric})
         )
 
     return (
-        segments.with_columns(pl.col(metric).alias("_v"))
-        .with_columns(
-            pl.struct("elevation", "distance_vertical", "_v")
-            .map_elements(_split_segment, return_dtype=_split_schema)
-            .alias("_bins")
-        )
-        .select("run_difficulty_condensed", "_bins")
-        .explode("_bins")
-        .unnest("_bins")
-        .rename({"binned_value": metric})
+        pl.concat([single_result, multi_result])
         .filter(pl.col(metric) > 0)
         .group_by("elevation_bin_center", "run_difficulty_condensed")
         .agg(pl.col(metric).sum())
