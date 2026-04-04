@@ -97,7 +97,10 @@ def pl_condense_run_difficulty(run_difficulty_col: str = "run_difficulty") -> pl
     return (
         pl.col(run_difficulty_col)
         .fill_null(SkiRunDifficulty.other)
-        .replace_strict(SkiRunDifficulty.condense())
+        # FIXME: simplify when https://github.com/pola-rs/polars/issues/27060 is fixed
+        .replace_strict(
+            {str(k): str(v) for k, v in SkiRunDifficulty.condense().items()}
+        )
         .cast(pl.Enum(SkiRunDifficulty))
         .alias("run_difficulty_condensed")
     )
