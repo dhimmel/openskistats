@@ -20,8 +20,9 @@ def add_spatial_metric_columns(
     """
     Add spatial metrics to a DataFrame of geographic coordinates.
     """
+    schema = df.collect_schema()
     for column in ["index", "latitude", "longitude", "elevation"]:
-        assert column in df
+        assert column in schema
     return (
         df.lazy()
         .with_columns(
