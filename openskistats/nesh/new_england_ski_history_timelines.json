@@ -160,6 +160,36 @@
     "date_iso": "2024-12-21"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Abenaki",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/abenaki.php",
+    "date_raw": "Mar 30",
+    "date_iso": "2025-03-30"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Abenaki",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/abenaki.php",
+    "date_raw": "Dec 21",
+    "date_iso": "2025-12-21"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Abenaki",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/abenaki.php",
+    "date_raw": "Mar 29",
+    "date_iso": "2026-03-29"
+  },
+  {
     "season": 1964,
     "season_str": "1964-65",
     "moment": "opening",
@@ -398,6 +428,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/arrowhead.php",
     "date_raw": "Mar 24",
     "date_iso": "2024-03-24"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Arrowhead",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/arrowhead.php",
+    "date_raw": "Feb 1",
+    "date_iso": "2025-02-01"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Arrowhead",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/arrowhead.php",
+    "date_raw": "Mar 1",
+    "date_iso": "2025-03-01"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Arrowhead",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/arrowhead.php",
+    "date_raw": "Jan 31",
+    "date_iso": "2026-01-31"
   },
   {
     "season": 1961,
@@ -908,6 +968,46 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Vermont/ascutney.php",
     "date_raw": "Mar 24",
     "date_iso": "2024-03-24"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Ascutney",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/ascutney.php",
+    "date_raw": "Feb 1",
+    "date_iso": "2025-02-01"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Ascutney",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/ascutney.php",
+    "date_raw": "Mar 2",
+    "date_iso": "2025-03-02"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Ascutney",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/ascutney.php",
+    "date_raw": "Dec 7",
+    "date_iso": "2025-12-07"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Ascutney",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/ascutney.php",
+    "date_raw": "Mar 8",
+    "date_iso": "2026-03-08"
   },
   {
     "season": 1964,
@@ -1570,6 +1670,36 @@
     "date_iso": "2024-12-06"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Attitash",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/attitash.php",
+    "date_raw": "Apr 13",
+    "date_iso": "2025-04-13"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Attitash",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/attitash.php",
+    "date_raw": "Dec 6",
+    "date_iso": "2025-12-06"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Attitash",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/attitash.php",
+    "date_raw": "Apr 5",
+    "date_iso": "2026-04-05"
+  },
+  {
     "season": 1997,
     "season_str": "1997-98",
     "moment": "opening",
@@ -2030,6 +2160,46 @@
     "date_iso": "2024-02-04"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Baker Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/bakermtn.php",
+    "date_raw": "Feb 16",
+    "date_iso": "2025-02-16"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Baker Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/bakermtn.php",
+    "date_raw": "Mar 2",
+    "date_iso": "2025-03-02"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Baker Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/bakermtn.php",
+    "date_raw": "Jan 31",
+    "date_iso": "2026-01-31"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Baker Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/bakermtn.php",
+    "date_raw": "Mar 8",
+    "date_iso": "2026-03-08"
+  },
+  {
     "season": 1964,
     "season_str": "1964-65",
     "moment": "opening",
@@ -2410,6 +2580,326 @@
     "date_iso": "1981-01-08"
   },
   {
+    "season": 1952,
+    "season_str": "1952-53",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Jan 4",
+    "date_iso": "1953-01-04"
+  },
+  {
+    "season": 1953,
+    "season_str": "1953-54",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Jan 13",
+    "date_iso": "1954-01-13"
+  },
+  {
+    "season": 1954,
+    "season_str": "1954-55",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Feb 17",
+    "date_iso": "1955-02-17"
+  },
+  {
+    "season": 1954,
+    "season_str": "1954-55",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Mar 30",
+    "date_iso": "1955-03-30"
+  },
+  {
+    "season": 1955,
+    "season_str": "1955-56",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Feb 2",
+    "date_iso": "1956-02-02"
+  },
+  {
+    "season": 1956,
+    "season_str": "1956-57",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Dec 16",
+    "date_iso": "1956-12-16"
+  },
+  {
+    "season": 1957,
+    "season_str": "1957-58",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Jan 9",
+    "date_iso": "1958-01-09"
+  },
+  {
+    "season": 1958,
+    "season_str": "1958-59",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Dec 16",
+    "date_iso": "1958-12-16"
+  },
+  {
+    "season": 1961,
+    "season_str": "1961-62",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Dec 29",
+    "date_iso": "1961-12-29"
+  },
+  {
+    "season": 1962,
+    "season_str": "1962-63",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Dec 30",
+    "date_iso": "1962-12-30"
+  },
+  {
+    "season": 1963,
+    "season_str": "1963-64",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Dec 29",
+    "date_iso": "1963-12-29"
+  },
+  {
+    "season": 1964,
+    "season_str": "1964-65",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Dec 6",
+    "date_iso": "1964-12-06"
+  },
+  {
+    "season": 1965,
+    "season_str": "1965-66",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Jan 8",
+    "date_iso": "1966-01-08"
+  },
+  {
+    "season": 1966,
+    "season_str": "1966-67",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Dec 29",
+    "date_iso": "1966-12-29"
+  },
+  {
+    "season": 1967,
+    "season_str": "1967-68",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Dec 30",
+    "date_iso": "1967-12-30"
+  },
+  {
+    "season": 1969,
+    "season_str": "1969-70",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Dec 27",
+    "date_iso": "1969-12-27"
+  },
+  {
+    "season": 1970,
+    "season_str": "1970-71",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Dec 26",
+    "date_iso": "1970-12-26"
+  },
+  {
+    "season": 1972,
+    "season_str": "1972-73",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Dec 31",
+    "date_iso": "1972-12-31"
+  },
+  {
+    "season": 1973,
+    "season_str": "1973-74",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Jan 12",
+    "date_iso": "1974-01-12"
+  },
+  {
+    "season": 1974,
+    "season_str": "1974-75",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Jan 15",
+    "date_iso": "1975-01-15"
+  },
+  {
+    "season": 1974,
+    "season_str": "1974-75",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Mar 16",
+    "date_iso": "1975-03-16"
+  },
+  {
+    "season": 1975,
+    "season_str": "1975-76",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Jan 1",
+    "date_iso": "1976-01-01"
+  },
+  {
+    "season": 1977,
+    "season_str": "1977-78",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Mar 19",
+    "date_iso": "1978-03-19"
+  },
+  {
+    "season": 1978,
+    "season_str": "1978-79",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Dec 27",
+    "date_iso": "1978-12-27"
+  },
+  {
+    "season": 1982,
+    "season_str": "1982-83",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Feb 10",
+    "date_iso": "1983-02-10"
+  },
+  {
+    "season": 1983,
+    "season_str": "1983-84",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Jan 14",
+    "date_iso": "1984-01-14"
+  },
+  {
+    "season": 1985,
+    "season_str": "1985-86",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Jan 1",
+    "date_iso": "1986-01-01"
+  },
+  {
+    "season": 1986,
+    "season_str": "1986-87",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Jan 7",
+    "date_iso": "1987-01-07"
+  },
+  {
+    "season": 2002,
+    "season_str": "2002-03",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Feb 8",
+    "date_iso": "2003-02-08"
+  },
+  {
+    "season": 2007,
+    "season_str": "2007-08",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Dec 22",
+    "date_iso": "2007-12-22"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Feb 22",
+    "date_iso": "2025-02-22"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bellows Falls Ski Tow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bellowsfalls.php",
+    "date_raw": "Jan 30",
+    "date_iso": "2026-01-30"
+  },
+  {
     "season": 1963,
     "season_str": "1963-64",
     "moment": "opening",
@@ -2648,6 +3138,16 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/berkshireeast.php",
     "date_raw": "Dec 7",
     "date_iso": "1991-12-07"
+  },
+  {
+    "season": 1992,
+    "season_str": "1992-93",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Berkshire East",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/berkshireeast.php",
+    "date_raw": "Apr 4",
+    "date_iso": "1993-04-04"
   },
   {
     "season": 1993,
@@ -3200,6 +3700,36 @@
     "date_iso": "2024-12-07"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Berkshire East",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/berkshireeast.php",
+    "date_raw": "Apr 4",
+    "date_iso": "2025-04-04"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Massachusetts",
+    "ski_area_name": "Berkshire East",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/berkshireeast.php",
+    "date_raw": "Dec 6",
+    "date_iso": "2025-12-06"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Berkshire East",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/berkshireeast.php",
+    "date_raw": "Apr 4",
+    "date_iso": "2026-04-04"
+  },
+  {
     "season": 1952,
     "season_str": "1952-53",
     "moment": "opening",
@@ -3498,6 +4028,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Maine/squawmtn.php",
     "date_raw": "Dec 8",
     "date_iso": "2024-12-08"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Big Moose Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/squawmtn.php",
+    "date_raw": "Mar 16",
+    "date_iso": "2025-03-16"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Big Moose Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/squawmtn.php",
+    "date_raw": "Dec 27",
+    "date_iso": "2025-12-27"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Big Moose Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/squawmtn.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2026-03-15"
   },
   {
     "season": 2001,
@@ -3888,6 +4448,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Maine/bigrock.php",
     "date_raw": "Dec 21",
     "date_iso": "2024-12-21"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Big Rock",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/bigrock.php",
+    "date_raw": "Mar 22",
+    "date_iso": "2025-03-22"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Big Rock",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/bigrock.php",
+    "date_raw": "Dec 12",
+    "date_iso": "2025-12-12"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Big Rock",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/bigrock.php",
+    "date_raw": "Mar 22",
+    "date_iso": "2026-03-22"
   },
   {
     "season": 1987,
@@ -4440,14 +5030,254 @@
     "date_iso": "1969-12-20"
   },
   {
+    "season": 1969,
+    "season_str": "1969-70",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Mar 29",
+    "date_iso": "1970-03-29"
+  },
+  {
+    "season": 1970,
+    "season_str": "1970-71",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Dec 12",
+    "date_iso": "1970-12-12"
+  },
+  {
+    "season": 1970,
+    "season_str": "1970-71",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Apr 4",
+    "date_iso": "1971-04-04"
+  },
+  {
+    "season": 1971,
+    "season_str": "1971-72",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Dec 4",
+    "date_iso": "1971-12-04"
+  },
+  {
+    "season": 1972,
+    "season_str": "1972-73",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Dec 2",
+    "date_iso": "1972-12-02"
+  },
+  {
+    "season": 1972,
+    "season_str": "1972-73",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Mar 11",
+    "date_iso": "1973-03-11"
+  },
+  {
+    "season": 1973,
+    "season_str": "1973-74",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Jan 4",
+    "date_iso": "1974-01-04"
+  },
+  {
+    "season": 1974,
+    "season_str": "1974-75",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Dec 20",
+    "date_iso": "1974-12-20"
+  },
+  {
+    "season": 1974,
+    "season_str": "1974-75",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Mar 23",
+    "date_iso": "1975-03-23"
+  },
+  {
+    "season": 1975,
+    "season_str": "1975-76",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Dec 23",
+    "date_iso": "1975-12-23"
+  },
+  {
+    "season": 1975,
+    "season_str": "1975-76",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Mar 21",
+    "date_iso": "1976-03-21"
+  },
+  {
+    "season": 1976,
+    "season_str": "1976-77",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Dec 18",
+    "date_iso": "1976-12-18"
+  },
+  {
+    "season": 1976,
+    "season_str": "1976-77",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Mar 13",
+    "date_iso": "1977-03-13"
+  },
+  {
     "season": 1977,
     "season_str": "1977-78",
     "moment": "opening",
     "state": "New Hampshire",
     "ski_area_name": "Black Mountain",
     "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
-    "date_raw": "Dec 17",
-    "date_iso": "1977-12-17"
+    "date_raw": "Dec 10",
+    "date_iso": "1977-12-10"
+  },
+  {
+    "season": 1977,
+    "season_str": "1977-78",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Mar 26",
+    "date_iso": "1978-03-26"
+  },
+  {
+    "season": 1978,
+    "season_str": "1978-79",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Dec 2",
+    "date_iso": "1978-12-02"
+  },
+  {
+    "season": 1978,
+    "season_str": "1978-79",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Mar 18",
+    "date_iso": "1979-03-18"
+  },
+  {
+    "season": 1979,
+    "season_str": "1979-80",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Feb 19",
+    "date_iso": "1980-02-19"
+  },
+  {
+    "season": 1980,
+    "season_str": "1980-81",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Dec 30",
+    "date_iso": "1980-12-30"
+  },
+  {
+    "season": 1981,
+    "season_str": "1981-82",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Dec 19",
+    "date_iso": "1981-12-19"
+  },
+  {
+    "season": 1981,
+    "season_str": "1981-82",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Mar 28",
+    "date_iso": "1982-03-28"
+  },
+  {
+    "season": 1982,
+    "season_str": "1982-83",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Jan 21",
+    "date_iso": "1983-01-21"
+  },
+  {
+    "season": 1982,
+    "season_str": "1982-83",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Feb 25",
+    "date_iso": "1983-02-25"
+  },
+  {
+    "season": 1983,
+    "season_str": "1983-84",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Dec 24",
+    "date_iso": "1983-12-24"
+  },
+  {
+    "season": 1983,
+    "season_str": "1983-84",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Mar 18",
+    "date_iso": "1984-03-18"
   },
   {
     "season": 1985,
@@ -4460,6 +5290,46 @@
     "date_iso": "1985-12-14"
   },
   {
+    "season": 1985,
+    "season_str": "1985-86",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Mar 30",
+    "date_iso": "1986-03-30"
+  },
+  {
+    "season": 1986,
+    "season_str": "1986-87",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Dec 13",
+    "date_iso": "1986-12-13"
+  },
+  {
+    "season": 1986,
+    "season_str": "1986-87",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Mar 22",
+    "date_iso": "1987-03-22"
+  },
+  {
+    "season": 1987,
+    "season_str": "1987-88",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Mar 20",
+    "date_iso": "1988-03-20"
+  },
+  {
     "season": 1988,
     "season_str": "1988-89",
     "moment": "opening",
@@ -4468,6 +5338,16 @@
     "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
     "date_raw": "Dec 10",
     "date_iso": "1988-12-10"
+  },
+  {
+    "season": 1988,
+    "season_str": "1988-89",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Mar 19",
+    "date_iso": "1989-03-19"
   },
   {
     "season": 1989,
@@ -5290,6 +6170,66 @@
     "date_iso": "2024-12-26"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/blackmtn.php",
+    "date_raw": "Mar 30",
+    "date_iso": "2025-03-30"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "May 3",
+    "date_iso": "2025-05-03"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "Nov 15",
+    "date_iso": "2025-11-15"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/blackmtn.php",
+    "date_raw": "Dec 26",
+    "date_iso": "2025-12-26"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/blackmtn.php",
+    "date_raw": "Mar 29",
+    "date_iso": "2026-03-29"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Black Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/blackmtn.php",
+    "date_raw": "May 17",
+    "date_iso": "2026-05-17"
+  },
+  {
     "season": 1957,
     "season_str": "1957-58",
     "moment": "closing",
@@ -5552,6 +6492,16 @@
   {
     "season": 1955,
     "season_str": "1955-56",
+    "moment": "opening",
+    "state": "Massachusetts",
+    "ski_area_name": "Blue Hill",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/bluehills.php",
+    "date_raw": "Jan 18",
+    "date_iso": "1956-01-18"
+  },
+  {
+    "season": 1955,
+    "season_str": "1955-56",
     "moment": "closing",
     "state": "Massachusetts",
     "ski_area_name": "Blue Hill",
@@ -5568,6 +6518,46 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/bluehills.php",
     "date_raw": "Feb 16",
     "date_iso": "1950-02-16"
+  },
+  {
+    "season": 1952,
+    "season_str": "1952-53",
+    "moment": "opening",
+    "state": "Massachusetts",
+    "ski_area_name": "Blue Hills",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/bluehills.php",
+    "date_raw": "Jan 13",
+    "date_iso": "1953-01-13"
+  },
+  {
+    "season": 1953,
+    "season_str": "1953-54",
+    "moment": "opening",
+    "state": "Massachusetts",
+    "ski_area_name": "Blue Hills",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/bluehills.php",
+    "date_raw": "Jan 11",
+    "date_iso": "1954-01-11"
+  },
+  {
+    "season": 1954,
+    "season_str": "1954-55",
+    "moment": "opening",
+    "state": "Massachusetts",
+    "ski_area_name": "Blue Hills",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/bluehills.php",
+    "date_raw": "Dec 22",
+    "date_iso": "1954-12-22"
+  },
+  {
+    "season": 1957,
+    "season_str": "1957-58",
+    "moment": "opening",
+    "state": "Massachusetts",
+    "ski_area_name": "Blue Hills",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/bluehills.php",
+    "date_raw": "Jan 8",
+    "date_iso": "1958-01-08"
   },
   {
     "season": 1976,
@@ -5878,6 +6868,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/bluehills.php",
     "date_raw": "Dec 14",
     "date_iso": "2024-12-14"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Blue Hills",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/bluehills.php",
+    "date_raw": "Mar 9",
+    "date_iso": "2025-03-09"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Massachusetts",
+    "ski_area_name": "Blue Hills",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/bluehills.php",
+    "date_raw": "Dec 13",
+    "date_iso": "2025-12-13"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Blue Hills",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/bluehills.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2026-03-15"
   },
   {
     "season": 1977,
@@ -6358,6 +7378,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Vermont/boltonvalley.php",
     "date_raw": "Dec 6",
     "date_iso": "2024-12-06"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Bolton Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/boltonvalley.php",
+    "date_raw": "Apr 13",
+    "date_iso": "2025-04-13"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bolton Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/boltonvalley.php",
+    "date_raw": "Nov 22",
+    "date_iso": "2025-11-22"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Bolton Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/boltonvalley.php",
+    "date_raw": "Apr 12",
+    "date_iso": "2026-04-12"
   },
   {
     "season": 1960,
@@ -7950,6 +9000,36 @@
     "date_iso": "2024-12-13"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Bousquet",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/bousquet.php",
+    "date_raw": "Mar 23",
+    "date_iso": "2025-03-23"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Massachusetts",
+    "ski_area_name": "Bousquet",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/bousquet.php",
+    "date_raw": "Dec 12",
+    "date_iso": "2025-12-12"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Bousquet",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/bousquet.php",
+    "date_raw": "Mar 29",
+    "date_iso": "2026-03-29"
+  },
+  {
     "season": 2016,
     "season_str": "2016-17",
     "moment": "opening",
@@ -8138,6 +9218,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Vermont/livingmemorialpark.php",
     "date_raw": "Dec 31",
     "date_iso": "2024-12-31"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Brattleboro Ski Hill",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/livingmemorialpark.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2025-03-15"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Brattleboro Ski Hill",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/livingmemorialpark.php",
+    "date_raw": "Dec 20",
+    "date_iso": "2025-12-20"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Brattleboro Ski Hill",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/livingmemorialpark.php",
+    "date_raw": "Mar 21",
+    "date_iso": "2026-03-21"
   },
   {
     "season": 1973,
@@ -8770,6 +9880,36 @@
     "date_iso": "2024-11-16"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Bretton Woods",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/brettonwoods.php",
+    "date_raw": "Apr 13",
+    "date_iso": "2025-04-13"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Bretton Woods",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/brettonwoods.php",
+    "date_raw": "Nov 15",
+    "date_iso": "2025-11-15"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Bretton Woods",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/brettonwoods.php",
+    "date_raw": "Apr 12",
+    "date_iso": "2026-04-12"
+  },
+  {
     "season": 1939,
     "season_str": "1939-40",
     "moment": "opening",
@@ -8778,6 +9918,16 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/brodie.php",
     "date_raw": "Dec 16",
     "date_iso": "1939-12-16"
+  },
+  {
+    "season": 1964,
+    "season_str": "1964-65",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Brodie",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/brodie.php",
+    "date_raw": "Apr 4",
+    "date_iso": "1965-04-04"
   },
   {
     "season": 1965,
@@ -9980,6 +11130,36 @@
     "date_iso": "2024-12-05"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Bromley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bromley.php",
+    "date_raw": "Apr 2",
+    "date_iso": "2025-04-02"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Bromley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bromley.php",
+    "date_raw": "Nov 28",
+    "date_iso": "2025-11-28"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Bromley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/bromley.php",
+    "date_raw": "Apr 4",
+    "date_iso": "2026-04-04"
+  },
+  {
     "season": 1961,
     "season_str": "1961-62",
     "moment": "opening",
@@ -10660,6 +11840,36 @@
     "date_iso": "2024-12-07"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Burke",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/burkemtn.php",
+    "date_raw": "Apr 6",
+    "date_iso": "2025-04-06"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Burke",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/burkemtn.php",
+    "date_raw": "Dec 6",
+    "date_iso": "2025-12-06"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Burke",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/burkemtn.php",
+    "date_raw": "Apr 12",
+    "date_iso": "2026-04-12"
+  },
+  {
     "season": 1990,
     "season_str": "1990-91",
     "moment": "opening",
@@ -10772,12 +11982,32 @@
   {
     "season": 2008,
     "season_str": "2008-09",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Burke Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/burkemtn.php",
+    "date_raw": "Dec 6",
+    "date_iso": "2008-12-06"
+  },
+  {
+    "season": 2008,
+    "season_str": "2008-09",
     "moment": "closing",
     "state": "Vermont",
     "ski_area_name": "Burke Mountain",
     "ski_area_page": "https://www.newenglandskihistory.com/Vermont/burkemtn.php",
     "date_raw": "Apr 5",
     "date_iso": "2009-04-05"
+  },
+  {
+    "season": 2009,
+    "season_str": "2009-10",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Burke Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/burkemtn.php",
+    "date_raw": "Dec 12",
+    "date_iso": "2009-12-12"
   },
   {
     "season": 2009,
@@ -11640,6 +12870,36 @@
     "date_iso": "2024-12-14"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Camden Snow Bowl",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/camdensnowbowl.php",
+    "date_raw": "Mar 16",
+    "date_iso": "2025-03-16"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Camden Snow Bowl",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/camdensnowbowl.php",
+    "date_raw": "Dec 13",
+    "date_iso": "2025-12-13"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Camden Snow Bowl",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/camdensnowbowl.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2026-03-15"
+  },
+  {
     "season": 2010,
     "season_str": "2010-11",
     "moment": "opening",
@@ -11768,6 +13028,16 @@
     "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/camptonmtn.php",
     "date_raw": "Dec 26",
     "date_iso": "2024-12-26"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Campton Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/camptonmtn.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2025-03-15"
   },
   {
     "season": 1949,
@@ -12460,6 +13730,36 @@
     "date_iso": "2024-11-29"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Cannon",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/cannonmtn.php",
+    "date_raw": "Apr 13",
+    "date_iso": "2025-04-13"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Cannon",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/cannonmtn.php",
+    "date_raw": "Nov 22",
+    "date_iso": "2025-11-22"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Cannon",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/cannonmtn.php",
+    "date_raw": "Apr 12",
+    "date_iso": "2026-04-12"
+  },
+  {
     "season": 1974,
     "season_str": "1974-75",
     "moment": "opening",
@@ -13140,6 +14440,36 @@
     "date_iso": "2024-12-06"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Catamount",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/catamount.php",
+    "date_raw": "Apr 5",
+    "date_iso": "2025-04-05"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Massachusetts",
+    "ski_area_name": "Catamount",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/catamount.php",
+    "date_raw": "Dec 5",
+    "date_iso": "2025-12-05"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Catamount",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/catamount.php",
+    "date_raw": "Apr 4",
+    "date_iso": "2026-04-04"
+  },
+  {
     "season": 1937,
     "season_str": "1937-38",
     "moment": "opening",
@@ -13738,6 +15068,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Vermont/cochrans.php",
     "date_raw": "Dec 14",
     "date_iso": "2024-12-14"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Cochrans",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/cochrans.php",
+    "date_raw": "Mar 23",
+    "date_iso": "2025-03-23"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Cochrans",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/cochrans.php",
+    "date_raw": "Dec 13",
+    "date_iso": "2025-12-13"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Cochrans",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/cochrans.php",
+    "date_raw": "Mar 29",
+    "date_iso": "2026-03-29"
   },
   {
     "season": 2004,
@@ -14660,6 +16020,36 @@
     "date_iso": "2024-12-06"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Cranmore",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/cranmore.php",
+    "date_raw": "Apr 6",
+    "date_iso": "2025-04-06"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Cranmore",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/cranmore.php",
+    "date_raw": "Dec 5",
+    "date_iso": "2025-12-05"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Cranmore",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/cranmore.php",
+    "date_raw": "Apr 4",
+    "date_iso": "2026-04-04"
+  },
+  {
     "season": 1980,
     "season_str": "1980-81",
     "moment": "opening",
@@ -14798,6 +16188,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/crotchedmtn.php",
     "date_raw": "Dec 6",
     "date_iso": "2024-12-06"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Crotched",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/crotchedmtn.php",
+    "date_raw": "Mar 23",
+    "date_iso": "2025-03-23"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Crotched",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/crotchedmtn.php",
+    "date_raw": "Dec 12",
+    "date_iso": "2025-12-12"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Crotched",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/crotchedmtn.php",
+    "date_raw": "Mar 29",
+    "date_iso": "2026-03-29"
   },
   {
     "season": 1963,
@@ -15780,6 +17200,36 @@
     "date_iso": "2024-12-20"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Dartmouth Skiway",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/dartmouth.php",
+    "date_raw": "Mar 23",
+    "date_iso": "2025-03-23"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Dartmouth Skiway",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/dartmouth.php",
+    "date_raw": "Dec 19",
+    "date_iso": "2025-12-19"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Dartmouth Skiway",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/dartmouth.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2026-03-15"
+  },
+  {
     "season": 1945,
     "season_str": "1945-46",
     "moment": "opening",
@@ -16540,6 +17990,46 @@
     "date_iso": "1980-02-16"
   },
   {
+    "season": 1983,
+    "season_str": "1983-84",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Eaton Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/eaton.php",
+    "date_raw": "Jan 13",
+    "date_iso": "1984-01-13"
+  },
+  {
+    "season": 1984,
+    "season_str": "1984-85",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Eaton Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/eaton.php",
+    "date_raw": "Dec 23",
+    "date_iso": "1984-12-23"
+  },
+  {
+    "season": 1986,
+    "season_str": "1986-87",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Eaton Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/eaton.php",
+    "date_raw": "Dec 20",
+    "date_iso": "1986-12-20"
+  },
+  {
+    "season": 1987,
+    "season_str": "1987-88",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Eaton Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/eaton.php",
+    "date_raw": "Dec 19",
+    "date_iso": "1987-12-19"
+  },
+  {
     "season": 1987,
     "season_str": "1987-88",
     "moment": "opening",
@@ -16930,6 +18420,46 @@
     "date_iso": "1964-12-12"
   },
   {
+    "season": 1963,
+    "season_str": "1963-64",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Glen Ellen",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/glenellen.php",
+    "date_raw": "Dec 14",
+    "date_iso": "1963-12-14"
+  },
+  {
+    "season": 1963,
+    "season_str": "1963-64",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Glen Ellen",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/glenellen.php",
+    "date_raw": "Apr 12",
+    "date_iso": "1964-04-12"
+  },
+  {
+    "season": 1964,
+    "season_str": "1964-65",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Glen Ellen",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/glenellen.php",
+    "date_raw": "Dec 12",
+    "date_iso": "1964-12-12"
+  },
+  {
+    "season": 1965,
+    "season_str": "1965-66",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Glen Ellen",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/glenellen.php",
+    "date_raw": "Nov 20",
+    "date_iso": "1965-11-20"
+  },
+  {
     "season": 1965,
     "season_str": "1965-66",
     "moment": "closing",
@@ -16940,6 +18470,26 @@
     "date_iso": "1966-05-01"
   },
   {
+    "season": 1966,
+    "season_str": "1966-67",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Glen Ellen",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/glenellen.php",
+    "date_raw": "Dec 3",
+    "date_iso": "1966-12-03"
+  },
+  {
+    "season": 1966,
+    "season_str": "1966-67",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Glen Ellen",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/glenellen.php",
+    "date_raw": "Apr 2",
+    "date_iso": "1967-04-02"
+  },
+  {
     "season": 1967,
     "season_str": "1967-68",
     "moment": "opening",
@@ -16948,6 +18498,46 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Vermont/glenellen.php",
     "date_raw": "Nov 23",
     "date_iso": "1967-11-23"
+  },
+  {
+    "season": 1967,
+    "season_str": "1967-68",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Glen Ellen",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/glenellen.php",
+    "date_raw": "Apr 7",
+    "date_iso": "1968-04-07"
+  },
+  {
+    "season": 1968,
+    "season_str": "1968-69",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Glen Ellen",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/glenellen.php",
+    "date_raw": "Nov 16",
+    "date_iso": "1968-11-16"
+  },
+  {
+    "season": 1968,
+    "season_str": "1968-69",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Glen Ellen",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/glenellen.php",
+    "date_raw": "May 4",
+    "date_iso": "1969-05-04"
+  },
+  {
+    "season": 1969,
+    "season_str": "1969-70",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Glen Ellen",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/glenellen.php",
+    "date_raw": "Nov 28",
+    "date_iso": "1969-11-28"
   },
   {
     "season": 1969,
@@ -16980,6 +18570,16 @@
     "date_iso": "1971-05-23"
   },
   {
+    "season": 1971,
+    "season_str": "1971-72",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Glen Ellen",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/glenellen.php",
+    "date_raw": "Nov 25",
+    "date_iso": "1971-11-25"
+  },
+  {
     "season": 1972,
     "season_str": "1972-73",
     "moment": "opening",
@@ -16990,14 +18590,74 @@
     "date_iso": "1972-12-16"
   },
   {
+    "season": 1972,
+    "season_str": "1972-73",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Glen Ellen",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/glenellen.php",
+    "date_raw": "Mar 25",
+    "date_iso": "1973-03-25"
+  },
+  {
+    "season": 1973,
+    "season_str": "1973-74",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Glen Ellen",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/glenellen.php",
+    "date_raw": "Dec 8",
+    "date_iso": "1973-12-08"
+  },
+  {
+    "season": 1973,
+    "season_str": "1973-74",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Glen Ellen",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/glenellen.php",
+    "date_raw": "Apr 14",
+    "date_iso": "1974-04-14"
+  },
+  {
+    "season": 1974,
+    "season_str": "1974-75",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Glen Ellen",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/glenellen.php",
+    "date_raw": "Apr 27",
+    "date_iso": "1975-04-27"
+  },
+  {
     "season": 1975,
     "season_str": "1975-76",
     "moment": "opening",
     "state": "Vermont",
     "ski_area_name": "Glen Ellen",
     "ski_area_page": "https://www.newenglandskihistory.com/Vermont/glenellen.php",
-    "date_raw": "Dec 22",
-    "date_iso": "1975-12-22"
+    "date_raw": "Nov 27",
+    "date_iso": "1975-11-27"
+  },
+  {
+    "season": 1976,
+    "season_str": "1976-77",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Glen Ellen",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/glenellen.php",
+    "date_raw": "Nov 25",
+    "date_iso": "1976-11-25"
+  },
+  {
+    "season": 1976,
+    "season_str": "1976-77",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Glen Ellen",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/glenellen.php",
+    "date_raw": "Apr 3",
+    "date_iso": "1977-04-03"
   },
   {
     "season": 1977,
@@ -17168,6 +18828,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/granitegorge.php",
     "date_raw": "Dec 21",
     "date_iso": "2024-12-21"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Granite Gorge",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/granitegorge.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2025-03-15"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Granite Gorge",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/granitegorge.php",
+    "date_raw": "Dec 20",
+    "date_iso": "2025-12-20"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Granite Gorge",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/granitegorge.php",
+    "date_raw": "Mar 22",
+    "date_iso": "2026-03-22"
   },
   {
     "season": 1952,
@@ -17700,6 +19390,36 @@
     "date_iso": "2024-12-06"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Gunstock",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/gunstock.php",
+    "date_raw": "Apr 6",
+    "date_iso": "2025-04-06"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Gunstock",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/gunstock.php",
+    "date_raw": "Dec 5",
+    "date_iso": "2025-12-05"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Gunstock",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/gunstock.php",
+    "date_raw": "Apr 4",
+    "date_iso": "2026-04-04"
+  },
+  {
     "season": 2017,
     "season_str": "2017-18",
     "moment": "opening",
@@ -17718,6 +19438,26 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Vermont/hardack.php",
     "date_raw": "Mar 25",
     "date_iso": "2018-03-25"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Hard Ack",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/hardack.php",
+    "date_raw": "Feb 1",
+    "date_iso": "2025-02-01"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Hard Ack",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/hardack.php",
+    "date_raw": "Mar 9",
+    "date_iso": "2025-03-09"
   },
   {
     "season": 2012,
@@ -17760,6 +19500,36 @@
     "date_iso": "2016-02-28"
   },
   {
+    "season": 1937,
+    "season_str": "1937-38",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "HardAck",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/hardack.php",
+    "date_raw": "Feb 27",
+    "date_iso": "1938-02-27"
+  },
+  {
+    "season": 1951,
+    "season_str": "1951-52",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "HardAck",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/hardack.php",
+    "date_raw": "Feb 24",
+    "date_iso": "1952-02-24"
+  },
+  {
+    "season": 1975,
+    "season_str": "1975-76",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "HardAck",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/hardack.php",
+    "date_raw": "Dec 26",
+    "date_iso": "1975-12-26"
+  },
+  {
     "season": 2016,
     "season_str": "2016-17",
     "moment": "opening",
@@ -17788,6 +19558,26 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Vermont/hardack.php",
     "date_raw": "Mar 10",
     "date_iso": "2019-03-10"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "HardAck",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/hardack.php",
+    "date_raw": "Jan 1",
+    "date_iso": "2026-01-01"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "HardAck",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/hardack.php",
+    "date_raw": "Mar 3",
+    "date_iso": "2026-03-03"
   },
   {
     "season": 2021,
@@ -18148,6 +19938,16 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Vermont/haystack.php",
     "date_raw": "Dec 14",
     "date_iso": "2024-12-14"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Hermitage Club",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/haystack.php",
+    "date_raw": "Mar 30",
+    "date_iso": "2025-03-30"
   },
   {
     "season": 1987,
@@ -18598,6 +20398,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Maine/hermonmtn.php",
     "date_raw": "Dec 26",
     "date_iso": "2024-12-26"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Hermon Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/hermonmtn.php",
+    "date_raw": "Mar 20",
+    "date_iso": "2025-03-20"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Hermon Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/hermonmtn.php",
+    "date_raw": "Dec 13",
+    "date_iso": "2025-12-13"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Hermon Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/hermonmtn.php",
+    "date_raw": "Mar 19",
+    "date_iso": "2026-03-19"
   },
   {
     "season": 1959,
@@ -19578,6 +21408,26 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Vermont/jaypeak.php",
     "date_raw": "Nov 23",
     "date_iso": "2024-11-23"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Jay Peak",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/jaypeak.php",
+    "date_raw": "Jun 21",
+    "date_iso": "2025-06-21"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Jay Peak",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/jaypeak.php",
+    "date_raw": "Nov 22",
+    "date_iso": "2025-11-22"
   },
   {
     "season": 1948,
@@ -20760,6 +22610,36 @@
     "date_iso": "2024-12-06"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Jiminy Peak",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/jiminypeak.php",
+    "date_raw": "Apr 4",
+    "date_iso": "2025-04-04"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Massachusetts",
+    "ski_area_name": "Jiminy Peak",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/jiminypeak.php",
+    "date_raw": "Nov 22",
+    "date_iso": "2025-11-22"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Jiminy Peak",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/jiminypeak.php",
+    "date_raw": "Apr 4",
+    "date_iso": "2026-04-04"
+  },
+  {
     "season": 1957,
     "season_str": "1957-58",
     "moment": "opening",
@@ -20898,6 +22778,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/kanc.php",
     "date_raw": "Dec 26",
     "date_iso": "2024-12-26"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Kanc Recreation",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/kanc.php",
+    "date_raw": "Mar 30",
+    "date_iso": "2025-03-30"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Kanc Recreation",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/kanc.php",
+    "date_raw": "Dec 26",
+    "date_iso": "2025-12-26"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Kanc Recreation",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/kanc.php",
+    "date_raw": "Apr 4",
+    "date_iso": "2026-04-04"
   },
   {
     "season": 2011,
@@ -22300,6 +24210,36 @@
     "date_iso": "2024-11-14"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Killington",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/killington.php",
+    "date_raw": "May 10",
+    "date_iso": "2025-05-10"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Killington",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/killington.php",
+    "date_raw": "Nov 12",
+    "date_iso": "2025-11-12"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Killington",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/killington.php",
+    "date_raw": "May 25",
+    "date_iso": "2026-05-25"
+  },
+  {
     "season": 1958,
     "season_str": "1958-59",
     "moment": "opening",
@@ -22950,6 +24890,36 @@
     "date_iso": "2024-12-13"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "King Pine",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/kingpine.php",
+    "date_raw": "Mar 30",
+    "date_iso": "2025-03-30"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "King Pine",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/kingpine.php",
+    "date_raw": "Dec 12",
+    "date_iso": "2025-12-12"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "King Pine",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/kingpine.php",
+    "date_raw": "Mar 29",
+    "date_iso": "2026-03-29"
+  },
+  {
     "season": 1961,
     "season_str": "1961-62",
     "moment": "opening",
@@ -23188,6 +25158,16 @@
     "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/kingridge.php",
     "date_raw": "Mar 12",
     "date_iso": "1995-03-12"
+  },
+  {
+    "season": 1978,
+    "season_str": "1978-79",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Living Memorial Park",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/livingmemorialpark.php",
+    "date_raw": "Nov 28",
+    "date_iso": "1978-11-28"
   },
   {
     "season": 1982,
@@ -23568,6 +25548,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Maine/lonesomepine.php",
     "date_raw": "Dec 13",
     "date_iso": "2024-12-13"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Lonesome Pine",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/lonesomepine.php",
+    "date_raw": "Apr 6",
+    "date_iso": "2025-04-06"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Lonesome Pine",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/lonesomepine.php",
+    "date_raw": "Dec 13",
+    "date_iso": "2025-12-13"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Lonesome Pine",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/lonesomepine.php",
+    "date_raw": "Apr 5",
+    "date_iso": "2026-04-05"
   },
   {
     "season": 1966,
@@ -24230,6 +26240,36 @@
     "date_iso": "2024-12-03"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Loon",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/loon.php",
+    "date_raw": "Apr 20",
+    "date_iso": "2025-04-20"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Loon",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/loon.php",
+    "date_raw": "Nov 21",
+    "date_iso": "2025-11-21"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Loon",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/loon.php",
+    "date_raw": "Apr 19",
+    "date_iso": "2026-04-19"
+  },
+  {
     "season": 1967,
     "season_str": "1967-68",
     "moment": "opening",
@@ -24780,6 +26820,36 @@
     "date_iso": "2024-12-08"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Lost Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/lostvalley.php",
+    "date_raw": "Mar 30",
+    "date_iso": "2025-03-30"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Lost Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/lostvalley.php",
+    "date_raw": "Dec 6",
+    "date_iso": "2025-12-06"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Lost Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/lostvalley.php",
+    "date_raw": "Mar 29",
+    "date_iso": "2026-03-29"
+  },
+  {
     "season": 1947,
     "season_str": "1947-48",
     "moment": "opening",
@@ -25008,6 +27078,46 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Vermont/lyndon.php",
     "date_raw": "Mar 24",
     "date_iso": "2024-03-24"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Lyndon Outing Club",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/lyndon.php",
+    "date_raw": "Feb 7",
+    "date_iso": "2025-02-07"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Lyndon Outing Club",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/lyndon.php",
+    "date_raw": "Mar 2",
+    "date_iso": "2025-03-02"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Lyndon Outing Club",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/lyndon.php",
+    "date_raw": "Jan 28",
+    "date_iso": "2026-01-28"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Lyndon Outing Club",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/lyndon.php",
+    "date_raw": "Mar 8",
+    "date_iso": "2026-03-08"
   },
   {
     "season": 1948,
@@ -25680,6 +27790,36 @@
     "date_iso": "2024-12-07"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Mad River Glen",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/madriverglen.php",
+    "date_raw": "Apr 6",
+    "date_iso": "2025-04-06"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Mad River Glen",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/madriverglen.php",
+    "date_raw": "Dec 6",
+    "date_iso": "2025-12-06"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Mad River Glen",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/madriverglen.php",
+    "date_raw": "Apr 4",
+    "date_iso": "2026-04-04"
+  },
+  {
     "season": 1967,
     "season_str": "1967-68",
     "moment": "opening",
@@ -25808,6 +27948,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Vermont/magicmtn.php",
     "date_raw": "Dec 7",
     "date_iso": "2024-12-07"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Magic",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/magicmtn.php",
+    "date_raw": "Apr 4",
+    "date_iso": "2025-04-04"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Magic",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/magicmtn.php",
+    "date_raw": "Dec 5",
+    "date_iso": "2025-12-05"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Magic",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/magicmtn.php",
+    "date_raw": "Apr 4",
+    "date_iso": "2026-04-04"
   },
   {
     "season": 1960,
@@ -26340,14 +28510,164 @@
     "date_iso": "1973-03-11"
   },
   {
+    "season": 1973,
+    "season_str": "1973-74",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Maple Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/maplevalley.php",
+    "date_raw": "Jan 5",
+    "date_iso": "1974-01-05"
+  },
+  {
+    "season": 1974,
+    "season_str": "1974-75",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Maple Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/maplevalley.php",
+    "date_raw": "Dec 21",
+    "date_iso": "1974-12-21"
+  },
+  {
+    "season": 1974,
+    "season_str": "1974-75",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Maple Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/maplevalley.php",
+    "date_raw": "Mar 16",
+    "date_iso": "1975-03-16"
+  },
+  {
+    "season": 1975,
+    "season_str": "1975-76",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Maple Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/maplevalley.php",
+    "date_raw": "Dec 23",
+    "date_iso": "1975-12-23"
+  },
+  {
+    "season": 1975,
+    "season_str": "1975-76",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Maple Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/maplevalley.php",
+    "date_raw": "Mar 21",
+    "date_iso": "1976-03-21"
+  },
+  {
+    "season": 1976,
+    "season_str": "1976-77",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Maple Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/maplevalley.php",
+    "date_raw": "Dec 30",
+    "date_iso": "1976-12-30"
+  },
+  {
+    "season": 1976,
+    "season_str": "1976-77",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Maple Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/maplevalley.php",
+    "date_raw": "Mar 27",
+    "date_iso": "1977-03-27"
+  },
+  {
     "season": 1977,
     "season_str": "1977-78",
     "moment": "opening",
     "state": "Vermont",
     "ski_area_name": "Maple Valley",
     "ski_area_page": "https://www.newenglandskihistory.com/Vermont/maplevalley.php",
-    "date_raw": "Dec 10",
-    "date_iso": "1977-12-10"
+    "date_raw": "Dec 6",
+    "date_iso": "1977-12-06"
+  },
+  {
+    "season": 1977,
+    "season_str": "1977-78",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Maple Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/maplevalley.php",
+    "date_raw": "Mar 26",
+    "date_iso": "1978-03-26"
+  },
+  {
+    "season": 1978,
+    "season_str": "1978-79",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Maple Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/maplevalley.php",
+    "date_raw": "Nov 29",
+    "date_iso": "1978-11-29"
+  },
+  {
+    "season": 1978,
+    "season_str": "1978-79",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Maple Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/maplevalley.php",
+    "date_raw": "Mar 18",
+    "date_iso": "1979-03-18"
+  },
+  {
+    "season": 1979,
+    "season_str": "1979-80",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Maple Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/maplevalley.php",
+    "date_raw": "Jan 5",
+    "date_iso": "1980-01-05"
+  },
+  {
+    "season": 1979,
+    "season_str": "1979-80",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Maple Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/maplevalley.php",
+    "date_raw": "Mar 16",
+    "date_iso": "1980-03-16"
+  },
+  {
+    "season": 1980,
+    "season_str": "1980-81",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Maple Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/maplevalley.php",
+    "date_raw": "Nov 22",
+    "date_iso": "1980-11-22"
+  },
+  {
+    "season": 1981,
+    "season_str": "1981-82",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Maple Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/maplevalley.php",
+    "date_raw": "Dec 19",
+    "date_iso": "1981-12-19"
+  },
+  {
+    "season": 1981,
+    "season_str": "1981-82",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Maple Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/maplevalley.php",
+    "date_raw": "Mar 21",
+    "date_iso": "1982-03-21"
   },
   {
     "season": 1982,
@@ -26358,6 +28678,26 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Vermont/maplevalley.php",
     "date_raw": "Jan 17",
     "date_iso": "1983-01-17"
+  },
+  {
+    "season": 1984,
+    "season_str": "1984-85",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Maple Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/maplevalley.php",
+    "date_raw": "Dec 28",
+    "date_iso": "1984-12-28"
+  },
+  {
+    "season": 1985,
+    "season_str": "1985-86",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Maple Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/maplevalley.php",
+    "date_raw": "Dec 21",
+    "date_iso": "1985-12-21"
   },
   {
     "season": 1988,
@@ -26710,6 +29050,36 @@
     "date_iso": "2024-12-13"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "McIntyre",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/mcintyre.php",
+    "date_raw": "Mar 23",
+    "date_iso": "2025-03-23"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "McIntyre",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/mcintyre.php",
+    "date_raw": "Dec 7",
+    "date_iso": "2025-12-07"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "McIntyre",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/mcintyre.php",
+    "date_raw": "Mar 29",
+    "date_iso": "2026-03-29"
+  },
+  {
     "season": 1974,
     "season_str": "1974-75",
     "moment": "opening",
@@ -27020,6 +29390,36 @@
     "date_iso": "2024-12-11"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Middlebury College Snow Bowl",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/middlebury.php",
+    "date_raw": "Apr 5",
+    "date_iso": "2025-04-05"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Middlebury College Snow Bowl",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/middlebury.php",
+    "date_raw": "Dec 6",
+    "date_iso": "2025-12-06"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Middlebury College Snow Bowl",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/middlebury.php",
+    "date_raw": "Apr 5",
+    "date_iso": "2026-04-05"
+  },
+  {
     "season": 1957,
     "season_str": "1957-58",
     "moment": "opening",
@@ -27038,6 +29438,16 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Vermont/middlebury.php",
     "date_raw": "Apr 20",
     "date_iso": "1958-04-20"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Millinocket",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/millinocket.php",
+    "date_raw": "Feb 27",
+    "date_iso": "2026-02-27"
   },
   {
     "season": 1950,
@@ -27240,6 +29650,76 @@
     "date_iso": "1965-01-03"
   },
   {
+    "season": 1964,
+    "season_str": "1964-65",
+    "moment": "closing",
+    "state": "Connecticut",
+    "ski_area_name": "Mohawk Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/mohawk.php",
+    "date_raw": "Mar 7",
+    "date_iso": "1965-03-07"
+  },
+  {
+    "season": 1965,
+    "season_str": "1965-66",
+    "moment": "opening",
+    "state": "Connecticut",
+    "ski_area_name": "Mohawk Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/mohawk.php",
+    "date_raw": "Dec 31",
+    "date_iso": "1965-12-31"
+  },
+  {
+    "season": 1965,
+    "season_str": "1965-66",
+    "moment": "closing",
+    "state": "Connecticut",
+    "ski_area_name": "Mohawk Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/mohawk.php",
+    "date_raw": "Mar 20",
+    "date_iso": "1966-03-20"
+  },
+  {
+    "season": 1966,
+    "season_str": "1966-67",
+    "moment": "opening",
+    "state": "Connecticut",
+    "ski_area_name": "Mohawk Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/mohawk.php",
+    "date_raw": "Dec 16",
+    "date_iso": "1966-12-16"
+  },
+  {
+    "season": 1966,
+    "season_str": "1966-67",
+    "moment": "closing",
+    "state": "Connecticut",
+    "ski_area_name": "Mohawk Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/mohawk.php",
+    "date_raw": "Apr 2",
+    "date_iso": "1967-04-02"
+  },
+  {
+    "season": 1967,
+    "season_str": "1967-68",
+    "moment": "opening",
+    "state": "Connecticut",
+    "ski_area_name": "Mohawk Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/mohawk.php",
+    "date_raw": "Dec 29",
+    "date_iso": "1967-12-29"
+  },
+  {
+    "season": 1967,
+    "season_str": "1967-68",
+    "moment": "closing",
+    "state": "Connecticut",
+    "ski_area_name": "Mohawk Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/mohawk.php",
+    "date_raw": "Mar 17",
+    "date_iso": "1968-03-17"
+  },
+  {
     "season": 1968,
     "season_str": "1968-69",
     "moment": "opening",
@@ -27250,14 +29730,64 @@
     "date_iso": "1968-12-20"
   },
   {
+    "season": 1968,
+    "season_str": "1968-69",
+    "moment": "closing",
+    "state": "Connecticut",
+    "ski_area_name": "Mohawk Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/mohawk.php",
+    "date_raw": "Mar 23",
+    "date_iso": "1969-03-23"
+  },
+  {
+    "season": 1969,
+    "season_str": "1969-70",
+    "moment": "opening",
+    "state": "Connecticut",
+    "ski_area_name": "Mohawk Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/mohawk.php",
+    "date_raw": "Dec 19",
+    "date_iso": "1969-12-19"
+  },
+  {
     "season": 1970,
     "season_str": "1970-71",
     "moment": "closing",
     "state": "Connecticut",
     "ski_area_name": "Mohawk Mountain",
     "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/mohawk.php",
-    "date_raw": "Mar 28",
-    "date_iso": "1971-03-28"
+    "date_raw": "Mar 21",
+    "date_iso": "1971-03-21"
+  },
+  {
+    "season": 1971,
+    "season_str": "1971-72",
+    "moment": "opening",
+    "state": "Connecticut",
+    "ski_area_name": "Mohawk Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/mohawk.php",
+    "date_raw": "Nov 27",
+    "date_iso": "1971-11-27"
+  },
+  {
+    "season": 1972,
+    "season_str": "1972-73",
+    "moment": "closing",
+    "state": "Connecticut",
+    "ski_area_name": "Mohawk Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/mohawk.php",
+    "date_raw": "Mar 4",
+    "date_iso": "1973-03-04"
+  },
+  {
+    "season": 1973,
+    "season_str": "1973-74",
+    "moment": "opening",
+    "state": "Connecticut",
+    "ski_area_name": "Mohawk Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/mohawk.php",
+    "date_raw": "Dec 21",
+    "date_iso": "1973-12-21"
   },
   {
     "season": 1974,
@@ -27648,6 +30178,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/mohawk.php",
     "date_raw": "Dec 6",
     "date_iso": "2024-12-06"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Connecticut",
+    "ski_area_name": "Mohawk Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/mohawk.php",
+    "date_raw": "Mar 23",
+    "date_iso": "2025-03-23"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Connecticut",
+    "ski_area_name": "Mohawk Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/mohawk.php",
+    "date_raw": "Dec 6",
+    "date_iso": "2025-12-06"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Connecticut",
+    "ski_area_name": "Mohawk Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/mohawk.php",
+    "date_raw": "Mar 22",
+    "date_iso": "2026-03-22"
   },
   {
     "season": 1956,
@@ -28340,6 +30900,36 @@
     "date_iso": "2024-12-03"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Mount Snow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/mtsnow.php",
+    "date_raw": "Apr 20",
+    "date_iso": "2025-04-20"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Mount Snow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/mtsnow.php",
+    "date_raw": "Nov 22",
+    "date_iso": "2025-11-22"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Mount Snow",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/mtsnow.php",
+    "date_raw": "Apr 18",
+    "date_iso": "2026-04-18"
+  },
+  {
     "season": 1960,
     "season_str": "1960-61",
     "moment": "opening",
@@ -28810,6 +31400,36 @@
     "date_iso": "2024-12-21"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Mt. Abram",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/mtabram.php",
+    "date_raw": "Mar 30",
+    "date_iso": "2025-03-30"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Mt. Abram",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/mtabram.php",
+    "date_raw": "Dec 20",
+    "date_iso": "2025-12-20"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Mt. Abram",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/mtabram.php",
+    "date_raw": "Mar 29",
+    "date_iso": "2026-03-29"
+  },
+  {
     "season": 1936,
     "season_str": "1936-37",
     "moment": "opening",
@@ -29088,6 +31708,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/mteustis.php",
     "date_raw": "Dec 27",
     "date_iso": "2024-12-27"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Mt. Eustis",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/mteustis.php",
+    "date_raw": "Mar 5",
+    "date_iso": "2025-03-05"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Mt. Eustis",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/mteustis.php",
+    "date_raw": "Jan 7",
+    "date_iso": "2026-01-07"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Mt. Eustis",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/mteustis.php",
+    "date_raw": "Mar 4",
+    "date_iso": "2026-03-04"
   },
   {
     "season": 1939,
@@ -29540,6 +32190,36 @@
     "date_iso": "2024-12-27"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Mt. Jefferson",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/mtjefferson.php",
+    "date_raw": "Mar 9",
+    "date_iso": "2025-03-09"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Mt. Jefferson",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/mtjefferson.php",
+    "date_raw": "Jan 31",
+    "date_iso": "2026-01-31"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Mt. Jefferson",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/mtjefferson.php",
+    "date_raw": "Mar 8",
+    "date_iso": "2026-03-08"
+  },
+  {
     "season": 1936,
     "season_str": "1936-37",
     "moment": "opening",
@@ -29930,6 +32610,26 @@
     "date_iso": "1966-12-17"
   },
   {
+    "season": 1966,
+    "season_str": "1966-67",
+    "moment": "closing",
+    "state": "Connecticut",
+    "ski_area_name": "Mt. Southington",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/mtsouthington.php",
+    "date_raw": "Mar 26",
+    "date_iso": "1967-03-26"
+  },
+  {
+    "season": 1969,
+    "season_str": "1969-70",
+    "moment": "opening",
+    "state": "Connecticut",
+    "ski_area_name": "Mt. Southington",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/mtsouthington.php",
+    "date_raw": "Dec 18",
+    "date_iso": "1969-12-18"
+  },
+  {
     "season": 1970,
     "season_str": "1970-71",
     "moment": "closing",
@@ -30268,6 +32968,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/mtsouthington.php",
     "date_raw": "Dec 7",
     "date_iso": "2024-12-07"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Connecticut",
+    "ski_area_name": "Mt. Southington",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/mtsouthington.php",
+    "date_raw": "Mar 16",
+    "date_iso": "2025-03-16"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Connecticut",
+    "ski_area_name": "Mt. Southington",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/mtsouthington.php",
+    "date_raw": "Dec 13",
+    "date_iso": "2025-12-13"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Connecticut",
+    "ski_area_name": "Mt. Southington",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/mtsouthington.php",
+    "date_raw": "Mar 22",
+    "date_iso": "2026-03-22"
   },
   {
     "season": 1948,
@@ -31500,6 +34230,36 @@
     "date_iso": "2024-12-04"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Mt. Sunapee",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/sunapee.php",
+    "date_raw": "Apr 6",
+    "date_iso": "2025-04-06"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Mt. Sunapee",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/sunapee.php",
+    "date_raw": "Dec 5",
+    "date_iso": "2025-12-05"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Mt. Sunapee",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/sunapee.php",
+    "date_raw": "Apr 5",
+    "date_iso": "2026-04-05"
+  },
+  {
     "season": 1960,
     "season_str": "1960-61",
     "moment": "opening",
@@ -31860,6 +34620,36 @@
     "date_iso": "1991-12-07"
   },
   {
+    "season": 1992,
+    "season_str": "1992-93",
+    "moment": "opening",
+    "state": "Massachusetts",
+    "ski_area_name": "Mt. Tom",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/mttom.php",
+    "date_raw": "Dec 12",
+    "date_iso": "1992-12-12"
+  },
+  {
+    "season": 1992,
+    "season_str": "1992-93",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Mt. Tom",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/mttom.php",
+    "date_raw": "Apr 4",
+    "date_iso": "1993-04-04"
+  },
+  {
+    "season": 1993,
+    "season_str": "1993-94",
+    "moment": "opening",
+    "state": "Massachusetts",
+    "ski_area_name": "Mt. Tom",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/mttom.php",
+    "date_raw": "Dec 19",
+    "date_iso": "1993-12-19"
+  },
+  {
     "season": 1993,
     "season_str": "1993-94",
     "moment": "closing",
@@ -31898,6 +34688,56 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/mttom.php",
     "date_raw": "Dec 10",
     "date_iso": "1995-12-10"
+  },
+  {
+    "season": 1995,
+    "season_str": "1995-96",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Mt. Tom",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/mttom.php",
+    "date_raw": "Mar 24",
+    "date_iso": "1996-03-24"
+  },
+  {
+    "season": 1996,
+    "season_str": "1996-97",
+    "moment": "opening",
+    "state": "Massachusetts",
+    "ski_area_name": "Mt. Tom",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/mttom.php",
+    "date_raw": "Dec 1",
+    "date_iso": "1996-12-01"
+  },
+  {
+    "season": 1996,
+    "season_str": "1996-97",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Mt. Tom",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/mttom.php",
+    "date_raw": "Mar 16",
+    "date_iso": "1997-03-16"
+  },
+  {
+    "season": 1997,
+    "season_str": "1997-98",
+    "moment": "opening",
+    "state": "Massachusetts",
+    "ski_area_name": "Mt. Tom",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/mttom.php",
+    "date_raw": "Nov 23",
+    "date_iso": "1997-11-23"
+  },
+  {
+    "season": 1997,
+    "season_str": "1997-98",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Mt. Tom",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/mttom.php",
+    "date_raw": "Mar 8",
+    "date_iso": "1998-03-08"
   },
   {
     "season": 1961,
@@ -32188,6 +35028,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/nashobavalley.php",
     "date_raw": "Dec 14",
     "date_iso": "2024-12-14"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Nashoba Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/nashobavalley.php",
+    "date_raw": "Mar 9",
+    "date_iso": "2025-03-09"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Massachusetts",
+    "ski_area_name": "Nashoba Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/nashobavalley.php",
+    "date_raw": "Dec 6",
+    "date_iso": "2025-12-06"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Nashoba Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/nashobavalley.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2026-03-15"
   },
   {
     "season": 2010,
@@ -32820,6 +35690,36 @@
     "date_iso": "2025-01-17"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Northeast Slopes",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/northeastslopes.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2025-03-15"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Northeast Slopes",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/northeastslopes.php",
+    "date_raw": "Jan 3",
+    "date_iso": "2026-01-03"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Northeast Slopes",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/northeastslopes.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2026-03-15"
+  },
+  {
     "season": 1955,
     "season_str": "1955-56",
     "moment": "opening",
@@ -32938,6 +35838,146 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Vermont/okemo.php",
     "date_raw": "Dec 22",
     "date_iso": "1962-12-22"
+  },
+  {
+    "season": 1963,
+    "season_str": "1963-64",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Okemo",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/okemo.php",
+    "date_raw": "Dec 20",
+    "date_iso": "1963-12-20"
+  },
+  {
+    "season": 1963,
+    "season_str": "1963-64",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Okemo",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/okemo.php",
+    "date_raw": "Apr 5",
+    "date_iso": "1964-04-05"
+  },
+  {
+    "season": 1964,
+    "season_str": "1964-65",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Okemo",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/okemo.php",
+    "date_raw": "Dec 11",
+    "date_iso": "1964-12-11"
+  },
+  {
+    "season": 1964,
+    "season_str": "1964-65",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Okemo",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/okemo.php",
+    "date_raw": "Apr 11",
+    "date_iso": "1965-04-11"
+  },
+  {
+    "season": 1965,
+    "season_str": "1965-66",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Okemo",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/okemo.php",
+    "date_raw": "Dec 18",
+    "date_iso": "1965-12-18"
+  },
+  {
+    "season": 1965,
+    "season_str": "1965-66",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Okemo",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/okemo.php",
+    "date_raw": "Apr 3",
+    "date_iso": "1966-04-03"
+  },
+  {
+    "season": 1966,
+    "season_str": "1966-67",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Okemo",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/okemo.php",
+    "date_raw": "Dec 22",
+    "date_iso": "1966-12-22"
+  },
+  {
+    "season": 1966,
+    "season_str": "1966-67",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Okemo",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/okemo.php",
+    "date_raw": "Apr 2",
+    "date_iso": "1967-04-02"
+  },
+  {
+    "season": 1967,
+    "season_str": "1967-68",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Okemo",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/okemo.php",
+    "date_raw": "Dec 9",
+    "date_iso": "1967-12-09"
+  },
+  {
+    "season": 1967,
+    "season_str": "1967-68",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Okemo",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/okemo.php",
+    "date_raw": "Mar 24",
+    "date_iso": "1968-03-24"
+  },
+  {
+    "season": 1968,
+    "season_str": "1968-69",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Okemo",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/okemo.php",
+    "date_raw": "Nov 23",
+    "date_iso": "1968-11-23"
+  },
+  {
+    "season": 1968,
+    "season_str": "1968-69",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Okemo",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/okemo.php",
+    "date_raw": "Apr 13",
+    "date_iso": "1969-04-13"
+  },
+  {
+    "season": 1969,
+    "season_str": "1969-70",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Okemo",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/okemo.php",
+    "date_raw": "Dec 6",
+    "date_iso": "1969-12-06"
+  },
+  {
+    "season": 1969,
+    "season_str": "1969-70",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Okemo",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/okemo.php",
+    "date_raw": "Apr 12",
+    "date_iso": "1970-04-12"
   },
   {
     "season": 1974,
@@ -33600,6 +36640,36 @@
     "date_iso": "2024-12-01"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Okemo",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/okemo.php",
+    "date_raw": "Apr 13",
+    "date_iso": "2025-04-13"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Okemo",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/okemo.php",
+    "date_raw": "Nov 22",
+    "date_iso": "2025-11-22"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Okemo",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/okemo.php",
+    "date_raw": "Apr 16",
+    "date_iso": "2026-04-16"
+  },
+  {
     "season": 1969,
     "season_str": "1969-70",
     "moment": "opening",
@@ -34248,6 +37318,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/otisridge.php",
     "date_raw": "Dec 14",
     "date_iso": "2024-12-14"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Otis Ridge",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/otisridge.php",
+    "date_raw": "Mar 16",
+    "date_iso": "2025-03-16"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Massachusetts",
+    "ski_area_name": "Otis Ridge",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/otisridge.php",
+    "date_raw": "Dec 13",
+    "date_iso": "2025-12-13"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Otis Ridge",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/otisridge.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2026-03-15"
   },
   {
     "season": 1962,
@@ -35140,6 +38240,36 @@
     "date_iso": "2024-12-06"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Pats Peak",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/patspeak.php",
+    "date_raw": "Mar 28",
+    "date_iso": "2025-03-28"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Pats Peak",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/patspeak.php",
+    "date_raw": "Dec 5",
+    "date_iso": "2025-12-05"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Pats Peak",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/patspeak.php",
+    "date_raw": "Mar 29",
+    "date_iso": "2026-03-29"
+  },
+  {
     "season": 1937,
     "season_str": "1937-38",
     "moment": "opening",
@@ -35660,6 +38790,36 @@
     "date_iso": "2024-12-13"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Pico",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/pico.php",
+    "date_raw": "Apr 6",
+    "date_iso": "2025-04-06"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Pico",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/pico.php",
+    "date_raw": "Dec 12",
+    "date_iso": "2025-12-12"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Pico",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/pico.php",
+    "date_raw": "Apr 5",
+    "date_iso": "2026-04-05"
+  },
+  {
     "season": 2005,
     "season_str": "2005-06",
     "moment": "closing",
@@ -35748,6 +38908,16 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Maine/pinnacle.php",
     "date_raw": "Dec 8",
     "date_iso": "2019-12-08"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Pinnacle Ski Club",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/pinnacle.php",
+    "date_raw": "Mar 7",
+    "date_iso": "2026-03-07"
   },
   {
     "season": 1954,
@@ -35928,6 +39098,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Maine/shawneepeak.php",
     "date_raw": "Dec 6",
     "date_iso": "2024-12-06"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Pleasant Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/shawneepeak.php",
+    "date_raw": "Apr 6",
+    "date_iso": "2025-04-06"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Pleasant Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/shawneepeak.php",
+    "date_raw": "Dec 6",
+    "date_iso": "2025-12-06"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Pleasant Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/shawneepeak.php",
+    "date_raw": "Apr 5",
+    "date_iso": "2026-04-05"
   },
   {
     "season": 1960,
@@ -36330,6 +39530,86 @@
     "date_iso": "2024-12-06"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Connecticut",
+    "ski_area_name": "Powder Ridge",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/powderridge.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2025-03-15"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Connecticut",
+    "ski_area_name": "Powder Ridge",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/powderridge.php",
+    "date_raw": "Nov 28",
+    "date_iso": "2025-11-28"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Connecticut",
+    "ski_area_name": "Powder Ridge",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/powderridge.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2026-03-15"
+  },
+  {
+    "season": 1940,
+    "season_str": "1940-41",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Powderhouse Hill",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/powderhousehill.php",
+    "date_raw": "Feb 2",
+    "date_iso": "1941-02-02"
+  },
+  {
+    "season": 1976,
+    "season_str": "1976-77",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Powderhouse Hill",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/powderhousehill.php",
+    "date_raw": "Dec 22",
+    "date_iso": "1976-12-22"
+  },
+  {
+    "season": 2008,
+    "season_str": "2008-09",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Powderhouse Hill",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/powderhousehill.php",
+    "date_raw": "Dec 26",
+    "date_iso": "2008-12-26"
+  },
+  {
+    "season": 2008,
+    "season_str": "2008-09",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Powderhouse Hill",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/powderhousehill.php",
+    "date_raw": "Mar 29",
+    "date_iso": "2009-03-29"
+  },
+  {
+    "season": 2009,
+    "season_str": "2009-10",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Powderhouse Hill",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/powderhousehill.php",
+    "date_raw": "Dec 26",
+    "date_iso": "2009-12-26"
+  },
+  {
     "season": 2011,
     "season_str": "2011-12",
     "moment": "opening",
@@ -36580,6 +39860,36 @@
     "date_iso": "2025-01-22"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Powderhouse Hill",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/powderhousehill.php",
+    "date_raw": "Mar 5",
+    "date_iso": "2025-03-05"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Powderhouse Hill",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/powderhousehill.php",
+    "date_raw": "Dec 3",
+    "date_iso": "2025-12-03"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Powderhouse Hill",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/powderhousehill.php",
+    "date_raw": "Mar 8",
+    "date_iso": "2026-03-08"
+  },
+  {
     "season": 1961,
     "season_str": "1961-62",
     "moment": "opening",
@@ -36788,6 +40098,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Maine/quarryroad.php",
     "date_raw": "Dec 27",
     "date_iso": "2024-12-27"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Quarry Road Trails",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/quarryroad.php",
+    "date_raw": "Mar 16",
+    "date_iso": "2025-03-16"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Quarry Road Trails",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/quarryroad.php",
+    "date_raw": "Dec 27",
+    "date_iso": "2025-12-27"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Quarry Road Trails",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/quarryroad.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2026-03-15"
   },
   {
     "season": 1993,
@@ -37008,6 +40348,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Vermont/quechee.php",
     "date_raw": "Dec 20",
     "date_iso": "2024-12-20"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Quechee",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/quechee.php",
+    "date_raw": "Mar 16",
+    "date_iso": "2025-03-16"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Quechee",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/quechee.php",
+    "date_raw": "Dec 20",
+    "date_iso": "2025-12-20"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Quechee",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/quechee.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2026-03-15"
   },
   {
     "season": 1992,
@@ -37240,6 +40610,46 @@
     "date_iso": "2024-03-26"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Quoggy Jo",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/quoggyjo.php",
+    "date_raw": "Feb 1",
+    "date_iso": "2025-02-01"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Quoggy Jo",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/quoggyjo.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2025-03-15"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Quoggy Jo",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/quoggyjo.php",
+    "date_raw": "Jan 7",
+    "date_iso": "2026-01-07"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Quoggy Jo",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/quoggyjo.php",
+    "date_raw": "Mar 4",
+    "date_iso": "2026-03-04"
+  },
+  {
     "season": 2016,
     "season_str": "2016-17",
     "moment": "opening",
@@ -37328,6 +40738,186 @@
     "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/raggedmtn.php",
     "date_raw": "Apr 13",
     "date_iso": "1969-04-13"
+  },
+  {
+    "season": 1969,
+    "season_str": "1969-70",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Ragged Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/raggedmtn.php",
+    "date_raw": "Apr 5",
+    "date_iso": "1970-04-05"
+  },
+  {
+    "season": 1970,
+    "season_str": "1970-71",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Ragged Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/raggedmtn.php",
+    "date_raw": "Dec 18",
+    "date_iso": "1970-12-18"
+  },
+  {
+    "season": 1970,
+    "season_str": "1970-71",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Ragged Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/raggedmtn.php",
+    "date_raw": "Apr 11",
+    "date_iso": "1971-04-11"
+  },
+  {
+    "season": 1971,
+    "season_str": "1971-72",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Ragged Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/raggedmtn.php",
+    "date_raw": "Dec 4",
+    "date_iso": "1971-12-04"
+  },
+  {
+    "season": 1971,
+    "season_str": "1971-72",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Ragged Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/raggedmtn.php",
+    "date_raw": "Apr 9",
+    "date_iso": "1972-04-09"
+  },
+  {
+    "season": 1972,
+    "season_str": "1972-73",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Ragged Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/raggedmtn.php",
+    "date_raw": "Dec 8",
+    "date_iso": "1972-12-08"
+  },
+  {
+    "season": 1972,
+    "season_str": "1972-73",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Ragged Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/raggedmtn.php",
+    "date_raw": "Mar 11",
+    "date_iso": "1973-03-11"
+  },
+  {
+    "season": 1973,
+    "season_str": "1973-74",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Ragged Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/raggedmtn.php",
+    "date_raw": "Jan 3",
+    "date_iso": "1974-01-03"
+  },
+  {
+    "season": 1973,
+    "season_str": "1973-74",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Ragged Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/raggedmtn.php",
+    "date_raw": "Mar 24",
+    "date_iso": "1974-03-24"
+  },
+  {
+    "season": 1974,
+    "season_str": "1974-75",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Ragged Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/raggedmtn.php",
+    "date_raw": "Dec 20",
+    "date_iso": "1974-12-20"
+  },
+  {
+    "season": 1974,
+    "season_str": "1974-75",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Ragged Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/raggedmtn.php",
+    "date_raw": "Apr 13",
+    "date_iso": "1975-04-13"
+  },
+  {
+    "season": 1975,
+    "season_str": "1975-76",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Ragged Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/raggedmtn.php",
+    "date_raw": "Dec 24",
+    "date_iso": "1975-12-24"
+  },
+  {
+    "season": 1975,
+    "season_str": "1975-76",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Ragged Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/raggedmtn.php",
+    "date_raw": "Mar 21",
+    "date_iso": "1976-03-21"
+  },
+  {
+    "season": 1976,
+    "season_str": "1976-77",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Ragged Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/raggedmtn.php",
+    "date_raw": "Dec 29",
+    "date_iso": "1976-12-29"
+  },
+  {
+    "season": 1976,
+    "season_str": "1976-77",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Ragged Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/raggedmtn.php",
+    "date_raw": "Mar 27",
+    "date_iso": "1977-03-27"
+  },
+  {
+    "season": 1977,
+    "season_str": "1977-78",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Ragged Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/raggedmtn.php",
+    "date_raw": "Dec 17",
+    "date_iso": "1977-12-17"
+  },
+  {
+    "season": 1977,
+    "season_str": "1977-78",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Ragged Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/raggedmtn.php",
+    "date_raw": "Mar 26",
+    "date_iso": "1978-03-26"
+  },
+  {
+    "season": 1978,
+    "season_str": "1978-79",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Ragged Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/raggedmtn.php",
+    "date_raw": "Mar 18",
+    "date_iso": "1979-03-18"
   },
   {
     "season": 1980,
@@ -37850,6 +41440,36 @@
     "date_iso": "2024-12-06"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Ragged Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/raggedmtn.php",
+    "date_raw": "Apr 6",
+    "date_iso": "2025-04-06"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Ragged Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/raggedmtn.php",
+    "date_raw": "Dec 5",
+    "date_iso": "2025-12-05"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Ragged Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/raggedmtn.php",
+    "date_raw": "Apr 5",
+    "date_iso": "2026-04-05"
+  },
+  {
     "season": 2013,
     "season_str": "2013-14",
     "moment": "opening",
@@ -37868,6 +41488,26 @@
     "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/redhilloutingclub.php",
     "date_raw": "Nov 27",
     "date_iso": "2014-11-27"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Red Hill",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/redhilloutingclub.php",
+    "date_raw": "Feb 8",
+    "date_iso": "2025-02-08"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Red Hill",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/redhilloutingclub.php",
+    "date_raw": "Jan 31",
+    "date_iso": "2026-01-31"
   },
   {
     "season": 2016,
@@ -38640,6 +42280,36 @@
     "date_iso": "2024-12-06"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Saddleback",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/saddleback.php",
+    "date_raw": "Apr 20",
+    "date_iso": "2025-04-20"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Saddleback",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/saddleback.php",
+    "date_raw": "Dec 5",
+    "date_iso": "2025-12-05"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Saddleback",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/saddleback.php",
+    "date_raw": "Apr 18",
+    "date_iso": "2026-04-18"
+  },
+  {
     "season": 2022,
     "season_str": "2022-23",
     "moment": "opening",
@@ -38688,6 +42358,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Vermont/suicidesix.php",
     "date_raw": "Dec 19",
     "date_iso": "2024-12-19"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Saskadena Six",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/suicidesix.php",
+    "date_raw": "Mar 23",
+    "date_iso": "2025-03-23"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Saskadena Six",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/suicidesix.php",
+    "date_raw": "Dec 20",
+    "date_iso": "2025-12-20"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Saskadena Six",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/suicidesix.php",
+    "date_raw": "Mar 29",
+    "date_iso": "2026-03-29"
   },
   {
     "season": 1965,
@@ -39490,6 +43190,36 @@
     "date_iso": "2024-12-26"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Ski Bradford",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/bradford.php",
+    "date_raw": "Mar 16",
+    "date_iso": "2025-03-16"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Massachusetts",
+    "ski_area_name": "Ski Bradford",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/bradford.php",
+    "date_raw": "Dec 20",
+    "date_iso": "2025-12-20"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Ski Bradford",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/bradford.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2026-03-15"
+  },
+  {
     "season": 2000,
     "season_str": "2000-01",
     "moment": "opening",
@@ -39898,6 +43628,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/butternut.php",
     "date_raw": "Dec 6",
     "date_iso": "2024-12-06"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Ski Butternut",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/butternut.php",
+    "date_raw": "Mar 23",
+    "date_iso": "2025-03-23"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Massachusetts",
+    "ski_area_name": "Ski Butternut",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/butternut.php",
+    "date_raw": "Dec 11",
+    "date_iso": "2025-12-11"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Ski Butternut",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/butternut.php",
+    "date_raw": "Mar 29",
+    "date_iso": "2026-03-29"
   },
   {
     "season": 1969,
@@ -40510,6 +44270,36 @@
     "date_iso": "2024-12-13"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Connecticut",
+    "ski_area_name": "Ski Sundown",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/sundown.php",
+    "date_raw": "Mar 23",
+    "date_iso": "2025-03-23"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Connecticut",
+    "ski_area_name": "Ski Sundown",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/sundown.php",
+    "date_raw": "Dec 12",
+    "date_iso": "2025-12-12"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Connecticut",
+    "ski_area_name": "Ski Sundown",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/sundown.php",
+    "date_raw": "Mar 29",
+    "date_iso": "2026-03-29"
+  },
+  {
     "season": 1983,
     "season_str": "1983-84",
     "moment": "opening",
@@ -40848,6 +44638,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/ward.php",
     "date_raw": "Oct 19",
     "date_iso": "2024-10-19"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Ski Ward",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/ward.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2025-03-15"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Massachusetts",
+    "ski_area_name": "Ski Ward",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/ward.php",
+    "date_raw": "Oct 18",
+    "date_iso": "2025-10-18"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Ski Ward",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/ward.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2026-03-15"
   },
   {
     "season": 1958,
@@ -41480,6 +45300,36 @@
     "date_iso": "2024-12-05"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Smugglers Notch",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/smugglersnotch.php",
+    "date_raw": "Apr 13",
+    "date_iso": "2025-04-13"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Smugglers Notch",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/smugglersnotch.php",
+    "date_raw": "Nov 28",
+    "date_iso": "2025-11-28"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Smugglers Notch",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/smugglersnotch.php",
+    "date_raw": "Apr 12",
+    "date_iso": "2026-04-12"
+  },
+  {
     "season": 1955,
     "season_str": "1955-56",
     "moment": "closing",
@@ -41970,6 +45820,36 @@
     "date_iso": "2025-01-25"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Spruce Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/sprucemtn.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2025-03-15"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Spruce Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/sprucemtn.php",
+    "date_raw": "Dec 26",
+    "date_iso": "2025-12-26"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Spruce Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/sprucemtn.php",
+    "date_raw": "Mar 12",
+    "date_iso": "2026-03-12"
+  },
+  {
     "season": 1967,
     "season_str": "1967-68",
     "moment": "opening",
@@ -42338,6 +46218,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/storrshill.php",
     "date_raw": "Jan 10",
     "date_iso": "2025-01-10"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Storrs Hill",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/storrshill.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2025-03-15"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Storrs Hill",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/storrshill.php",
+    "date_raw": "Jan 3",
+    "date_iso": "2026-01-03"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Storrs Hill",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/storrshill.php",
+    "date_raw": "Mar 21",
+    "date_iso": "2026-03-21"
   },
   {
     "season": 1945,
@@ -43030,6 +46940,36 @@
     "date_iso": "2024-12-03"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Stowe",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/stowe.php",
+    "date_raw": "Apr 27",
+    "date_iso": "2025-04-27"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Stowe",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/stowe.php",
+    "date_raw": "Nov 21",
+    "date_iso": "2025-11-21"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Stowe",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/stowe.php",
+    "date_raw": "Apr 25",
+    "date_iso": "2026-04-25"
+  },
+  {
     "season": 1961,
     "season_str": "1961-62",
     "moment": "opening",
@@ -43650,6 +47590,36 @@
     "date_iso": "2024-12-01"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Stratton",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/strattonmtn.php",
+    "date_raw": "Apr 13",
+    "date_iso": "2025-04-13"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Stratton",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/strattonmtn.php",
+    "date_raw": "Nov 26",
+    "date_iso": "2025-11-26"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Stratton",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/strattonmtn.php",
+    "date_raw": "Apr 12",
+    "date_iso": "2026-04-12"
+  },
+  {
     "season": 1958,
     "season_str": "1958-59",
     "moment": "opening",
@@ -43668,6 +47638,56 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Vermont/sugarbush.php",
     "date_raw": "Dec 12",
     "date_iso": "1959-12-12"
+  },
+  {
+    "season": 1960,
+    "season_str": "1960-61",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Sugarbush",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/sugarbush.php",
+    "date_raw": "Dec 21",
+    "date_iso": "1960-12-21"
+  },
+  {
+    "season": 1960,
+    "season_str": "1960-61",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Sugarbush",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/sugarbush.php",
+    "date_raw": "Apr 16",
+    "date_iso": "1961-04-16"
+  },
+  {
+    "season": 1962,
+    "season_str": "1962-63",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Sugarbush",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/sugarbush.php",
+    "date_raw": "Dec 15",
+    "date_iso": "1962-12-15"
+  },
+  {
+    "season": 1963,
+    "season_str": "1963-64",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Sugarbush",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/sugarbush.php",
+    "date_raw": "Dec 14",
+    "date_iso": "1963-12-14"
+  },
+  {
+    "season": 1964,
+    "season_str": "1964-65",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Sugarbush",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/sugarbush.php",
+    "date_raw": "Dec 12",
+    "date_iso": "1964-12-12"
   },
   {
     "season": 1967,
@@ -44340,6 +48360,36 @@
     "date_iso": "2024-12-04"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Sugarbush",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/sugarbush.php",
+    "date_raw": "May 4",
+    "date_iso": "2025-05-04"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Vermont",
+    "ski_area_name": "Sugarbush",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/sugarbush.php",
+    "date_raw": "Nov 22",
+    "date_iso": "2025-11-22"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Sugarbush",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/sugarbush.php",
+    "date_raw": "May 2",
+    "date_iso": "2026-05-02"
+  },
+  {
     "season": 1961,
     "season_str": "1961-62",
     "moment": "opening",
@@ -44368,6 +48418,16 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Vermont/sugarbush.php",
     "date_raw": "Nov 20",
     "date_iso": "1965-11-20"
+  },
+  {
+    "season": 1965,
+    "season_str": "1965-66",
+    "moment": "closing",
+    "state": "Vermont",
+    "ski_area_name": "Sugarbush Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/Vermont/sugarbush.php",
+    "date_raw": "Apr 17",
+    "date_iso": "1966-04-17"
   },
   {
     "season": 1968,
@@ -45308,6 +49368,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Maine/sugarloaf.php",
     "date_raw": "Nov 23",
     "date_iso": "2024-11-23"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Sugarloaf",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/sugarloaf.php",
+    "date_raw": "Apr 27",
+    "date_iso": "2025-04-27"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Sugarloaf",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/sugarloaf.php",
+    "date_raw": "Nov 21",
+    "date_iso": "2025-11-21"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Sugarloaf",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/sugarloaf.php",
+    "date_raw": "Apr 26",
+    "date_iso": "2026-04-26"
   },
   {
     "season": 1937,
@@ -46540,6 +50630,36 @@
     "date_iso": "2024-10-31"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Sunday River",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/sundayriver.php",
+    "date_raw": "Apr 27",
+    "date_iso": "2025-04-27"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Sunday River",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/sundayriver.php",
+    "date_raw": "Nov 12",
+    "date_iso": "2025-11-12"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Sunday River",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/sundayriver.php",
+    "date_raw": "Apr 19",
+    "date_iso": "2026-04-19"
+  },
+  {
     "season": 1963,
     "season_str": "1963-64",
     "moment": "opening",
@@ -46548,6 +50668,16 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/woodbury.php",
     "date_raw": "Dec 14",
     "date_iso": "1963-12-14"
+  },
+  {
+    "season": 1971,
+    "season_str": "1971-72",
+    "moment": "opening",
+    "state": "Connecticut",
+    "ski_area_name": "Tapawingo",
+    "ski_area_page": "https://www.newenglandskihistory.com/Connecticut/woodbury.php",
+    "date_raw": "Dec 31",
+    "date_iso": "1971-12-31"
   },
   {
     "season": 1939,
@@ -46798,6 +50928,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/tenneymtn.php",
     "date_raw": "Dec 21",
     "date_iso": "2024-12-21"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Tenney",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/tenneymtn.php",
+    "date_raw": "Mar 30",
+    "date_iso": "2025-03-30"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Tenney",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/tenneymtn.php",
+    "date_raw": "Dec 6",
+    "date_iso": "2025-12-06"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Tenney",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/tenneymtn.php",
+    "date_raw": "Apr 12",
+    "date_iso": "2026-04-12"
   },
   {
     "season": 1960,
@@ -47106,8 +51266,8 @@
     "state": "Massachusetts",
     "ski_area_name": "Thunder Mountain",
     "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/berkshireeast.php",
-    "date_raw": "Dec 20",
-    "date_iso": "1961-12-20"
+    "date_raw": "Dec 28",
+    "date_iso": "1961-12-28"
   },
   {
     "season": 1961,
@@ -47116,8 +51276,8 @@
     "state": "Massachusetts",
     "ski_area_name": "Thunder Mountain",
     "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/berkshireeast.php",
-    "date_raw": "Apr 1",
-    "date_iso": "1962-04-01"
+    "date_raw": "Mar 31",
+    "date_iso": "1962-03-31"
   },
   {
     "season": 1963,
@@ -47126,8 +51286,8 @@
     "state": "Massachusetts",
     "ski_area_name": "Thunder Mountain",
     "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/berkshireeast.php",
-    "date_raw": "Dec 8",
-    "date_iso": "1963-12-08"
+    "date_raw": "Dec 24",
+    "date_iso": "1963-12-24"
   },
   {
     "season": 1963,
@@ -47560,6 +51720,36 @@
     "date_iso": "2024-12-21"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Titcomb Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/titcomb.php",
+    "date_raw": "Mar 16",
+    "date_iso": "2025-03-16"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Maine",
+    "ski_area_name": "Titcomb Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/titcomb.php",
+    "date_raw": "Dec 13",
+    "date_iso": "2025-12-13"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Maine",
+    "ski_area_name": "Titcomb Mountain",
+    "ski_area_page": "https://www.newenglandskihistory.com/Maine/titcomb.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2026-03-15"
+  },
+  {
     "season": 1964,
     "season_str": "1964-65",
     "moment": "opening",
@@ -47798,6 +51988,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/veteransmemorial.php",
     "date_raw": "Jan 11",
     "date_iso": "2025-01-11"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Veterans Memorial",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/veteransmemorial.php",
+    "date_raw": "Mar 9",
+    "date_iso": "2025-03-09"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Veterans Memorial",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/veteransmemorial.php",
+    "date_raw": "Jan 3",
+    "date_iso": "2026-01-03"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Veterans Memorial",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/veteransmemorial.php",
+    "date_raw": "Mar 7",
+    "date_iso": "2026-03-07"
   },
   {
     "season": 1962,
@@ -48458,6 +52678,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/wachusett.php",
     "date_raw": "Dec 5",
     "date_iso": "2024-12-05"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Wachusett",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/wachusett.php",
+    "date_raw": "Apr 6",
+    "date_iso": "2025-04-06"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Massachusetts",
+    "ski_area_name": "Wachusett",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/wachusett.php",
+    "date_raw": "Nov 22",
+    "date_iso": "2025-11-22"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Massachusetts",
+    "ski_area_name": "Wachusett",
+    "ski_area_page": "https://www.newenglandskihistory.com/Massachusetts/wachusett.php",
+    "date_raw": "Apr 11",
+    "date_iso": "2026-04-11"
   },
   {
     "season": 1949,
@@ -49330,6 +53580,36 @@
     "date_iso": "2024-11-30"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Waterville Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/watervillevalley.php",
+    "date_raw": "Apr 12",
+    "date_iso": "2025-04-12"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Waterville Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/watervillevalley.php",
+    "date_raw": "Nov 29",
+    "date_iso": "2025-11-29"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Waterville Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/watervillevalley.php",
+    "date_raw": "Apr 11",
+    "date_iso": "2026-04-11"
+  },
+  {
     "season": 1973,
     "season_str": "1973-74",
     "moment": "opening",
@@ -49888,6 +54168,36 @@
     "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/whaleback.php",
     "date_raw": "Dec 21",
     "date_iso": "2024-12-21"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Whaleback",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/whaleback.php",
+    "date_raw": "Mar 9",
+    "date_iso": "2025-03-09"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Whaleback",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/whaleback.php",
+    "date_raw": "Dec 26",
+    "date_iso": "2025-12-26"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Whaleback",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/whaleback.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2026-03-15"
   },
   {
     "season": 1942,
@@ -50760,6 +55070,36 @@
     "date_iso": "2024-12-04"
   },
   {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Wildcat",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/wildcatmtn.php",
+    "date_raw": "Apr 6",
+    "date_iso": "2025-04-06"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "New Hampshire",
+    "ski_area_name": "Wildcat",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/wildcatmtn.php",
+    "date_raw": "Dec 3",
+    "date_iso": "2025-12-03"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "New Hampshire",
+    "ski_area_name": "Wildcat",
+    "ski_area_page": "https://www.newenglandskihistory.com/NewHampshire/wildcatmtn.php",
+    "date_raw": "Apr 12",
+    "date_iso": "2026-04-12"
+  },
+  {
     "season": 1991,
     "season_str": "1991-92",
     "moment": "opening",
@@ -51268,5 +55608,35 @@
     "ski_area_page": "https://www.newenglandskihistory.com/RhodeIsland/yawgoovalley.php",
     "date_raw": "Dec 14",
     "date_iso": "2024-12-14"
+  },
+  {
+    "season": 2024,
+    "season_str": "2024-25",
+    "moment": "closing",
+    "state": "Rhode Island",
+    "ski_area_name": "Yawgoo Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/RhodeIsland/yawgoovalley.php",
+    "date_raw": "Mar 9",
+    "date_iso": "2025-03-09"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "opening",
+    "state": "Rhode Island",
+    "ski_area_name": "Yawgoo Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/RhodeIsland/yawgoovalley.php",
+    "date_raw": "Dec 13",
+    "date_iso": "2025-12-13"
+  },
+  {
+    "season": 2025,
+    "season_str": "2025-26",
+    "moment": "closing",
+    "state": "Rhode Island",
+    "ski_area_name": "Yawgoo Valley",
+    "ski_area_page": "https://www.newenglandskihistory.com/RhodeIsland/yawgoovalley.php",
+    "date_raw": "Mar 15",
+    "date_iso": "2026-03-15"
   }
 ]

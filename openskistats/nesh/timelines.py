@@ -163,6 +163,7 @@ class NewEnglandSkiHistoryTimelineScraper:
 def read_nesh_timelines() -> pl.DataFrame:
     df = (
         pl.read_json(NewEnglandSkiHistoryTimelineScraper.JSON_PATH)
+        .unique(maintain_order=True)
         .pivot(
             index=["ski_area_name", "season", "state", "ski_area_page"],
             on="moment",
@@ -415,6 +416,7 @@ nesh_to_skimap = {
     "https://www.newenglandskihistory.com/Vermont/magicmtn.php": "https://skimap.org/skiareas/view/201",
     "https://www.newenglandskihistory.com/Vermont/maplevalley.php": "https://skimap.org/skiareas/view/2660",
     "https://www.newenglandskihistory.com/Maine/maymtn.php": "https://skimap.org/skiareas/view/4497",
+    "https://www.newenglandskihistory.com/Maine/millinocket.php": None,
     "https://www.newenglandskihistory.com/NewHampshire/mcintyre.php": "https://skimap.org/skiareas/view/3012",
     "https://www.newenglandskihistory.com/Vermont/middlebury.php": "https://skimap.org/skiareas/view/214",
     # sub-peak of Cannon Mountain known as Mt. Jackson or Mittersill Peak
