@@ -49,9 +49,9 @@ typer = "==0.24.1"
 
 [tool.pixi.feature.dev.pypi-dependencies]
 mypy = "==2.1.0"
-prek = "==0.3.8"
+prek = "==0.4.3"
 pytest = "==9.0.2"
-types-PyYAML = "*"
+types-PyYAML = "==6.0.12.20260518"
 
 [tool.pixi.feature.r.dependencies]
 imagemagick = "==7.1.2_8"
