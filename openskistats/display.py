@@ -215,6 +215,7 @@ def _format_header(ci: reactable.HeaderCellInfo) -> htmltools.Tag | str:
     """
     column_id = ci.name
     column_name = ci.value
+    assert isinstance(column_name, str)
     if description := columns_descriptions.get(column_id):
         return htmltools.tags.abbr(column_name, title=description)
     return column_name

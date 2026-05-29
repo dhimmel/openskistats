@@ -113,8 +113,6 @@ show_error_context = true
 # https://mypy.readthedocs.io/en/stable/config_file.html#using-a-pyproject-toml-file
 [[tool.mypy.overrides]]
 module = [
-    "bs4.*",
-    "htmltools.*",
     "IPython.*",
     "networkx.*",
     "pandas.*",
@@ -123,7 +121,6 @@ module = [
     "polars.*",
     "pvlib.*",
     "reactable.*",
-    "requests.*",
 ]
 ignore_missing_imports = true
 follow_imports = "skip"

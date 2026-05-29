@@ -85,7 +85,10 @@ class NewEnglandSkiHistoryTimelineScraper:
         opening_days = []
         for table in state_tables:
             header_row, *rows = table.find_all("tr")
-            state_name = header_row.find("b").text
+            state_header = header_row.find("b")
+            if state_header is None:
+                raise ValueError("Expected state table header to contain a bold label.")
+            state_name = state_header.text
             for row in rows:
                 ski_area_cell, date_cell = row.find_all("td")
                 date_raw = date_cell.get_text(strip=True)
