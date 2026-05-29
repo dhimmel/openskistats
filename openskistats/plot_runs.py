@@ -6,6 +6,8 @@ import numpy.typing as npt
 import plotnine as pn
 import polars as pl
 from matplotlib.colors import TwoSlopeNorm
+from matplotlib.figure import Figure
+from matplotlib.projections.polar import PolarAxes
 from mizani.formatters import comma_format
 
 from openskistats.analyze import load_run_segments_pl, load_runs_pl
@@ -289,12 +291,14 @@ def get_bearing_by_latitude_bin_mesh_grids() -> BearingByLatitudeBinMeshGrid:
     )
 
 
-def plot_bearing_by_latitude_bin() -> plt.Figure:
+def plot_bearing_by_latitude_bin() -> Figure:
     """
     https://github.com/dhimmel/openskistats/issues/11
     """
     grids = get_bearing_by_latitude_bin_mesh_grids()
     fig, ax = plt.subplots(subplot_kw={"projection": "polar"})
+    assert isinstance(fig, Figure)
+    assert isinstance(ax, PolarAxes)
     quad_mesh = ax.pcolormesh(
         np.deg2rad(grids.bearing_grid),
         grids.latitude_grid,
@@ -304,7 +308,7 @@ def plot_bearing_by_latitude_bin() -> plt.Figure:
         norm=TwoSlopeNorm(vmin=0, vcenter=1, vmax=2.5),
     )
     colorbar = plt.colorbar(quad_mesh, ax=ax, location="left", aspect=35, pad=0.053)
-    colorbar.outline.set_visible(False)
+    colorbar.outline.set_visible(False)  # type: ignore[operator]
     colorbar.ax.tick_params(labelsize=8)
     ax.set_theta_zero_location("N")
     ax.set_theta_direction("clockwise")

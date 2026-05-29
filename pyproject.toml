@@ -120,7 +120,6 @@ module = [
     "folium.*",
     "htmltools.*",
     "IPython.*",
-    "matplotlib.*",
     "mizani.*",
     "networkx.*",
     "osmnx.*",
@@ -136,15 +135,3 @@ module = [
 ]
 ignore_missing_imports = true
 follow_imports = "skip"
-
-[[tool.mypy.overrides]]
-module = [
-    "openskistats.elevation",
-    "openskistats.plot",
-    "openskistats.plot_ski_areas",
-    "openskistats.sunlight",
-]
-disable_error_code = [
-    "arg-type",
-    "no-any-return",
-]
