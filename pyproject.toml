@@ -19,9 +19,6 @@ license = {file = "LICENSE.md"}
 requires-python = "==3.14.*"
 
 [tool.pixi.dependencies]
-# pyogrio not explicitly imported, but required to prevent a build failure with Python 3.14:
-# No such file or directory: 'gdal-config'
-pyogrio = "==0.12.1"
 quarto = "==1.8.27"
 
 [tool.pixi.pypi-dependencies]
@@ -31,26 +28,26 @@ folium = "==0.20.0"
 # https://github.com/machow/reactable-py/issues/29
 great-tables = "==0.21.0" 
 jupyter = "==1.1.1"
-matplotlib = "==3.10.8"
+matplotlib = "==3.10.9"
 mizani = "==0.14.4"
 networkx = "==3.6.1"
-numpy = "==2.4.0"
+numpy = "==2.4.6"
 osmnx = "==2.1.0"
 patito = "==0.8.6"
-plotly = "==6.6.0"
-plotnine = "==0.15.3"
-polars= "==1.39.3"
-pvlib= "==0.15.0"
-pyarrow = "==23.0.1"
+plotly = "==6.7.0"
+plotnine = "==0.15.4"
+polars= "==1.40.1"
+pvlib= "==0.15.1"
+pyarrow = "==24.0.0"
 reactable = "==0.1.6"
-requests = "==2.33.1"
-rich= "==14.3.3"
-typer = "==0.24.1"
+requests = "==2.34.2"
+rich= "==15.0.0"
+typer = "==0.26.2"
 
 [tool.pixi.feature.dev.pypi-dependencies]
 mypy = "==2.1.0"
 prek = "==0.4.3"
-pytest = "==9.0.2"
+pytest = "==9.0.3"
 types-PyYAML = "==6.0.12.20260518"
 
 [tool.pixi.feature.r.dependencies]
