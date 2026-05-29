@@ -20,11 +20,12 @@ repos:
       # Run the formatter.
       - id: ruff-format
         types_or: [ python, jupyter ]
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v2.1.0
+  - repo: local
     hooks:
       - id: mypy
-        additional_dependencies:
-          - numpy
-          - pytest
-          - types-PyYAML
+        name: mypy
+        entry: pixi run mypy
+        language: system
+        types_or: [ python, pyi ]
+        require_serial: true
+        pass_filenames: true
