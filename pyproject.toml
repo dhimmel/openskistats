@@ -117,12 +117,9 @@ show_error_context = true
 [[tool.mypy.overrides]]
 module = [
     "bs4.*",
-    "folium.*",
     "htmltools.*",
     "IPython.*",
-    "mizani.*",
     "networkx.*",
-    "osmnx.*",
     "pandas.*",
     "patito.*",
     "plotnine.*",
@@ -130,8 +127,6 @@ module = [
     "pvlib.*",
     "reactable.*",
     "requests.*",
-    "rich.*",
-    "typer.*",
 ]
 ignore_missing_imports = true
 follow_imports = "skip"
