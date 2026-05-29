@@ -29,6 +29,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      with:
+        persist-credentials: false
     - name: Setup Pixi
       uses: prefix-dev/setup-pixi@5185adfbffb4bd703da3010310260805d89ebb11 # v0.9.6
       with:
@@ -41,7 +43,8 @@ jobs:
     - name: Process inputs
       id: inputs
       run: |
-        echo "refresh_cache=${{ github.event_name == 'schedule' || fromJSON(inputs.refresh_cache) }}" >> "$GITHUB_OUTPUT"
+        # Use github.event.inputs because workflow_dispatch boolean inputs are stringified there.
+        echo "refresh_cache=${{ github.event_name == 'schedule' || github.event.inputs.refresh_cache == 'true' }}" >> "$GITHUB_OUTPUT"
         echo "solar_segment_count=${{ inputs.solar_segment_count || 200000 }}" >> "$GITHUB_OUTPUT"
     # GitHub will remove any cache entries that have not been accessed in over 7 days
     - name: Restore OpenSkiMap Cache
