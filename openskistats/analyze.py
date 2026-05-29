@@ -623,7 +623,9 @@ def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
     logging.info(f"Writing ski rose the world to {path}")
     with pdf_pages:
         for fig in figures.values():
-            pdf_pages.savefig(fig, facecolor="#FFFFFF", bbox_inches="tight")
+            pdf_pages.savefig(  # type: ignore[no-untyped-call]
+                fig, facecolor="#FFFFFF", bbox_inches="tight"
+            )
             matplotlib.pyplot.close(fig)
 
 

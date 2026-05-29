@@ -18,6 +18,8 @@ import pvlib
 import requests
 from matplotlib.collections import QuadMesh
 from matplotlib.colorbar import Colorbar
+from matplotlib.figure import Figure
+from matplotlib.projections.polar import PolarAxes
 from osmnx.plot import _get_fig_ax
 from rich.progress import Progress
 
@@ -398,11 +400,13 @@ class SolarPolarPlot:
 
     def plot(
         self,
-        fig: plt.Figure | None = None,
-        ax: plt.Axes | None = None,
+        fig: Figure | None = None,
+        ax: PolarAxes | None = None,
         vmax: float | None = None,
-    ) -> tuple[plt.Figure, QuadMesh]:
+    ) -> tuple[Figure, QuadMesh]:
         fig, ax = _get_fig_ax(ax=ax, figsize=(3, 3), bgcolor=None, polar=True)
+        assert isinstance(fig, Figure)
+        assert isinstance(ax, PolarAxes)
         radial_grid, bearing_grid, irradiance_grid = self.get_grids()
         mesh = self._create_polar_mesh(
             ax,
@@ -414,7 +418,9 @@ class SolarPolarPlot:
         self._setup_polar_plot(ax, colorbar=False)
         return fig, mesh
 
-    def _setup_polar_plot(self, ax: plt.Axes, colorbar: bool = True) -> Colorbar | None:
+    def _setup_polar_plot(
+        self, ax: PolarAxes, colorbar: bool = True
+    ) -> Colorbar | None:
         """Configure polar plot with standard formatting."""
         ax.set_theta_zero_location("N")
         ax.set_theta_direction("clockwise")
@@ -438,20 +444,20 @@ class SolarPolarPlot:
         if colorbar:
             quad_mesh = ax.collections[0]  # Get the last added pcolormesh
             cb = plt.colorbar(quad_mesh, ax=ax, location="left", aspect=35, pad=0.053)
-            cb.outline.set_visible(False)
+            cb.outline.set_visible(False)  # type: ignore[operator]
             cb.ax.tick_params(labelsize=8)
         return cb
 
     def _create_polar_mesh(
         self,
-        ax: plt.Axes,
+        ax: PolarAxes,
         bearing_grid: npt.NDArray[np.float64],
         radial_grid: npt.NDArray[np.float64],
         value_grid: npt.NDArray[np.float64],
         vmax: float | None = None,
     ) -> QuadMesh:
         """Create polar mesh plot with standard formatting."""
-        return ax.pcolormesh(
+        mesh = ax.pcolormesh(
             np.deg2rad(bearing_grid),
             radial_grid,
             value_grid,
@@ -460,6 +466,8 @@ class SolarPolarPlot:
             vmin=0,
             vmax=vmax,
         )
+        assert isinstance(mesh, QuadMesh)
+        return mesh
 
     def get_grids(
         self,
@@ -624,7 +632,7 @@ class LatitudeByBearingPlots(SolarPolarPlot):
         return latitude_grid, bearing_grid, irradiance_grid
 
 
-def create_combined_solar_plots() -> plt.Figure:
+def create_combined_solar_plots() -> Figure:
     """Create a combined figure with multiple solar plots arranged in a 2x3 grid."""
     # Create main figure with two subfigures side by side
     fig = plt.figure(figsize=(9.4, 5), constrained_layout=True)

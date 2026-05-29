@@ -388,7 +388,7 @@ def subplot_orientations(
     plot_solar_band: bool = False,
     color_convention: RunDifficultyConvention
     | None = RunDifficultyConvention.north_america,
-) -> plt.Figure:
+) -> Figure:
     """
     Plot orientations from multiple graphs in a grid.
     https://github.com/gboeing/osmnx-examples/blob/bb870c225906db5a7b02c4c87a28095cb9dceb30/notebooks/17-street-network-orientations.ipynb
@@ -554,7 +554,8 @@ def get_snowflake_marker() -> MplPath:
     )
     # fmt: on
     # normalize path to have its center at (0, 0)
+    vertices = np.asarray(path.vertices, dtype=float)
     return MplPath(
-        vertices=path.vertices - np.mean(path.vertices, axis=0),
+        vertices=vertices - np.mean(vertices, axis=0),
         codes=path.codes,
     )

@@ -11,7 +11,9 @@ from typing import Any, Literal
 import matplotlib.pyplot as plt
 import numpy as np
 import polars as pl
+from matplotlib.axes import Axes
 from matplotlib.figure import Figure
+from matplotlib.ticker import FuncFormatter
 
 from openskistats.models import (
     RunDifficultyConvention,
@@ -305,7 +307,7 @@ def get_shared_axis_bounds(
 
 
 def _plot_elevation_detail(
-    ax: plt.Axes,
+    ax: Axes,
     ski_area_id: str,
     segments: pl.DataFrame,
     histogram: pl.DataFrame,
@@ -360,11 +362,11 @@ def _plot_elevation_detail(
     ax.set_ylabel("Elevation (m)", fontsize=10)
     if metric == "distance_3d":
         ax.set_xlabel("Skiable Distance (km)", fontsize=10)
-        ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x / 1_000:.1f}"))
+        ax.xaxis.set_major_formatter(FuncFormatter(lambda x, _: f"{x / 1_000:.1f}"))
     else:
         ax.set_xlabel("Skiable Vertical (m)", fontsize=10)
-        ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x:,.0f}"))
-    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x:,.0f}"))
+        ax.xaxis.set_major_formatter(FuncFormatter(lambda x, _: f"{x:,.0f}"))
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda x, _: f"{x:,.0f}"))
 
     ski_area_name = info.get("ski_area_name", "")
     if ski_area_name:
