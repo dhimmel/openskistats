@@ -109,6 +109,18 @@ def plot_ski_area_metric_ecdfs(
     return lorenz_plot, gini_plot
 
 
+def plot_ski_area_metric_dists(
+    ski_area_filters: list[pl.Expr] | None = None,
+) -> pn.composition.Compose:
+    """
+    Combine the Lorenz curve and Gini coefficient plots into a single composed
+    figure with lettered subplot tags for use as a manuscript figure.
+    https://plotnine.org/guide/plot-composition.html
+    """
+    lorenz_plot, gini_plot = plot_ski_area_metric_ecdfs(ski_area_filters)
+    return (lorenz_plot + pn.labs(tag="A")) | (gini_plot + pn.labs(tag="B"))
+
+
 class SkiAreaSubsetPlot:
     @classmethod
     def get_ski_area_names(self) -> list[str]:

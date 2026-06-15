@@ -432,6 +432,23 @@ def plot_run_difficulty_histograms_by_slope(
     )
 
 
+def plot_run_difficulty_histograms_by_slope_composition(
+    convention: RunDifficultyConvention = RunDifficultyConvention.north_america,
+) -> pn.composition.Compose:
+    """
+    Combine the full and condensed slope-by-difficulty histograms into a single
+    composed figure with lettered subplot tags for use as a manuscript figure.
+    https://plotnine.org/guide/plot-composition.html
+    """
+    full_plot = plot_run_difficulty_histograms_by_slope(
+        condense_difficulty=False, convention=convention
+    ) + pn.labs(tag="A")
+    condensed_plot = plot_run_difficulty_histograms_by_slope(
+        condense_difficulty=True, convention=convention
+    ) + pn.labs(tag="B")
+    return full_plot | condensed_plot
+
+
 class DifficultyByConventionRunMetrics:
     @classmethod
     def get_difficulty_by_convention_metrics(cls) -> pl.DataFrame:

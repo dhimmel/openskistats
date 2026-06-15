@@ -162,19 +162,10 @@ Skiing is further concentrated in the northern hemisphere within a narrow latitu
 
 ## Ski area influence
 
-::::: {#fig-ski-area-metric-dists layout="[60,40]"}
-::: {#fig-ski-area-metric-lorenz}
-![](../images/ski_area_lorenz_curves.svg)
-
-Lorenz curves show each ski area's share of the total for a variety of metrics.
-:::
-
-::: {#fig-ski-area-metric-gini}
-![](../images/ski_area_gini_bars.svg)
-
-Gini coefficients showing concentration of metrics.
-:::
-:::::
+![**Concentration of ski area metrics.**
+**(A)** Lorenz curves show each ski area's share of the total for a variety of metrics.
+**(B)** Gini coefficients showing the concentration of each metric.
+](../images/ski_area_metric_dists.svg){#fig-ski-area-metric-dists}
 
 ## Orientation findings
 
@@ -309,21 +300,11 @@ both what difficulty level can you expect and what color would the trail signage
 :::
 
 
-::::: {#fig-slope-by-difficulty layout="[50,50]"}
-::: {#fig-slope-by-difficulty-full}
-![](../images/slope_by_difficulty_distributions_full.svg)
-
-**All difficulty levels.**
-:::
-
-::: {#fig-slope-by-difficulty-condensed}
-![](../images/slope_by_difficulty_distributions_condensed.svg)
-
-**Condensed difficulty levels.**
-:::
-
-Distribution of slope by run difficulty. See OpenStreetMap `piste:difficulty` key.
-:::::
+![**Distribution of slope by run difficulty.**
+**(A)** All difficulty levels.
+**(B)** Condensed difficulty levels.
+See OpenStreetMap `piste:difficulty` key.
+](../images/slope_by_difficulty_distributions.svg){#fig-slope-by-difficulty}
 
 
 
