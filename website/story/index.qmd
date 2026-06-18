@@ -44,7 +44,7 @@ or are they more often found on the [**north**]{style="color: #36B37E;"} side of
 @cr-southface
 
 :::{#cr-southface}
-![](https://www.myskimaps.com/Ski-Maps/USA/Big-Sky-South-Face-Ski-Trail-Map-2019.jpg)
+![](https://myskimaps.com/skimaps/USA/Big-Sky-South-Face-Ski-Trail-Map-2019.jpg)
 :::
 ::::
 
