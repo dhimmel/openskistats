@@ -9,6 +9,7 @@ from matplotlib.colors import TwoSlopeNorm
 from matplotlib.figure import Figure
 from matplotlib.projections.polar import PolarAxes
 from mizani.formatters import comma_format
+from plotnine.composition import Compose, plot_layout, plot_spacer
 
 from openskistats.analyze import load_run_segments_pl, load_runs_pl
 from openskistats.bearing import (
@@ -223,36 +224,6 @@ class RunLatitudeBearingHistogram:
             )
         )
 
-    def plot_latitude_histogram(self) -> pn.ggplot:
-        return (
-            pn.ggplot(
-                data=self.get_latitude_histogram(),
-                mapping=pn.aes(
-                    x="latitude_abs_bin_center",
-                    y="combined_vertical",
-                    fill="hemisphere",
-                ),
-            )
-            + pn.geom_col()
-            + pn.scale_x_continuous(
-                name="Absolute Latitude",
-                breaks=np.linspace(0, 90, 10),
-                labels=lambda values: [f"{x:.0f}°" for x in values],
-                expand=(0, 0),
-            )
-            + pn.scale_y_continuous(
-                labels=lambda values: [f"{x / 1_000:.0f}" for x in values],
-                name="Combined Vertical (km)",
-            )
-            + pn.coord_flip()
-            + pn.theme_bw()
-            + pn.theme(
-                figure_size=(2.5, 5),
-                legend_position="inside",
-                legend_position_inside=(0.97, 0.97),
-            )
-        )
-
 
 @dataclass
 class BearingByLatitudeBinMeshGrid:
@@ -291,14 +262,20 @@ def get_bearing_by_latitude_bin_mesh_grids() -> BearingByLatitudeBinMeshGrid:
     )
 
 
-def plot_bearing_by_latitude_bin() -> Figure:
+def plot_bearing_by_latitude_bin(ax: PolarAxes | None = None) -> Figure:
     """
+    Plot the polar "eye of skiing". With no ``ax``, a standalone figure is created
+    (used for the manuscript's page thumbnail); pass ``ax`` to draw onto a shared
+    figure such as the combined latitude panel.
     https://github.com/dhimmel/openskistats/issues/11
     """
-    grids = get_bearing_by_latitude_bin_mesh_grids()
-    fig, ax = plt.subplots(subplot_kw={"projection": "polar"})
+    if ax is None:
+        _, created_ax = plt.subplots(subplot_kw={"projection": "polar"})
+        assert isinstance(created_ax, PolarAxes)
+        ax = created_ax
+    fig = ax.get_figure()
     assert isinstance(fig, Figure)
-    assert isinstance(ax, PolarAxes)
+    grids = get_bearing_by_latitude_bin_mesh_grids()
     quad_mesh = ax.pcolormesh(
         np.deg2rad(grids.bearing_grid),
         grids.latitude_grid,
@@ -307,7 +284,7 @@ def plot_bearing_by_latitude_bin() -> Figure:
         cmap="coolwarm",
         norm=TwoSlopeNorm(vmin=0, vcenter=1, vmax=2.5),
     )
-    colorbar = plt.colorbar(quad_mesh, ax=ax, location="left", aspect=35, pad=0.053)
+    colorbar = fig.colorbar(quad_mesh, ax=ax, location="left", aspect=35, pad=0.053)
     colorbar.outline.set_visible(False)  # type: ignore[operator]
     colorbar.ax.tick_params(labelsize=8)
     ax.set_theta_zero_location("N")
@@ -319,7 +296,68 @@ def plot_bearing_by_latitude_bin() -> Figure:
     ax.set_xticklabels(labels=xticklabels)
     ax.tick_params(axis="x", which="major", pad=-2)
     _add_polar_y_ticks(ax=ax, arc_color="black")
+    return fig
 
+
+def plot_latitude_eye_and_histogram() -> Figure:
+    """
+    Combine the polar "eye of skiing" (A) and the latitude histogram (B) into a
+    single manuscript figure (https://github.com/dhimmel/openskistats/issues/83).
+    The eye is a matplotlib polar plot, so the panels are arranged with a matplotlib
+    gridspec rather than plotnine composition, which lacks polar coordinate support.
+    The histogram is drawn here with matplotlib (rather than reusing the plotnine
+    builder) for the same reason: a ggplot cannot share a figure with the polar eye.
+    """
+    fig = plt.figure(figsize=(9, 5))
+    gridspec = fig.add_gridspec(1, 2, width_ratios=[3, 1], wspace=0.35)
+    ax_eye = fig.add_subplot(gridspec[0], projection="polar")
+    ax_histogram = fig.add_subplot(gridspec[1])
+    assert isinstance(ax_eye, PolarAxes)
+    plot_bearing_by_latitude_bin(ax=ax_eye)
+
+    # latitude histogram: combined vertical by absolute latitude, stacked by
+    # hemisphere using the default plotnine discrete fill colors
+    histogram = RunLatitudeBearingHistogram().get_latitude_histogram()
+    cumulative_km: npt.NDArray[np.float64] | None = None
+    for hemisphere, color in {"north": "#f8766d", "south": "#00bfc4"}.items():
+        group = histogram.filter(pl.col("hemisphere") == hemisphere).sort(
+            "latitude_abs_bin_center"
+        )
+        widths_km = group["combined_vertical"].to_numpy() / 1_000
+        if cumulative_km is None:
+            cumulative_km = np.zeros_like(widths_km)
+        ax_histogram.barh(
+            group["latitude_abs_bin_center"].to_numpy(),
+            widths_km,
+            height=3.0,  # degrees spanned by each latitude bin
+            left=cumulative_km,
+            color=color,
+            label=hemisphere,
+        )
+        cumulative_km = cumulative_km + widths_km
+    ax_histogram.set_xlabel("Combined Vertical (km)")
+    ax_histogram.set_ylabel("Absolute Latitude")
+    ax_histogram.set_ylim(0, 90)
+    ax_histogram.set_yticks(np.arange(0, 91, 10))
+    ax_histogram.set_yticklabels([f"{tick:.0f}°" for tick in np.arange(0, 91, 10)])
+    ax_histogram.set_axisbelow(True)
+    ax_histogram.grid(visible=True, color="#d9d9d9", linewidth=0.5)
+    for spine in ax_histogram.spines.values():
+        spine.set_edgecolor("#333333")
+    ax_histogram.legend(title="hemisphere", loc="upper right")
+
+    for ax, tag in [(ax_eye, "A"), (ax_histogram, "B")]:
+        ax.annotate(
+            tag,
+            xy=(0, 1),
+            xycoords="axes fraction",
+            xytext=(-24, 12),
+            textcoords="offset points",
+            fontsize=14,
+            fontweight="bold",
+            va="bottom",
+            ha="right",
+        )
     return fig
 
 
@@ -434,19 +472,36 @@ def plot_run_difficulty_histograms_by_slope(
 
 def plot_run_difficulty_histograms_by_slope_composition(
     convention: RunDifficultyConvention = RunDifficultyConvention.north_america,
-) -> pn.composition.Compose:
+) -> Compose:
     """
     Combine the full and condensed slope-by-difficulty histograms into a single
     composed figure with lettered subplot tags for use as a manuscript figure.
     https://plotnine.org/guide/plot-composition.html
     """
-    full_plot = plot_run_difficulty_histograms_by_slope(
-        condense_difficulty=False, convention=convention
-    ) + pn.labs(tag="A")
-    condensed_plot = plot_run_difficulty_histograms_by_slope(
-        condense_difficulty=True, convention=convention
-    ) + pn.labs(tag="B")
-    return full_plot | condensed_plot
+    # widen the inner plot margins to add horizontal space between panels A and B
+    full_plot = (
+        plot_run_difficulty_histograms_by_slope(
+            condense_difficulty=False, convention=convention
+        )
+        + pn.labs(tag="A")
+        + pn.theme(plot_margin_right=0.04)
+    )
+    condensed_plot = (
+        plot_run_difficulty_histograms_by_slope(
+            condense_difficulty=True, convention=convention
+        )
+        + pn.labs(tag="B")
+        + pn.theme(plot_margin_left=0.04)
+    )
+    # stack the condensed plot above a spacer, using plot_layout to make panel B
+    # 0.535x as tall as panel A
+    panel_b = (condensed_plot / plot_spacer()) + plot_layout(heights=[0.535, 0.465])
+    composition = full_plot | panel_b
+    # set the overall composition size, which otherwise defaults to the size of
+    # a single constituent plot and renders the panels too small
+    return composition & pn.theme(
+        figure_size=(7, 10.8), plot_tag=pn.element_text(face="bold")
+    )
 
 
 class DifficultyByConventionRunMetrics:

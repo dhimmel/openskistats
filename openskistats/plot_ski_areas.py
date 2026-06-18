@@ -2,6 +2,7 @@ import plotnine as pn
 import polars as pl
 from matplotlib.figure import Figure
 from mizani.formatters import percent_format
+from plotnine.composition import Compose, plot_layout
 
 from openskistats.analyze import load_ski_areas_pl
 from openskistats.plot import subplot_orientations
@@ -111,14 +112,23 @@ def plot_ski_area_metric_ecdfs(
 
 def plot_ski_area_metric_dists(
     ski_area_filters: list[pl.Expr] | None = None,
-) -> pn.composition.Compose:
+) -> Compose:
     """
     Combine the Lorenz curve and Gini coefficient plots into a single composed
     figure with lettered subplot tags for use as a manuscript figure.
     https://plotnine.org/guide/plot-composition.html
     """
     lorenz_plot, gini_plot = plot_ski_area_metric_ecdfs(ski_area_filters)
-    return (lorenz_plot + pn.labs(tag="A")) | (gini_plot + pn.labs(tag="B"))
+    # use plot_layout to make panel B (Gini) 0.6x as wide as panel A (Lorenz), which
+    # keeps the square coord_equal Lorenz panel dominant without leaving whitespace
+    composition = (
+        (lorenz_plot + pn.labs(tag="A")) | (gini_plot + pn.labs(tag="B"))
+    ) + plot_layout(widths=[1, 0.6])
+    # set the overall composition size, which otherwise defaults to the size of a
+    # single sub-plot and renders the panels too small
+    return composition & pn.theme(
+        figure_size=(8, 4.2), plot_tag=pn.element_text(face="bold")
+    )
 
 
 class SkiAreaSubsetPlot:

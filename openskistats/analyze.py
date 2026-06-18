@@ -582,8 +582,8 @@ def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
         figures[name] = fig
     from openskistats.plot_runs import (
         DifficultyByConventionRunMetrics,
-        RunLatitudeBearingHistogram,
         plot_bearing_by_latitude_bin,
+        plot_latitude_eye_and_histogram,
         plot_run_difficulty_histograms_by_slope_composition,
     )
     from openskistats.plot_ski_areas import (
@@ -592,10 +592,9 @@ def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
     )
 
     figures["select_ski_area_roses"] = SkiAreaSubsetPlot.plot_rose_grid()
+    # the standalone eye is also used as the manuscript's page thumbnail
     figures["bearing_by_latitude_eye"] = plot_bearing_by_latitude_bin()
-    figures["latitude_histogram"] = (
-        RunLatitudeBearingHistogram().plot_latitude_histogram().draw()
-    )
+    figures["latitude_panel"] = plot_latitude_eye_and_histogram()
     figures["slope_by_difficulty_distributions"] = (
         plot_run_difficulty_histograms_by_slope_composition().draw()
     )

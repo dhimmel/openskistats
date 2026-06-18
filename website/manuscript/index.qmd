@@ -156,7 +156,7 @@ The northern hemisphere is home to
 and `{python} var("hemisphere__north_over_south__ski_areas_count", ".0f")` times the number of ski areas
 than the southern hemisphere.
 
-Skiing is further concentrated in the northern hemisphere within a narrow latitude band (@fig-latitude).
+Skiing is further concentrated in the northern hemisphere within a narrow latitude band (@fig-latitude-panel).
 `{python} var("latitude__between_40_50__combined_vertical_prop", ".1%")` of the world's skiable vert is located between 40--50°N and 
 `{python} var("latitude__between_45_58__combined_vertical_prop", ".1%")` is between 45--58°N.
 
@@ -203,11 +203,8 @@ Ski roses for US states.
 :::
 
 
-::::: {#fig-latitude-panel layout="[75,25]"}
-::: {#fig-eye}
-![](../images/bearing_by_latitude_eye.svg)
-
-**The eye of skiing**:
+![**Latitude insights of ski runs and their association with orientation.**
+**(A) The eye of skiing.**
 A 2-dimensional polar histogram showing skiable vert by orientation (angular coordinate) and absolute latitude (radial coordinate).
 Orientations for ski run segments in the southern hemisphere undergo a hemispherical flip, such that a due west bearing remains due west, while a due south bearing becomes due north.
 Hence, orientation axis labels use the terms poleward and equatorward.
@@ -217,18 +214,10 @@ latitude bands without at least XX in combined vert are removed;
 a uniform prior is applied to orientations;
 and extreme enrichment values are clipped.
 Ski runs closer to the equator demonstrate a greater northeast preference.
-:::
-
-::: {#fig-latitude}
-![](../images/latitude_histogram.svg)
-
-**Skiable vert by latitude**:
+**(B) Skiable vert by latitude.**
 The histogram shows the combined skiable vert across all ski run segments for each absolute latitude bin, split by hemisphere.
 Downhill skiing is remarkably concentrated in both the northern hemisphere and around 45 degrees north!
-:::
-
-Latitude insights of ski runs and their association with orientation.
-:::::
+](../images/latitude_panel.svg){#fig-latitude-panel}
 
 Deduplication of effort: OpenStreetMap used by Strava, mapy.cz, mapbox, komoot, REGRID etc.
 Single place to curate the world's ski areas
