@@ -637,6 +637,9 @@ def create_combined_solar_plots() -> Figure:
     # Create main figure with two subfigures side by side
     fig = plt.figure(figsize=(9.4, 5), constrained_layout=True)
     subfigs = fig.subfigures(nrows=1, ncols=2, width_ratios=[2, 1])
+    # subfigures returns an ndarray of SubFigures for a 1x2 grid; narrow the
+    # ndarray | SubFigure union so the elements can be indexed
+    assert isinstance(subfigs, np.ndarray)
 
     # Left subfigure for instant irradiance plots (4 plots)
     subfig_instant = subfigs[0]
