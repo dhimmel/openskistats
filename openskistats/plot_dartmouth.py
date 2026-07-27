@@ -58,13 +58,15 @@ def bearing_to_bin_index(bearing: pl.Expr, num_bins: int) -> pl.Expr:
 def plot_skiway_segments_with_rose(
     highlight_bin_label: str = "NNE",
     num_bins: int = 32,
+    bearings: pl.DataFrame | None = None,
 ) -> Figure:
     """
     Plot Dartmouth Skiway run segments as arrows colored by whether their
     bearing falls in the highlighted compass bin,
     with an inset ski rose highlighting that bin's petal.
     """
-    bearings = load_skiway_bearings(num_bins=num_bins)
+    if bearings is None:
+        bearings = load_skiway_bearings(num_bins=num_bins)
     (highlight_bin_index,) = bearings.filter(
         pl.col("bin_label") == highlight_bin_label
     )["bin_index"]
