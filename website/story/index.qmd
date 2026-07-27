@@ -2,11 +2,12 @@
 pagetitle: Story
 title: "Which way do you ski?"
 subtitle: Scroll your way through the story of OpenSkiStats and visualize the methods used to assess ski area orientation.
-image: "../images/rose_dartmouth.svg"
+date: 2026-07-25
+image: "https://github.com/dhimmel/openskistats/raw/82a8267aea148d4faa663fd4c3f2591c88bf5306/assets/story/rose_dartmouth.svg"
 engine: jupyter
 execute:
   echo: false
-format: 
+format:
   closeread-html:
     mainfont: Quicksand
     css: style.css
@@ -85,7 +86,7 @@ These are the two signature sides of the Skiway, [**Holt's Ledge**]{style="color
 
 
 :::{#cr-dots-overlay}
-![](../images/dots_overlay.png)
+![](https://github.com/dhimmel/openskistats/raw/82a8267aea148d4faa663fd4c3f2591c88bf5306/assets/story/dots_overlay.png)
 :::
 
 On powder days,
@@ -93,11 +94,11 @@ you can ski from [**Winslow**]{style="color: #36B37E;"} across the Grafton Turnp
 [@cr-dots-only]
 
 :::{#cr-dots-only}
-![](../images/dots_only.png)
+![](https://github.com/dhimmel/openskistats/raw/82a8267aea148d4faa663fd4c3f2591c88bf5306/assets/story/dots_only.png)
 :::
 
 :::{#cr-segments}
-![](../images/segments_plot.png)
+![](https://github.com/dhimmel/openskistats/raw/82a8267aea148d4faa663fd4c3f2591c88bf5306/assets/story/segments_plot.png)
 :::
 
 :::{focus-on="cr-segments"}
@@ -121,7 +122,7 @@ ski roses characterize the directions of all trail segments at a ski area.
 
 
 :::{#cr-dartmouth-rose}
-![](../images/rose_dartmouth.svg)
+![](https://github.com/dhimmel/openskistats/raw/82a8267aea148d4faa663fd4c3f2591c88bf5306/assets/story/rose_dartmouth.svg)
 :::
 
 Each *petal* of the circular chart represents a compass direction,
@@ -131,14 +132,14 @@ Highlighted is the [**Northwest by West**]{style="color: #f07178;"} petal...
 
 
 :::{#cr-rose-nwbw}
-![](../images/rose_nwbw.svg)
+![](https://github.com/dhimmel/openskistats/raw/82a8267aea148d4faa663fd4c3f2591c88bf5306/assets/story/rose_nwbw.svg)
 :::
 
 :::{focus-on="cr-rose-nwbw"}
 ... to which these particular segments contribute.
 
 <br>
-![](../images/segments_nwbw.svg)
+![](https://github.com/dhimmel/openskistats/raw/82a8267aea148d4faa663fd4c3f2591c88bf5306/assets/story/segments_nwbw.svg)
 :::
 
 :::{focus-on="cr-rose-nne"}
@@ -148,11 +149,11 @@ And here's the [**North North East**]{style="color: #f07178;"} petal.
 While these NNE segments appear similar in horizontal distance to the NWbW segments above, their greater steepness results in greater vertical drop, and hence the largest petal of the rose.
 
 <br>
-![](../images/segments_nne.svg)
+![](https://github.com/dhimmel/openskistats/raw/82a8267aea148d4faa663fd4c3f2591c88bf5306/assets/story/segments_nne.svg)
 :::
 
 :::{#cr-rose-nne}
-![](../images/rose_nne.svg)
+![](https://github.com/dhimmel/openskistats/raw/82a8267aea148d4faa663fd4c3f2591c88bf5306/assets/story/rose_nne.svg)
 :::
 
 ::::
@@ -170,7 +171,7 @@ Did you remember facing north while skiing down?
 [@cr-all-roses]
 
 :::{#cr-all-roses}
-![](../images/all_roses.svg)
+![](https://github.com/dhimmel/openskistats/raw/82a8267aea148d4faa663fd4c3f2591c88bf5306/assets/story/all_roses.svg)
 :::
 
 And here are the [ski roses]{style="color: #f07178;"} for 37 US states with at least one ski area.<br><br>
@@ -179,7 +180,7 @@ And, as an aside, can you tell which state has the most combined vertical?
 [@cr-us-roses]
 
 :::{#cr-us-roses}
-![](../images/us_roses_dark.svg)
+![](https://github.com/dhimmel/openskistats/raw/82a8267aea148d4faa663fd4c3f2591c88bf5306/assets/story/us_roses_dark.svg)
 :::
 
 Our analysis of the orientation of *all* ski areas across the globe revealed a strong [poleward]{style="color: #36B37E;"} and moderate [eastward]{style="color: #36B37E;"} preference.<br><br>
@@ -191,7 +192,7 @@ This trend reflects which aspects maximize [snow retention]{style="color: #36B37
 [@cr-hemisphere]{scale-by="0.8"}
 
 :::{#cr-hemisphere}
-![](../images/hemisphere.svg)
+![](https://github.com/dhimmel/openskistats/raw/82a8267aea148d4faa663fd4c3f2591c88bf5306/assets/story/hemisphere.svg)
 :::
 
 ::::
@@ -224,4 +225,6 @@ We hope this data inspires your winter adventures, helps you assess the climate 
 
 Curious to learn more?
 Read our [manuscript](/manuscript) to explore the approach we took and dive deeper into our findings.
+
+[The figures in this story are frozen snapshots generated from OpenSkiMap data as of 2026-07-25, while the table above continues to update with the latest data.]{style="font-size: 75%;"}
 :::
