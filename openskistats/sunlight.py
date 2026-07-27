@@ -323,7 +323,7 @@ def load_solar_irradiation_cache_pl(skip_cache: bool = False) -> pl.DataFrame:
         # NOTE: could use load_run_segments_pl if we allow custom paths
         pl.scan_parquet(source=path)
         .select("run_id", "run_coordinates_clean")
-        .explode("run_coordinates_clean")
+        .explode("run_coordinates_clean", empty_as_null=False, keep_nulls=False)
         .unnest("run_coordinates_clean")
         .filter(pl.col("segment_hash").is_not_null())
         .filter(pl.col("solar_cache_version") == SOLAR_CACHE_VERSION)

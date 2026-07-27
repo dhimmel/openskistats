@@ -171,7 +171,7 @@ def read_nesh_timelines() -> pl.DataFrame:
             maintain_order=True,
         )
         .with_columns(
-            pl.col("opening", "closing").cast(pl.Date).name.suffix("_date"),
+            pl.col("opening", "closing").str.to_date().name.suffix("_date"),
         )
         .drop("opening", "closing")
         .with_columns(
@@ -300,7 +300,7 @@ def nesh_season_duration_vs_poleward_plot() -> pn.ggplot:
     # Load ski area metrics for poleward affinity
     ski_areas = (
         load_ski_areas_pl()
-        .explode("ski_area_sources")
+        .explode("ski_area_sources", empty_as_null=False, keep_nulls=False)
         .rename({"ski_area_sources": "skimap_url"})
         .select("ski_area_id", "ski_area_name", "skimap_url", "poleward_affinity")
         .join(nesh_metrics, on="skimap_url", how="inner")

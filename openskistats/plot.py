@@ -433,7 +433,7 @@ def subplot_orientations(
     )
     dists_pl = (
         groups_pl.select(grouping_col, "bearings")
-        .explode("bearings")
+        .explode("bearings", empty_as_null=False, keep_nulls=False)
         .unnest("bearings")
         .filter(pl.col("num_bins") == num_bins)
     )
