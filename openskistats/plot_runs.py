@@ -285,7 +285,7 @@ def plot_bearing_by_latitude_bin(ax: PolarAxes | None = None) -> Figure:
         norm=TwoSlopeNorm(vmin=0, vcenter=1, vmax=2.5),
     )
     colorbar = fig.colorbar(quad_mesh, ax=ax, location="left", aspect=35, pad=0.053)
-    colorbar.outline.set_visible(False)  # type: ignore[operator]
+    colorbar.outline.set_visible(False)
     colorbar.ax.tick_params(labelsize=8)
     ax.set_theta_zero_location("N")
     ax.set_theta_direction("clockwise")

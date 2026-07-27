@@ -444,7 +444,7 @@ class SolarPolarPlot:
         if colorbar:
             quad_mesh = ax.collections[0]  # Get the last added pcolormesh
             cb = plt.colorbar(quad_mesh, ax=ax, location="left", aspect=35, pad=0.053)
-            cb.outline.set_visible(False)  # type: ignore[operator]
+            cb.outline.set_visible(False)
             cb.ax.tick_params(labelsize=8)
         return cb
 
