@@ -272,7 +272,7 @@ def load_runs_pl(
     path = get_runs_parquet_path()
     logging.info(f"Loading runs metrics from {path}")
     df = pl.scan_parquet(source=path)
-    df = df.filter(*_prepare_pl_filters(run_filters))
+    df = df.filter(*(run_filters or []))
     if ski_area_filters:
         ski_areas = (
             load_ski_areas_pl(ski_area_filters=ski_area_filters)
@@ -322,7 +322,7 @@ def load_lifts_pl() -> pl.DataFrame:
 def load_ski_areas_pl(ski_area_filters: list[pl.Expr] | None = None) -> pl.DataFrame:
     path = get_ski_area_metrics_path()
     logging.info(f"Loading ski area metrics from {path}")
-    return pl.read_parquet(source=path).filter(*_prepare_pl_filters(ski_area_filters))
+    return pl.read_parquet(source=path).filter(*(ski_area_filters or []))
 
 
 def load_bearing_distribution_pl(
@@ -358,16 +358,6 @@ def _get_bearing_summary_stats_pl(struct_series: pl.Series) -> BearingStatsModel
         alignments=df.get_column("bearing_alignment", default=None),
         hemisphere=hemisphere,
     )
-
-
-def _prepare_pl_filters(
-    filters: list[pl.Expr] | None = None,
-) -> list[pl.Expr | bool]:
-    if not filters:
-        # pl.lit(True) had issues that True did not.
-        # https://github.com/pola-rs/polars/issues/19771
-        return [True]
-    return filters
 
 
 def aggregate_ski_areas_pl(

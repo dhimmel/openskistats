@@ -2,7 +2,13 @@ import polars as pl
 import pytest
 from polars.testing import assert_frame_equal
 
-from openskistats.utils import gini_coefficient, pl_flip_bearing, pl_weighted_mean
+from openskistats.models import SkiRunDifficulty
+from openskistats.utils import (
+    gini_coefficient,
+    pl_condense_run_difficulty,
+    pl_flip_bearing,
+    pl_weighted_mean,
+)
 
 
 def test_pl_flip_bearing() -> None:
@@ -35,6 +41,27 @@ def test_pl_weighted_mean() -> None:
     )
     wtd_mean = df.select(pl_weighted_mean("value", "weight")).item(0, 0)
     assert wtd_mean == 1.75
+
+
+def test_pl_condense_run_difficulty() -> None:
+    difficulties = list(SkiRunDifficulty) + [None]
+    result = (
+        pl.DataFrame(
+            {"run_difficulty": difficulties},
+            schema={"run_difficulty": pl.Enum(SkiRunDifficulty)},
+        )
+        .with_columns(pl_condense_run_difficulty())
+        .get_column("run_difficulty_condensed")
+    )
+    assert result.dtype == pl.Enum(SkiRunDifficulty)
+    assert result.to_list() == [
+        (
+            SkiRunDifficulty.condense()[value]
+            if value is not None
+            else SkiRunDifficulty.other
+        )
+        for value in difficulties
+    ]
 
 
 @pytest.mark.parametrize(
