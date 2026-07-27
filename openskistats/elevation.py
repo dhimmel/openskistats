@@ -72,55 +72,6 @@ def _get_elevation_segments(ski_area_id: str) -> pl.DataFrame:
     )
 
 
-def _split_segment_across_bins(
-    elevation: float,
-    distance_vertical: float,
-    value: float,
-    bin_width: float = _DEFAULT_BIN_WIDTH,
-) -> list[dict[str, float]]:
-    """
-    Split a single segment's metric value proportionally across elevation bins.
-
-    The segment runs from ``elevation`` (upper end, since distance_vertical =
-    elevation_lag - elevation) to ``elevation + distance_vertical``.  Each bin
-    the segment spans receives a fraction of ``value`` equal to the overlap of
-    the segment's vertical extent with that bin divided by the total vertical
-    extent of the segment.
-
-    Flat segments (|distance_vertical| < 1e-6) are assigned entirely to the
-    bin containing ``elevation``.
-
-    Returns a list of ``{"elevation_bin_center": float, "binned_value": float}``
-    dicts, one per bin touched.
-    """
-    span = abs(distance_vertical)
-    if span < 1e-6:
-        bin_lo = np.floor(elevation / bin_width) * bin_width
-        return [
-            {
-                "elevation_bin_center": float(bin_lo + bin_width / 2),
-                "binned_value": float(value),
-            }
-        ]
-    elev_lo = min(elevation, elevation + distance_vertical)
-    elev_hi = max(elevation, elevation + distance_vertical)
-    first_idx = int(np.floor(elev_lo / bin_width))
-    last_idx = int(np.floor(elev_hi / bin_width))
-    results: list[dict[str, float]] = []
-    for i in range(first_idx, last_idx + 1):
-        lo = i * bin_width
-        hi = lo + bin_width
-        overlap = min(elev_hi, hi) - max(elev_lo, lo)
-        if overlap > 0:
-            results.append(
-                {
-                    "elevation_bin_center": float(lo + bin_width / 2),
-                    "binned_value": float(value * overlap / span),
-                }
-            )
-    return results
-
-
 def get_elevation_histogram_data(
     segments: pl.DataFrame,
     bin_width: float = _DEFAULT_BIN_WIDTH,
@@ -134,9 +85,8 @@ def get_elevation_histogram_data(
     so long segments crossing bin boundaries are accurately distributed rather
     than assigned entirely to a single midpoint bin.
 
-    Segments that fit entirely within a single bin are handled with vectorized
-    Polars expressions; only multi-bin segments fall back to Python row-level
-    splitting.
+    Bin expansion and proportional allocation are performed with native Polars
+    expressions.
 
     The default metric is ``distance_vertical_drop`` (skiable vertical), which
     avoids over-representing low-angle runs relative to steep terrain —
@@ -153,66 +103,38 @@ def get_elevation_histogram_data(
         )
 
     bw = bin_width
-    # Compute bin indices for the low/high ends of each segment
-    df = segments.with_columns(
-        _elev_lo=pl.min_horizontal(
-            "elevation", pl.col("elevation") + pl.col("distance_vertical")
-        ),
-        _elev_hi=pl.max_horizontal(
-            "elevation", pl.col("elevation") + pl.col("distance_vertical")
-        ),
-    ).with_columns(
-        _first_idx=(pl.col("_elev_lo") / bw).floor().cast(pl.Int64),
-        _last_idx=(pl.col("_elev_hi") / bw).floor().cast(pl.Int64),
-    )
-
-    single = df.filter(pl.col("_first_idx") == pl.col("_last_idx"))
-    multi = df.filter(pl.col("_first_idx") != pl.col("_last_idx"))
-
-    # Single-bin segments: pure Polars, assign full value to the one bin
-    single_result = single.select(
-        "run_difficulty_condensed",
-        (pl.col("_first_idx") * bw + bw / 2).alias("elevation_bin_center"),
-        pl.col(metric).cast(pl.Float64),
-    )
-
-    # Multi-bin segments: fall back to proportional Python split
-    if multi.is_empty():
-        multi_result = pl.DataFrame(
-            schema={
-                "elevation_bin_center": pl.Float64,
-                "run_difficulty_condensed": pl.String,
-                metric: pl.Float64,
-            }
-        )
-    else:
-        _split_schema = pl.List(
-            pl.Struct({"elevation_bin_center": pl.Float64, "binned_value": pl.Float64})
-        )
-
-        def _split_segment(row: dict[str, float]) -> list[dict[str, float]]:
-            return _split_segment_across_bins(
-                elevation=row["elevation"],
-                distance_vertical=row["distance_vertical"],
-                value=row["_v"],
-                bin_width=bin_width,
-            )
-
-        multi_result = (
-            multi.with_columns(pl.col(metric).alias("_v"))
-            .with_columns(
-                pl.struct("elevation", "distance_vertical", "_v")
-                .map_elements(_split_segment, return_dtype=_split_schema)
-                .alias("_bins")
-            )
-            .select("run_difficulty_condensed", "_bins")
-            .explode("_bins", empty_as_null=False, keep_nulls=False)
-            .unnest("_bins")
-            .rename({"binned_value": metric})
-        )
-
     return (
-        pl.concat([single_result, multi_result])
+        segments.with_columns(
+            _elev_lo=pl.min_horizontal(
+                "elevation", pl.col("elevation") + pl.col("distance_vertical")
+            ),
+            _elev_hi=pl.max_horizontal(
+                "elevation", pl.col("elevation") + pl.col("distance_vertical")
+            ),
+            _span=pl.col("distance_vertical").abs(),
+        )
+        .with_columns(
+            _first_idx=(pl.col("_elev_lo") / bw).floor().cast(pl.Int64),
+            _last_idx=(pl.col("_elev_hi") / bw).floor().cast(pl.Int64),
+        )
+        .with_columns(
+            _bin_idx=pl.int_ranges("_first_idx", pl.col("_last_idx") + 1),
+        )
+        .explode("_bin_idx", empty_as_null=False, keep_nulls=False)
+        .with_columns(_bin_lo=pl.col("_bin_idx") * bw)
+        .with_columns(
+            _overlap=pl.min_horizontal("_elev_hi", pl.col("_bin_lo") + bw)
+            - pl.max_horizontal("_elev_lo", "_bin_lo")
+        )
+        .select(
+            "run_difficulty_condensed",
+            (pl.col("_bin_lo") + bw / 2).alias("elevation_bin_center"),
+            pl.when(pl.col("_span") < 1e-6)
+            .then(pl.col(metric))
+            .otherwise(pl.col(metric) * pl.col("_overlap") / pl.col("_span"))
+            .cast(pl.Float64)
+            .alias(metric),
+        )
         .filter(pl.col(metric) > 0)
         .group_by("elevation_bin_center", "run_difficulty_condensed")
         .agg(pl.col(metric).sum())

@@ -6,12 +6,12 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import polars as pl
 import pytest
 
 from openskistats.analyze import analyze_all_ski_areas_polars, load_ski_areas_pl
 from openskistats.elevation import (
     _get_elevation_segments,
-    _split_segment_across_bins,
     get_elevation_histogram_data,
     plot_elevation_histogram,
 )
@@ -82,7 +82,7 @@ def test_plot_elevation_histogram(first_ski_area_id: str) -> None:
 
 
 # ---------------------------------------------------------------------------
-# Unit tests for _split_segment_across_bins
+# Unit tests for proportional segment splitting
 # These test the core proportional-split logic in isolation, independent of
 # any real ski area data.
 # ---------------------------------------------------------------------------
@@ -90,9 +90,25 @@ def test_plot_elevation_histogram(first_ski_area_id: str) -> None:
 BW = 25.0  # bin width used throughout unit tests
 
 
-def _bins(results: list[dict[str, float]]) -> dict[float, float]:
-    """Convert split results to {bin_center: value} for easy assertion."""
-    return {r["elevation_bin_center"]: r["binned_value"] for r in results}
+def _split_segment(
+    elevation: float, distance_vertical: float, value: float
+) -> dict[float, float]:
+    """Split one segment and return {bin_center: value} for easy assertion."""
+    return dict(
+        get_elevation_histogram_data(
+            pl.DataFrame(
+                {
+                    "run_difficulty_condensed": ["other"],
+                    "elevation": [elevation],
+                    "distance_vertical": [distance_vertical],
+                    "distance_vertical_drop": [value],
+                }
+            ),
+            bin_width=BW,
+        )
+        .select("elevation_bin_center", "distance_vertical_drop")
+        .iter_rows()
+    )
 
 
 @pytest.mark.parametrize(
@@ -152,7 +168,7 @@ def test_split_segment_shape(
     value: float,
     expected_bins: dict[float, float],
 ) -> None:
-    result = _bins(_split_segment_across_bins(elevation, distance_vertical, value, BW))
+    result = _split_segment(elevation, distance_vertical, value)
     assert set(result.keys()) == set(expected_bins.keys())
     for center, expected_val in expected_bins.items():
         assert abs(result[center] - expected_val) < 1e-9
@@ -171,6 +187,6 @@ def test_split_segment_conservation(
     elevation: float, distance_vertical: float, value: float
 ) -> None:
     """Sum of split values must always equal the original value."""
-    result = _split_segment_across_bins(elevation, distance_vertical, value, BW)
-    total = sum(r["binned_value"] for r in result)
+    result = _split_segment(elevation, distance_vertical, value)
+    total = sum(result.values())
     assert abs(total - value) < 1e-9
