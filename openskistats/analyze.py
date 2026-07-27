@@ -569,6 +569,7 @@ def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
             free_y=True,
         )
         figures[name] = fig
+    from openskistats.plot_dartmouth import plot_skiway_segments_with_rose
     from openskistats.plot_runs import (
         DifficultyByConventionRunMetrics,
         plot_bearing_by_latitude_bin,
@@ -591,6 +592,7 @@ def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
         DifficultyByConventionRunMetrics.plot_difficulty_by_convention().draw()
     )
     figures["ski_area_metric_dists"] = plot_ski_area_metric_dists().draw()
+    figures["dartmouth_nne_light"] = plot_skiway_segments_with_rose()
     # save SVGs
     for name, fig in figures.items():
         fig.savefig(
