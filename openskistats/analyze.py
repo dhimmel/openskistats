@@ -569,7 +569,10 @@ def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
             free_y=True,
         )
         figures[name] = fig
-    from openskistats.plot_dartmouth import plot_skiway_segments_with_rose
+    from openskistats.plot_dartmouth import (
+        load_skiway_bearings,
+        plot_skiway_segments_with_rose,
+    )
     from openskistats.plot_runs import (
         DifficultyByConventionRunMetrics,
         plot_bearing_by_latitude_bin,
@@ -580,6 +583,7 @@ def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
         SkiAreaSubsetPlot,
         plot_ski_area_metric_dists,
     )
+    from openskistats.plot_us_roses import plot_us_state_roses
 
     figures["select_ski_area_roses"] = SkiAreaSubsetPlot.plot_rose_grid()
     # the standalone eye is also used as the manuscript's page thumbnail
@@ -592,7 +596,17 @@ def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
         DifficultyByConventionRunMetrics.plot_difficulty_by_convention().draw()
     )
     figures["ski_area_metric_dists"] = plot_ski_area_metric_dists().draw()
-    figures["dartmouth_nne_light"] = plot_skiway_segments_with_rose()
+    figures["us_roses_light"] = plot_us_state_roses()
+    skiway_bearings = load_skiway_bearings()
+    if skiway_bearings.is_empty():
+        logging.info(
+            "Skipping dartmouth_nne_light plot: "
+            "Dartmouth Skiway is absent from the ski area metrics."
+        )
+    else:
+        figures["dartmouth_nne_light"] = plot_skiway_segments_with_rose(
+            bearings=skiway_bearings
+        )
     # save SVGs
     for name, fig in figures.items():
         fig.savefig(
