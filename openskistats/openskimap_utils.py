@@ -306,6 +306,7 @@ def load_downhill_ski_areas_from_download_pl() -> pl.DataFrame:
         .agg(pl.col("lift_id").n_unique().alias("lift_count"))
     )
     _place_col = pl.col("places").list.first()
+    source_element = pl.element()
     ski_area_df = (
         load_ski_areas_from_download_pl()
         .filter(pl.col("type") == "skiArea")
@@ -329,17 +330,16 @@ def load_downhill_ski_areas_from_download_pl() -> pl.DataFrame:
             _place_col.struct.field("iso3166_1Alpha2").alias("country_code"),
             _place_col.struct.field("iso3166_2").alias("country_subdiv_code"),
             pl.col("websites").alias("ski_area_websites"),
-            # sources can have inconsistently typed nested column 'id' as string or int
-            # map_elements on struct, see https://github.com/pola-rs/polars/issues/16452#issuecomment-2549487549
             pl.col("sources")
             .list.eval(
-                pl.element().map_elements(
-                    # kwargs due to https://github.com/pola-rs/polars/issues/24840
-                    lambda x, **kwargs: openskimap_source_to_url(
-                        type=x["type"],
-                        id=x["id"],
+                pl.concat_str(
+                    source_element.struct.field("type").replace_strict(
+                        {
+                            "openstreetmap": "https://www.openstreetmap.org/",
+                            "skimap.org": "https://skimap.org/skiareas/view/",
+                        }
                     ),
-                    return_dtype=pl.String,
+                    source_element.struct.field("id"),
                 )
             )
             .alias("ski_area_sources"),
