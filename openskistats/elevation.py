@@ -52,7 +52,7 @@ def _get_elevation_segments(ski_area_id: str) -> pl.DataFrame:
             "run_difficulty_condensed",
             "run_coordinates_clean",
         )
-        .explode("run_coordinates_clean")
+        .explode("run_coordinates_clean", empty_as_null=False, keep_nulls=False)
         .unnest("run_coordinates_clean")
         .filter(pl.col("segment_hash").is_not_null())
         .filter(
@@ -206,7 +206,7 @@ def get_elevation_histogram_data(
                 .alias("_bins")
             )
             .select("run_difficulty_condensed", "_bins")
-            .explode("_bins")
+            .explode("_bins", empty_as_null=False, keep_nulls=False)
             .unnest("_bins")
             .rename({"binned_value": metric})
         )

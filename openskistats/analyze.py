@@ -94,7 +94,7 @@ def process_and_export_lifts() -> None:
     coords_df = (
         lifts.lazy()
         .select("lift_id", "lift_coordinates")
-        .explode("lift_coordinates")
+        .explode("lift_coordinates", empty_as_null=False, keep_nulls=False)
         .unnest("lift_coordinates")
         .filter(pl.col("index").is_not_null())
         .pipe(add_spatial_metric_columns, partition_by="lift_id")
@@ -134,7 +134,7 @@ def process_and_export_runs() -> None:
     runs_lazy = load_downhill_runs_from_download_pl().lazy()
     coords_df = (
         runs_lazy.select("run_id", "run_coordinates_clean")
-        .explode("run_coordinates_clean")
+        .explode("run_coordinates_clean", empty_as_null=False, keep_nulls=False)
         .unnest("run_coordinates_clean")
         .filter(pl.col("index").is_not_null())
         .pipe(add_spatial_metric_columns, partition_by="run_id")
@@ -199,7 +199,7 @@ def analyze_all_ski_areas_polars(skip_runs: bool = False) -> None:
     ski_area_run_metrics_df = (
         load_runs_pl()
         .lazy()
-        .explode("ski_area_ids")
+        .explode("ski_area_ids", empty_as_null=False, keep_nulls=False)
         .rename({"ski_area_ids": "ski_area_id"})
         .filter(pl.col("ski_area_id").is_not_null())
         .select(
@@ -208,7 +208,7 @@ def analyze_all_ski_areas_polars(skip_runs: bool = False) -> None:
             pl_condense_run_difficulty(),
             "run_coordinates_clean",
         )
-        .explode("run_coordinates_clean")
+        .explode("run_coordinates_clean", empty_as_null=False, keep_nulls=False)
         .unnest("run_coordinates_clean")
         .with_columns(
             hemisphere=pl_hemisphere("latitude"),
@@ -280,7 +280,7 @@ def load_runs_pl(
             .lazy()
         )
         df = (
-            df.explode("ski_area_ids")
+            df.explode("ski_area_ids", empty_as_null=False, keep_nulls=False)
             .rename({"ski_area_ids": "ski_area_id"})
             .join(ski_areas, on="ski_area_id", how="semi", maintain_order="left")
         )
@@ -295,7 +295,7 @@ def load_run_coordinates_pl(
     return (
         load_runs_pl(run_filters=run_filters, ski_area_filters=ski_area_filters)
         .select("run_id", "run_coordinates_clean")
-        .explode("run_coordinates_clean")
+        .explode("run_coordinates_clean", empty_as_null=False, keep_nulls=False)
         .unnest("run_coordinates_clean")
     )
 
@@ -335,7 +335,7 @@ def load_bearing_distribution_pl(
     return (
         load_ski_areas_pl(ski_area_filters=ski_area_filters)
         .select("ski_area_id", "bearings")
-        .explode("bearings")
+        .explode("bearings", empty_as_null=False, keep_nulls=False)
         .filter(pl.col("bearings").is_not_null())
         .unnest("bearings")
     )
@@ -424,7 +424,7 @@ def aggregate_ski_area_bearing_dists_pl(
 ) -> pl.DataFrame:
     return (
         load_ski_areas_pl(ski_area_filters=ski_area_filters)
-        .explode("bearings")
+        .explode("bearings", empty_as_null=False, keep_nulls=False)
         .filter(pl.col("bearings").is_not_null())
         .unnest("bearings")
         .group_by(*group_by, "num_bins", "bin_index")
@@ -821,7 +821,7 @@ def _create_data_inputs_for_r() -> None:
         load_runs_pl(ski_area_filters=[pl.col("ski_area_name").eq("Dartmouth Skiway")])
         .select("run_id", "run_name", "run_difficulty", "run_coordinates_clean")
         .collect()
-        .explode("run_coordinates_clean")
+        .explode("run_coordinates_clean", empty_as_null=False, keep_nulls=False)
         .unnest("run_coordinates_clean")
         .drop("segment_hash")
         .write_parquet(path)

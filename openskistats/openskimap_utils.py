@@ -298,7 +298,7 @@ def openskimap_source_to_url(
 def load_downhill_ski_areas_from_download_pl() -> pl.DataFrame:
     lift_metrics = (
         load_lifts_from_download_pl()
-        .explode("ski_area_ids")
+        .explode("ski_area_ids", empty_as_null=False, keep_nulls=False)
         .rename({"ski_area_ids": "ski_area_id"})
         .filter(pl.col("ski_area_id").is_not_null())
         .filter(pl.col("lift_status") == OpenSkiMapStatus.operating)
@@ -359,7 +359,7 @@ def get_ski_area_to_runs(
     """
     # ski area names can be duplicated, like 'Black Mountain', so use the id instead.
     return dict(
-        runs_pl.explode("ski_area_ids")
+        runs_pl.explode("ski_area_ids", empty_as_null=False, keep_nulls=False)
         .filter(pl.col("ski_area_ids").is_not_null())
         .select(
             pl.col("ski_area_ids").alias("ski_area_id"),
