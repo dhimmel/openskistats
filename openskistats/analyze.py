@@ -583,7 +583,10 @@ def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
         SkiAreaSubsetPlot,
         plot_ski_area_metric_dists,
     )
-    from openskistats.plot_us_roses import plot_us_state_roses
+    from openskistats.plot_us_roses import (
+        US_ROSES_EXPORT_PADDING_INCHES,
+        plot_us_state_roses,
+    )
 
     figures["select_ski_area_roses"] = SkiAreaSubsetPlot.plot_rose_grid()
     # the standalone eye is also used as the manuscript's page thumbnail
@@ -609,11 +612,14 @@ def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
         )
     # save SVGs
     for name, fig in figures.items():
+        pad_inches = (
+            US_ROSES_EXPORT_PADDING_INCHES if name == "us_roses_light" else 0.02
+        )
         fig.savefig(
             image_directory.joinpath(f"{name}.svg"),
             format="svg",
             bbox_inches="tight",
-            pad_inches=0.02,
+            pad_inches=pad_inches,
             metadata={
                 "Creator": "https://github.com/dhimmel/openskistats",
             },

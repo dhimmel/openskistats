@@ -7,7 +7,6 @@ import math
 
 import polars as pl
 from matplotlib.figure import Figure
-from matplotlib.patches import Rectangle
 from matplotlib.projections.polar import PolarAxes
 
 from openskistats.plot import plot_orientation
@@ -21,19 +20,22 @@ TITLE_COLOR = "#1A1A1A"
 ANNOTATION_COLOR = "#4D4D4D"
 
 NUM_BINS = 16
-MAX_BORDER_WIDTH = 8.2
-MIN_BORDER_WIDTH = 0.27
+MAX_BORDER_WIDTH = 2.6
+MIN_BORDER_WIDTH = 0.1
 
-FIGURE_SIZE = (33.0, 24.0)
-EXPORT_PADDING_INCHES = 0.02
-STATE_LABEL_SIZE = 28.0
-COMPASS_LABEL_SIZE = 24.0
-TITLE_SIZE = 81.0
-SUBTITLE_SIZE = 45.0
-ANNOTATION_SIZE = 28.0
+FIGURE_SIZE = (8.25, 6.0)
+# Five visible pixels around the painted content at the 300 DPI PNG export.
+US_ROSES_EXPORT_PADDING_INCHES = 8.5 / 300
+STATE_LABEL_SIZE = 9.0
+COMPASS_LABEL_SIZE = 8.0
+TITLE_SIZE = 24.0
+SUBTITLE_SIZE = 14.0
+ANNOTATION_SIZE = 9.0
 
 SUBPLOT_MARGIN_X = 0.013
-SUBPLOT_MARGIN_Y = 0.017
+SUBPLOT_MARGIN_TOP = 0.020
+# Keep the bottom-row labels inside the figure before the tight export crop.
+SUBPLOT_MARGIN_BOTTOM = 0.0265
 SUBPLOT_SPACING = 0.31
 
 US_STATE_TO_ABBREVIATION = {
@@ -114,7 +116,7 @@ def _style_state_axes(ax: PolarAxes, abbreviation: str, border_width: float) -> 
             "facecolor": CIRCLE_FILL,
             "alpha": 0.8,
             "edgecolor": TITLE_COLOR,
-            "linewidth": 0.55,
+            "linewidth": 0.5,
         },
         zorder=4,
     )
@@ -132,6 +134,7 @@ def _plot_empty_state(ax: PolarAxes, abbreviation: str) -> None:
             labels=["N", "E", "", "W"],
             fontdict={"size": COMPASS_LABEL_SIZE, "color": ANNOTATION_COLOR},
         )
+        ax.tick_params(axis="x", which="major", pad=-3)
     else:
         ax.set_xticks([])
     _style_state_axes(ax=ax, abbreviation=abbreviation, border_width=0)
@@ -159,8 +162,8 @@ def plot_us_state_roses() -> Figure:
     fig.subplots_adjust(
         left=SUBPLOT_MARGIN_X,
         right=1 - SUBPLOT_MARGIN_X,
-        bottom=SUBPLOT_MARGIN_Y,
-        top=1 - SUBPLOT_MARGIN_Y,
+        bottom=SUBPLOT_MARGIN_BOTTOM,
+        top=1 - SUBPLOT_MARGIN_TOP,
         wspace=SUBPLOT_SPACING,
         hspace=SUBPLOT_SPACING,
     )
@@ -221,25 +224,9 @@ def plot_us_state_roses() -> Figure:
         arrowprops={
             "arrowstyle": "-",
             "color": CIRCLE_COLOR,
-            "linewidth": 2,
+            "linewidth": 0.75,
             "connectionstyle": "arc3,rad=-0.25",
         },
         annotation_clip=False,
-    )
-    # The manuscript exporter uses bbox_inches="tight" for every figure. Include
-    # the intended canvas in that bounding box, inset by the padding that the
-    # exporter adds back, so this edge-to-edge tile map retains the same outer
-    # margins, dimensions, and 11:8 aspect ratio as the R original.
-    frame_x = EXPORT_PADDING_INCHES / FIGURE_SIZE[0]
-    frame_y = EXPORT_PADDING_INCHES / FIGURE_SIZE[1]
-    fig.add_artist(
-        Rectangle(
-            (frame_x, frame_y),
-            1 - 2 * frame_x,
-            1 - 2 * frame_y,
-            transform=fig.transFigure,
-            facecolor="none",
-            edgecolor="none",
-        )
     )
     return fig
