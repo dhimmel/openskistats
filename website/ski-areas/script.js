@@ -61,17 +61,17 @@ function footerSum(column, state) {
 
 function footerSumMeters(column, state) {
   const total = sumColumn(column, state);
-  return `Sum: ${formatNumber(total)}`;
+  return `Sum: ${formatMeters(total)}`;
 }
 
 function footerMinMeters(column, state) {
   const min = Math.min(...state.sortedData.map(row => row[column.id]));
-  return `Min: ${formatNumber(min)}`;
+  return `Min: ${formatMeters(min)}`;
 }
 
 function footerMaxMeters(column, state) {
   const max = Math.max(...state.sortedData.map(row => row[column.id]));
-  return `Max: ${formatNumber(max)}`;
+  return `Max: ${formatMeters(max)}`;
 }
 
 function footerDistinctCount(column, state) {
