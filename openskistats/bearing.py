@@ -229,11 +229,11 @@ def get_bearing_histogram(
     Source at https://github.com/gboeing/osmnx/blob/v2.0.0/osmnx/bearing.py#L240-L296.
     Compute distribution of bearings across evenly spaced bins.
 
-    Prevents bin-edge effects around common values like 0 degrees and 90
-    degrees by initially creating twice as many bins as desired, then merging
-    them in pairs. For example, if `num_bins=36` is provided, then each bin
-    will represent 10 degrees around the compass, with the first bin
-    representing 355 degrees to 5 degrees.
+    Bins are assigned by cut_bearings_pl, which prevents bin-edge effects
+    around common values like 0 degrees and 90 degrees by centering the
+    first bin due north. For example, if `num_bins=36` is provided, then
+    each bin will represent 10 degrees around the compass, with the first
+    bin representing 355 degrees to 5 degrees.
     """
     return (
         pl.DataFrame(

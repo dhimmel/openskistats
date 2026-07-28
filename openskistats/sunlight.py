@@ -231,7 +231,9 @@ def add_solar_irradiation_columns(
     - solar_irradiation_season
     - solar_irradiation_solstice
 
-    Unless clear_cache is True, a lookup of prior results is attempted because the computation is quite slow.
+    Unless skip_cache is True, a lookup of prior results is attempted because the computation is quite slow.
+    At most max_items uncached segments are computed;
+    segments beyond the limit receive null values for the added columns.
     """
     segments_cached = load_solar_irradiation_cache_pl(skip_cache=skip_cache)
     n_segments = run_segments["segment_hash"].drop_nulls().n_unique()
