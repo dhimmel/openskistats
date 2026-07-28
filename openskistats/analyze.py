@@ -388,7 +388,6 @@ def aggregate_ski_areas_pl(
             combined_distance=pl.sum("combined_distance"),
             min_elevation=pl.min("min_elevation"),
             max_elevation=pl.max("max_elevation"),
-            vertical_drop=pl.max("max_elevation") - pl.min("min_elevation"),
             latitude=pl.mean("latitude"),
             longitude=pl.mean("longitude"),
             osm_run_convention=pl.col("osm_run_convention").unique().drop_nulls(),
