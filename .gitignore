@@ -5,7 +5,6 @@
 .ruff_cache/
 __pycache__/
 *.egg-info/
-pip-wheel-metadata/
 .ipynb_checkpoints
 .cache
 .pytest_cache/
@@ -34,9 +33,6 @@ Thumbs.db
 .vscode
 .idea/
 
-/.quarto/
-.Rproj.user
-/docs/
 # pixi environments
 .pixi/*
 !.pixi/config.toml

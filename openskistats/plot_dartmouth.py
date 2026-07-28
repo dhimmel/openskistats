@@ -1,7 +1,8 @@
 """
 Dartmouth Skiway manuscript figure:
 run segments with one compass direction highlighted and an inset ski rose.
-Ported from the retired R implementation in r/02.plot.R.
+Ported from the retired R implementation at
+https://github.com/dhimmel/openskistats/blob/b01f47defbdb0119d76aed25235fa6d0cb887e92/r/02.plot.R.
 """
 
 import math

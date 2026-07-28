@@ -1,6 +1,7 @@
 """
 US state tile map of ski roses for the manuscript ("Which way do you ski?").
-Ported from the retired R implementation in r/02.plot.R.
+Ported from the retired R implementation at
+https://github.com/dhimmel/openskistats/blob/b01f47defbdb0119d76aed25235fa6d0cb887e92/r/02.plot.R.
 """
 
 import math
