@@ -86,11 +86,6 @@ jobs:
         openskistats analyze
         openskistats validate
         openskistats visualize
-    - name: Make story plots
-      working-directory: r/
-      run: |
-        Rscript 01.data.R
-        Rscript 02.plot.R
     - name: Quarto Render
       run: quarto render website
     - name: Publish data
