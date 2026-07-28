@@ -28,11 +28,11 @@ jobs:
     timeout-minutes: 360
     steps:
     - name: Checkout
-      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       with:
         persist-credentials: false
     - name: Setup Pixi
-      uses: prefix-dev/setup-pixi@5185adfbffb4bd703da3010310260805d89ebb11 # v0.9.6
+      uses: prefix-dev/setup-pixi@a09b6247153796b190642a2b53fac4241043cf6f # v0.10.0
       with:
         activate-environment: true
     - name: Install fonts
@@ -50,7 +50,7 @@ jobs:
     - name: Restore OpenSkiMap Cache
       id: restore-openskimap
       if: ${{ steps.inputs.outputs.refresh_cache != 'true' }}
-      uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
       with:
         path: data/openskimap
         key: openskimap
@@ -73,7 +73,7 @@ jobs:
       shell: bash
     - name: Save OpenSkiMap Cache
       if: steps.download-openskimap.outputs.downloaded == 'true'
-      uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
       with:
         path: data/openskimap
         # overwriting the cache key is not permitted, hence append the run_id on save
@@ -89,7 +89,7 @@ jobs:
     - name: Quarto Render
       run: quarto render website
     - name: Publish data
-      uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4
+      uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4
       if: github.ref == 'refs/heads/main'
       with:
         publish_branch: data
@@ -102,7 +102,7 @@ jobs:
         # remove the unnecessary .nojekyll file
         enable_jekyll: true
     - name: Deploy website
-      uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4
+      uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4
       if: github.ref == 'refs/heads/main'
       with:
         publish_branch: gh-pages
