@@ -12,7 +12,7 @@ latitude:
     combined_vertical_prop: 1.0
   between_40_50:
     combined_vertical_prop: 1.0
-  between_45_58:
+  between_45_48:
     combined_vertical_prop: 0.0
 openskimap:
   countries:

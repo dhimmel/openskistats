@@ -158,7 +158,7 @@ than the southern hemisphere.
 
 Skiing is further concentrated in the northern hemisphere within a narrow latitude band (@fig-latitude-panel).
 `{python} var("latitude__between_40_50__combined_vertical_prop", ".1%")` of the world's skiable vert is located between 40--50°N and 
-`{python} var("latitude__between_45_58__combined_vertical_prop", ".1%")` is between 45--58°N.
+`{python} var("latitude__between_45_48__combined_vertical_prop", ".1%")` is between 45--48°N.
 
 ## Ski area influence
 

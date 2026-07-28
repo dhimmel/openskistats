@@ -491,7 +491,7 @@ def set_latitude_metrics() -> None:
         latitude__between_40_50__combined_vertical_prop=rlbh.get_combined_vertical_prop_in_latitude_range(
             40, 50
         ),
-        latitude__between_45_58__combined_vertical_prop=rlbh.get_combined_vertical_prop_in_latitude_range(
+        latitude__between_45_48__combined_vertical_prop=rlbh.get_combined_vertical_prop_in_latitude_range(
             45, 48
         ),
     )
