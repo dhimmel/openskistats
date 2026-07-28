@@ -162,6 +162,12 @@ class SkiSeasonDatetimes:
         )
 
 
+SEASON_DURATION_DAYS = SkiSeasonDatetimes(
+    hemisphere="north", extent="season"
+).season_duration_days
+"""Days in a typical ski season, identical in either hemisphere."""
+
+
 @lru_cache(maxsize=5_000)
 def get_clearsky(
     latitude: float, longitude: float, elevation: float, ski_season: SkiSeasonDatetimes

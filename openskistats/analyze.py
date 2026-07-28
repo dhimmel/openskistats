@@ -36,6 +36,7 @@ from openskistats.plot import (
     subplot_orientations,
 )
 from openskistats.sunlight import (
+    SEASON_DURATION_DAYS,
     add_solar_irradiation_columns,
 )
 from openskistats.utils import (
@@ -254,7 +255,10 @@ def analyze_all_ski_areas_polars(skip_runs: bool = False) -> None:
     ski_area_metrics_path = get_ski_area_metrics_path()
     logging.info(f"Writing {ski_area_metrics_path}")
     ski_area_metrics_df.write_parquet(ski_area_metrics_path)
-    set_variables(**get_ski_area_comparable_counts())
+    set_variables(
+        sunlight__season_duration_days=SEASON_DURATION_DAYS,
+        **get_ski_area_comparable_counts(),
+    )
     set_latitude_metrics()
 
 

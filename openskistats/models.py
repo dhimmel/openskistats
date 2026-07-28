@@ -9,6 +9,8 @@ from typing import Annotated, Literal
 
 from patito import Field, Model
 
+from openskistats.sunlight import SEASON_DURATION_DAYS
+
 
 class OpenSkiMapStatus(StrEnum):
     """
@@ -295,7 +297,7 @@ class RunSegmentModel(Model):  # type: ignore [misc]
         Field(
             ge=0,
             lt=15,  # practical limit
-            description=f"Average daily solar irradiation received by the segment over the course of a typical 115 ski season in kilowatt-hours per square meter (kW/m²/day). {_solar_irradiation_description}",
+            description=f"Average daily solar irradiation received by the segment over the course of a typical {SEASON_DURATION_DAYS} day ski season in kilowatt-hours per square meter (kW/m²/day). {_solar_irradiation_description}",
         ),
     ]
     solar_irradiation_solstice: Annotated[
@@ -634,7 +636,7 @@ class SkiAreaBaseModel(Model):  # type: ignore [misc]
     solar_irradiation_season: Annotated[
         float | None,
         Field(
-            description="Average daily solar irradiation received by run segments over the course of a typical 120 day ski season in kilowatt-hours per square meter (kW/m²/day). "
+            description=f"Average daily solar irradiation received by run segments over the course of a typical {SEASON_DURATION_DAYS} day ski season in kilowatt-hours per square meter (kW/m²/day). "
             "The average is weighted by the vertical drop of each segment. "
             f"{_solar_irradiation_description}",
         ),

@@ -15,6 +15,7 @@ from openskistats.analyze import (
 )
 from openskistats.models import SkiAreaModel
 from openskistats.plot import NARROW_SPACE
+from openskistats.sunlight import SEASON_DURATION_DAYS
 from openskistats.utils import get_website_source_directory
 
 
@@ -198,7 +199,7 @@ columns_descriptions = {
     "The area of each rose petal represents the proportion of vertical-weighted run segments oriented in that direction. "
     "Each petal is subdivided to show run difficulty using the North American coloring convention: green for easy, blue for intermediate, and black for expert. "
     "The snowflake represents the mean orientation and alignment of all run segments, weighted by vertical drop. "
-    "The sun's path throughout the course of a 120-day season is shown as a yellow band defined by the sun's azimuth on the angular axis and zenith on the radial axis.",
+    f"The sun's path throughout the course of a {SEASON_DURATION_DAYS}-day season is shown as a yellow band defined by the sun's azimuth on the angular axis and zenith on the radial axis.",
 }
 
 

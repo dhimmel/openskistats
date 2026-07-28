@@ -6,8 +6,6 @@ import numpy as np
 import numpy.typing as npt
 import polars as pl
 
-from openskistats.models import SkiRunDifficulty
-
 
 def get_repo_directory() -> Path:
     return Path(__file__).parent.parent
@@ -94,6 +92,8 @@ def pl_weighted_mean(value_col: str, weight_col: str) -> pl.Expr:
 
 
 def pl_condense_run_difficulty(run_difficulty_col: str = "run_difficulty") -> pl.Expr:
+    from openskistats.models import SkiRunDifficulty
+
     return (
         pl.col(run_difficulty_col)
         .fill_null(SkiRunDifficulty.other)

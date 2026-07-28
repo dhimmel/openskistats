@@ -303,7 +303,7 @@ Solar irradiance is computed at the level of a run segment, as defined by its la
 The segment is treated as a plane, analogous to a solar panel allowing us to use the `pvlib` photovoltaic modeling library for these calculations [@joss-pvlib-2023].
 The Ineichen and Perez model with Linke turbidity estimates diffuse normal irradiance, global horizontal irradiance, and direct horizontal irradiance,
 under the assumption of a clear sky.
-We compute irradiance at 15 minute intervals for the duration of a typical 120 day ski season ---
+We compute irradiance at 15 minute intervals for the duration of a typical `{python} var("sunlight__season_duration_days")` day ski season ---
 December 1 to March 31 in the northern hemisphere and May 31 to September 28 in the southern hemisphere for the 2024 ski season.
 We average the irradiance over the ski season to compute solar irradiation in kilowatt-hours per square meter per day (kW/m²/day) along the segment.
 When averaging irradiation across segments, like when aggregating to the level of a run or ski area, we weight by the vertical drop of the segment.
@@ -318,7 +318,7 @@ We specify a surface type of snow in `pvlib`, which sets an albedo of 65%, i.e. 
 **The effect of slope, latitude, and orientation on solar irradiance.**
 Polar plots show how solar irradiance varies for a hypothetical ski run segment by its orientation (angular coordinate) and its slope (top row radial coordinate) or latitude (bottom row radial coordinate).
 The first column estimates solar irradiance at 09:00 on the winter solstice.
-The second column estimates solar irradiance at 15:30 on March 31, closing day of a typical 120 day ski season.
+The second column estimates solar irradiance at 15:30 on March 31, closing day of a typical `{python} var("sunlight__season_duration_days")` day ski season.
 The third column shows the average solar irradiation over the entire season.
 Fixed geographic inputs --- latitude, longitude, and elevation --- correspond to those of the Dartmouth Skiway in New Hampshire, USA.
 For the latitude-varying plots, a fixed slope of 15° is used.
