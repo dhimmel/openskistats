@@ -256,7 +256,6 @@ def analyze_all_ski_areas_polars(skip_runs: bool = False) -> None:
     ski_area_metrics_df.write_parquet(ski_area_metrics_path)
     set_variables(**get_ski_area_comparable_counts())
     set_latitude_metrics()
-    _create_data_inputs_for_r()
 
 
 def load_runs_pl(
@@ -818,21 +817,3 @@ def _create_ski_area_rose(
     )
 
     matplotlib.pyplot.close(fig)
-
-
-def _create_data_inputs_for_r() -> None:
-    """
-    Create data inputs for R analysis.
-    """
-    logging.info("Creating data inputs for R analysis")
-    path = get_images_data_directory().joinpath("skiway_run_coordinates.parquet")
-    logging.info(f"Writing {path}")
-    (
-        load_runs_pl(ski_area_filters=[pl.col("ski_area_name").eq("Dartmouth Skiway")])
-        .select("run_id", "run_name", "run_difficulty", "run_coordinates_clean")
-        .collect()
-        .explode("run_coordinates_clean", empty_as_null=False, keep_nulls=False)
-        .unnest("run_coordinates_clean")
-        .drop("segment_hash")
-        .write_parquet(path)
-    )

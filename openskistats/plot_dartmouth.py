@@ -11,7 +11,6 @@ from matplotlib.figure import Figure
 from matplotlib.patches import Rectangle
 
 from openskistats.plot import plot_orientation
-from openskistats.utils import get_images_data_directory
 
 HIGHLIGHT_COLOR = "#d33c44"
 MUTED_COLOR = "#cccccc"
@@ -23,13 +22,17 @@ SKIWAY_NAME = "Dartmouth Skiway"
 def load_skiway_segments() -> pl.DataFrame:
     """
     Segments between consecutive coordinates of Dartmouth Skiway runs.
-    In skiway_run_coordinates.parquet, segment attributes like bearing are
-    stored on the segment's ending coordinate,
-    hence the backwards shift to combine them with the starting coordinate.
+    Segment attributes like bearing are stored on the segment's ending
+    coordinate, hence the backwards shift to combine them with the
+    starting coordinate.
     """
-    path = get_images_data_directory().joinpath("skiway_run_coordinates.parquet")
+    from openskistats.analyze import load_runs_pl
+
     return (
-        pl.read_parquet(path)
+        load_runs_pl(ski_area_filters=[pl.col("ski_area_name") == SKIWAY_NAME])
+        .select("run_id", "run_coordinates_clean")
+        .explode("run_coordinates_clean")
+        .unnest("run_coordinates_clean")
         .sort("run_id", "index")
         .select(
             "run_id",
@@ -40,6 +43,7 @@ def load_skiway_segments() -> pl.DataFrame:
             bearing=pl.col("bearing").shift(-1).over("run_id"),
         )
         .drop_nulls()
+        .collect()
     )
 
 
