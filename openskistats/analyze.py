@@ -569,6 +569,7 @@ def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
             free_y=True,
         )
         figures[name] = fig
+    from openskistats.elevation import plot_elevation_by_latitude_violins
     from openskistats.plot_dartmouth import (
         load_skiway_bearings,
         plot_skiway_segments_with_rose,
@@ -592,6 +593,7 @@ def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
     # the standalone eye is also used as the manuscript's page thumbnail
     figures["bearing_by_latitude_eye"] = plot_bearing_by_latitude_bin()
     figures["latitude_panel"] = plot_latitude_eye_and_histogram()
+    figures["elevation_by_latitude"] = plot_elevation_by_latitude_violins().draw()
     figures["slope_by_difficulty_distributions"] = (
         plot_run_difficulty_histograms_by_slope_composition().draw()
     )

@@ -2,18 +2,22 @@
 Elevation distribution histograms for ski areas.
 
 Generates horizontal stacked bar charts showing the distribution of
-run length across elevation bands, colored by difficulty grade.
+run length across elevation bands, colored by difficulty grade, plus
+latitude-binned elevation distributions across all ski-run segments.
 """
 
 import textwrap
+from collections.abc import Sequence
 from typing import Any, Literal
 
 import matplotlib.pyplot as plt
 import numpy as np
+import plotnine as pn
 import polars as pl
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.ticker import FuncFormatter
+from mizani.formatters import comma_format
 
 from openskistats.models import (
     RunDifficultyConvention,
@@ -72,6 +76,85 @@ def _get_elevation_segments(ski_area_id: str) -> pl.DataFrame:
     )
 
 
+def _get_latitude_elevation_segments() -> pl.DataFrame:
+    """
+    Load segments belonging to ski areas for the global latitude analysis.
+
+    Runs can be mapped outside a ski area in OpenSkiMap. Restricting this analysis
+    to runs with at least one ski-area association matches the existing global
+    latitude analyses in :mod:`openskistats.plot_runs`.
+    """
+    from openskistats.analyze import load_run_segments_pl
+
+    return (
+        load_run_segments_pl(
+            run_filters=[pl.col("ski_area_ids").list.len() > 0],
+        )
+        .filter(
+            pl.col("latitude").is_not_null(),
+            pl.col("latitude").is_between(-90, 90),
+            pl.col("elevation").is_not_null(),
+            pl.col("distance_vertical").is_not_null(),
+            pl.col("distance_3d").is_not_null(),
+            pl.col("distance_3d") > 0,
+            pl.col("distance_vertical_drop").is_not_null(),
+        )
+        .select(
+            "latitude",
+            "elevation",
+            "distance_vertical",
+            "distance_3d",
+            "distance_vertical_drop",
+        )
+        .collect()
+    )
+
+
+def _allocate_segments_to_elevation_bins(
+    segments: pl.DataFrame,
+    *,
+    bin_width: float,
+    metric: ElevationMetric,
+    group_columns: Sequence[str],
+) -> pl.DataFrame:
+    """Split segment metric values across elevation bins, retaining group columns."""
+    bw = bin_width
+    return (
+        segments.with_columns(
+            _elev_lo=pl.min_horizontal(
+                "elevation", pl.col("elevation") + pl.col("distance_vertical")
+            ),
+            _elev_hi=pl.max_horizontal(
+                "elevation", pl.col("elevation") + pl.col("distance_vertical")
+            ),
+            _span=pl.col("distance_vertical").abs(),
+        )
+        .with_columns(
+            _first_idx=(pl.col("_elev_lo") / bw).floor().cast(pl.Int64),
+            _last_idx=(pl.col("_elev_hi") / bw).floor().cast(pl.Int64),
+        )
+        .with_columns(
+            _bin_idx=pl.int_ranges("_first_idx", pl.col("_last_idx") + 1),
+        )
+        .explode("_bin_idx", empty_as_null=False, keep_nulls=False)
+        .with_columns(_bin_lo=pl.col("_bin_idx") * bw)
+        .with_columns(
+            _overlap=pl.min_horizontal("_elev_hi", pl.col("_bin_lo") + bw)
+            - pl.max_horizontal("_elev_lo", "_bin_lo")
+        )
+        .select(
+            *group_columns,
+            (pl.col("_bin_lo") + bw / 2).alias("elevation_bin_center"),
+            pl.when(pl.col("_span") < 1e-6)
+            .then(pl.col(metric))
+            .otherwise(pl.col(metric) * pl.col("_overlap") / pl.col("_span"))
+            .cast(pl.Float64)
+            .alias(metric),
+        )
+        .filter(pl.col(metric) > 0)
+    )
+
+
 def get_elevation_histogram_data(
     segments: pl.DataFrame,
     bin_width: float = _DEFAULT_BIN_WIDTH,
@@ -102,43 +185,151 @@ def get_elevation_histogram_data(
             }
         )
 
-    bw = bin_width
     return (
-        segments.with_columns(
-            _elev_lo=pl.min_horizontal(
-                "elevation", pl.col("elevation") + pl.col("distance_vertical")
-            ),
-            _elev_hi=pl.max_horizontal(
-                "elevation", pl.col("elevation") + pl.col("distance_vertical")
-            ),
-            _span=pl.col("distance_vertical").abs(),
+        _allocate_segments_to_elevation_bins(
+            segments,
+            bin_width=bin_width,
+            metric=metric,
+            group_columns=["run_difficulty_condensed"],
         )
-        .with_columns(
-            _first_idx=(pl.col("_elev_lo") / bw).floor().cast(pl.Int64),
-            _last_idx=(pl.col("_elev_hi") / bw).floor().cast(pl.Int64),
-        )
-        .with_columns(
-            _bin_idx=pl.int_ranges("_first_idx", pl.col("_last_idx") + 1),
-        )
-        .explode("_bin_idx", empty_as_null=False, keep_nulls=False)
-        .with_columns(_bin_lo=pl.col("_bin_idx") * bw)
-        .with_columns(
-            _overlap=pl.min_horizontal("_elev_hi", pl.col("_bin_lo") + bw)
-            - pl.max_horizontal("_elev_lo", "_bin_lo")
-        )
-        .select(
-            "run_difficulty_condensed",
-            (pl.col("_bin_lo") + bw / 2).alias("elevation_bin_center"),
-            pl.when(pl.col("_span") < 1e-6)
-            .then(pl.col(metric))
-            .otherwise(pl.col(metric) * pl.col("_overlap") / pl.col("_span"))
-            .cast(pl.Float64)
-            .alias(metric),
-        )
-        .filter(pl.col(metric) > 0)
         .group_by("elevation_bin_center", "run_difficulty_condensed")
         .agg(pl.col(metric).sum())
         .sort("elevation_bin_center", "run_difficulty_condensed")
+    )
+
+
+def get_elevation_by_latitude_data(segments: pl.DataFrame) -> pl.DataFrame:
+    """
+    Prepare weighted segment elevations within latitude bands.
+
+    A segment's elevation is its midpoint elevation. Elevations are rounded to
+    the nearest meter and identical values within a latitude band are collapsed
+    by summing ``metric``. This keeps the weighted violin density equivalent at
+    the scale of the chart while avoiding over a million duplicate observations.
+
+    The northern and southern hemispheres are combined into 10-degree absolute
+    latitude bands, matching the project's other global latitude analyses.
+    """
+    schema = {
+        "latitude_bin_lower": pl.Float64,
+        "latitude_bin_center": pl.Float64,
+        "latitude_bin_upper": pl.Float64,
+        "segment_elevation": pl.Float64,
+        "distance_vertical_drop": pl.Float64,
+    }
+    if segments.is_empty():
+        return pl.DataFrame(schema=schema)
+
+    latitude_bin_width = 10.0
+    binned = segments.filter(
+        pl.col("latitude").is_not_null(),
+        pl.col("latitude").is_between(-90, 90),
+        pl.col("elevation").is_not_null(),
+        pl.col("distance_vertical").is_not_null(),
+        pl.col("distance_vertical_drop").is_not_null(),
+        pl.col("distance_vertical_drop") > 0,
+    ).with_columns(
+        latitude_bin_lower=(pl.col("latitude").abs() / latitude_bin_width).floor()
+        * latitude_bin_width,
+        segment_elevation=(pl.col("elevation") + pl.col("distance_vertical") / 2).round(
+            0
+        ),
+    )
+    if binned.is_empty():
+        return pl.DataFrame(schema=schema)
+
+    return (
+        binned.with_columns(
+            latitude_bin_center=pl.col("latitude_bin_lower") + latitude_bin_width / 2,
+            latitude_bin_upper=pl.col("latitude_bin_lower") + latitude_bin_width,
+        )
+        .group_by(
+            "latitude_bin_lower",
+            "latitude_bin_center",
+            "latitude_bin_upper",
+            "segment_elevation",
+        )
+        .agg(pl.col("distance_vertical_drop").sum())
+        .select(*schema)
+        .sort("latitude_bin_center", "segment_elevation")
+    )
+
+
+def plot_elevation_by_latitude_violins() -> pn.ggplot:
+    """
+    Plot the manuscript's elevation violins by absolute-latitude band.
+
+    Plotnine's violin density is drawn horizontally so elevation is on the x-axis
+    and 10-degree latitude bands are on the y-axis. The distributions are weighted
+    by skiable vertical.
+    """
+    data = get_elevation_by_latitude_data(_get_latitude_elevation_segments())
+    if data.is_empty():
+        raise ValueError("No segment elevation data found.")
+
+    latitude_bins = (
+        data.select(
+            "latitude_bin_lower",
+            "latitude_bin_center",
+            "latitude_bin_upper",
+        )
+        .unique()
+        .sort("latitude_bin_center")
+    )
+    latitude_breaks = latitude_bins["latitude_bin_center"].to_list()
+    latitude_labels = [
+        f"{lower:g}–{upper:g}°"
+        for lower, upper in latitude_bins.select(
+            "latitude_bin_lower", "latitude_bin_upper"
+        ).iter_rows()
+    ]
+    plot_data = data.to_pandas()
+    plot_data["distance_vertical_drop"] = plot_data["distance_vertical_drop"].astype(
+        object
+    )
+    return (
+        pn.ggplot(
+            # Plotnine passes weights to statsmodels, which normalizes them in
+            # place. Object dtype makes its float conversion allocate a writable
+            # array under pandas copy-on-write.
+            data=plot_data,
+            mapping=pn.aes(
+                x="latitude_bin_center",
+                y="segment_elevation",
+                group="latitude_bin_center",
+                weight="distance_vertical_drop",
+            ),
+        )
+        + pn.geom_violin(
+            width=9,
+            scale="width",
+            trim=True,
+            bw=150,
+            fill="#D4A0A7",
+            color="#292929",
+            size=0.4,
+            draw_quantiles=[0.25, 0.5, 0.75],
+            quantile_color="#B9828A",
+            quantile_size=0.6,
+            quantile_linetype="dotted",
+        )
+        + pn.coord_flip()
+        + pn.scale_x_continuous(
+            name="Absolute Latitude",
+            breaks=latitude_breaks,
+            labels=latitude_labels,
+            expand=(0.03, 0.03),
+        )
+        + pn.scale_y_continuous(
+            name="Segment Elevation (m)",
+            labels=comma_format(),
+            expand=(0.02, 0.02),
+        )
+        + pn.theme_bw()
+        + pn.theme(
+            figure_size=(3, 4),
+            panel_grid_minor=pn.element_blank(),
+        )
     )
 
 

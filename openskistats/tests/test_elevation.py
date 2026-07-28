@@ -12,7 +12,9 @@ import pytest
 from openskistats.analyze import analyze_all_ski_areas_polars, load_ski_areas_pl
 from openskistats.elevation import (
     _get_elevation_segments,
+    get_elevation_by_latitude_data,
     get_elevation_histogram_data,
+    plot_elevation_by_latitude_violins,
     plot_elevation_histogram,
 )
 
@@ -79,6 +81,27 @@ def test_plot_elevation_histogram(first_ski_area_id: str) -> None:
     fig = plot_elevation_histogram(first_ski_area_id)
     assert fig is not None
     plt.close(fig)
+
+
+def test_get_elevation_by_latitude_data() -> None:
+    segments = pl.DataFrame(
+        {
+            "latitude": [-44.0, 44.0, 45.0],
+            "elevation": [250.0, 250.0, 300.0],
+            "distance_vertical": [-100.0, -100.0, -100.0],
+            "distance_vertical_drop": [100.0, 200.0, 300.0],
+        }
+    )
+    data = get_elevation_by_latitude_data(segments)
+
+    assert data["latitude_bin_center"].unique().sort().to_list() == [45.0]
+    assert data["segment_elevation"].sort().to_list() == [200.0, 250.0]
+    assert abs(data["distance_vertical_drop"].sum() - 600.0) < 1e-9
+
+
+def test_plot_elevation_by_latitude_violins(first_ski_area_id: str) -> None:
+    plot = plot_elevation_by_latitude_violins()
+    plt.close(plot.draw())
 
 
 # ---------------------------------------------------------------------------
