@@ -204,20 +204,24 @@ columns_descriptions = {
 
 def _format_header(ci: reactable.HeaderCellInfo) -> htmltools.Tag | str:
     """
-    Format header cell with tooltip provided by an <abbr> tag.
-    FIXME: The title attribute is inaccessible to most keyboard, mobile, and screen reader users,
-    so creating tooltips like this is generally discouraged.
+    Format header cell with a keyboard-accessible Tippy tooltip.
 
     References for tooltip headers:
     https://machow.github.io/reactable-py/get-started/format-header-footer.html#headers
     https://glin.github.io/reactable/articles/cookbook/cookbook.html#tooltips
     https://github.com/glin/reactable/issues/220
+    https://atomiks.github.io/tippyjs/v6/constructor/
+    https://atomiks.github.io/tippyjs/v6/accessibility/
     """
     column_id = ci.name
     column_name = ci.value
     assert isinstance(column_name, str)
     if description := columns_descriptions.get(column_id):
-        return htmltools.tags.abbr(column_name, title=description)
+        return htmltools.tags.span(
+            column_name,
+            tabindex=0,
+            data_tippy_content=description,
+        )
     return column_name
 
 
