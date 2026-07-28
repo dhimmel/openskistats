@@ -27,6 +27,3 @@ jobs:
       run: pixi run prek run --all-files --show-diff-on-failure --color=always
     - name: Python tests
       run: pixi run pytest --color=yes
-    - name: R tests
-      run: Rscript -e "packageVersion('arrow')"
-      working-directory: r/

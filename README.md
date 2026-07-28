@@ -46,13 +46,6 @@ Install the [quarto](https://quarto.org) extensions:
 (cd website/story && quarto add --no-prompt https://github.com/qmd-lab/closeread/archive/e3645070dd668004056ae508d2d25d05baca5ad1.zip)
 ```
 
-Check that [R](https://cran.r-project.org/) is installed:
-
-```shell
-# Check that R is installed by running:
-R --version
-```
-
 [Renovate](https://developer.mend.io/github/dhimmel/openskistats) automates dependency updates and is configured in [`renovate.json5`](.github/renovate.json5).
 
 ### Execution
@@ -83,14 +76,6 @@ pytest
 
 # run the full pre-commit suite
 prek run --all-files
-```
-
-To execute the R analysis, run the following command:
-
-```shell
-cd r
-Rscript 01.data.R
-Rscript 02.plot.R
 ```
 
 To render the website, use either:
