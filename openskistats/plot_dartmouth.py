@@ -8,6 +8,7 @@ import math
 
 import polars as pl
 from matplotlib.figure import Figure
+from matplotlib.patches import Rectangle
 
 from openskistats.plot import plot_orientation
 from openskistats.utils import get_images_data_directory
@@ -117,13 +118,19 @@ def plot_skiway_segments_with_rose(
     )
     # transparent circle so segments remain visible beneath the rose
     rose_ax.patch.set_alpha(0.0)
-    for patch, bin_index in zip(rose_ax.patches, bearings["bin_index"], strict=True):
-        if bin_index == highlight_bin_index:
-            patch.set_facecolor(HIGHLIGHT_COLOR)
+    (highlight_patch,) = (
+        patch
+        for patch, bin_index in zip(rose_ax.patches, bearings["bin_index"], strict=True)
+        if bin_index == highlight_bin_index
+    )
+    assert isinstance(highlight_patch, Rectangle)
+    highlight_patch.set_facecolor(HIGHLIGHT_COLOR)
     highlight_row = bearings.row(
         by_predicate=pl.col("bin_index") == highlight_bin_index, named=True
     )
-    radius = math.sqrt(highlight_row["bin_count"] * num_bins / math.pi)
+    # read the petal's radius from the bar itself rather than re-deriving
+    # plot_orientation's area-scaling formula
+    radius = highlight_patch.get_height()
     rose_ax.text(
         x=math.radians(highlight_row["bin_center"]),
         y=radius * 0.78,

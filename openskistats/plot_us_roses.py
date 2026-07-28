@@ -24,7 +24,7 @@ MAX_BORDER_WIDTH = 2.6
 MIN_BORDER_WIDTH = 0.1
 
 FIGURE_SIZE = (8.25, 6.0)
-# Five visible pixels around the painted content at the 300 DPI PNG export.
+# slim padding around the painted content of the SVG export
 US_ROSES_EXPORT_PADDING_INCHES = 8.5 / 300
 STATE_LABEL_SIZE = 9.0
 COMPASS_LABEL_SIZE = 8.0
