@@ -11,6 +11,7 @@ import polars as pl
 from matplotlib.figure import Figure
 from matplotlib.patches import Rectangle
 
+from openskistats.bearing import cut_bearings_pl
 from openskistats.plot import plot_orientation
 
 HIGHLIGHT_COLOR = "#d33c44"
@@ -56,11 +57,6 @@ def load_skiway_bearings(num_bins: int = 32) -> pl.DataFrame:
     ).filter(pl.col("num_bins") == num_bins)
 
 
-def bearing_to_bin_index(bearing: pl.Expr, num_bins: int) -> pl.Expr:
-    """Compass bin of a bearing in degrees, 1-indexed with bin 1 centered at north."""
-    return ((bearing / (360 / num_bins)).round(0) % num_bins + 1).cast(pl.Int64)
-
-
 def plot_skiway_segments_with_rose(
     highlight_bin_label: str = "NNE",
     num_bins: int = 32,
@@ -77,8 +73,7 @@ def plot_skiway_segments_with_rose(
         pl.col("bin_label") == highlight_bin_label
     )["bin_index"]
     segments = load_skiway_segments().with_columns(
-        highlight=bearing_to_bin_index(pl.col("bearing"), num_bins=num_bins)
-        == highlight_bin_index
+        highlight=cut_bearings_pl(num_bins=num_bins) == highlight_bin_index
     )
     # a figure unmanaged by pyplot to avoid spawning interactive backend windows
     fig = Figure(figsize=(8, 6))
