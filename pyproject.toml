@@ -41,6 +41,7 @@ pvlib= "==0.15.2"
 pyarrow = "==25.0.0"
 reactable = "==0.1.6"
 requests = "==2.34.2"
+shapely = "==2.1.2"
 rich= "==15.0.0"
 typer = "==0.27.0"
 
@@ -49,6 +50,7 @@ mypy = "==2.3.0"
 prek = "==0.4.11"
 pytest = "==9.1.1"
 types-PyYAML = "==6.0.12.20260724"
+types-shapely = "==2.1.0.20260630"
 
 [tool.pixi.environments]
 default = { features = ["dev"], solve-group = "default" }
