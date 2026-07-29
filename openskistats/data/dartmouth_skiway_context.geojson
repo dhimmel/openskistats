@@ -4,7 +4,7 @@
     "source": "https://www.openstreetmap.org",
     "copyright": "OpenStreetMap contributors",
     "license": "https://opendatacommons.org/licenses/odbl/1-0/",
-    "latest_osm_feature_timestamp": "2026-03-31T15:06:44Z",
+    "latest_osm_feature_timestamp": "2026-07-01T17:05:11Z",
     "refresh_command": "pixi run openskistats download_dartmouth_context"
   },
   "features": [
@@ -17,8 +17,10 @@
         "osm_version": 2,
         "osm_timestamp": "2023-02-13T20:53:10Z",
         "name": "McLane Family Lodge",
+        "amenity": "events_venue",
         "building": "yes",
         "highway": null,
+        "parking": null,
         "surface": null,
         "source": "https://www.openstreetmap.org/way/296382919"
       },
@@ -120,6 +122,202 @@
     },
     {
       "type": "Feature",
+      "id": "way/602788499",
+      "properties": {
+        "feature_kind": "parking",
+        "osm_id": 602788499,
+        "osm_version": 7,
+        "osm_timestamp": "2026-06-02T23:37:25Z",
+        "name": null,
+        "amenity": "parking",
+        "building": null,
+        "highway": null,
+        "parking": "surface",
+        "surface": null,
+        "source": "https://www.openstreetmap.org/way/602788499"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -72.1006518,
+              43.7886187
+            ],
+            [
+              -72.1005231,
+              43.7886381
+            ],
+            [
+              -72.100566,
+              43.7888782
+            ],
+            [
+              -72.100566,
+              43.7892112
+            ],
+            [
+              -72.100409,
+              43.7892409
+            ],
+            [
+              -72.1002093,
+              43.7884565
+            ],
+            [
+              -72.1002357,
+              43.7884081
+            ],
+            [
+              -72.0999805,
+              43.7884453
+            ],
+            [
+              -72.0998896,
+              43.7884597
+            ],
+            [
+              -72.099974,
+              43.7888456
+            ],
+            [
+              -72.100091,
+              43.7893533
+            ],
+            [
+              -72.1001886,
+              43.7894359
+            ],
+            [
+              -72.100095,
+              43.7897718
+            ],
+            [
+              -72.1000355,
+              43.7899703
+            ],
+            [
+              -72.100092,
+              43.7899878
+            ],
+            [
+              -72.1003192,
+              43.7900206
+            ],
+            [
+              -72.1003278,
+              43.7900148
+            ],
+            [
+              -72.1004652,
+              43.7899229
+            ],
+            [
+              -72.1005195,
+              43.7897031
+            ],
+            [
+              -72.1004864,
+              43.7895462
+            ],
+            [
+              -72.1004211,
+              43.7893739
+            ],
+            [
+              -72.1006042,
+              43.7893341
+            ],
+            [
+              -72.100684,
+              43.7894901
+            ],
+            [
+              -72.1007645,
+              43.7896682
+            ],
+            [
+              -72.1007966,
+              43.789827
+            ],
+            [
+              -72.1007859,
+              43.7899896
+            ],
+            [
+              -72.100731,
+              43.790096
+            ],
+            [
+              -72.100684,
+              43.7901871
+            ],
+            [
+              -72.1006786,
+              43.7902568
+            ],
+            [
+              -72.1007645,
+              43.7903575
+            ],
+            [
+              -72.100861,
+              43.7904659
+            ],
+            [
+              -72.1010702,
+              43.7907021
+            ],
+            [
+              -72.1012365,
+              43.7908416
+            ],
+            [
+              -72.1013425,
+              43.7908702
+            ],
+            [
+              -72.1014282,
+              43.7908636
+            ],
+            [
+              -72.1014833,
+              43.7907912
+            ],
+            [
+              -72.1014738,
+              43.7907674
+            ],
+            [
+              -72.1014582,
+              43.7907284
+            ],
+            [
+              -72.1011882,
+              43.7900516
+            ],
+            [
+              -72.1010434,
+              43.7897263
+            ],
+            [
+              -72.1009147,
+              43.7894359
+            ],
+            [
+              -72.1007913,
+              43.7890486
+            ],
+            [
+              -72.1006518,
+              43.7886187
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "way/328497225",
       "properties": {
         "feature_kind": "road",
@@ -127,8 +325,10 @@
         "osm_version": 10,
         "osm_timestamp": "2026-03-31T15:06:44Z",
         "name": "Grafton Turnpike",
+        "amenity": null,
         "building": null,
         "highway": "unclassified",
+        "parking": null,
         "surface": "gravel",
         "source": "https://www.openstreetmap.org/way/328497225"
       },
@@ -403,8 +603,10 @@
         "osm_version": 8,
         "osm_timestamp": "2026-02-11T13:32:32Z",
         "name": "Grafton Turnpike",
+        "amenity": null,
         "building": null,
         "highway": "tertiary",
+        "parking": null,
         "surface": "asphalt",
         "source": "https://www.openstreetmap.org/way/532980281"
       },
@@ -499,8 +701,10 @@
         "osm_version": 6,
         "osm_timestamp": "2021-07-07T02:47:15Z",
         "name": "Grafton Turnpike",
+        "amenity": null,
         "building": null,
         "highway": "unclassified",
+        "parking": null,
         "surface": "unpaved",
         "source": "https://www.openstreetmap.org/way/532980282"
       },
@@ -943,8 +1147,10 @@
         "osm_version": 1,
         "osm_timestamp": "2025-09-22T14:16:33Z",
         "name": "Grafton Turnpike",
+        "amenity": null,
         "building": null,
         "highway": "unclassified",
+        "parking": null,
         "surface": "asphalt",
         "source": "https://www.openstreetmap.org/way/1431999174"
       },
@@ -970,6 +1176,108 @@
           [
             -72.1002057,
             43.7878576
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "relation/18319298",
+      "properties": {
+        "feature_kind": "trail",
+        "osm_id": 18319298,
+        "osm_version": 16,
+        "osm_timestamp": "2026-07-01T17:05:11Z",
+        "name": "Appalachian Trail",
+        "network": "nwn",
+        "ref": "AT",
+        "route": "hiking",
+        "source": "https://www.openstreetmap.org/relation/18319298"
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              -72.1047701,
+              43.7903
+            ],
+            [
+              -72.1048532,
+              43.7901856
+            ],
+            [
+              -72.1048909,
+              43.7901188
+            ],
+            [
+              -72.1049224,
+              43.7899141
+            ],
+            [
+              -72.1049484,
+              43.789776
+            ],
+            [
+              -72.1049573,
+              43.7894642
+            ],
+            [
+              -72.1049936,
+              43.7893256
+            ],
+            [
+              -72.1050055,
+              43.7892575
+            ],
+            [
+              -72.1050482,
+              43.7891805
+            ],
+            [
+              -72.1051089,
+              43.7891065
+            ],
+            [
+              -72.1051995,
+              43.7891055
+            ],
+            [
+              -72.1052884,
+              43.7891122
+            ],
+            [
+              -72.1053737,
+              43.7890367
+            ],
+            [
+              -72.1054396,
+              43.7890058
+            ],
+            [
+              -72.1055818,
+              43.7888694
+            ],
+            [
+              -72.1058288,
+              43.788644
+            ],
+            [
+              -72.1059223,
+              43.7885492
+            ],
+            [
+              -72.1062572,
+              43.7878788
+            ],
+            [
+              -72.1063704,
+              43.7872033
+            ],
+            [
+              -72.1072,
+              43.7864377
+            ]
           ]
         ]
       }

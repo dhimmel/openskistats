@@ -27,6 +27,10 @@ LIFT_COLOR = "#dceaf2"
 LODGE_COLOR = "#f2d49b"
 ROAD_COLOR = LODGE_COLOR
 ROAD_LABEL_COLOR = ROAD_COLOR
+ROAD_LINEWIDTH = 3
+TRAIL_COLOR = ROAD_COLOR
+TRAIL_LINEWIDTH = ROAD_LINEWIDTH / 2
+PARKING_COLOR = "#f7e5c2"
 MAP_LABEL_COLOR = "#4d5961"
 CONTOUR_COLOR = "#eeeae5"
 INDEX_CONTOUR_COLOR = "#ded8d0"
@@ -183,7 +187,7 @@ def load_skiway_lift_coordinates() -> pl.DataFrame:
 
 
 def _plot_skiway_map_context(ax: Axes, map_context: dict[str, Any]) -> None:
-    """Plot the static road and lodge snapshot behind the ski data."""
+    """Plot the static OpenStreetMap context behind the ski data."""
     for feature in map_context["features"]:
         coordinates = feature["geometry"]["coordinates"]
         match feature["properties"]["feature_kind"]:
@@ -192,19 +196,30 @@ def _plot_skiway_map_context(ax: Axes, map_context: dict[str, Any]) -> None:
                     [coordinate[0] for coordinate in coordinates],
                     [coordinate[1] for coordinate in coordinates],
                     color=ROAD_COLOR,
-                    linewidth=3,
+                    linewidth=ROAD_LINEWIDTH,
                     solid_capstyle="round",
                     zorder=0,
                 )
-            case "lodge":
+            case "trail":
+                for line_coordinates in coordinates:
+                    ax.plot(
+                        [coordinate[0] for coordinate in line_coordinates],
+                        [coordinate[1] for coordinate in line_coordinates],
+                        color=TRAIL_COLOR,
+                        linewidth=TRAIL_LINEWIDTH,
+                        solid_capstyle="round",
+                        zorder=0,
+                    )
+            case "lodge" | "parking":
                 polygon_coordinates = coordinates[0]
+                is_lodge = feature["properties"]["feature_kind"] == "lodge"
                 ax.add_patch(
                     Polygon(
                         polygon_coordinates,
                         closed=True,
-                        facecolor=LODGE_COLOR,
+                        facecolor=LODGE_COLOR if is_lodge else PARKING_COLOR,
                         edgecolor="none",
-                        zorder=1.2,
+                        zorder=1.2 if is_lodge else -0.5,
                     )
                 )
 

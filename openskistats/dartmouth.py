@@ -30,9 +30,13 @@ DARTMOUTH_CONTEXT_OSM_WAY_IDS = (
     328497225,  # Grafton Turnpike
     532980281,  # Grafton Turnpike
     532980282,  # Grafton Turnpike continuation
+    602788499,  # Dartmouth Skiway parking lot
     1431999174,  # Grafton Turnpike connector
 )
+DARTMOUTH_CONTEXT_OSM_RELATION_IDS = (18319298,)  # Appalachian Trail, New Hampshire
 MCLANE_FAMILY_LODGE_OSM_ID = 296382919
+DARTMOUTH_SKIWAY_PARKING_LOT_OSM_ID = 602788499
+APPALACHIAN_TRAIL_OSM_ID = 18319298
 USER_AGENT = "openskistats/0.1 (https://github.com/dhimmel/openskistats)"
 DARTMOUTH_ELEVATION_SERVICE_URL = (
     "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer"
@@ -55,26 +59,88 @@ def _osm_way_to_geojson_feature(osm_data: dict[str, Any]) -> dict[str, Any]:
     coordinates = [
         [nodes[node_id]["lon"], nodes[node_id]["lat"]] for node_id in way["nodes"]
     ]
-    is_lodge = osm_id == MCLANE_FAMILY_LODGE_OSM_ID
-    geometry_type = "Polygon" if is_lodge else "LineString"
-    geometry_coordinates = [coordinates] if is_lodge else coordinates
+    if osm_id == MCLANE_FAMILY_LODGE_OSM_ID:
+        feature_kind = "lodge"
+    elif osm_id == DARTMOUTH_SKIWAY_PARKING_LOT_OSM_ID:
+        feature_kind = "parking"
+    else:
+        feature_kind = "road"
+    is_polygon = feature_kind in {"lodge", "parking"}
+    geometry_type = "Polygon" if is_polygon else "LineString"
+    geometry_coordinates = [coordinates] if is_polygon else coordinates
     return {
         "type": "Feature",
         "id": f"way/{osm_id}",
         "properties": {
-            "feature_kind": "lodge" if is_lodge else "road",
+            "feature_kind": feature_kind,
             "osm_id": osm_id,
             "osm_version": way["version"],
             "osm_timestamp": way["timestamp"],
-            "name": tags["name"],
+            "name": tags.get("name"),
+            "amenity": tags.get("amenity"),
             "building": tags.get("building"),
             "highway": tags.get("highway"),
+            "parking": tags.get("parking"),
             "surface": tags.get("surface"),
             "source": f"https://www.openstreetmap.org/way/{osm_id}",
         },
         "geometry": {
             "type": geometry_type,
             "coordinates": geometry_coordinates,
+        },
+    }
+
+
+def _osm_relation_to_geojson_feature(
+    osm_data: dict[str, Any],
+    bounds: GeographicBounds,
+) -> dict[str, Any]:
+    """Convert one OSM route relation to a clipped GeoJSON feature."""
+    relation = next(
+        element for element in osm_data["elements"] if element["type"] == "relation"
+    )
+    ways = {
+        element["id"]: element
+        for element in osm_data["elements"]
+        if element["type"] == "way"
+    }
+    nodes = {
+        element["id"]: element
+        for element in osm_data["elements"]
+        if element["type"] == "node"
+    }
+    coordinates = []
+    for member in relation["members"]:
+        if member["type"] != "way":
+            continue
+        way = ways[member["ref"]]
+        vertices = np.asarray(
+            [
+                [nodes[node_id]["lon"], nodes[node_id]["lat"]]
+                for node_id in way["nodes"]
+            ],
+            dtype=np.float64,
+        )
+        coordinates.extend(_clip_polyline_to_bounds(vertices=vertices, bounds=bounds))
+    tags = relation["tags"]
+    osm_id = relation["id"]
+    return {
+        "type": "Feature",
+        "id": f"relation/{osm_id}",
+        "properties": {
+            "feature_kind": "trail",
+            "osm_id": osm_id,
+            "osm_version": relation["version"],
+            "osm_timestamp": relation["timestamp"],
+            "name": tags.get("name"),
+            "network": tags.get("network"),
+            "ref": tags.get("ref"),
+            "route": tags.get("route"),
+            "source": f"https://www.openstreetmap.org/relation/{osm_id}",
+        },
+        "geometry": {
+            "type": "MultiLineString",
+            "coordinates": coordinates,
         },
     }
 
@@ -86,6 +152,8 @@ def download_dartmouth_skiway_context() -> Path:
     This command is intended to be rerun infrequently and always manually.
     Plot generation reads the committed snapshot and never makes a network request.
     """
+    from openskistats.plot_dartmouth import SKIWAY_MAP_BOUNDS
+
     features = []
     for osm_id in DARTMOUTH_CONTEXT_OSM_WAY_IDS:
         response = requests.get(
@@ -95,6 +163,19 @@ def download_dartmouth_skiway_context() -> Path:
         )
         response.raise_for_status()
         features.append(_osm_way_to_geojson_feature(response.json()))
+    for osm_id in DARTMOUTH_CONTEXT_OSM_RELATION_IDS:
+        response = requests.get(
+            f"https://api.openstreetmap.org/api/0.6/relation/{osm_id}/full.json",
+            headers={"User-Agent": USER_AGENT},
+            timeout=60,
+        )
+        response.raise_for_status()
+        features.append(
+            _osm_relation_to_geojson_feature(
+                osm_data=response.json(),
+                bounds=SKIWAY_MAP_BOUNDS,
+            )
+        )
     features.sort(
         key=lambda feature: (
             feature["properties"]["feature_kind"],
