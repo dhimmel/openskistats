@@ -65,12 +65,12 @@ SKIWAY_MAP_LABELS = (
     ),
     GeographicLabel(
         text="Holt's Ledge",
-        longitude=-72.1047,
-        latitude=43.7778,
+        longitude=-72.1049,
+        latitude=43.7777,
     ),
     GeographicLabel(
-        text="Winslow Mountain",
-        longitude=-72.0879,
+        text="Winslow\nMountain",
+        longitude=-72.0870,
         latitude=43.7833,
     ),
 )

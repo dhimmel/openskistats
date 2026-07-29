@@ -79,10 +79,10 @@ class GeographicBounds:
 
 
 SKIWAY_MAP_BOUNDS = GeographicBounds(
-    west=-72.1072,
-    east=-72.0859,
-    south=43.7776,
-    north=43.7903,
+    west=-72.1075,
+    east=-72.0857,
+    south=43.7774,
+    north=43.7908,
 )
 """Editable fixed map extent, stored in WGS 84 longitude and latitude."""
 
