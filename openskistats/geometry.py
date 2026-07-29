@@ -9,7 +9,24 @@ from typing import Any
 import numpy as np
 import polars as pl
 from osmnx.distance import EARTH_RADIUS_M
-from shapely import LineString
+from shapely import LineString, clip_by_rect, get_parts
+
+
+@dataclass(frozen=True)
+class MetersPerDegree:
+    """Local lengths in meters of one degree of longitude and latitude."""
+
+    longitude: float
+    latitude: float
+
+
+def meters_per_degree(latitude: float) -> MetersPerDegree:
+    """Spherical lengths in meters of one degree at the given latitude."""
+    per_degree_latitude = math.pi * EARTH_RADIUS_M / 180
+    return MetersPerDegree(
+        longitude=per_degree_latitude * math.cos(math.radians(latitude)),
+        latitude=per_degree_latitude,
+    )
 
 
 @dataclass(frozen=True)
@@ -22,10 +39,14 @@ class GeographicBounds:
     north: float
     crs: str = "EPSG:4326"
 
+    @property
+    def midpoint_latitude(self) -> float:
+        return (self.south + self.north) / 2
+
     def local_data_aspect(self) -> float:
         """Return the latitude-to-longitude display scale at the map midpoint."""
-        midpoint_latitude = (self.south + self.north) / 2
-        return 1 / math.cos(math.radians(midpoint_latitude))
+        scale = meters_per_degree(self.midpoint_latitude)
+        return scale.latitude / scale.longitude
 
     def height_for_width(self, width: float) -> float:
         """Return the canvas height that preserves local geographic proportions."""
@@ -58,14 +79,11 @@ def simplify_coordinates(
         return []
     origin_longitude, origin_latitude = coordinates[0]
     midpoint_latitude = sum(latitude for _, latitude in coordinates) / len(coordinates)
-    meters_per_degree_latitude = math.pi * EARTH_RADIUS_M / 180
-    meters_per_degree_longitude = meters_per_degree_latitude * math.cos(
-        math.radians(midpoint_latitude)
-    )
+    scale = meters_per_degree(midpoint_latitude)
     projected = [
         (
-            (longitude - origin_longitude) * meters_per_degree_longitude,
-            (latitude - origin_latitude) * meters_per_degree_latitude,
+            (longitude - origin_longitude) * scale.longitude,
+            (latitude - origin_latitude) * scale.latitude,
         )
         for longitude, latitude in coordinates
     ]
@@ -127,72 +145,22 @@ def simplify_segments(
     return pl.DataFrame(rows, schema=schema)
 
 
-def clip_segment_to_bounds(
-    start: tuple[float, float],
-    end: tuple[float, float],
-    bounds: GeographicBounds,
-) -> tuple[tuple[float, float], tuple[float, float]] | None:
-    """Clip one line segment to a rectangular geographic extent."""
-    x_start, y_start = start
-    delta_x = end[0] - x_start
-    delta_y = end[1] - y_start
-    minimum_fraction = 0.0
-    maximum_fraction = 1.0
-    for direction, distance in (
-        (-delta_x, x_start - bounds.west),
-        (delta_x, bounds.east - x_start),
-        (-delta_y, y_start - bounds.south),
-        (delta_y, bounds.north - y_start),
-    ):
-        if direction == 0:
-            if distance < 0:
-                return None
-            continue
-        fraction = distance / direction
-        if direction < 0:
-            minimum_fraction = max(minimum_fraction, fraction)
-        else:
-            maximum_fraction = min(maximum_fraction, fraction)
-        if minimum_fraction > maximum_fraction:
-            return None
-    return (
-        (
-            x_start + minimum_fraction * delta_x,
-            y_start + minimum_fraction * delta_y,
-        ),
-        (
-            x_start + maximum_fraction * delta_x,
-            y_start + maximum_fraction * delta_y,
-        ),
-    )
-
-
 def clip_polyline_to_bounds(
     vertices: np.ndarray[Any, np.dtype[np.float64]],
     bounds: GeographicBounds,
 ) -> list[list[list[float]]]:
-    """Clip a polyline and return its nonempty pieces as GeoJSON coordinates."""
-    pieces: list[list[list[float]]] = []
-    current_piece: list[list[float]] = []
-    for start_array, end_array in zip(vertices[:-1], vertices[1:], strict=True):
-        clipped = clip_segment_to_bounds(
-            start=(float(start_array[0]), float(start_array[1])),
-            end=(float(end_array[0]), float(end_array[1])),
-            bounds=bounds,
-        )
-        if clipped is None:
-            if current_piece:
-                pieces.append(current_piece)
-                current_piece = []
-            continue
-        clipped_start = [round(value, 7) for value in clipped[0]]
-        clipped_end = [round(value, 7) for value in clipped[1]]
-        if current_piece and current_piece[-1] == clipped_start:
-            current_piece.append(clipped_end)
-        else:
-            if current_piece:
-                pieces.append(current_piece)
-            current_piece = [clipped_start, clipped_end]
-    if current_piece:
-        pieces.append(current_piece)
-    return pieces
+    """
+    Clip a polyline to a rectangular geographic extent,
+    returning its nonempty pieces as GeoJSON MultiLineString coordinates
+    rounded to 7 decimal places.
+    """
+    if len(vertices) < 2:
+        return []
+    clipped = clip_by_rect(
+        LineString(vertices), bounds.west, bounds.south, bounds.east, bounds.north
+    )
+    return [
+        [[round(x, 7), round(y, 7)] for x, y in piece.coords]
+        for piece in get_parts(clipped)
+        if isinstance(piece, LineString) and not piece.is_empty
+    ]

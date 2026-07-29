@@ -12,7 +12,11 @@ from typing import TYPE_CHECKING, Any, cast
 import numpy as np
 import requests
 
-from openskistats.geometry import GeographicBounds, clip_polyline_to_bounds
+from openskistats.geometry import (
+    GeographicBounds,
+    clip_polyline_to_bounds,
+    meters_per_degree,
+)
 from openskistats.utils import get_repo_directory
 
 if TYPE_CHECKING:
@@ -348,24 +352,22 @@ def download_dartmouth_skiway_contours(
         )
     if pixel_size_meters <= 0:
         raise ValueError("pixel_size_meters must be positive")
-    midpoint_latitude = (bounds.south + bounds.north) / 2
-    meters_per_longitude_degree = 111_320 * math.cos(math.radians(midpoint_latitude))
-    meters_per_latitude_degree = 110_574
+    scale = meters_per_degree(bounds.midpoint_latitude)
     padding_meters = pixel_size_meters * 2
     request_bounds = {
-        "west": bounds.west - padding_meters / meters_per_longitude_degree,
-        "east": bounds.east + padding_meters / meters_per_longitude_degree,
-        "south": bounds.south - padding_meters / meters_per_latitude_degree,
-        "north": bounds.north + padding_meters / meters_per_latitude_degree,
+        "west": bounds.west - padding_meters / scale.longitude,
+        "east": bounds.east + padding_meters / scale.longitude,
+        "south": bounds.south - padding_meters / scale.latitude,
+        "north": bounds.north + padding_meters / scale.latitude,
     }
     width = math.ceil(
         (request_bounds["east"] - request_bounds["west"])
-        * meters_per_longitude_degree
+        * scale.longitude
         / pixel_size_meters
     )
     height = math.ceil(
         (request_bounds["north"] - request_bounds["south"])
-        * meters_per_latitude_degree
+        * scale.latitude
         / pixel_size_meters
     )
     export_parameters = {
