@@ -10,6 +10,7 @@ from openskistats.analyze import (
     load_ski_areas_pl,
     ski_rose_the_world,
 )
+from openskistats.dartmouth import download_dartmouth_skiway_context
 from openskistats.models import RunModel, SkiAreaModel
 from openskistats.nesh.timelines import NewEnglandSkiHistoryTimelineScraper
 from openskistats.openskimap_utils import (
@@ -26,6 +27,13 @@ class Commands:
     def download() -> None:
         """Download latest OpenSkiMap source data."""
         download_openskimap_geojsons()
+
+    @staticmethod
+    @cli.command(name="download_dartmouth_context")
+    def download_dartmouth_context() -> None:
+        """Refresh the committed OSM context for the Dartmouth Skiway figure."""
+        path = download_dartmouth_skiway_context()
+        logging.info(f"Wrote {path}")
 
     @staticmethod
     @cli.command(name="nesh_timelines")

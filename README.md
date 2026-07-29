@@ -66,6 +66,9 @@ To execute the Python analysis, run the following commands:
 # downloads persist locally
 openskistats download
 
+# manually refresh the committed OpenStreetMap context for the Dartmouth figure
+openskistats download_dartmouth_context
+
 # extract ski area metadata and metrics
 openskistats analyze
 

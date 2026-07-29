@@ -266,7 +266,7 @@ _collecting examples of ski infrastructure that have been lost_
 ![](../images/dartmouth_nne_light.svg)
 
 A map of the Dartmouth Skiway showing which run segments belong to the NNE petal of the rose.
-Orienting features are also shown, including ski lifts.
+Orienting features include ski lifts, their two upper terminals, the lodge, and the road through the base area.
 :::
 
 ### Run Difficulty

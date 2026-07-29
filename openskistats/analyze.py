@@ -573,6 +573,8 @@ def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
         figures[name] = fig
     from openskistats.elevation import plot_elevation_by_latitude_violins
     from openskistats.plot_dartmouth import (
+        SKIWAY_FIGURE_NAME,
+        SKIWAY_MAP_BOUNDS,
         load_skiway_bearings,
         plot_skiway_segments_with_rose,
     )
@@ -611,29 +613,39 @@ def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
             "Dartmouth Skiway is absent from the ski area metrics."
         )
     else:
-        figures["dartmouth_nne_light"] = plot_skiway_segments_with_rose(
+        figures[SKIWAY_FIGURE_NAME] = plot_skiway_segments_with_rose(
             bearings=skiway_bearings
         )
     # save SVGs
     for name, fig in figures.items():
+        is_fixed_skiway_canvas = name == SKIWAY_FIGURE_NAME
         pad_inches = (
-            US_ROSES_EXPORT_PADDING_INCHES if name == "us_roses_light" else 0.02
+            0
+            if is_fixed_skiway_canvas
+            else (US_ROSES_EXPORT_PADDING_INCHES if name == "us_roses_light" else 0.02)
         )
+        metadata = {
+            "Creator": "https://github.com/dhimmel/openskistats",
+        }
+        if is_fixed_skiway_canvas:
+            metadata["Description"] = SKIWAY_MAP_BOUNDS.metadata_description()
         fig.savefig(
             image_directory.joinpath(f"{name}.svg"),
             format="svg",
-            bbox_inches="tight",
+            bbox_inches=None if is_fixed_skiway_canvas else "tight",
             pad_inches=pad_inches,
-            metadata={
-                "Creator": "https://github.com/dhimmel/openskistats",
-            },
+            metadata=metadata,
         )
     # save multi-page PDF
     logging.info(f"Writing ski rose the world to {path}")
     with pdf_pages:
-        for fig in figures.values():
+        for name, fig in figures.items():
+            is_fixed_skiway_canvas = name == SKIWAY_FIGURE_NAME
             pdf_pages.savefig(  # type: ignore[no-untyped-call]
-                fig, facecolor="#FFFFFF", bbox_inches="tight"
+                fig,
+                facecolor="#FFFFFF",
+                bbox_inches=None if is_fixed_skiway_canvas else "tight",
+                pad_inches=0 if is_fixed_skiway_canvas else 0.1,
             )
             matplotlib.pyplot.close(fig)
 

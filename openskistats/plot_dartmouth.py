@@ -6,20 +6,106 @@ https://github.com/dhimmel/openskistats/blob/b01f47defbdb0119d76aed25235fa6d0cb8
 """
 
 import math
+from dataclasses import dataclass
+from typing import Any
 
 import polars as pl
+from matplotlib.axes import Axes
 from matplotlib.figure import Figure
-from matplotlib.patches import Rectangle
+from matplotlib.patches import Polygon, Rectangle
 
 from openskistats.bearing import cut_bearings_pl
+from openskistats.dartmouth import load_dartmouth_skiway_context
 from openskistats.plot import plot_orientation
 
 HIGHLIGHT_COLOR = "#d33c44"
 MUTED_COLOR = "#cccccc"
 LIFT_COLOR = "#dceaf2"
+LODGE_COLOR = "#f2d49b"
+ROAD_COLOR = LODGE_COLOR
+ROAD_LABEL_COLOR = ROAD_COLOR
+MAP_LABEL_COLOR = "#4d5961"
 
+SKIWAY_FIGURE_NAME = "dartmouth_nne_light"
 SKIWAY_NAME = "Dartmouth Skiway"
 """Ski area for the example figure, chosen for its two distinctly oriented ledges."""
+
+
+@dataclass(frozen=True)
+class GeographicBounds:
+    """Fixed longitude and latitude bounds for a map canvas."""
+
+    west: float
+    east: float
+    south: float
+    north: float
+    crs: str = "EPSG:4326"
+
+    def local_data_aspect(self) -> float:
+        """Return the latitude-to-longitude display scale at the map midpoint."""
+        midpoint_latitude = (self.south + self.north) / 2
+        return 1 / math.cos(math.radians(midpoint_latitude))
+
+    def height_for_width(self, width: float) -> float:
+        """Return the canvas height that preserves local geographic proportions."""
+        longitude_span = self.east - self.west
+        latitude_span = self.north - self.south
+        geographic_width_to_height = longitude_span / (
+            self.local_data_aspect() * latitude_span
+        )
+        return width / geographic_width_to_height
+
+    def metadata_description(self) -> str:
+        """Describe the coordinate reference system and bounding box."""
+        return (
+            f"{self.crs} bounds: "
+            f"west={self.west}, east={self.east}, "
+            f"south={self.south}, north={self.north}."
+        )
+
+
+@dataclass(frozen=True)
+class GeographicLabel:
+    """A map label positioned by the center of its text."""
+
+    text: str
+    longitude: float
+    latitude: float
+    color: str = MAP_LABEL_COLOR
+    rotation: float = 0
+
+
+SKIWAY_MAP_BOUNDS = GeographicBounds(
+    west=-72.1072,
+    east=-72.0859,
+    south=43.7776,
+    north=43.7903,
+)
+"""Editable fixed map extent, stored in WGS 84 longitude and latitude."""
+
+SKIWAY_FIGURE_WIDTH = 8.0
+"""Fixed figure width in inches; height adapts to `SKIWAY_MAP_BOUNDS`."""
+
+SKIWAY_MAP_LABELS = (
+    GeographicLabel(
+        text="Grafton Turnpike",
+        longitude=-72.0977,
+        latitude=43.7847,
+        color=ROAD_LABEL_COLOR,
+        rotation=-69,
+    ),
+    GeographicLabel(
+        text="Holt's Ledge",
+        longitude=-72.1047,
+        latitude=43.7778,
+    ),
+    GeographicLabel(
+        text="Winslow Mountain",
+        longitude=-72.0879,
+        latitude=43.7833,
+    ),
+)
+"""Editable map labels whose coordinates specify each text bounding-box center."""
 
 
 def load_skiway_segments() -> pl.DataFrame:
@@ -73,14 +159,65 @@ def load_skiway_lift_coordinates() -> pl.DataFrame:
         .explode("ski_area_ids", empty_as_null=False, keep_nulls=False)
         .rename({"ski_area_ids": "ski_area_id"})
         .join(ski_area_ids, on="ski_area_id", how="semi", maintain_order="left")
-        .select("lift_id", "lift_coordinates")
+        .select("lift_id", "lift_name", "lift_type", "lift_coordinates")
         .explode("lift_coordinates", empty_as_null=False, keep_nulls=False)
         .unnest("lift_coordinates")
-        .select("lift_id", "index", "longitude", "latitude")
-        .drop_nulls()
+        .select(
+            "lift_id",
+            "lift_name",
+            "lift_type",
+            "index",
+            "longitude",
+            "latitude",
+            "elevation",
+        )
+        .drop_nulls(["lift_id", "index", "longitude", "latitude"])
         .sort("lift_id", "index")
         .collect()
     )
+
+
+def _plot_skiway_map_context(ax: Axes, map_context: dict[str, Any]) -> None:
+    """Plot the static road and lodge snapshot behind the ski data."""
+    for feature in map_context["features"]:
+        coordinates = feature["geometry"]["coordinates"]
+        match feature["properties"]["feature_kind"]:
+            case "road":
+                ax.plot(
+                    [coordinate[0] for coordinate in coordinates],
+                    [coordinate[1] for coordinate in coordinates],
+                    color=ROAD_COLOR,
+                    linewidth=3,
+                    solid_capstyle="round",
+                    zorder=0,
+                )
+            case "lodge":
+                polygon_coordinates = coordinates[0]
+                ax.add_patch(
+                    Polygon(
+                        polygon_coordinates,
+                        closed=True,
+                        facecolor=LODGE_COLOR,
+                        edgecolor="none",
+                        zorder=1.2,
+                    )
+                )
+
+
+def _plot_skiway_map_labels(ax: Axes) -> None:
+    """Plot labels at their declarative geographic positions."""
+    for label in SKIWAY_MAP_LABELS:
+        ax.text(
+            label.longitude,
+            label.latitude,
+            label.text,
+            color=label.color,
+            fontsize=8,
+            ha="center",
+            va="center",
+            rotation=label.rotation,
+            zorder=4,
+        )
 
 
 def plot_skiway_segments_with_rose(
@@ -88,6 +225,7 @@ def plot_skiway_segments_with_rose(
     num_bins: int = 32,
     bearings: pl.DataFrame | None = None,
     lift_coordinates: pl.DataFrame | None = None,
+    map_context: dict[str, Any] | None = None,
 ) -> Figure:
     """
     Plot Dartmouth Skiway lifts underneath run-segment arrows.
@@ -99,6 +237,8 @@ def plot_skiway_segments_with_rose(
         bearings = load_skiway_bearings(num_bins=num_bins)
     if lift_coordinates is None:
         lift_coordinates = load_skiway_lift_coordinates()
+    if map_context is None:
+        map_context = load_dartmouth_skiway_context()
     (highlight_bin_index,) = bearings.filter(
         pl.col("bin_label") == highlight_bin_label
     )["bin_index"]
@@ -106,23 +246,19 @@ def plot_skiway_segments_with_rose(
         highlight=cut_bearings_pl(num_bins=num_bins) == highlight_bin_index
     )
     # a figure unmanaged by pyplot to avoid spawning interactive backend windows
-    fig = Figure(figsize=(8, 6))
+    fig = Figure(
+        figsize=(
+            SKIWAY_FIGURE_WIDTH,
+            SKIWAY_MAP_BOUNDS.height_for_width(SKIWAY_FIGURE_WIDTH),
+        )
+    )
     ax = fig.add_axes((0, 0, 1, 1))
     ax.set_axis_off()
-    margin = 0.03
-    bounds = segments.select(
-        x_min=pl.min_horizontal("longitude", "longitude_end").min(),
-        x_max=pl.max_horizontal("longitude", "longitude_end").max(),
-        y_min=pl.min_horizontal("latitude", "latitude_end").min(),
-        y_max=pl.max_horizontal("latitude", "latitude_end").max(),
-    ).row(0, named=True)
-    x_pad = margin * (bounds["x_max"] - bounds["x_min"])
-    y_pad = margin * (bounds["y_max"] - bounds["y_min"])
-    ax.set_xlim(bounds["x_min"] - x_pad, bounds["x_max"] + x_pad)
-    ax.set_ylim(bounds["y_min"] - y_pad, bounds["y_max"] + y_pad)
-    # render longitude and latitude with locally correct proportions
-    mean_latitude = float(segments["latitude"].mean())
-    ax.set_aspect(1 / math.cos(math.radians(mean_latitude)))
+    ax.set_xlim(SKIWAY_MAP_BOUNDS.west, SKIWAY_MAP_BOUNDS.east)
+    ax.set_ylim(SKIWAY_MAP_BOUNDS.south, SKIWAY_MAP_BOUNDS.north)
+    # The adaptive canvas height lets the map fill the canvas at true local proportions.
+    ax.set_aspect(SKIWAY_MAP_BOUNDS.local_data_aspect())
+    _plot_skiway_map_context(ax=ax, map_context=map_context)
     for lift in lift_coordinates.partition_by("lift_id", maintain_order=True):
         ax.plot(
             lift["longitude"],
@@ -137,6 +273,7 @@ def plot_skiway_segments_with_rose(
             "",
             xy=(row["longitude_end"], row["latitude_end"]),
             xytext=(row["longitude"], row["latitude"]),
+            annotation_clip=False,
             arrowprops={
                 "arrowstyle": "->",
                 "color": HIGHLIGHT_COLOR if row["highlight"] else MUTED_COLOR,
@@ -147,7 +284,8 @@ def plot_skiway_segments_with_rose(
                 "zorder": 3 if row["highlight"] else 2,
             },
         )
-    rose_ax = fig.add_axes((0.4, 0.0, 0.4, 0.5), projection="polar")
+    _plot_skiway_map_labels(ax=ax)
+    rose_ax = fig.add_axes((0.4, 0.04, 0.4, 0.5), projection="polar")
     plot_orientation(
         bin_counts=bearings["bin_count"].to_numpy(),
         bin_centers=bearings["bin_center"].to_numpy(),
@@ -155,8 +293,9 @@ def plot_skiway_segments_with_rose(
         color=MUTED_COLOR,
         margin_text={},
     )
-    # transparent circle so segments remain visible beneath the rose
-    rose_ax.patch.set_alpha(0.0)
+    # opaque circle masks the contextual map layers beneath the rose
+    rose_ax.patch.set_facecolor("white")
+    rose_ax.patch.set_alpha(1.0)
     (highlight_patch,) = (
         patch
         for patch, bin_index in zip(rose_ax.patches, bearings["bin_index"], strict=True)
