@@ -10,6 +10,7 @@ from openskistats.skiway_data import (
     DARTMOUTH_CONTOUR_INTERVAL_METERS,
     DARTMOUTH_INDEX_CONTOUR_INTERVAL_METERS,
     DARTMOUTH_SKIWAY_PARKING_LOT_OSM_ID,
+    DARTMOUTH_SKIWAY_SERVICE_ROAD_OSM_ID,
     MCLANE_FAMILY_LODGE_OSM_ID,
     SKIWAY_MAP_BOUNDS,
     load_dartmouth_skiway_context,
@@ -37,6 +38,11 @@ def test_dartmouth_skiway_context_snapshot() -> None:
         feature
         for feature in features
         if feature["properties"]["feature_kind"] == "road"
+    ]
+    parking_road_features = [
+        feature
+        for feature in features
+        if feature["properties"]["feature_kind"] == "parking_road"
     ]
     parking_features = [
         feature
@@ -81,9 +87,19 @@ def test_dartmouth_skiway_context_snapshot() -> None:
         for line in trail_features[0]["geometry"]["coordinates"]
         for longitude, latitude in line
     )
+    assert [feature["properties"]["osm_id"] for feature in parking_road_features] == [
+        DARTMOUTH_SKIWAY_SERVICE_ROAD_OSM_ID
+    ]
+    (service_road,) = parking_road_features
+    assert service_road["properties"]["highway"] == "service"
+    assert service_road["properties"]["surface"] == "asphalt"
     assert {feature["properties"]["osm_id"] for feature in road_features} == set(
         DARTMOUTH_CONTEXT_OSM_WAY_IDS
-    ) - {MCLANE_FAMILY_LODGE_OSM_ID, DARTMOUTH_SKIWAY_PARKING_LOT_OSM_ID}
+    ) - {
+        MCLANE_FAMILY_LODGE_OSM_ID,
+        DARTMOUTH_SKIWAY_PARKING_LOT_OSM_ID,
+        DARTMOUTH_SKIWAY_SERVICE_ROAD_OSM_ID,
+    }
     assert all(
         feature["properties"]["name"] == "Grafton Turnpike"
         and feature["geometry"]["type"] == "LineString"
@@ -150,10 +166,14 @@ def test_dartmouth_skiway_context_styles() -> None:
 
     parking_patch = next(patch for patch in ax.patches if patch.get_zorder() == -0.5)
     road_lines = [line for line in ax.lines if line.get_linewidth() == ROAD_LINEWIDTH]
+    parking_road_lines = [
+        line for line in road_lines if line.get_color() == PARKING_COLOR
+    ]
     trail_lines = [line for line in ax.lines if line.get_linewidth() == TRAIL_LINEWIDTH]
 
     assert parking_patch.get_facecolor() == to_rgba(PARKING_COLOR)
     assert road_lines
+    assert len(parking_road_lines) == 1
     assert trail_lines
     assert parking_patch.get_zorder() < min(line.get_zorder() for line in road_lines)
     assert TRAIL_COLOR == ROAD_COLOR

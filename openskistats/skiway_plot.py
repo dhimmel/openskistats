@@ -7,6 +7,7 @@ https://github.com/dhimmel/openskistats/blob/b01f47defbdb0119d76aed25235fa6d0cb8
 
 import math
 from dataclasses import dataclass
+from functools import cache
 from typing import Any
 
 import numpy as np
@@ -54,7 +55,8 @@ ROAD_COLOR = LODGE_COLOR
 ROAD_LABEL_COLOR = ROAD_COLOR
 ROAD_LINEWIDTH = 3
 TRAIL_COLOR = ROAD_COLOR
-TRAIL_LINEWIDTH = ROAD_LINEWIDTH / 2
+TRAIL_LINEWIDTH = ROAD_LINEWIDTH / 3
+APPALACHIAN_TRAIL_MARKER_SIZE = 80
 PARKING_COLOR = "#f7e5c2"
 MAP_LABEL_COLOR = "#4d5961"
 CONTOUR_COLOR = "#ebe4da"
@@ -100,6 +102,51 @@ SKIWAY_MAP_LABELS = (
     ),
 )
 """Editable map labels whose coordinates specify each text bounding-box center."""
+
+APPALACHIAN_TRAIL_MARKER_COORDINATES = (-72.1052, 43.7898)
+
+
+@cache
+def get_appalachian_trail_marker() -> MatplotlibPath:
+    """
+    Get a Matplotlib path for the filled, interlocked AT letterform.
+
+    Source:
+    <https://upload.wikimedia.org/wikipedia/commons/2/24/Appalachian_Trail_Marker_Logo.svg>,
+    a public-domain/CC0 vector based on the National Park Service trail marker.
+    The letterform's SVG path was converted once using `svgpath2mpl.parse_path`,
+    following the same workflow as `get_snowflake_marker`.
+    """
+    path = MatplotlibPath(
+        vertices=[
+            [106.49, 102.49],
+            [91.355, 127.695],
+            [96.966, 127.695],
+            [99.6051, 123.3878],
+            [105.9132, 123.3878],
+            [105.9132, 140.6158],
+            [110.7661, 140.6158],
+            [110.7661, 123.3878],
+            [117.3181, 123.3878],
+            [119.8657, 127.695],
+            [125.7196, 127.695],
+            [110.5546, 102.49],
+            [106.49, 102.49],
+            [106.49, 102.49],
+            [108.4909, 107.9889],
+            [115.0047, 119.2699],
+            [101.9577, 119.2699],
+            [108.4909, 107.9889],
+            [108.4909, 107.9889],
+        ],
+        codes=[1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 79, 1, 2, 2, 2, 79],
+    )
+    vertices = np.asarray(path.vertices, dtype=float).copy()
+    vertices[:, 1] *= -1
+    return MatplotlibPath(
+        vertices=vertices - np.mean(vertices, axis=0),
+        codes=path.codes,
+    )
 
 
 def load_skiway_segments() -> pl.DataFrame:
@@ -313,11 +360,14 @@ def _plot_skiway_map_context(ax: Axes, map_context: dict[str, Any]) -> None:
     for feature in map_context["features"]:
         coordinates = feature["geometry"]["coordinates"]
         match feature["properties"]["feature_kind"]:
-            case "road":
+            case "road" | "parking_road":
+                is_parking_road = (
+                    feature["properties"]["feature_kind"] == "parking_road"
+                )
                 ax.plot(
                     [coordinate[0] for coordinate in coordinates],
                     [coordinate[1] for coordinate in coordinates],
-                    color=ROAD_COLOR,
+                    color=PARKING_COLOR if is_parking_road else ROAD_COLOR,
                     linewidth=ROAD_LINEWIDTH,
                     solid_capstyle="round",
                     zorder=0,
@@ -374,6 +424,14 @@ def _plot_skiway_map_labels(ax: Axes) -> None:
             rotation=label.rotation,
             zorder=4,
         )
+    ax.scatter(
+        *APPALACHIAN_TRAIL_MARKER_COORDINATES,
+        marker=get_appalachian_trail_marker(),
+        s=APPALACHIAN_TRAIL_MARKER_SIZE,
+        color=TRAIL_COLOR,
+        edgecolors="none",
+        zorder=4,
+    )
 
 
 def plot_skiway_segments_with_rose(

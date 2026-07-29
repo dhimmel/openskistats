@@ -34,11 +34,13 @@ DARTMOUTH_CONTEXT_OSM_WAY_IDS = (
     532980281,  # Grafton Turnpike
     532980282,  # Grafton Turnpike continuation
     602788499,  # Dartmouth Skiway parking lot
+    1147052531,  # Dartmouth Skiway service road
     1431999174,  # Grafton Turnpike connector
 )
 DARTMOUTH_CONTEXT_OSM_RELATION_IDS = (18319298,)  # Appalachian Trail, New Hampshire
 MCLANE_FAMILY_LODGE_OSM_ID = 296382919
 DARTMOUTH_SKIWAY_PARKING_LOT_OSM_ID = 602788499
+DARTMOUTH_SKIWAY_SERVICE_ROAD_OSM_ID = 1147052531
 APPALACHIAN_TRAIL_OSM_ID = 18319298
 USER_AGENT = "openskistats/0.1 (https://github.com/dhimmel/openskistats)"
 DARTMOUTH_ELEVATION_SERVICE_URL = (
@@ -75,6 +77,8 @@ def _osm_way_to_geojson_feature(osm_data: dict[str, Any]) -> dict[str, Any]:
         feature_kind = "lodge"
     elif osm_id == DARTMOUTH_SKIWAY_PARKING_LOT_OSM_ID:
         feature_kind = "parking"
+    elif osm_id == DARTMOUTH_SKIWAY_SERVICE_ROAD_OSM_ID:
+        feature_kind = "parking_road"
     else:
         feature_kind = "road"
     is_polygon = feature_kind in {"lodge", "parking"}

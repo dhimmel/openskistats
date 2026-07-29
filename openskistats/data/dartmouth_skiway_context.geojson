@@ -4,7 +4,7 @@
     "source": "https://www.openstreetmap.org",
     "copyright": "OpenStreetMap contributors",
     "license": "https://opendatacommons.org/licenses/odbl/1-0/",
-    "latest_osm_feature_timestamp": "2026-07-01T17:05:11Z",
+    "latest_osm_feature_timestamp": "2026-07-29T17:01:32Z",
     "refresh_command": "pixi run openskistats download_dartmouth_context"
   },
   "features": [
@@ -312,6 +312,76 @@
               -72.1006518,
               43.7886187
             ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1147052531",
+      "properties": {
+        "feature_kind": "parking_road",
+        "osm_id": 1147052531,
+        "osm_version": 3,
+        "osm_timestamp": "2026-07-29T17:01:32Z",
+        "name": null,
+        "amenity": null,
+        "building": null,
+        "highway": "service",
+        "parking": null,
+        "surface": "asphalt",
+        "source": "https://www.openstreetmap.org/way/1147052531"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -72.1002057,
+            43.7878576
+          ],
+          [
+            -72.1000742,
+            43.7879503
+          ],
+          [
+            -72.0999908,
+            43.7880413
+          ],
+          [
+            -72.0999542,
+            43.7881029
+          ],
+          [
+            -72.0999441,
+            43.7881513
+          ],
+          [
+            -72.0999603,
+            43.7882027
+          ],
+          [
+            -72.0999969,
+            43.7882467
+          ],
+          [
+            -72.100066,
+            43.7882702
+          ],
+          [
+            -72.10027,
+            43.7882762
+          ],
+          [
+            -72.1003291,
+            43.7882741
+          ],
+          [
+            -72.1003979,
+            43.7882576
+          ],
+          [
+            -72.1005507,
+            43.7882659
           ]
         ]
       }
