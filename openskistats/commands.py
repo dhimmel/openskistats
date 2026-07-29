@@ -10,15 +10,15 @@ from openskistats.analyze import (
     load_ski_areas_pl,
     ski_rose_the_world,
 )
-from openskistats.dartmouth import (
-    download_dartmouth_skiway_context,
-    download_dartmouth_skiway_contours,
-)
 from openskistats.models import RunModel, SkiAreaModel
 from openskistats.nesh.timelines import NewEnglandSkiHistoryTimelineScraper
 from openskistats.openskimap_utils import (
     download_openskimap_geojsons,
     generate_openskimap_test_data,
+)
+from openskistats.skiway_data import (
+    download_dartmouth_skiway_context,
+    download_dartmouth_skiway_contours,
 )
 
 cli = typer.Typer(pretty_exceptions_show_locals=False)
@@ -42,9 +42,7 @@ class Commands:
     @cli.command(name="download_dartmouth_contours")
     def download_dartmouth_contours() -> None:
         """Refresh the committed USGS contours for the Dartmouth Skiway figure."""
-        from openskistats.plot_dartmouth import SKIWAY_MAP_BOUNDS
-
-        path = download_dartmouth_skiway_contours(bounds=SKIWAY_MAP_BOUNDS)
+        path = download_dartmouth_skiway_contours()
         logging.info(f"Wrote {path}")
 
     @staticmethod

@@ -15,11 +15,12 @@ from matplotlib.figure import Figure
 from matplotlib.patches import Polygon, Rectangle
 
 from openskistats.bearing import cut_bearings_pl
-from openskistats.dartmouth import (
+from openskistats.plot import plot_orientation
+from openskistats.skiway_data import (
+    SKIWAY_MAP_BOUNDS,
     load_dartmouth_skiway_context,
     load_dartmouth_skiway_contours,
 )
-from openskistats.plot import plot_orientation
 
 HIGHLIGHT_COLOR = "#d33c44"
 MUTED_COLOR = "#cccccc"
@@ -41,39 +42,6 @@ SKIWAY_NAME = "Dartmouth Skiway"
 
 
 @dataclass(frozen=True)
-class GeographicBounds:
-    """Fixed longitude and latitude bounds for a map canvas."""
-
-    west: float
-    east: float
-    south: float
-    north: float
-    crs: str = "EPSG:4326"
-
-    def local_data_aspect(self) -> float:
-        """Return the latitude-to-longitude display scale at the map midpoint."""
-        midpoint_latitude = (self.south + self.north) / 2
-        return 1 / math.cos(math.radians(midpoint_latitude))
-
-    def height_for_width(self, width: float) -> float:
-        """Return the canvas height that preserves local geographic proportions."""
-        longitude_span = self.east - self.west
-        latitude_span = self.north - self.south
-        geographic_width_to_height = longitude_span / (
-            self.local_data_aspect() * latitude_span
-        )
-        return width / geographic_width_to_height
-
-    def metadata_description(self) -> str:
-        """Describe the coordinate reference system and bounding box."""
-        return (
-            f"{self.crs} bounds: "
-            f"west={self.west}, east={self.east}, "
-            f"south={self.south}, north={self.north}."
-        )
-
-
-@dataclass(frozen=True)
 class GeographicLabel:
     """A map label positioned by the center of its text."""
 
@@ -83,14 +51,6 @@ class GeographicLabel:
     color: str = MAP_LABEL_COLOR
     rotation: float = 0
 
-
-SKIWAY_MAP_BOUNDS = GeographicBounds(
-    west=-72.1072,
-    east=-72.0859,
-    south=43.7776,
-    north=43.7903,
-)
-"""Editable fixed map extent, stored in WGS 84 longitude and latitude."""
 
 SKIWAY_FIGURE_WIDTH = 8.0
 """Fixed figure width in inches; height adapts to `SKIWAY_MAP_BOUNDS`."""

@@ -572,12 +572,6 @@ def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
         )
         figures[name] = fig
     from openskistats.elevation import plot_elevation_by_latitude_violins
-    from openskistats.plot_dartmouth import (
-        SKIWAY_FIGURE_NAME,
-        SKIWAY_MAP_BOUNDS,
-        load_skiway_bearings,
-        plot_skiway_segments_with_rose,
-    )
     from openskistats.plot_runs import (
         DifficultyByConventionRunMetrics,
         plot_bearing_by_latitude_bin,
@@ -591,6 +585,12 @@ def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
     from openskistats.plot_us_roses import (
         US_ROSES_EXPORT_PADDING_INCHES,
         plot_us_state_roses,
+    )
+    from openskistats.skiway_data import SKIWAY_MAP_BOUNDS
+    from openskistats.skiway_plot import (
+        SKIWAY_FIGURE_NAME,
+        load_skiway_bearings,
+        plot_skiway_segments_with_rose,
     )
 
     figures["select_ski_area_roses"] = SkiAreaSubsetPlot.plot_rose_grid()

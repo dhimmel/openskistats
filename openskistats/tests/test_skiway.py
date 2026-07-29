@@ -1,7 +1,9 @@
+"""Tests for Dartmouth Skiway geographic data and plotting."""
+
 from matplotlib.colors import to_rgba
 from matplotlib.figure import Figure
 
-from openskistats.dartmouth import (
+from openskistats.skiway_data import (
     APPALACHIAN_TRAIL_OSM_ID,
     DARTMOUTH_CONTEXT_OSM_RELATION_IDS,
     DARTMOUTH_CONTEXT_OSM_WAY_IDS,
@@ -9,14 +11,14 @@ from openskistats.dartmouth import (
     DARTMOUTH_INDEX_CONTOUR_INTERVAL_METERS,
     DARTMOUTH_SKIWAY_PARKING_LOT_OSM_ID,
     MCLANE_FAMILY_LODGE_OSM_ID,
+    SKIWAY_MAP_BOUNDS,
     load_dartmouth_skiway_context,
     load_dartmouth_skiway_contours,
 )
-from openskistats.plot_dartmouth import (
+from openskistats.skiway_plot import (
     PARKING_COLOR,
     ROAD_COLOR,
     ROAD_LINEWIDTH,
-    SKIWAY_MAP_BOUNDS,
     TRAIL_COLOR,
     TRAIL_LINEWIDTH,
     _plot_skiway_map_context,

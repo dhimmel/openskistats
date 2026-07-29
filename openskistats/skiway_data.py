@@ -5,6 +5,7 @@ from __future__ import annotations
 import io
 import json
 import math
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, cast
@@ -16,8 +17,6 @@ from openskistats.utils import get_repo_directory
 
 if TYPE_CHECKING:
     from matplotlib.path import Path as MatplotlibPath
-
-    from openskistats.plot_dartmouth import GeographicBounds
 
 DARTMOUTH_CONTEXT_PATH = Path(__file__).parent.joinpath(
     "data", "dartmouth_skiway_context.geojson"
@@ -44,6 +43,48 @@ DARTMOUTH_ELEVATION_SERVICE_URL = (
 DARTMOUTH_CONTOUR_INTERVAL_METERS = 20
 DARTMOUTH_INDEX_CONTOUR_INTERVAL_METERS = 100
 DARTMOUTH_DEM_PIXEL_SIZE_METERS = 5
+
+
+@dataclass(frozen=True)
+class GeographicBounds:
+    """Fixed longitude and latitude bounds for a map canvas."""
+
+    west: float
+    east: float
+    south: float
+    north: float
+    crs: str = "EPSG:4326"
+
+    def local_data_aspect(self) -> float:
+        """Return the latitude-to-longitude display scale at the map midpoint."""
+        midpoint_latitude = (self.south + self.north) / 2
+        return 1 / math.cos(math.radians(midpoint_latitude))
+
+    def height_for_width(self, width: float) -> float:
+        """Return the canvas height that preserves local geographic proportions."""
+        longitude_span = self.east - self.west
+        latitude_span = self.north - self.south
+        geographic_width_to_height = longitude_span / (
+            self.local_data_aspect() * latitude_span
+        )
+        return width / geographic_width_to_height
+
+    def metadata_description(self) -> str:
+        """Describe the coordinate reference system and bounding box."""
+        return (
+            f"{self.crs} bounds: "
+            f"west={self.west}, east={self.east}, "
+            f"south={self.south}, north={self.north}."
+        )
+
+
+SKIWAY_MAP_BOUNDS = GeographicBounds(
+    west=-72.1072,
+    east=-72.0859,
+    south=43.7776,
+    north=43.7903,
+)
+"""Editable fixed map extent, stored in WGS 84 longitude and latitude."""
 
 
 def _osm_way_to_geojson_feature(osm_data: dict[str, Any]) -> dict[str, Any]:
@@ -152,8 +193,6 @@ def download_dartmouth_skiway_context() -> Path:
     This command is intended to be rerun infrequently and always manually.
     Plot generation reads the committed snapshot and never makes a network request.
     """
-    from openskistats.plot_dartmouth import SKIWAY_MAP_BOUNDS
-
     features = []
     for osm_id in DARTMOUTH_CONTEXT_OSM_WAY_IDS:
         response = requests.get(
@@ -369,7 +408,7 @@ def _contour_features(
 
 
 def download_dartmouth_skiway_contours(
-    bounds: GeographicBounds,
+    bounds: GeographicBounds = SKIWAY_MAP_BOUNDS,
     *,
     contour_interval_meters: int = DARTMOUTH_CONTOUR_INTERVAL_METERS,
     index_contour_interval_meters: int = DARTMOUTH_INDEX_CONTOUR_INTERVAL_METERS,
