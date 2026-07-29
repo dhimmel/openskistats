@@ -9,10 +9,13 @@ import math
 from dataclasses import dataclass
 from typing import Any
 
+import numpy as np
 import polars as pl
 from matplotlib.axes import Axes
+from matplotlib.colors import to_hex, to_rgb, to_rgba
 from matplotlib.figure import Figure
-from matplotlib.patches import Polygon, Rectangle
+from matplotlib.patches import ArrowStyle, Polygon, Rectangle
+from matplotlib.path import Path as MatplotlibPath
 
 from openskistats.bearing import cut_bearings_pl
 from openskistats.geometry import simplify_segments
@@ -23,8 +26,28 @@ from openskistats.skiway_data import (
     load_dartmouth_skiway_contours,
 )
 
-HIGHLIGHT_COLOR = "#d33c44"
-MUTED_COLOR = "#cccccc"
+MUTED_COLOR = "#94a3b8"
+SKIWAY_HIGHLIGHT_BIN_COLORS = {
+    "NNE": "#6d28d9",
+    "NWbW": "#15803d",
+}
+"""
+Compass bins to highlight with their colors:
+the overall modal bin and the modal bin of the northwest-facing ledge.
+"""
+SKIWAY_ARROW_ALPHA = 0.75
+"""Arrow translucency so overplotted segments darken where they stack."""
+SKIWAY_HIGHLIGHT_TAIL_WIDTH = 2.7
+SKIWAY_MUTED_TAIL_WIDTH = 1.8
+"""Arrow shaft widths in points."""
+SKIWAY_ARROW_HEAD_WIDTH_RATIO = 2.6
+SKIWAY_ARROW_HEAD_LENGTH_RATIO = 2.0
+"""
+Arrowhead dimensions as multiples of the shaft width,
+so wider highlight arrows keep proportional heads.
+A width ratio exceeding the length ratio makes a stout head
+with a wide angle at the point.
+"""
 LIFT_COLOR = "#dceaf2"
 LODGE_COLOR = "#f2d49b"
 ROAD_COLOR = LODGE_COLOR
@@ -148,6 +171,143 @@ def load_skiway_lift_coordinates() -> pl.DataFrame:
     )
 
 
+class RoundTailArrowStyle(ArrowStyle._Base):  # noqa: SLF001
+    """
+    Arrow drawn as a single filled polygon:
+    a straight shaft with a rounded tail cap, like a round-capped stroke,
+    and a triangular head whose tip and barb corners are also rounded
+    on the scale of the shaft radius.
+    A single fill keeps translucency uniform across the whole arrow,
+    unlike stroked arrow styles whose overlapping shaft and barb strokes
+    darken at the tip when drawn with alpha.
+    Dimensions are in points when `mutation_scale` is 1.
+    """
+
+    # cubic bezier control-point offset approximating a quarter circle
+    _QUARTER_CIRCLE_BEZIER = 0.5522847498
+
+    def __init__(
+        self, tail_width: float, head_width: float, head_length: float
+    ) -> None:
+        self.tail_width = tail_width
+        self.head_width = head_width
+        self.head_length = head_length
+        super().__init__()
+
+    def transmute(
+        self, path: MatplotlibPath, mutation_size: float, linewidth: float
+    ) -> tuple[MatplotlibPath, bool]:
+        endpoints = np.asarray(path.vertices, dtype=np.float64)
+        start_x, start_y = map(float, endpoints[0])
+        end_x, end_y = map(float, endpoints[-1])
+        length = math.hypot(end_x - start_x, end_y - start_y)
+        if length == 0:
+            return MatplotlibPath([(end_x, end_y)]), False
+        unit_x, unit_y = (end_x - start_x) / length, (end_y - start_y) / length
+        normal_x, normal_y = -unit_y, unit_x
+        tail_radius = self.tail_width * mutation_size / 2
+        head_half_width = self.head_width * mutation_size / 2
+        head_length = min(self.head_length * mutation_size, length)
+        base_x = end_x - unit_x * head_length
+        base_y = end_y - unit_y * head_length
+        tail_left = (start_x + normal_x * tail_radius, start_y + normal_y * tail_radius)
+        tail_back = (start_x - unit_x * tail_radius, start_y - unit_y * tail_radius)
+        tail_right = (
+            start_x - normal_x * tail_radius,
+            start_y - normal_y * tail_radius,
+        )
+        shaft_left = (base_x + normal_x * tail_radius, base_y + normal_y * tail_radius)
+        shaft_right = (base_x - normal_x * tail_radius, base_y - normal_y * tail_radius)
+        barb_right = (
+            base_x - normal_x * head_half_width,
+            base_y - normal_y * head_half_width,
+        )
+        barb_left = (
+            base_x + normal_x * head_half_width,
+            base_y + normal_y * head_half_width,
+        )
+        tip = (end_x, end_y)
+        slant_length = math.hypot(tip[0] - barb_right[0], tip[1] - barb_right[1])
+        toward_tip_right = (
+            (tip[0] - barb_right[0]) / slant_length,
+            (tip[1] - barb_right[1]) / slant_length,
+        )
+        toward_tip_left = (
+            (tip[0] - barb_left[0]) / slant_length,
+            (tip[1] - barb_left[1]) / slant_length,
+        )
+        # sharp corners are trimmed by this distance along each adjacent edge
+        # and rounded with a quadratic bezier controlled by the corner point
+        trim = min(tail_radius, head_half_width - tail_radius, slant_length / 3)
+        bezier = self._QUARTER_CIRCLE_BEZIER * tail_radius
+        vertices = [
+            shaft_left,
+            tail_left,
+            # tail cap: two quarter-circle cubic arcs bulging behind the start
+            (tail_left[0] - unit_x * bezier, tail_left[1] - unit_y * bezier),
+            (tail_back[0] + normal_x * bezier, tail_back[1] + normal_y * bezier),
+            tail_back,
+            (tail_back[0] - normal_x * bezier, tail_back[1] - normal_y * bezier),
+            (tail_right[0] - unit_x * bezier, tail_right[1] - unit_y * bezier),
+            tail_right,
+            shaft_right,
+            (barb_right[0] + normal_x * trim, barb_right[1] + normal_y * trim),
+            barb_right,
+            (
+                barb_right[0] + toward_tip_right[0] * trim,
+                barb_right[1] + toward_tip_right[1] * trim,
+            ),
+            (tip[0] - toward_tip_right[0] * trim, tip[1] - toward_tip_right[1] * trim),
+            tip,
+            (tip[0] - toward_tip_left[0] * trim, tip[1] - toward_tip_left[1] * trim),
+            (
+                barb_left[0] + toward_tip_left[0] * trim,
+                barb_left[1] + toward_tip_left[1] * trim,
+            ),
+            barb_left,
+            (barb_left[0] - normal_x * trim, barb_left[1] - normal_y * trim),
+            shaft_left,
+        ]
+        codes = [
+            MatplotlibPath.MOVETO,
+            MatplotlibPath.LINETO,
+            MatplotlibPath.CURVE4,
+            MatplotlibPath.CURVE4,
+            MatplotlibPath.CURVE4,
+            MatplotlibPath.CURVE4,
+            MatplotlibPath.CURVE4,
+            MatplotlibPath.CURVE4,
+            MatplotlibPath.LINETO,
+            MatplotlibPath.LINETO,
+            MatplotlibPath.CURVE3,
+            MatplotlibPath.CURVE3,
+            MatplotlibPath.LINETO,
+            MatplotlibPath.CURVE3,
+            MatplotlibPath.CURVE3,
+            MatplotlibPath.LINETO,
+            MatplotlibPath.CURVE3,
+            MatplotlibPath.CURVE3,
+            MatplotlibPath.CLOSEPOLY,
+        ]
+        return MatplotlibPath(vertices, codes), True
+
+
+def _blend_on_white(color: str, alpha: float) -> str:
+    """
+    Solid color equivalent to drawing `color` at `alpha` over a white background.
+    Used for the rose petals to match the translucent arrows
+    without underlying grid lines showing through.
+    """
+    red, green, blue = to_rgb(color)
+    return to_hex(
+        (
+            alpha * red + 1 - alpha,
+            alpha * green + 1 - alpha,
+            alpha * blue + 1 - alpha,
+        )
+    )
+
+
 def _plot_skiway_map_context(ax: Axes, map_context: dict[str, Any]) -> None:
     """Plot the static OpenStreetMap context behind the ski data."""
     for feature in map_context["features"]:
@@ -217,7 +377,7 @@ def _plot_skiway_map_labels(ax: Axes) -> None:
 
 
 def plot_skiway_segments_with_rose(
-    highlight_bin_label: str = "NNE",
+    highlight_bin_colors: dict[str, str] | None = None,
     num_bins: int = 32,
     arrow_simplification_tolerance_meters: float = (
         SKIWAY_ARROW_SIMPLIFICATION_TOLERANCE_METERS
@@ -230,9 +390,11 @@ def plot_skiway_segments_with_rose(
     """
     Plot Dartmouth Skiway lifts underneath run-segment arrows.
 
-    Color the arrows by whether their bearing falls in the highlighted compass bin,
-    with an inset ski rose highlighting that bin's petal.
+    Color the arrows by whether their bearing falls in a highlighted compass bin,
+    with an inset ski rose coloring and labeling the matching petals.
     """
+    if highlight_bin_colors is None:
+        highlight_bin_colors = SKIWAY_HIGHLIGHT_BIN_COLORS
     if bearings is None:
         bearings = load_skiway_bearings(num_bins=num_bins)
     if lift_coordinates is None:
@@ -241,15 +403,20 @@ def plot_skiway_segments_with_rose(
         map_context = load_dartmouth_skiway_context()
     if contours is None:
         contours = load_dartmouth_skiway_contours()
-    (highlight_bin_index,) = bearings.filter(
-        pl.col("bin_label") == highlight_bin_label
-    )["bin_index"]
+    bin_index_to_color = {
+        bearings.row(by_predicate=pl.col("bin_label") == label, named=True)[
+            "bin_index"
+        ]: color
+        for label, color in highlight_bin_colors.items()
+    }
     segments = load_skiway_segments().with_columns(
-        highlight=cut_bearings_pl(num_bins=num_bins) == highlight_bin_index
+        color=cut_bearings_pl(num_bins=num_bins).replace_strict(
+            bin_index_to_color, default=MUTED_COLOR, return_dtype=pl.String
+        )
     )
     plot_segments = simplify_segments(
         segments=segments,
-        group_columns=["run_id", "highlight"],
+        group_columns=["run_id", "color"],
         tolerance_meters=arrow_simplification_tolerance_meters,
     )
     # a figure unmanaged by pyplot to avoid spawning interactive backend windows
@@ -277,19 +444,31 @@ def plot_skiway_segments_with_rose(
             zorder=1,
         )
     for row in plot_segments.iter_rows(named=True):
+        highlighted = row["color"] != MUTED_COLOR
+        tail_width = (
+            SKIWAY_HIGHLIGHT_TAIL_WIDTH if highlighted else SKIWAY_MUTED_TAIL_WIDTH
+        )
         ax.annotate(
             "",
             xy=(row["longitude_end"], row["latitude_end"]),
             xytext=(row["longitude"], row["latitude"]),
             annotation_clip=False,
             arrowprops={
-                "arrowstyle": "->",
-                "color": HIGHLIGHT_COLOR if row["highlight"] else MUTED_COLOR,
-                "linewidth": 1.5,
-                "mutation_scale": 10,
+                "arrowstyle": RoundTailArrowStyle(
+                    tail_width=tail_width,
+                    head_width=tail_width * SKIWAY_ARROW_HEAD_WIDTH_RATIO,
+                    head_length=tail_width * SKIWAY_ARROW_HEAD_LENGTH_RATIO,
+                ),
+                "color": to_rgba(row["color"], alpha=SKIWAY_ARROW_ALPHA),
+                "linewidth": 0,
+                # annotate defaults mutation_scale to the font size;
+                # pin to 1 so the arrow dimensions are in points
+                "mutation_scale": 1,
                 "shrinkA": 0,
-                "shrinkB": 0,
-                "zorder": 3 if row["highlight"] else 2,
+                # stop the tip short of the following arrow's round tail cap,
+                # which bulges backward by the tail radius
+                "shrinkB": tail_width / 2,
+                "zorder": 3 if highlighted else 2,
             },
         )
     _plot_skiway_map_labels(ax=ax)
@@ -298,36 +477,41 @@ def plot_skiway_segments_with_rose(
         bin_counts=bearings["bin_count"].to_numpy(),
         bin_centers=bearings["bin_center"].to_numpy(),
         ax=rose_ax,  # type: ignore[arg-type]
-        color=MUTED_COLOR,
+        color=_blend_on_white(MUTED_COLOR, alpha=SKIWAY_ARROW_ALPHA),
         margin_text={},
     )
     # opaque circle masks the contextual map layers beneath the rose
     rose_ax.patch.set_facecolor("white")
     rose_ax.patch.set_alpha(1.0)
-    (highlight_patch,) = (
-        patch
-        for patch, bin_index in zip(rose_ax.patches, bearings["bin_index"], strict=True)
-        if bin_index == highlight_bin_index
-    )
-    assert isinstance(highlight_patch, Rectangle)
-    highlight_patch.set_facecolor(HIGHLIGHT_COLOR)
-    highlight_row = bearings.row(
-        by_predicate=pl.col("bin_index") == highlight_bin_index, named=True
-    )
-    # read the petal's radius from the bar itself rather than re-deriving
-    # plot_orientation's area-scaling formula
-    radius = highlight_patch.get_height()
-    rose_ax.text(
-        x=math.radians(highlight_row["bin_center"]),
-        y=radius * 0.78,
-        s=highlight_bin_label,
-        color="white",
-        size=9,
-        weight="bold",
-        ha="center",
-        va="center",
-        # radial rotation so the label runs along the narrow petal
-        rotation=90 - highlight_row["bin_center"],
-        rotation_mode="anchor",
-    )
+    for label, color in highlight_bin_colors.items():
+        bin_row = bearings.row(by_predicate=pl.col("bin_label") == label, named=True)
+        (petal,) = (
+            patch
+            for patch, bin_index in zip(
+                rose_ax.patches, bearings["bin_index"], strict=True
+            )
+            if bin_index == bin_row["bin_index"]
+        )
+        assert isinstance(petal, Rectangle)
+        petal.set_facecolor(_blend_on_white(color, alpha=SKIWAY_ARROW_ALPHA))
+        # radial rotation so the label runs along the narrow petal,
+        # flipped on west-side petals to keep the text reading upward
+        rotation = 90 - bin_row["bin_center"]
+        if bin_row["bin_center"] > 180:
+            rotation += 180
+        # read the petal's radius from the bar itself rather than re-deriving
+        # plot_orientation's area-scaling formula
+        radius = petal.get_height()
+        rose_ax.text(
+            x=math.radians(bin_row["bin_center"]),
+            y=radius * 0.78,
+            s=label,
+            color="white",
+            size=9,
+            weight="bold",
+            ha="center",
+            va="center",
+            rotation=rotation,
+            rotation_mode="anchor",
+        )
     return fig
