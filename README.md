@@ -69,6 +69,9 @@ openskistats download
 # manually refresh the committed OpenStreetMap context for the Dartmouth figure
 openskistats download_dartmouth_context
 
+# manually refresh the committed USGS 3DEP contours for the Dartmouth figure
+openskistats download_dartmouth_contours
+
 # extract ski area metadata and metrics
 openskistats analyze
 

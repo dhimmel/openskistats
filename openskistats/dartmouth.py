@@ -1,15 +1,29 @@
-"""Static OpenStreetMap context for the Dartmouth Skiway figure."""
+"""Static geographic context for the Dartmouth Skiway figure."""
 
+from __future__ import annotations
+
+import io
 import json
+import math
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, cast
+from typing import TYPE_CHECKING, Any, cast
 
+import numpy as np
 import requests
 
 from openskistats.utils import get_repo_directory
 
+if TYPE_CHECKING:
+    from matplotlib.path import Path as MatplotlibPath
+
+    from openskistats.plot_dartmouth import GeographicBounds
+
 DARTMOUTH_CONTEXT_PATH = Path(__file__).parent.joinpath(
     "data", "dartmouth_skiway_context.geojson"
+)
+DARTMOUTH_CONTOURS_PATH = Path(__file__).parent.joinpath(
+    "data", "dartmouth_skiway_contours.geojson"
 )
 DARTMOUTH_CONTEXT_OSM_WAY_IDS = (
     296382919,  # McLane Family Lodge
@@ -20,6 +34,11 @@ DARTMOUTH_CONTEXT_OSM_WAY_IDS = (
 )
 MCLANE_FAMILY_LODGE_OSM_ID = 296382919
 USER_AGENT = "openskistats/0.1 (https://github.com/dhimmel/openskistats)"
+DARTMOUTH_ELEVATION_SERVICE_URL = (
+    "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer"
+)
+DARTMOUTH_CONTOUR_INTERVAL_METERS = 50
+DARTMOUTH_DEM_PIXEL_SIZE_METERS = 5
 
 
 def _osm_way_to_geojson_feature(osm_data: dict[str, Any]) -> dict[str, Any]:
@@ -102,3 +121,284 @@ def download_dartmouth_skiway_context() -> Path:
 def load_dartmouth_skiway_context() -> dict[str, Any]:
     """Load the committed OpenStreetMap context without network access."""
     return cast(dict[str, Any], json.loads(DARTMOUTH_CONTEXT_PATH.read_text()))
+
+
+def _clip_segment_to_bounds(
+    start: tuple[float, float],
+    end: tuple[float, float],
+    bounds: GeographicBounds,
+) -> tuple[tuple[float, float], tuple[float, float]] | None:
+    """Clip one line segment to a rectangular geographic extent."""
+    x_start, y_start = start
+    delta_x = end[0] - x_start
+    delta_y = end[1] - y_start
+    minimum_fraction = 0.0
+    maximum_fraction = 1.0
+    for direction, distance in (
+        (-delta_x, x_start - bounds.west),
+        (delta_x, bounds.east - x_start),
+        (-delta_y, y_start - bounds.south),
+        (delta_y, bounds.north - y_start),
+    ):
+        if direction == 0:
+            if distance < 0:
+                return None
+            continue
+        fraction = distance / direction
+        if direction < 0:
+            minimum_fraction = max(minimum_fraction, fraction)
+        else:
+            maximum_fraction = min(maximum_fraction, fraction)
+        if minimum_fraction > maximum_fraction:
+            return None
+    return (
+        (
+            x_start + minimum_fraction * delta_x,
+            y_start + minimum_fraction * delta_y,
+        ),
+        (
+            x_start + maximum_fraction * delta_x,
+            y_start + maximum_fraction * delta_y,
+        ),
+    )
+
+
+def _clip_polyline_to_bounds(
+    vertices: np.ndarray[Any, np.dtype[np.float64]],
+    bounds: GeographicBounds,
+) -> list[list[list[float]]]:
+    """Clip a polyline and return its nonempty pieces as GeoJSON coordinates."""
+    pieces: list[list[list[float]]] = []
+    current_piece: list[list[float]] = []
+    for start_array, end_array in zip(vertices[:-1], vertices[1:], strict=True):
+        clipped = _clip_segment_to_bounds(
+            start=(float(start_array[0]), float(start_array[1])),
+            end=(float(end_array[0]), float(end_array[1])),
+            bounds=bounds,
+        )
+        if clipped is None:
+            if current_piece:
+                pieces.append(current_piece)
+                current_piece = []
+            continue
+        clipped_start = [round(value, 7) for value in clipped[0]]
+        clipped_end = [round(value, 7) for value in clipped[1]]
+        if current_piece and current_piece[-1] == clipped_start:
+            current_piece.append(clipped_end)
+        else:
+            if current_piece:
+                pieces.append(current_piece)
+            current_piece = [clipped_start, clipped_end]
+    if current_piece:
+        pieces.append(current_piece)
+    return pieces
+
+
+def _iter_contour_path_polylines(
+    path: MatplotlibPath,
+) -> list[np.ndarray[Any, np.dtype[np.float64]]]:
+    """Split a compound Matplotlib contour path into disconnected polylines."""
+    from matplotlib.path import Path as MatplotlibPath
+
+    polylines = []
+    current_vertices: list[tuple[float, float]] = []
+    for vertices, code in path.iter_segments(simplify=False, curves=False):
+        point = (float(vertices[-2]), float(vertices[-1]))
+        if code == MatplotlibPath.MOVETO:
+            if current_vertices:
+                polylines.append(np.asarray(current_vertices, dtype=np.float64))
+            current_vertices = [point]
+        elif code == MatplotlibPath.LINETO:
+            current_vertices.append(point)
+        elif code == MatplotlibPath.CLOSEPOLY:
+            current_vertices.append(current_vertices[0])
+            polylines.append(np.asarray(current_vertices, dtype=np.float64))
+            current_vertices = []
+    if current_vertices:
+        polylines.append(np.asarray(current_vertices, dtype=np.float64))
+    return polylines
+
+
+def _contour_features(
+    elevations: np.ndarray[Any, np.dtype[np.float32]],
+    extent: dict[str, float],
+    bounds: GeographicBounds,
+    contour_interval_meters: int,
+) -> list[dict[str, Any]]:
+    """Convert an elevation grid into clipped GeoJSON contour features."""
+    from matplotlib.figure import Figure
+
+    height, width = elevations.shape
+    longitude_step = (extent["xmax"] - extent["xmin"]) / width
+    latitude_step = (extent["ymax"] - extent["ymin"]) / height
+    longitudes = extent["xmin"] + longitude_step * (np.arange(width) + 0.5)
+    latitudes = extent["ymin"] + latitude_step * (np.arange(height) + 0.5)
+    minimum_level = (
+        math.ceil(float(np.nanmin(elevations)) / contour_interval_meters)
+        * contour_interval_meters
+    )
+    maximum_level = (
+        math.floor(float(np.nanmax(elevations)) / contour_interval_meters)
+        * contour_interval_meters
+    )
+    levels = np.arange(
+        minimum_level,
+        maximum_level + contour_interval_meters,
+        contour_interval_meters,
+    )
+
+    figure = Figure()
+    axes = figure.subplots()
+    contour_set = axes.contour(
+        longitudes,
+        latitudes,
+        np.flipud(elevations),
+        levels=levels,
+    )
+    features = []
+    for level, path in zip(contour_set.levels, contour_set.get_paths(), strict=True):
+        lines = [
+            piece
+            for vertices in _iter_contour_path_polylines(path)
+            for piece in _clip_polyline_to_bounds(
+                vertices=vertices,
+                bounds=bounds,
+            )
+        ]
+        if not lines:
+            continue
+        elevation_meters = int(level)
+        features.append(
+            {
+                "type": "Feature",
+                "id": f"contour/{elevation_meters}m",
+                "properties": {"elevation_m": elevation_meters},
+                "geometry": {
+                    "type": "MultiLineString",
+                    "coordinates": lines,
+                },
+            }
+        )
+    return features
+
+
+def download_dartmouth_skiway_contours(
+    bounds: GeographicBounds,
+    *,
+    contour_interval_meters: int = DARTMOUTH_CONTOUR_INTERVAL_METERS,
+    pixel_size_meters: int = DARTMOUTH_DEM_PIXEL_SIZE_METERS,
+) -> Path:
+    """
+    Refresh static USGS 3DEP contours for the Dartmouth Skiway map extent.
+
+    The temporary elevation raster is sampled slightly beyond `bounds` so contours
+    can be clipped exactly at the requested edges.
+    Only the resulting WGS 84 line geometry is saved in the repository.
+    """
+    from PIL import Image
+
+    if contour_interval_meters <= 0:
+        raise ValueError("contour_interval_meters must be positive")
+    if pixel_size_meters <= 0:
+        raise ValueError("pixel_size_meters must be positive")
+    midpoint_latitude = (bounds.south + bounds.north) / 2
+    meters_per_longitude_degree = 111_320 * math.cos(math.radians(midpoint_latitude))
+    meters_per_latitude_degree = 110_574
+    padding_meters = pixel_size_meters * 2
+    request_bounds = {
+        "west": bounds.west - padding_meters / meters_per_longitude_degree,
+        "east": bounds.east + padding_meters / meters_per_longitude_degree,
+        "south": bounds.south - padding_meters / meters_per_latitude_degree,
+        "north": bounds.north + padding_meters / meters_per_latitude_degree,
+    }
+    width = math.ceil(
+        (request_bounds["east"] - request_bounds["west"])
+        * meters_per_longitude_degree
+        / pixel_size_meters
+    )
+    height = math.ceil(
+        (request_bounds["north"] - request_bounds["south"])
+        * meters_per_latitude_degree
+        / pixel_size_meters
+    )
+    export_parameters = {
+        "bbox": ",".join(
+            str(request_bounds[direction])
+            for direction in ("west", "south", "east", "north")
+        ),
+        "bboxSR": "4326",
+        "imageSR": "4326",
+        "size": f"{width},{height}",
+        "format": "tiff",
+        "pixelType": "F32",
+        "interpolation": "RSP_Bilinear",
+        "adjustAspectRatio": "false",
+        "f": "json",
+    }
+    export_response = requests.get(
+        f"{DARTMOUTH_ELEVATION_SERVICE_URL}/exportImage",
+        params=export_parameters,
+        headers={"User-Agent": USER_AGENT},
+        timeout=60,
+    )
+    export_response.raise_for_status()
+    export = export_response.json()
+    if "error" in export:
+        raise RuntimeError(f"USGS elevation export failed: {export['error']}")
+    raster_response = requests.get(
+        export["href"],
+        headers={"User-Agent": USER_AGENT},
+        timeout=60,
+    )
+    raster_response.raise_for_status()
+    with Image.open(io.BytesIO(raster_response.content)) as image:
+        elevations = np.asarray(image, dtype=np.float32).copy()
+    if elevations.ndim != 2:
+        raise ValueError(
+            f"Expected a single-band elevation raster, got {elevations.shape}"
+        )
+
+    extent = {
+        direction: float(export["extent"][direction])
+        for direction in ("xmin", "ymin", "xmax", "ymax")
+    }
+    features = _contour_features(
+        elevations=elevations,
+        extent=extent,
+        bounds=bounds,
+        contour_interval_meters=contour_interval_meters,
+    )
+    feature_collection = {
+        "type": "FeatureCollection",
+        "properties": {
+            "source": DARTMOUTH_ELEVATION_SERVICE_URL,
+            "source_name": "USGS 3D Elevation Program Bare Earth DEM",
+            "downloaded_at": datetime.now(UTC).isoformat(),
+            "horizontal_crs": bounds.crs,
+            "vertical_crs": "EPSG:5703",
+            "vertical_datum": "NAVD88",
+            "vertical_units": "meters",
+            "contour_interval_m": contour_interval_meters,
+            "dem_pixel_size_m": pixel_size_meters,
+            "bounds": {
+                "west": bounds.west,
+                "east": bounds.east,
+                "south": bounds.south,
+                "north": bounds.north,
+            },
+            "dem_elevation_range_m": [
+                round(float(np.nanmin(elevations)), 3),
+                round(float(np.nanmax(elevations)), 3),
+            ],
+            "refresh_command": "pixi run openskistats download_dartmouth_contours",
+        },
+        "features": features,
+    }
+    DARTMOUTH_CONTOURS_PATH.parent.mkdir(exist_ok=True)
+    DARTMOUTH_CONTOURS_PATH.write_text(json.dumps(feature_collection, indent=2) + "\n")
+    return DARTMOUTH_CONTOURS_PATH.relative_to(get_repo_directory())
+
+
+def load_dartmouth_skiway_contours() -> dict[str, Any]:
+    """Load the committed USGS contour snapshot without network access."""
+    return cast(dict[str, Any], json.loads(DARTMOUTH_CONTOURS_PATH.read_text()))

@@ -15,7 +15,10 @@ from matplotlib.figure import Figure
 from matplotlib.patches import Polygon, Rectangle
 
 from openskistats.bearing import cut_bearings_pl
-from openskistats.dartmouth import load_dartmouth_skiway_context
+from openskistats.dartmouth import (
+    load_dartmouth_skiway_context,
+    load_dartmouth_skiway_contours,
+)
 from openskistats.plot import plot_orientation
 
 HIGHLIGHT_COLOR = "#d33c44"
@@ -25,6 +28,7 @@ LODGE_COLOR = "#f2d49b"
 ROAD_COLOR = LODGE_COLOR
 ROAD_LABEL_COLOR = ROAD_COLOR
 MAP_LABEL_COLOR = "#4d5961"
+CONTOUR_COLOR = "#eeeae5"
 
 SKIWAY_FIGURE_NAME = "dartmouth_nne_light"
 SKIWAY_NAME = "Dartmouth Skiway"
@@ -204,6 +208,19 @@ def _plot_skiway_map_context(ax: Axes, map_context: dict[str, Any]) -> None:
                 )
 
 
+def _plot_skiway_contours(ax: Axes, contours: dict[str, Any]) -> None:
+    """Plot static elevation contours beneath the other map geometry."""
+    for feature in contours["features"]:
+        for coordinates in feature["geometry"]["coordinates"]:
+            ax.plot(
+                [coordinate[0] for coordinate in coordinates],
+                [coordinate[1] for coordinate in coordinates],
+                color=CONTOUR_COLOR,
+                linewidth=0.5,
+                zorder=-1,
+            )
+
+
 def _plot_skiway_map_labels(ax: Axes) -> None:
     """Plot labels at their declarative geographic positions."""
     for label in SKIWAY_MAP_LABELS:
@@ -226,6 +243,7 @@ def plot_skiway_segments_with_rose(
     bearings: pl.DataFrame | None = None,
     lift_coordinates: pl.DataFrame | None = None,
     map_context: dict[str, Any] | None = None,
+    contours: dict[str, Any] | None = None,
 ) -> Figure:
     """
     Plot Dartmouth Skiway lifts underneath run-segment arrows.
@@ -239,6 +257,8 @@ def plot_skiway_segments_with_rose(
         lift_coordinates = load_skiway_lift_coordinates()
     if map_context is None:
         map_context = load_dartmouth_skiway_context()
+    if contours is None:
+        contours = load_dartmouth_skiway_contours()
     (highlight_bin_index,) = bearings.filter(
         pl.col("bin_label") == highlight_bin_label
     )["bin_index"]
@@ -258,6 +278,7 @@ def plot_skiway_segments_with_rose(
     ax.set_ylim(SKIWAY_MAP_BOUNDS.south, SKIWAY_MAP_BOUNDS.north)
     # The adaptive canvas height lets the map fill the canvas at true local proportions.
     ax.set_aspect(SKIWAY_MAP_BOUNDS.local_data_aspect())
+    _plot_skiway_contours(ax=ax, contours=contours)
     _plot_skiway_map_context(ax=ax, map_context=map_context)
     for lift in lift_coordinates.partition_by("lift_id", maintain_order=True):
         ax.plot(
