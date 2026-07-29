@@ -1,6 +1,7 @@
 from openskistats.dartmouth import (
     DARTMOUTH_CONTEXT_OSM_WAY_IDS,
     DARTMOUTH_CONTOUR_INTERVAL_METERS,
+    DARTMOUTH_INDEX_CONTOUR_INTERVAL_METERS,
     MCLANE_FAMILY_LODGE_OSM_ID,
     load_dartmouth_skiway_context,
     load_dartmouth_skiway_contours,
@@ -51,6 +52,10 @@ def test_dartmouth_skiway_contour_snapshot() -> None:
     contours = load_dartmouth_skiway_contours()
     properties = contours["properties"]
     assert properties["contour_interval_m"] == DARTMOUTH_CONTOUR_INTERVAL_METERS
+    assert (
+        properties["index_contour_interval_m"]
+        == DARTMOUTH_INDEX_CONTOUR_INTERVAL_METERS
+    )
     assert properties["horizontal_crs"] == SKIWAY_MAP_BOUNDS.crs
     assert properties["vertical_crs"] == "EPSG:5703"
     assert properties["vertical_datum"] == "NAVD88"
@@ -67,6 +72,12 @@ def test_dartmouth_skiway_contour_snapshot() -> None:
         feature["geometry"]["type"] == "MultiLineString"
         and feature["properties"]["elevation_m"] % DARTMOUTH_CONTOUR_INTERVAL_METERS
         == 0
+        and feature["properties"]["is_index"]
+        == (
+            feature["properties"]["elevation_m"]
+            % DARTMOUTH_INDEX_CONTOUR_INTERVAL_METERS
+            == 0
+        )
         for feature in features
     )
     coordinates = [

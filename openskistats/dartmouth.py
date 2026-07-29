@@ -37,7 +37,8 @@ USER_AGENT = "openskistats/0.1 (https://github.com/dhimmel/openskistats)"
 DARTMOUTH_ELEVATION_SERVICE_URL = (
     "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer"
 )
-DARTMOUTH_CONTOUR_INTERVAL_METERS = 50
+DARTMOUTH_CONTOUR_INTERVAL_METERS = 20
+DARTMOUTH_INDEX_CONTOUR_INTERVAL_METERS = 100
 DARTMOUTH_DEM_PIXEL_SIZE_METERS = 5
 
 
@@ -224,6 +225,7 @@ def _contour_features(
     extent: dict[str, float],
     bounds: GeographicBounds,
     contour_interval_meters: int,
+    index_contour_interval_meters: int,
 ) -> list[dict[str, Any]]:
     """Convert an elevation grid into clipped GeoJSON contour features."""
     from matplotlib.figure import Figure
@@ -272,7 +274,10 @@ def _contour_features(
             {
                 "type": "Feature",
                 "id": f"contour/{elevation_meters}m",
-                "properties": {"elevation_m": elevation_meters},
+                "properties": {
+                    "elevation_m": elevation_meters,
+                    "is_index": (elevation_meters % index_contour_interval_meters == 0),
+                },
                 "geometry": {
                     "type": "MultiLineString",
                     "coordinates": lines,
@@ -286,6 +291,7 @@ def download_dartmouth_skiway_contours(
     bounds: GeographicBounds,
     *,
     contour_interval_meters: int = DARTMOUTH_CONTOUR_INTERVAL_METERS,
+    index_contour_interval_meters: int = DARTMOUTH_INDEX_CONTOUR_INTERVAL_METERS,
     pixel_size_meters: int = DARTMOUTH_DEM_PIXEL_SIZE_METERS,
 ) -> Path:
     """
@@ -294,11 +300,36 @@ def download_dartmouth_skiway_contours(
     The temporary elevation raster is sampled slightly beyond `bounds` so contours
     can be clipped exactly at the requested edges.
     Only the resulting WGS 84 line geometry is saved in the repository.
+
+    Alternative approaches considered:
+
+    - The [USGS 3DEP ImageServer](https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer)
+      contour function requires little local computation and accepts fixed intervals,
+      but returns a raster that would remain rasterized in SVG and PDF output.
+    - The [National Map contour MapServer](https://carto.nationalmap.gov/arcgis/rest/services/contours/MapServer)
+      provides ready-made vectors, but its precomputed data can be older,
+      its service proved unreliable, and its queries return long source features
+      that still require clipping.
+    - [Seamless3DEP](https://github.com/hyriver/seamless-3dep) and
+      [Rasterio](https://github.com/rasterio/rasterio) provide maintained,
+      reusable retrieval machinery, but add substantial dependencies without
+      eliminating local vector generation and clipping.
+
+    Downloading the current dynamic DEM and generating contours locally preserves
+    exact interval control, current elevation data, and true vector output.
     """
     from PIL import Image
 
     if contour_interval_meters <= 0:
         raise ValueError("contour_interval_meters must be positive")
+    if (
+        index_contour_interval_meters <= 0
+        or index_contour_interval_meters % contour_interval_meters
+    ):
+        raise ValueError(
+            "index_contour_interval_meters must be a positive multiple of "
+            "contour_interval_meters"
+        )
     if pixel_size_meters <= 0:
         raise ValueError("pixel_size_meters must be positive")
     midpoint_latitude = (bounds.south + bounds.north) / 2
@@ -367,6 +398,7 @@ def download_dartmouth_skiway_contours(
         extent=extent,
         bounds=bounds,
         contour_interval_meters=contour_interval_meters,
+        index_contour_interval_meters=index_contour_interval_meters,
     )
     feature_collection = {
         "type": "FeatureCollection",
@@ -379,6 +411,7 @@ def download_dartmouth_skiway_contours(
             "vertical_datum": "NAVD88",
             "vertical_units": "meters",
             "contour_interval_m": contour_interval_meters,
+            "index_contour_interval_m": index_contour_interval_meters,
             "dem_pixel_size_m": pixel_size_meters,
             "bounds": {
                 "west": bounds.west,

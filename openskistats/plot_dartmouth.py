@@ -29,6 +29,7 @@ ROAD_COLOR = LODGE_COLOR
 ROAD_LABEL_COLOR = ROAD_COLOR
 MAP_LABEL_COLOR = "#4d5961"
 CONTOUR_COLOR = "#eeeae5"
+INDEX_CONTOUR_COLOR = "#ded8d0"
 
 SKIWAY_FIGURE_NAME = "dartmouth_nne_light"
 SKIWAY_NAME = "Dartmouth Skiway"
@@ -211,12 +212,13 @@ def _plot_skiway_map_context(ax: Axes, map_context: dict[str, Any]) -> None:
 def _plot_skiway_contours(ax: Axes, contours: dict[str, Any]) -> None:
     """Plot static elevation contours beneath the other map geometry."""
     for feature in contours["features"]:
+        is_index = feature["properties"]["is_index"]
         for coordinates in feature["geometry"]["coordinates"]:
             ax.plot(
                 [coordinate[0] for coordinate in coordinates],
                 [coordinate[1] for coordinate in coordinates],
-                color=CONTOUR_COLOR,
-                linewidth=0.5,
+                color=INDEX_CONTOUR_COLOR if is_index else CONTOUR_COLOR,
+                linewidth=0.7 if is_index else 0.35,
                 zorder=-1,
             )
 
