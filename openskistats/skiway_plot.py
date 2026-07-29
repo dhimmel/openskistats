@@ -15,6 +15,7 @@ from matplotlib.figure import Figure
 from matplotlib.patches import Polygon, Rectangle
 
 from openskistats.bearing import cut_bearings_pl
+from openskistats.geometry import simplify_segments
 from openskistats.plot import plot_orientation
 from openskistats.skiway_data import (
     SKIWAY_MAP_BOUNDS,
@@ -35,6 +36,7 @@ PARKING_COLOR = "#f7e5c2"
 MAP_LABEL_COLOR = "#4d5961"
 CONTOUR_COLOR = "#eeeae5"
 INDEX_CONTOUR_COLOR = "#ded8d0"
+SKIWAY_ARROW_SIMPLIFICATION_TOLERANCE_METERS = 0.5
 
 SKIWAY_FIGURE_NAME = "dartmouth_nne_light"
 SKIWAY_NAME = "Dartmouth Skiway"
@@ -217,6 +219,9 @@ def _plot_skiway_map_labels(ax: Axes) -> None:
 def plot_skiway_segments_with_rose(
     highlight_bin_label: str = "NNE",
     num_bins: int = 32,
+    arrow_simplification_tolerance_meters: float = (
+        SKIWAY_ARROW_SIMPLIFICATION_TOLERANCE_METERS
+    ),
     bearings: pl.DataFrame | None = None,
     lift_coordinates: pl.DataFrame | None = None,
     map_context: dict[str, Any] | None = None,
@@ -242,6 +247,11 @@ def plot_skiway_segments_with_rose(
     segments = load_skiway_segments().with_columns(
         highlight=cut_bearings_pl(num_bins=num_bins) == highlight_bin_index
     )
+    plot_segments = simplify_segments(
+        segments=segments,
+        group_columns=["run_id", "highlight"],
+        tolerance_meters=arrow_simplification_tolerance_meters,
+    )
     # a figure unmanaged by pyplot to avoid spawning interactive backend windows
     fig = Figure(
         figsize=(
@@ -266,7 +276,7 @@ def plot_skiway_segments_with_rose(
             solid_capstyle="round",
             zorder=1,
         )
-    for row in segments.iter_rows(named=True):
+    for row in plot_segments.iter_rows(named=True):
         ax.annotate(
             "",
             xy=(row["longitude_end"], row["latitude_end"]),
