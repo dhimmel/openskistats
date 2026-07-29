@@ -16,6 +16,7 @@ from openskistats.plot import plot_orientation
 
 HIGHLIGHT_COLOR = "#d33c44"
 MUTED_COLOR = "#cccccc"
+LIFT_COLOR = "#dceaf2"
 
 SKIWAY_NAME = "Dartmouth Skiway"
 """Ski area for the example figure, chosen for its two distinctly oriented ledges."""
@@ -57,18 +58,47 @@ def load_skiway_bearings(num_bins: int = 32) -> pl.DataFrame:
     ).filter(pl.col("num_bins") == num_bins)
 
 
+def load_skiway_lift_coordinates() -> pl.DataFrame:
+    """Coordinates for lifts belonging to Dartmouth Skiway."""
+    from openskistats.analyze import load_lifts_pl, load_ski_areas_pl
+
+    ski_area_ids = (
+        load_ski_areas_pl(ski_area_filters=[pl.col("ski_area_name") == SKIWAY_NAME])
+        .select("ski_area_id")
+        .lazy()
+    )
+    return (
+        load_lifts_pl()
+        .lazy()
+        .explode("ski_area_ids", empty_as_null=False, keep_nulls=False)
+        .rename({"ski_area_ids": "ski_area_id"})
+        .join(ski_area_ids, on="ski_area_id", how="semi", maintain_order="left")
+        .select("lift_id", "lift_coordinates")
+        .explode("lift_coordinates", empty_as_null=False, keep_nulls=False)
+        .unnest("lift_coordinates")
+        .select("lift_id", "index", "longitude", "latitude")
+        .drop_nulls()
+        .sort("lift_id", "index")
+        .collect()
+    )
+
+
 def plot_skiway_segments_with_rose(
     highlight_bin_label: str = "NNE",
     num_bins: int = 32,
     bearings: pl.DataFrame | None = None,
+    lift_coordinates: pl.DataFrame | None = None,
 ) -> Figure:
     """
-    Plot Dartmouth Skiway run segments as arrows colored by whether their
-    bearing falls in the highlighted compass bin,
+    Plot Dartmouth Skiway lifts underneath run-segment arrows.
+
+    Color the arrows by whether their bearing falls in the highlighted compass bin,
     with an inset ski rose highlighting that bin's petal.
     """
     if bearings is None:
         bearings = load_skiway_bearings(num_bins=num_bins)
+    if lift_coordinates is None:
+        lift_coordinates = load_skiway_lift_coordinates()
     (highlight_bin_index,) = bearings.filter(
         pl.col("bin_label") == highlight_bin_label
     )["bin_index"]
@@ -93,6 +123,15 @@ def plot_skiway_segments_with_rose(
     # render longitude and latitude with locally correct proportions
     mean_latitude = float(segments["latitude"].mean())
     ax.set_aspect(1 / math.cos(math.radians(mean_latitude)))
+    for lift in lift_coordinates.partition_by("lift_id", maintain_order=True):
+        ax.plot(
+            lift["longitude"],
+            lift["latitude"],
+            color=LIFT_COLOR,
+            linewidth=4,
+            solid_capstyle="round",
+            zorder=1,
+        )
     for row in segments.iter_rows(named=True):
         ax.annotate(
             "",
