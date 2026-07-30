@@ -189,7 +189,7 @@ def get_clearsky(
     )
 
 
-def write_dartmouth_skiway_solar_irradiance() -> pl.DataFrame:
+def write_skiway_solar_irradiance() -> pl.DataFrame:
     from openskistats.analyze import load_run_segments_pl
 
     skiway_df = (

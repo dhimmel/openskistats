@@ -22,33 +22,33 @@ from openskistats.utils import get_repo_directory
 if TYPE_CHECKING:
     from matplotlib.path import Path as MatplotlibPath
 
-DARTMOUTH_CONTEXT_PATH = Path(__file__).parent.joinpath(
+SKIWAY_CONTEXT_PATH = Path(__file__).parent.joinpath(
     "data", "dartmouth_skiway_context.geojson"
 )
-DARTMOUTH_CONTOURS_PATH = Path(__file__).parent.joinpath(
+SKIWAY_CONTOURS_PATH = Path(__file__).parent.joinpath(
     "data", "dartmouth_skiway_contours.geojson"
 )
 MCLANE_FAMILY_LODGE_OSM_ID = 296382919
-DARTMOUTH_SKIWAY_PARKING_LOT_OSM_ID = 602788499
-DARTMOUTH_SKIWAY_SERVICE_ROAD_OSM_ID = 1147052531
+SKIWAY_PARKING_LOT_OSM_ID = 602788499
+SKIWAY_SERVICE_ROAD_OSM_ID = 1147052531
 APPALACHIAN_TRAIL_OSM_ID = 18319298
 GRAFTON_TURNPIKE_OSM_WAY_IDS = (328497225, 532980281, 532980282, 1431999174)
-DARTMOUTH_SKIWAY_WATER_OSM_WAY_IDS = (1144943274, 1475644343)
-DARTMOUTH_CONTEXT_OSM_WAY_IDS = (
+SKIWAY_WATER_OSM_WAY_IDS = (1144943274, 1475644343)
+SKIWAY_CONTEXT_OSM_WAY_IDS = (
     MCLANE_FAMILY_LODGE_OSM_ID,
-    DARTMOUTH_SKIWAY_PARKING_LOT_OSM_ID,
-    DARTMOUTH_SKIWAY_SERVICE_ROAD_OSM_ID,
+    SKIWAY_PARKING_LOT_OSM_ID,
+    SKIWAY_SERVICE_ROAD_OSM_ID,
     *GRAFTON_TURNPIKE_OSM_WAY_IDS,
-    *DARTMOUTH_SKIWAY_WATER_OSM_WAY_IDS,
+    *SKIWAY_WATER_OSM_WAY_IDS,
 )
-DARTMOUTH_CONTEXT_OSM_RELATION_IDS = (APPALACHIAN_TRAIL_OSM_ID,)
+SKIWAY_CONTEXT_OSM_RELATION_IDS = (APPALACHIAN_TRAIL_OSM_ID,)
 USER_AGENT = "openskistats/0.1 (https://github.com/dhimmel/openskistats)"
-DARTMOUTH_ELEVATION_SERVICE_URL = (
+SKIWAY_ELEVATION_SERVICE_URL = (
     "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer"
 )
-DARTMOUTH_CONTOUR_INTERVAL_METERS = 20
-DARTMOUTH_INDEX_CONTOUR_INTERVAL_METERS = 100
-DARTMOUTH_DEM_PIXEL_SIZE_METERS = 5
+SKIWAY_CONTOUR_INTERVAL_METERS = 20
+SKIWAY_INDEX_CONTOUR_INTERVAL_METERS = 100
+SKIWAY_DEM_PIXEL_SIZE_METERS = 5
 
 
 SKIWAY_MAP_BOUNDS = GeographicBounds(
@@ -75,11 +75,11 @@ def _osm_way_to_geojson_feature(osm_data: dict[str, Any]) -> dict[str, Any]:
     ]
     if osm_id == MCLANE_FAMILY_LODGE_OSM_ID:
         feature_kind = "lodge"
-    elif osm_id == DARTMOUTH_SKIWAY_PARKING_LOT_OSM_ID:
+    elif osm_id == SKIWAY_PARKING_LOT_OSM_ID:
         feature_kind = "parking"
-    elif osm_id == DARTMOUTH_SKIWAY_SERVICE_ROAD_OSM_ID:
+    elif osm_id == SKIWAY_SERVICE_ROAD_OSM_ID:
         feature_kind = "parking_road"
-    elif osm_id in DARTMOUTH_SKIWAY_WATER_OSM_WAY_IDS:
+    elif osm_id in SKIWAY_WATER_OSM_WAY_IDS:
         feature_kind = "water"
     else:
         feature_kind = "road"
@@ -166,7 +166,7 @@ def _osm_relation_to_geojson_feature(
     }
 
 
-def download_dartmouth_skiway_context() -> Path:
+def download_skiway_context() -> Path:
     """
     Refresh the committed OpenStreetMap context for the Dartmouth Skiway figure.
 
@@ -174,7 +174,7 @@ def download_dartmouth_skiway_context() -> Path:
     Plot generation reads the committed snapshot and never makes a network request.
     """
     features = []
-    for osm_id in DARTMOUTH_CONTEXT_OSM_WAY_IDS:
+    for osm_id in SKIWAY_CONTEXT_OSM_WAY_IDS:
         response = requests.get(
             f"https://api.openstreetmap.org/api/0.6/way/{osm_id}/full.json",
             headers={"User-Agent": USER_AGENT},
@@ -182,7 +182,7 @@ def download_dartmouth_skiway_context() -> Path:
         )
         response.raise_for_status()
         features.append(_osm_way_to_geojson_feature(response.json()))
-    for osm_id in DARTMOUTH_CONTEXT_OSM_RELATION_IDS:
+    for osm_id in SKIWAY_CONTEXT_OSM_RELATION_IDS:
         response = requests.get(
             f"https://api.openstreetmap.org/api/0.6/relation/{osm_id}/full.json",
             headers={"User-Agent": USER_AGENT},
@@ -210,18 +210,18 @@ def download_dartmouth_skiway_context() -> Path:
             "latest_osm_feature_timestamp": max(
                 feature["properties"]["osm_timestamp"] for feature in features
             ),
-            "refresh_command": "pixi run openskistats download_dartmouth_context",
+            "refresh_command": "pixi run openskistats download_skiway_context",
         },
         "features": features,
     }
-    DARTMOUTH_CONTEXT_PATH.parent.mkdir(exist_ok=True)
-    DARTMOUTH_CONTEXT_PATH.write_text(json.dumps(feature_collection, indent=2) + "\n")
-    return DARTMOUTH_CONTEXT_PATH.relative_to(get_repo_directory())
+    SKIWAY_CONTEXT_PATH.parent.mkdir(exist_ok=True)
+    SKIWAY_CONTEXT_PATH.write_text(json.dumps(feature_collection, indent=2) + "\n")
+    return SKIWAY_CONTEXT_PATH.relative_to(get_repo_directory())
 
 
-def load_dartmouth_skiway_context() -> dict[str, Any]:
+def load_skiway_context() -> dict[str, Any]:
     """Load the committed OpenStreetMap context without network access."""
-    return cast(dict[str, Any], json.loads(DARTMOUTH_CONTEXT_PATH.read_text()))
+    return cast(dict[str, Any], json.loads(SKIWAY_CONTEXT_PATH.read_text()))
 
 
 def _iter_contour_path_polylines(
@@ -316,12 +316,12 @@ def _contour_features(
     return features
 
 
-def download_dartmouth_skiway_contours(
+def download_skiway_contours(
     bounds: GeographicBounds = SKIWAY_MAP_BOUNDS,
     *,
-    contour_interval_meters: int = DARTMOUTH_CONTOUR_INTERVAL_METERS,
-    index_contour_interval_meters: int = DARTMOUTH_INDEX_CONTOUR_INTERVAL_METERS,
-    pixel_size_meters: int = DARTMOUTH_DEM_PIXEL_SIZE_METERS,
+    contour_interval_meters: int = SKIWAY_CONTOUR_INTERVAL_METERS,
+    index_contour_interval_meters: int = SKIWAY_INDEX_CONTOUR_INTERVAL_METERS,
+    pixel_size_meters: int = SKIWAY_DEM_PIXEL_SIZE_METERS,
 ) -> Path:
     """
     Refresh static USGS 3DEP contours for the Dartmouth Skiway map extent.
@@ -394,7 +394,7 @@ def download_dartmouth_skiway_contours(
         "f": "json",
     }
     export_response = requests.get(
-        f"{DARTMOUTH_ELEVATION_SERVICE_URL}/exportImage",
+        f"{SKIWAY_ELEVATION_SERVICE_URL}/exportImage",
         params=export_parameters,
         headers={"User-Agent": USER_AGENT},
         timeout=60,
@@ -430,7 +430,7 @@ def download_dartmouth_skiway_contours(
     feature_collection = {
         "type": "FeatureCollection",
         "properties": {
-            "source": DARTMOUTH_ELEVATION_SERVICE_URL,
+            "source": SKIWAY_ELEVATION_SERVICE_URL,
             "source_name": "USGS 3D Elevation Program Bare Earth DEM",
             "downloaded_at": datetime.now(UTC).isoformat(),
             "horizontal_crs": bounds.crs,
@@ -450,15 +450,15 @@ def download_dartmouth_skiway_contours(
                 round(float(np.nanmin(elevations)), 3),
                 round(float(np.nanmax(elevations)), 3),
             ],
-            "refresh_command": "pixi run openskistats download_dartmouth_contours",
+            "refresh_command": "pixi run openskistats download_skiway_contours",
         },
         "features": features,
     }
-    DARTMOUTH_CONTOURS_PATH.parent.mkdir(exist_ok=True)
-    DARTMOUTH_CONTOURS_PATH.write_text(json.dumps(feature_collection, indent=2) + "\n")
-    return DARTMOUTH_CONTOURS_PATH.relative_to(get_repo_directory())
+    SKIWAY_CONTOURS_PATH.parent.mkdir(exist_ok=True)
+    SKIWAY_CONTOURS_PATH.write_text(json.dumps(feature_collection, indent=2) + "\n")
+    return SKIWAY_CONTOURS_PATH.relative_to(get_repo_directory())
 
 
-def load_dartmouth_skiway_contours() -> dict[str, Any]:
+def load_skiway_contours() -> dict[str, Any]:
     """Load the committed USGS contour snapshot without network access."""
-    return cast(dict[str, Any], json.loads(DARTMOUTH_CONTOURS_PATH.read_text()))
+    return cast(dict[str, Any], json.loads(SKIWAY_CONTOURS_PATH.read_text()))

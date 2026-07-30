@@ -17,8 +17,8 @@ from openskistats.openskimap_utils import (
     generate_openskimap_test_data,
 )
 from openskistats.skiway_data import (
-    download_dartmouth_skiway_context,
-    download_dartmouth_skiway_contours,
+    download_skiway_context,
+    download_skiway_contours,
 )
 
 cli = typer.Typer(pretty_exceptions_show_locals=False)
@@ -32,17 +32,17 @@ class Commands:
         download_openskimap_geojsons()
 
     @staticmethod
-    @cli.command(name="download_dartmouth_context")
-    def download_dartmouth_context() -> None:
+    @cli.command(name="download_skiway_context")
+    def download_skiway_context() -> None:
         """Refresh the committed OSM context for the Dartmouth Skiway figure."""
-        path = download_dartmouth_skiway_context()
+        path = download_skiway_context()
         logging.info(f"Wrote {path}")
 
     @staticmethod
-    @cli.command(name="download_dartmouth_contours")
-    def download_dartmouth_contours() -> None:
+    @cli.command(name="download_skiway_contours")
+    def download_skiway_contours() -> None:
         """Refresh the committed USGS contours for the Dartmouth Skiway figure."""
-        path = download_dartmouth_skiway_contours()
+        path = download_skiway_contours()
         logging.info(f"Wrote {path}")
 
     @staticmethod

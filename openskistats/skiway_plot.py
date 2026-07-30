@@ -23,8 +23,8 @@ from openskistats.geometry import simplify_segments
 from openskistats.plot import plot_orientation
 from openskistats.skiway_data import (
     SKIWAY_MAP_BOUNDS,
-    load_dartmouth_skiway_context,
-    load_dartmouth_skiway_contours,
+    load_skiway_context,
+    load_skiway_contours,
 )
 
 MUTED_COLOR = "#94a3b8"
@@ -64,7 +64,7 @@ CONTOUR_COLOR = "#ebe4da"
 INDEX_CONTOUR_COLOR = "#d7cab9"
 SKIWAY_ARROW_SIMPLIFICATION_TOLERANCE_METERS = 0.5
 
-SKIWAY_FIGURE_NAME = "dartmouth_nne_light"
+SKIWAY_FIGURE_STEM = "dartmouth_skiway_trail_segments_and_rose"
 SKIWAY_NAME = "Dartmouth Skiway"
 """Ski area for the example figure, chosen for its two distinctly oriented ledges."""
 
@@ -150,7 +150,7 @@ def get_appalachian_trail_marker() -> MatplotlibPath:
     )
 
 
-def load_skiway_segments() -> pl.DataFrame:
+def load_skiway_trail_segments() -> pl.DataFrame:
     """
     Segments between consecutive coordinates of Dartmouth Skiway runs.
     Segment attributes like bearing are stored on the segment's ending
@@ -445,7 +445,7 @@ def _plot_skiway_map_labels(ax: Axes) -> None:
     )
 
 
-def plot_skiway_segments_with_rose(
+def plot_skiway_trail_segments_and_rose(
     highlight_bin_colors: dict[str, str] | None = None,
     num_bins: int = 32,
     arrow_simplification_tolerance_meters: float = (
@@ -469,16 +469,16 @@ def plot_skiway_segments_with_rose(
     if lift_coordinates is None:
         lift_coordinates = load_skiway_lift_coordinates()
     if map_context is None:
-        map_context = load_dartmouth_skiway_context()
+        map_context = load_skiway_context()
     if contours is None:
-        contours = load_dartmouth_skiway_contours()
+        contours = load_skiway_contours()
     bin_index_to_color = {
         bearings.row(by_predicate=pl.col("bin_label") == label, named=True)[
             "bin_index"
         ]: color
         for label, color in highlight_bin_colors.items()
     }
-    segments = load_skiway_segments().with_columns(
+    segments = load_skiway_trail_segments().with_columns(
         color=cut_bearings_pl(num_bins=num_bins).replace_strict(
             bin_index_to_color, default=MUTED_COLOR, return_dtype=pl.String
         )

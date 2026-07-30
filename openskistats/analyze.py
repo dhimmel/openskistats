@@ -588,9 +588,9 @@ def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
     )
     from openskistats.skiway_data import SKIWAY_MAP_BOUNDS
     from openskistats.skiway_plot import (
-        SKIWAY_FIGURE_NAME,
+        SKIWAY_FIGURE_STEM,
         load_skiway_bearings,
-        plot_skiway_segments_with_rose,
+        plot_skiway_trail_segments_and_rose,
     )
 
     figures["select_ski_area_roses"] = SkiAreaSubsetPlot.plot_rose_grid()
@@ -609,16 +609,16 @@ def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
     skiway_bearings = load_skiway_bearings()
     if skiway_bearings.is_empty():
         logging.info(
-            "Skipping dartmouth_nne_light plot: "
+            f"Skipping {SKIWAY_FIGURE_STEM} plot: "
             "Dartmouth Skiway is absent from the ski area metrics."
         )
     else:
-        figures[SKIWAY_FIGURE_NAME] = plot_skiway_segments_with_rose(
+        figures[SKIWAY_FIGURE_STEM] = plot_skiway_trail_segments_and_rose(
             bearings=skiway_bearings
         )
     # save SVGs
     for name, fig in figures.items():
-        is_fixed_skiway_canvas = name == SKIWAY_FIGURE_NAME
+        is_fixed_skiway_canvas = name == SKIWAY_FIGURE_STEM
         pad_inches = (
             0
             if is_fixed_skiway_canvas
@@ -640,7 +640,7 @@ def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
     logging.info(f"Writing ski rose the world to {path}")
     with pdf_pages:
         for name, fig in figures.items():
-            is_fixed_skiway_canvas = name == SKIWAY_FIGURE_NAME
+            is_fixed_skiway_canvas = name == SKIWAY_FIGURE_STEM
             pdf_pages.savefig(  # type: ignore[no-untyped-call]
                 fig,
                 facecolor="#FFFFFF",

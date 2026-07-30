@@ -5,7 +5,7 @@
     "copyright": "OpenStreetMap contributors",
     "license": "https://opendatacommons.org/licenses/odbl/1-0/",
     "latest_osm_feature_timestamp": "2026-07-29T17:01:32Z",
-    "refresh_command": "pixi run openskistats download_dartmouth_context"
+    "refresh_command": "pixi run openskistats download_skiway_context"
   },
   "features": [
     {

@@ -21,7 +21,7 @@
       270.545,
       605.241
     ],
-    "refresh_command": "pixi run openskistats download_dartmouth_contours"
+    "refresh_command": "pixi run openskistats download_skiway_contours"
   },
   "features": [
     {

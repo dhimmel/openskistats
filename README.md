@@ -66,11 +66,11 @@ To execute the Python analysis, run the following commands:
 # downloads persist locally
 openskistats download
 
-# manually refresh the committed OpenStreetMap context for the Dartmouth figure
-openskistats download_dartmouth_context
+# manually refresh the committed OpenStreetMap context for the Dartmouth Skiway figure
+openskistats download_skiway_context
 
-# manually refresh the committed USGS 3DEP contours for the Dartmouth figure
-openskistats download_dartmouth_contours
+# manually refresh the committed USGS 3DEP contours for the Dartmouth Skiway figure
+openskistats download_skiway_contours
 
 # extract ski area metadata and metrics
 openskistats analyze

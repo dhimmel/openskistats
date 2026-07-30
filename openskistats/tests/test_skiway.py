@@ -5,18 +5,18 @@ from matplotlib.figure import Figure
 
 from openskistats.skiway_data import (
     APPALACHIAN_TRAIL_OSM_ID,
-    DARTMOUTH_CONTEXT_OSM_RELATION_IDS,
-    DARTMOUTH_CONTEXT_OSM_WAY_IDS,
-    DARTMOUTH_CONTOUR_INTERVAL_METERS,
-    DARTMOUTH_INDEX_CONTOUR_INTERVAL_METERS,
-    DARTMOUTH_SKIWAY_PARKING_LOT_OSM_ID,
-    DARTMOUTH_SKIWAY_SERVICE_ROAD_OSM_ID,
-    DARTMOUTH_SKIWAY_WATER_OSM_WAY_IDS,
     GRAFTON_TURNPIKE_OSM_WAY_IDS,
     MCLANE_FAMILY_LODGE_OSM_ID,
+    SKIWAY_CONTEXT_OSM_RELATION_IDS,
+    SKIWAY_CONTEXT_OSM_WAY_IDS,
+    SKIWAY_CONTOUR_INTERVAL_METERS,
+    SKIWAY_INDEX_CONTOUR_INTERVAL_METERS,
     SKIWAY_MAP_BOUNDS,
-    load_dartmouth_skiway_context,
-    load_dartmouth_skiway_contours,
+    SKIWAY_PARKING_LOT_OSM_ID,
+    SKIWAY_SERVICE_ROAD_OSM_ID,
+    SKIWAY_WATER_OSM_WAY_IDS,
+    load_skiway_context,
+    load_skiway_contours,
 )
 from openskistats.skiway_plot import (
     PARKING_COLOR,
@@ -29,8 +29,8 @@ from openskistats.skiway_plot import (
 )
 
 
-def test_dartmouth_skiway_context_snapshot() -> None:
-    context = load_dartmouth_skiway_context()
+def test_skiway_context_snapshot() -> None:
+    context = load_skiway_context()
     features = context["features"]
     lodge_features = [
         feature
@@ -67,7 +67,7 @@ def test_dartmouth_skiway_context_snapshot() -> None:
         feature["properties"]["osm_id"]
         for feature in features
         if feature["id"].startswith("way/")
-    } == set(DARTMOUTH_CONTEXT_OSM_WAY_IDS)
+    } == set(SKIWAY_CONTEXT_OSM_WAY_IDS)
     assert [feature["properties"]["osm_id"] for feature in lodge_features] == [
         MCLANE_FAMILY_LODGE_OSM_ID
     ]
@@ -77,7 +77,7 @@ def test_dartmouth_skiway_context_snapshot() -> None:
         == lodge_features[0]["geometry"]["coordinates"][0][-1]
     )
     assert [feature["properties"]["osm_id"] for feature in parking_features] == [
-        DARTMOUTH_SKIWAY_PARKING_LOT_OSM_ID
+        SKIWAY_PARKING_LOT_OSM_ID
     ]
     assert parking_features[0]["properties"]["amenity"] == "parking"
     assert parking_features[0]["geometry"]["type"] == "Polygon"
@@ -89,7 +89,7 @@ def test_dartmouth_skiway_context_snapshot() -> None:
         APPALACHIAN_TRAIL_OSM_ID
     ]
     assert {feature["properties"]["osm_id"] for feature in trail_features} == set(
-        DARTMOUTH_CONTEXT_OSM_RELATION_IDS
+        SKIWAY_CONTEXT_OSM_RELATION_IDS
     )
     assert trail_features[0]["properties"]["ref"] == "AT"
     assert trail_features[0]["geometry"]["type"] == "MultiLineString"
@@ -101,7 +101,7 @@ def test_dartmouth_skiway_context_snapshot() -> None:
         for longitude, latitude in line
     )
     assert {feature["properties"]["osm_id"] for feature in water_features} == set(
-        DARTMOUTH_SKIWAY_WATER_OSM_WAY_IDS
+        SKIWAY_WATER_OSM_WAY_IDS
     )
     assert all(
         feature["properties"]["natural"] == "water"
@@ -111,7 +111,7 @@ def test_dartmouth_skiway_context_snapshot() -> None:
         for feature in water_features
     )
     assert [feature["properties"]["osm_id"] for feature in parking_road_features] == [
-        DARTMOUTH_SKIWAY_SERVICE_ROAD_OSM_ID
+        SKIWAY_SERVICE_ROAD_OSM_ID
     ]
     (service_road,) = parking_road_features
     assert service_road["properties"]["highway"] == "service"
@@ -133,13 +133,12 @@ def test_dartmouth_skiway_context_snapshot() -> None:
     assert max(road_latitudes) > 43.792
 
 
-def test_dartmouth_skiway_contour_snapshot() -> None:
-    contours = load_dartmouth_skiway_contours()
+def test_skiway_contour_snapshot() -> None:
+    contours = load_skiway_contours()
     properties = contours["properties"]
-    assert properties["contour_interval_m"] == DARTMOUTH_CONTOUR_INTERVAL_METERS
+    assert properties["contour_interval_m"] == SKIWAY_CONTOUR_INTERVAL_METERS
     assert (
-        properties["index_contour_interval_m"]
-        == DARTMOUTH_INDEX_CONTOUR_INTERVAL_METERS
+        properties["index_contour_interval_m"] == SKIWAY_INDEX_CONTOUR_INTERVAL_METERS
     )
     assert properties["horizontal_crs"] == SKIWAY_MAP_BOUNDS.crs
     assert properties["vertical_crs"] == "EPSG:5703"
@@ -155,12 +154,10 @@ def test_dartmouth_skiway_contour_snapshot() -> None:
     assert features
     assert all(
         feature["geometry"]["type"] == "MultiLineString"
-        and feature["properties"]["elevation_m"] % DARTMOUTH_CONTOUR_INTERVAL_METERS
-        == 0
+        and feature["properties"]["elevation_m"] % SKIWAY_CONTOUR_INTERVAL_METERS == 0
         and feature["properties"]["is_index"]
         == (
-            feature["properties"]["elevation_m"]
-            % DARTMOUTH_INDEX_CONTOUR_INTERVAL_METERS
+            feature["properties"]["elevation_m"] % SKIWAY_INDEX_CONTOUR_INTERVAL_METERS
             == 0
         )
         for feature in features
@@ -178,10 +175,10 @@ def test_dartmouth_skiway_contour_snapshot() -> None:
     )
 
 
-def test_dartmouth_skiway_context_styles() -> None:
+def test_skiway_context_styles() -> None:
     figure = Figure()
     ax = figure.subplots()
-    _plot_skiway_map_context(ax=ax, map_context=load_dartmouth_skiway_context())
+    _plot_skiway_map_context(ax=ax, map_context=load_skiway_context())
 
     parking_patch = next(patch for patch in ax.patches if patch.get_zorder() == -0.5)
     water_patches = [patch for patch in ax.patches if patch.get_zorder() == -0.75]
@@ -192,7 +189,7 @@ def test_dartmouth_skiway_context_styles() -> None:
     trail_lines = [line for line in ax.lines if line.get_linewidth() == TRAIL_LINEWIDTH]
 
     assert parking_patch.get_facecolor() == to_rgba(PARKING_COLOR)
-    assert len(water_patches) == len(DARTMOUTH_SKIWAY_WATER_OSM_WAY_IDS)
+    assert len(water_patches) == len(SKIWAY_WATER_OSM_WAY_IDS)
     assert all(patch.get_facecolor() == to_rgba(WATER_COLOR) for patch in water_patches)
     assert road_lines
     assert len(parking_road_lines) == 1
