@@ -49,7 +49,8 @@ so wider highlight arrows keep proportional heads.
 A width ratio exceeding the length ratio makes a stout head
 with a wide angle at the point.
 """
-LIFT_COLOR = "#dceaf2"
+LIFT_COLOR = "#c8e0eb"
+WATER_COLOR = "#b8dbe9"
 LODGE_COLOR = "#f2d49b"
 ROAD_COLOR = LODGE_COLOR
 ROAD_LABEL_COLOR = ROAD_COLOR
@@ -382,6 +383,16 @@ def _plot_skiway_map_context(ax: Axes, map_context: dict[str, Any]) -> None:
                         solid_capstyle="round",
                         zorder=0,
                     )
+            case "water":
+                ax.add_patch(
+                    Polygon(
+                        coordinates[0],
+                        closed=True,
+                        facecolor=WATER_COLOR,
+                        edgecolor="none",
+                        zorder=-0.75,
+                    )
+                )
             case "lodge" | "parking":
                 polygon_coordinates = coordinates[0]
                 is_lodge = feature["properties"]["feature_kind"] == "lodge"

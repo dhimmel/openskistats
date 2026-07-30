@@ -20,8 +20,11 @@
         "amenity": "events_venue",
         "building": "yes",
         "highway": null,
+        "intermittent": null,
+        "natural": null,
         "parking": null,
         "surface": null,
+        "water": null,
         "source": "https://www.openstreetmap.org/way/296382919"
       },
       "geometry": {
@@ -132,8 +135,11 @@
         "amenity": "parking",
         "building": null,
         "highway": null,
+        "intermittent": null,
+        "natural": null,
         "parking": "surface",
         "surface": null,
+        "water": null,
         "source": "https://www.openstreetmap.org/way/602788499"
       },
       "geometry": {
@@ -328,8 +334,11 @@
         "amenity": null,
         "building": null,
         "highway": "service",
+        "intermittent": null,
+        "natural": null,
         "parking": null,
         "surface": "asphalt",
+        "water": null,
         "source": "https://www.openstreetmap.org/way/1147052531"
       },
       "geometry": {
@@ -398,8 +407,11 @@
         "amenity": null,
         "building": null,
         "highway": "unclassified",
+        "intermittent": null,
+        "natural": null,
         "parking": null,
         "surface": "gravel",
+        "water": null,
         "source": "https://www.openstreetmap.org/way/328497225"
       },
       "geometry": {
@@ -676,8 +688,11 @@
         "amenity": null,
         "building": null,
         "highway": "tertiary",
+        "intermittent": null,
+        "natural": null,
         "parking": null,
         "surface": "asphalt",
+        "water": null,
         "source": "https://www.openstreetmap.org/way/532980281"
       },
       "geometry": {
@@ -774,8 +789,11 @@
         "amenity": null,
         "building": null,
         "highway": "unclassified",
+        "intermittent": null,
+        "natural": null,
         "parking": null,
         "surface": "unpaved",
+        "water": null,
         "source": "https://www.openstreetmap.org/way/532980282"
       },
       "geometry": {
@@ -1220,8 +1238,11 @@
         "amenity": null,
         "building": null,
         "highway": "unclassified",
+        "intermittent": null,
+        "natural": null,
         "parking": null,
         "surface": "asphalt",
+        "water": null,
         "source": "https://www.openstreetmap.org/way/1431999174"
       },
       "geometry": {
@@ -1393,6 +1414,216 @@
             [
               -72.107233,
               43.7774
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1144943274",
+      "properties": {
+        "feature_kind": "water",
+        "osm_id": 1144943274,
+        "osm_version": 1,
+        "osm_timestamp": "2023-02-13T20:53:10Z",
+        "name": null,
+        "amenity": null,
+        "building": null,
+        "highway": null,
+        "intermittent": "yes",
+        "natural": "water",
+        "parking": null,
+        "surface": null,
+        "water": "basin",
+        "source": "https://www.openstreetmap.org/way/1144943274"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -72.1004526,
+              43.7921893
+            ],
+            [
+              -72.1005013,
+              43.7921878
+            ],
+            [
+              -72.1005543,
+              43.7921603
+            ],
+            [
+              -72.100639,
+              43.7921113
+            ],
+            [
+              -72.1008531,
+              43.7920486
+            ],
+            [
+              -72.1011349,
+              43.7919889
+            ],
+            [
+              -72.1013193,
+              43.7919431
+            ],
+            [
+              -72.1014358,
+              43.7918987
+            ],
+            [
+              -72.1014506,
+              43.7918849
+            ],
+            [
+              -72.1014443,
+              43.7918497
+            ],
+            [
+              -72.1014316,
+              43.7917411
+            ],
+            [
+              -72.1014273,
+              43.7917075
+            ],
+            [
+              -72.1013256,
+              43.791527
+            ],
+            [
+              -72.1012324,
+              43.7913847
+            ],
+            [
+              -72.1011518,
+              43.7912639
+            ],
+            [
+              -72.1010862,
+              43.7912042
+            ],
+            [
+              -72.100976,
+              43.7911828
+            ],
+            [
+              -72.1008213,
+              43.7911966
+            ],
+            [
+              -72.1006496,
+              43.7912394
+            ],
+            [
+              -72.1004568,
+              43.7912776
+            ],
+            [
+              -72.1000521,
+              43.7914031
+            ],
+            [
+              -72.0999419,
+              43.7914582
+            ],
+            [
+              -72.0999207,
+              43.7914826
+            ],
+            [
+              -72.0999652,
+              43.7916065
+            ],
+            [
+              -72.1001072,
+              43.791862
+            ],
+            [
+              -72.1002004,
+              43.7920226
+            ],
+            [
+              -72.1002746,
+              43.7921128
+            ],
+            [
+              -72.1003636,
+              43.792174
+            ],
+            [
+              -72.1004526,
+              43.7921893
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1475644343",
+      "properties": {
+        "feature_kind": "water",
+        "osm_id": 1475644343,
+        "osm_version": 1,
+        "osm_timestamp": "2026-02-09T16:57:44Z",
+        "name": null,
+        "amenity": null,
+        "building": null,
+        "highway": null,
+        "intermittent": "yes",
+        "natural": "water",
+        "parking": null,
+        "surface": null,
+        "water": "basin",
+        "source": "https://www.openstreetmap.org/way/1475644343"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -72.1001953,
+              43.7911085
+            ],
+            [
+              -72.1001202,
+              43.7911317
+            ],
+            [
+              -72.0998037,
+              43.7911123
+            ],
+            [
+              -72.0997715,
+              43.7910697
+            ],
+            [
+              -72.09975,
+              43.7909071
+            ],
+            [
+              -72.0997393,
+              43.7905934
+            ],
+            [
+              -72.0998037,
+              43.7905702
+            ],
+            [
+              -72.1001738,
+              43.7905779
+            ],
+            [
+              -72.1001953,
+              43.7906089
+            ],
+            [
+              -72.1001953,
+              43.7911085
             ]
           ]
         ]

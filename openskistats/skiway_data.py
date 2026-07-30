@@ -28,20 +28,20 @@ DARTMOUTH_CONTEXT_PATH = Path(__file__).parent.joinpath(
 DARTMOUTH_CONTOURS_PATH = Path(__file__).parent.joinpath(
     "data", "dartmouth_skiway_contours.geojson"
 )
-DARTMOUTH_CONTEXT_OSM_WAY_IDS = (
-    296382919,  # McLane Family Lodge
-    328497225,  # Grafton Turnpike
-    532980281,  # Grafton Turnpike
-    532980282,  # Grafton Turnpike continuation
-    602788499,  # Dartmouth Skiway parking lot
-    1147052531,  # Dartmouth Skiway service road
-    1431999174,  # Grafton Turnpike connector
-)
-DARTMOUTH_CONTEXT_OSM_RELATION_IDS = (18319298,)  # Appalachian Trail, New Hampshire
 MCLANE_FAMILY_LODGE_OSM_ID = 296382919
 DARTMOUTH_SKIWAY_PARKING_LOT_OSM_ID = 602788499
 DARTMOUTH_SKIWAY_SERVICE_ROAD_OSM_ID = 1147052531
 APPALACHIAN_TRAIL_OSM_ID = 18319298
+GRAFTON_TURNPIKE_OSM_WAY_IDS = (328497225, 532980281, 532980282, 1431999174)
+DARTMOUTH_SKIWAY_WATER_OSM_WAY_IDS = (1144943274, 1475644343)
+DARTMOUTH_CONTEXT_OSM_WAY_IDS = (
+    MCLANE_FAMILY_LODGE_OSM_ID,
+    DARTMOUTH_SKIWAY_PARKING_LOT_OSM_ID,
+    DARTMOUTH_SKIWAY_SERVICE_ROAD_OSM_ID,
+    *GRAFTON_TURNPIKE_OSM_WAY_IDS,
+    *DARTMOUTH_SKIWAY_WATER_OSM_WAY_IDS,
+)
+DARTMOUTH_CONTEXT_OSM_RELATION_IDS = (APPALACHIAN_TRAIL_OSM_ID,)
 USER_AGENT = "openskistats/0.1 (https://github.com/dhimmel/openskistats)"
 DARTMOUTH_ELEVATION_SERVICE_URL = (
     "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer"
@@ -79,9 +79,11 @@ def _osm_way_to_geojson_feature(osm_data: dict[str, Any]) -> dict[str, Any]:
         feature_kind = "parking"
     elif osm_id == DARTMOUTH_SKIWAY_SERVICE_ROAD_OSM_ID:
         feature_kind = "parking_road"
+    elif osm_id in DARTMOUTH_SKIWAY_WATER_OSM_WAY_IDS:
+        feature_kind = "water"
     else:
         feature_kind = "road"
-    is_polygon = feature_kind in {"lodge", "parking"}
+    is_polygon = feature_kind in {"lodge", "parking", "water"}
     geometry_type = "Polygon" if is_polygon else "LineString"
     geometry_coordinates = [coordinates] if is_polygon else coordinates
     return {
@@ -96,8 +98,11 @@ def _osm_way_to_geojson_feature(osm_data: dict[str, Any]) -> dict[str, Any]:
             "amenity": tags.get("amenity"),
             "building": tags.get("building"),
             "highway": tags.get("highway"),
+            "intermittent": tags.get("intermittent"),
+            "natural": tags.get("natural"),
             "parking": tags.get("parking"),
             "surface": tags.get("surface"),
+            "water": tags.get("water"),
             "source": f"https://www.openstreetmap.org/way/{osm_id}",
         },
         "geometry": {
