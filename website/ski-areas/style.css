@@ -58,7 +58,7 @@
   max-width: 100%;
   min-width: 0;
   overflow: auto;
-  width: 100%;
+  width: fit-content;
 }
 
 .oss-table-scroll:focus-visible {
@@ -70,9 +70,7 @@
   border-collapse: separate;
   border-spacing: 0;
   margin: 0;
-  min-width: 1235px;
   table-layout: fixed;
-  width: 100%;
 }
 
 .oss-table th,

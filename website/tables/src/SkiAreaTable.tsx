@@ -718,7 +718,12 @@ export function SkiAreaTable({ document }: { document: SkiAreaDocument }) {
         </button>
       </div>
       <div className="oss-table-scroll" tabIndex={0}>
-        <table>
+        <table style={{ width: table.getTotalSize() }}>
+          <colgroup>
+            {table.getVisibleLeafColumns().map((column) => (
+              <col key={column.id} style={{ width: column.getSize() }} />
+            ))}
+          </colgroup>
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
@@ -775,7 +780,7 @@ export function SkiAreaTable({ document }: { document: SkiAreaDocument }) {
             )}
           </tbody>
           <tfoot>
-            {table.getFooterGroups().slice(-1).map((footerGroup) => (
+            {table.getFooterGroups().slice(0, 1).map((footerGroup) => (
               <tr key={footerGroup.id}>
                 {footerGroup.headers.map((footerCell) => (
                   <td
