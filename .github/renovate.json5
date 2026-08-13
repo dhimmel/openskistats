@@ -11,7 +11,7 @@
   "constraints": {
     "pixi": ">=0.40.0"
   },
-  "enabledManagers": ["pixi", "pep621", "pre-commit", "github-actions"],
+  "enabledManagers": ["pixi", "pep621", "pre-commit", "github-actions", "npm"],
   "lockFileMaintenance": {
     "enabled": false,
   },
@@ -27,6 +27,10 @@
     },
     {
       "matchManagers": ["pep621", "pixi"],
+      "rangeStrategy": "pin"
+    },
+    {
+      "matchManagers": ["npm"],
       "rangeStrategy": "pin"
     },
     {

@@ -1,0 +1,28 @@
+{
+  "name": "openskistats-website",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "24.x",
+    "pnpm": "11.x"
+  },
+  "scripts": {
+    "build": "esbuild tables/src/main.tsx --bundle --format=esm --minify --sourcemap --outfile=ski-areas/table.bundle.js",
+    "build:watch": "esbuild tables/src/main.tsx --bundle --format=esm --sourcemap --outfile=ski-areas/table.bundle.js --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tanstack/react-table": "8.21.3",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
+    "esbuild": "0.28.2",
+    "typescript": "6.0.3",
+    "vitest": "4.1.10"
+  }
+}
