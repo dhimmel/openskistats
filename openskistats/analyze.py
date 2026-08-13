@@ -652,30 +652,13 @@ def ski_rose_the_world(min_combined_vertical: int = 10_000) -> None:
             matplotlib.pyplot.close(fig)
 
 
-def get_story_ski_area_names() -> list[str]:
-    """
-    Subset of ski areas by name for the closeread scrollytelling story
-    https://github.com/dhimmel/openskistats/issues/17
-    """
-    return [
-        "Killington Resort",
-        "Pico Mountain Resort",
-        "Whaleback Mountain",
-        "Storrs Hill Ski Area",
-        "Dartmouth Skiway",
-    ]
-
-
-def get_display_ski_area_filters(story: bool = False) -> list[pl.Expr]:
+def get_display_ski_area_filters() -> list[pl.Expr]:
     """Ski area filters to produce a subset of ski areas for display."""
-    filters = [
+    return [
         pl.col("run_count") >= 3,
         pl.col("combined_vertical") >= 50,
         pl.col("ski_area_name").is_not_null(),
     ]
-    if story:
-        filters.append(pl.col("ski_area_name").is_in(get_story_ski_area_names()))
-    return filters
 
 
 def create_ski_area_roses(overwrite: bool = False) -> None:

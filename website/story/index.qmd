@@ -202,29 +202,12 @@ In addition to trail bearings, we have published data on other key metrics of a 
 In [OpenSkiStats.org/ski-areas](/ski-areas), you can search for your favorite ski area and explore all of its summary statistics.
 Whether you're planning your next powder day or just marveling at the hidden patterns of the slopes, this may be a fresh way to see the mountains you love.
 
-For example, below are the statistics of the five New Hampshire/Vermont mountains we saw earlier:
+There you can look up the five New Hampshire and Vermont mountains we saw earlier, alongside every other ski area in the dataset.
 
-<br>
-:::
-
-::::{.column-screen}
-:::{style="font-family: 'Source Sans 3'; font-size: 70%;"}
-```{python}
-#| output: asis
-from openskistats.display import embed_reactable_html, get_ski_area_reactable
-
-embed_reactable_html()
-get_ski_area_reactable(story=True)
-```
-:::
-::::
-<br>
-
-:::{.column-page}
 We hope this data inspires your winter adventures, helps you assess the climate resilience of distant ski mountains, or simply gives you a moment to pause and [*smell* the roses]{style="color: #f07178;"}.
 
 Curious to learn more?
 Read our [manuscript](/manuscript) to explore the approach we took and dive deeper into our findings.
 
-[The figures in this story are frozen snapshots generated from OpenSkiMap data as of 2026-07-25, while the table above continues to update with the latest data.]{style="font-size: 75%;"}
+[The figures in this story are frozen snapshots generated from OpenSkiMap data as of 2026-07-25.]{style="font-size: 75%;"}
 :::

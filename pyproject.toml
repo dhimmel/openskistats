@@ -37,8 +37,6 @@ args = [
 openskistats = { path = ".", editable = true }
 beautifulsoup4 = "==4.15.0"
 folium = "==0.20.0"
-# https://github.com/machow/reactable-py/issues/29
-great-tables = "==0.23.0" 
 jupyter = "==1.1.1"
 matplotlib = "==3.11.1"
 mizani = "==0.14.4"
@@ -52,7 +50,6 @@ polars= "==1.43.2"
 pydantic = "==2.13.4"
 pvlib= "==0.15.2"
 pyarrow = "==25.0.1"
-reactable = "==0.1.6"
 requests = "==2.34.2"
 shapely = "==2.1.2"
 rich= "==15.0.0"
@@ -112,7 +109,6 @@ module = [
     "plotnine.*",
     "polars.*",
     "pvlib.*",
-    "reactable.*",
 ]
 ignore_missing_imports = true
 follow_imports = "skip"
