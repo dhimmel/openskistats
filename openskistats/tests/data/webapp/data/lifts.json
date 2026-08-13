@@ -1,0 +1,537 @@
+{
+  "schema_version": "1.0",
+  "data_updated_at": "2025-12-21T23:39:50Z",
+  "license": "ODbL-1.0",
+  "attribution": "OpenSkiStats; source data from OpenSkiMap and OpenStreetMap contributors.",
+  "sources": [
+    {
+      "name": "lifts",
+      "url": "https://tiles.openskimap.org/geojson/lifts.geojson",
+      "last_modified": "2025-12-21T23:39:50Z",
+      "retrieved_at": "2025-12-22T15:17:20Z",
+      "checksum_sha256": "cfb7c94efa6fe690831c501b072bf0472a0de43667e47368bae6ce31ad57e362"
+    }
+  ],
+  "record_count": 4,
+  "record_schema": {
+    "$defs": {
+      "LiftType": {
+        "description": "Type of lift according to OpenSkiMap.",
+        "enum": [
+          "cable_car",
+          "gondola",
+          "chair_lift",
+          "mixed_lift",
+          "drag_lift",
+          "t-bar",
+          "j-bar",
+          "platter",
+          "rope_tow",
+          "magic_carpet",
+          "funicular",
+          "railway"
+        ],
+        "title": "LiftType",
+        "type": "string"
+      },
+      "OpenSkiMapStatus": {
+        "description": "Operating status of a run, ski area, or lift according to OpenSkiMap.\nNull values can arise for elements without an OSM source. \"\nSee OpenSkiMap processing code at\n<https://github.com/russellporter/openskidata-processor/blob/bc168105f4d90c19817189ebe47e7bee20a2dcbc/src/transforms/Status.ts#L3-L8>.",
+        "enum": [
+          "proposed",
+          "planned",
+          "construction",
+          "operating",
+          "disused",
+          "abandoned",
+          "never_opened"
+        ],
+        "title": "OpenSkiMapStatus",
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "description": "Curated properties and core metrics for a named lift.",
+    "properties": {
+      "lift_id": {
+        "description": "Unique OpenSkiMap identifier for the lift.",
+        "title": "Lift Id",
+        "type": "string"
+      },
+      "lift_name": {
+        "description": "Name of the lift.",
+        "title": "Lift Name",
+        "type": "string"
+      },
+      "lift_type": {
+        "$ref": "#/$defs/LiftType"
+      },
+      "lift_status": {
+        "$ref": "#/$defs/OpenSkiMapStatus",
+        "description": "Operating status of the lift according to OpenSkiMap."
+      },
+      "lift_access": {
+        "anyOf": [
+          {
+            "const": "private",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Access restriction for the lift.",
+        "title": "Lift Access"
+      },
+      "lift_oneway": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Whether passengers may ride the lift in only one direction.",
+        "title": "Lift Oneway"
+      },
+      "lift_occupancy": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Number of people per carrier.",
+        "title": "Lift Occupancy"
+      },
+      "lift_capacity": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Transport capacity in people per hour.",
+        "title": "Lift Capacity"
+      },
+      "lift_duration": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Typical ride duration in seconds.",
+        "title": "Lift Duration"
+      },
+      "lift_detachable": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Whether the lift has detachable grips.",
+        "title": "Lift Detachable"
+      },
+      "lift_bubble": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Whether carriers have weather-protective covers.",
+        "title": "Lift Bubble"
+      },
+      "lift_heating": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Whether carriers or seats are heated.",
+        "title": "Lift Heating"
+      },
+      "ski_area_ids": {
+        "description": "OpenSkiMap identifiers of associated ski areas.",
+        "items": {
+          "type": "string"
+        },
+        "title": "Ski Area Ids",
+        "type": "array"
+      },
+      "ski_area_names": {
+        "description": "Names of associated ski areas, ordered like `ski_area_ids`.",
+        "items": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "title": "Ski Area Names",
+        "type": "array"
+      },
+      "country": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Country where the lift is located.",
+        "title": "Country"
+      },
+      "country_code": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "ISO 3166-1 alpha-2 country code.",
+        "title": "Country Code"
+      },
+      "country_subdiv_code": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "ISO 3166-2 country subdivision code.",
+        "title": "Country Subdiv Code"
+      },
+      "region": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Region, state, or province where the lift is located.",
+        "title": "Region"
+      },
+      "locality": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Locality where the lift is located.",
+        "title": "Locality"
+      },
+      "latitude": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Mean latitude of lift coordinates in decimal degrees.",
+        "title": "Latitude"
+      },
+      "longitude": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Mean longitude of lift coordinates in decimal degrees.",
+        "title": "Longitude"
+      },
+      "lift_websites": {
+        "description": "Websites associated with the lift.",
+        "items": {
+          "type": "string"
+        },
+        "title": "Lift Websites",
+        "type": "array"
+      },
+      "lift_sources": {
+        "description": "Source URLs for the lift.",
+        "items": {
+          "type": "string"
+        },
+        "title": "Lift Sources",
+        "type": "array"
+      },
+      "wikidata_id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Wikidata identifier for the lift.",
+        "title": "Wikidata Id"
+      },
+      "inclined_length": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Three-dimensional length of the lift in meters.",
+        "title": "Inclined Length"
+      },
+      "vertical_rise": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Elevation range from the lowest to highest lift coordinate in meters.",
+        "title": "Vertical Rise"
+      },
+      "min_elevation": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Minimum lift elevation in meters.",
+        "title": "Min Elevation"
+      },
+      "max_elevation": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Maximum lift elevation in meters.",
+        "title": "Max Elevation"
+      }
+    },
+    "required": [
+      "lift_id",
+      "lift_name",
+      "lift_type",
+      "lift_status",
+      "lift_access",
+      "lift_oneway",
+      "lift_occupancy",
+      "lift_capacity",
+      "lift_duration",
+      "lift_detachable",
+      "lift_bubble",
+      "lift_heating",
+      "ski_area_ids",
+      "ski_area_names",
+      "country",
+      "country_code",
+      "country_subdiv_code",
+      "region",
+      "locality",
+      "latitude",
+      "longitude",
+      "lift_websites",
+      "lift_sources",
+      "wikidata_id",
+      "inclined_length",
+      "vertical_rise",
+      "min_elevation",
+      "max_elevation"
+    ],
+    "title": "LiftSummary",
+    "type": "object"
+  },
+  "lifts": [
+    {
+      "lift_id": "41014dd60dd2af503da8d75d377e9ed248082fb1",
+      "lift_name": "Sky Lift",
+      "lift_type": "chair_lift",
+      "lift_status": "operating",
+      "lift_access": null,
+      "lift_oneway": true,
+      "lift_occupancy": 2,
+      "lift_capacity": null,
+      "lift_duration": 360,
+      "lift_detachable": null,
+      "lift_bubble": false,
+      "lift_heating": false,
+      "ski_area_ids": [
+        "28cb013693827a90d778603d8bb6bc0cfd3999c0"
+      ],
+      "ski_area_names": [
+        "Whaleback Mountain"
+      ],
+      "country": "United States",
+      "country_code": "US",
+      "country_subdiv_code": "US-NH",
+      "region": "New Hampshire",
+      "locality": "Enfield",
+      "latitude": 43.59881,
+      "longitude": -72.18212,
+      "lift_websites": [],
+      "lift_sources": [
+        "https://www.openstreetmap.org/way/252693149"
+      ],
+      "wikidata_id": null,
+      "inclined_length": 763.3,
+      "vertical_rise": 200.2,
+      "min_elevation": 345.4,
+      "max_elevation": 545.6
+    },
+    {
+      "lift_id": "4c53e569a9086308b6e757794d588ff04f2c658b",
+      "lift_name": "T-Bar",
+      "lift_type": "t-bar",
+      "lift_status": "operating",
+      "lift_access": null,
+      "lift_oneway": true,
+      "lift_occupancy": 2,
+      "lift_capacity": null,
+      "lift_duration": 210,
+      "lift_detachable": null,
+      "lift_bubble": null,
+      "lift_heating": null,
+      "ski_area_ids": [
+        "28cb013693827a90d778603d8bb6bc0cfd3999c0"
+      ],
+      "ski_area_names": [
+        "Whaleback Mountain"
+      ],
+      "country": "United States",
+      "country_code": "US",
+      "country_subdiv_code": "US-NH",
+      "region": "New Hampshire",
+      "locality": "Enfield",
+      "latitude": 43.60066,
+      "longitude": -72.18303,
+      "lift_websites": [],
+      "lift_sources": [
+        "https://www.openstreetmap.org/way/654539996"
+      ],
+      "wikidata_id": null,
+      "inclined_length": 248.5,
+      "vertical_rise": 69.0,
+      "min_elevation": 346.8,
+      "max_elevation": 415.8
+    },
+    {
+      "lift_id": "75370913b15570dc785502e0c10ea779b4ff7c35",
+      "lift_name": "Rope Tow",
+      "lift_type": "rope_tow",
+      "lift_status": "operating",
+      "lift_access": null,
+      "lift_oneway": null,
+      "lift_occupancy": null,
+      "lift_capacity": null,
+      "lift_duration": null,
+      "lift_detachable": null,
+      "lift_bubble": null,
+      "lift_heating": null,
+      "ski_area_ids": [
+        "28cb013693827a90d778603d8bb6bc0cfd3999c0"
+      ],
+      "ski_area_names": [
+        "Whaleback Mountain"
+      ],
+      "country": "United States",
+      "country_code": "US",
+      "country_subdiv_code": "US-NH",
+      "region": "New Hampshire",
+      "locality": "Enfield",
+      "latitude": 43.60174,
+      "longitude": -72.18268,
+      "lift_websites": [],
+      "lift_sources": [
+        "https://www.openstreetmap.org/way/255618836"
+      ],
+      "wikidata_id": null,
+      "inclined_length": 74.5,
+      "vertical_rise": 15.2,
+      "min_elevation": 345.3,
+      "max_elevation": 360.5
+    },
+    {
+      "lift_id": "a535c2a3cdb81792c3233d46669a15b34d2cccae",
+      "lift_name": "Magic Carpet",
+      "lift_type": "magic_carpet",
+      "lift_status": "operating",
+      "lift_access": null,
+      "lift_oneway": null,
+      "lift_occupancy": null,
+      "lift_capacity": null,
+      "lift_duration": null,
+      "lift_detachable": null,
+      "lift_bubble": null,
+      "lift_heating": null,
+      "ski_area_ids": [
+        "28cb013693827a90d778603d8bb6bc0cfd3999c0"
+      ],
+      "ski_area_names": [
+        "Whaleback Mountain"
+      ],
+      "country": "United States",
+      "country_code": "US",
+      "country_subdiv_code": "US-NH",
+      "region": "New Hampshire",
+      "locality": "Enfield",
+      "latitude": 43.60148,
+      "longitude": -72.18148,
+      "lift_websites": [],
+      "lift_sources": [
+        "https://www.openstreetmap.org/way/255618835"
+      ],
+      "wikidata_id": null,
+      "inclined_length": 26.6,
+      "vertical_rise": 2.0,
+      "min_elevation": 345.5,
+      "max_elevation": 347.5
+    }
+  ]
+}

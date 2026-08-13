@@ -244,29 +244,56 @@ def load_lifts_from_download_pl() -> pl.DataFrame:
         row["lift_name"] = lift_properties["name"]
         row["lift_type"] = lift_properties["liftType"]
         row["lift_status"] = lift_properties["status"]
+        row["lift_access"] = lift_properties.get("access")
+        row["lift_ref"] = lift_properties.get("ref")
+        row["lift_ref_fr_cairn"] = lift_properties.get("refFRCAIRN")
+        row["lift_description"] = lift_properties.get("description")
+        row["lift_oneway"] = lift_properties.get("oneway")
         # see https://wiki.openstreetmap.org/wiki/Pistes#Ski_lifts
         row["lift_occupancy"] = lift_properties["occupancy"]
         row["lift_capacity"] = lift_properties["capacity"]
         row["lift_duration"] = lift_properties["duration"]
-        row["ski_area_ids"] = sorted(
-            ski_area["properties"]["id"] for ski_area in lift_properties["skiAreas"]
+        row["lift_detachable"] = lift_properties.get("detachable")
+        row["lift_bubble"] = lift_properties.get("bubble")
+        row["lift_heating"] = lift_properties.get("heating")
+        row["lift_tunnel"] = lift_properties.get("tunnel")
+        ski_areas = sorted(
+            lift_properties["skiAreas"],
+            key=lambda ski_area: ski_area["properties"]["id"],
         )
+        row["ski_area_ids"] = [ski_area["properties"]["id"] for ski_area in ski_areas]
+        row["ski_area_names"] = [
+            ski_area["properties"]["name"] for ski_area in ski_areas
+        ]
+        place: dict[str, Any] = next(iter(lift_properties.get("places", [])), {})
+        localized_en = place.get("localized", {}).get("en", {})
+        row["country"] = localized_en.get("country")
+        row["country_code"] = place.get("iso3166_1Alpha2")
+        row["country_subdiv_code"] = place.get("iso3166_2")
+        row["region"] = localized_en.get("region")
+        row["locality"] = localized_en.get("locality")
         row["lift_websites"] = lift_properties["websites"]
         row["lift_sources"] = sorted(
             openskimap_source_to_url(**source) for source in lift_properties["sources"]
         )
+        row["wikidata_id"] = lift_properties.get("wikidataID")
         row["lift_geometry_type"] = lift["geometry"]["type"]
+        coordinates = lift["geometry"]["coordinates"]
+        row["lift_coordinates_raw_count"] = (
+            len(coordinates) if row["lift_geometry_type"] == "LineString" else 0
+        )
         row["lift_coordinates"] = (
             [
                 x.model_dump()
                 for x in _structure_coordinates(
-                    _clean_coordinates(
-                        lift["geometry"]["coordinates"], ensure_downhill=False
-                    )
+                    _clean_coordinates(coordinates, ensure_downhill=False)
                 )
             ]
             if row["lift_geometry_type"] == "LineString"
             else None
+        )
+        row["lift_coordinates_filter_count"] = row["lift_coordinates_raw_count"] - len(
+            row["lift_coordinates"] or []
         )
         rows.append(row)
     return pl.DataFrame(rows, strict=False, infer_schema_length=None)

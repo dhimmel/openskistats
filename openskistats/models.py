@@ -29,6 +29,23 @@ class OpenSkiMapStatus(StrEnum):
     never_opened = "never_opened"
 
 
+class LiftType(StrEnum):
+    """Type of lift according to OpenSkiMap."""
+
+    cable_car = "cable_car"
+    gondola = "gondola"
+    chair_lift = "chair_lift"
+    mixed_lift = "mixed_lift"
+    drag_lift = "drag_lift"
+    t_bar = "t-bar"
+    j_bar = "j-bar"
+    platter = "platter"
+    rope_tow = "rope_tow"
+    magic_carpet = "magic_carpet"
+    funicular = "funicular"
+    railway = "railway"
+
+
 class RunDifficultyConvention(StrEnum):
     """
     Convention for the ski run difficulty coloring.

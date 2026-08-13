@@ -2,16 +2,13 @@
 
 import logging
 from copy import deepcopy
-from datetime import datetime
 from pathlib import Path
 from typing import Annotated, Any, Literal, Self
 
 import polars as pl
 from pydantic import (
     AwareDatetime,
-    BaseModel,
     BeforeValidator,
-    ConfigDict,
     Field,
     create_model,
     model_validator,
@@ -19,16 +16,16 @@ from pydantic import (
 from pydantic.fields import FieldInfo
 
 from openskistats.models import SkiAreaModel
-from openskistats.openskimap_utils import load_openskimap_download_info
+from openskistats.public_data import (
+    OpenSkiMapSource as OpenSkiMapSource,
+)
+from openskistats.public_data import (
+    PublicDataModel,
+    create_openskimap_sources,
+)
 from openskistats.utils import get_data_directory
 
 SCHEMA_VERSION: Literal["1.0"] = "1.0"
-
-
-class PublicDataModel(BaseModel):
-    """Base configuration for models in the public JSON data contract."""
-
-    model_config = ConfigDict(extra="forbid", frozen=True)
 
 
 SKI_AREA_SUMMARY_SOURCE_FIELDS = (
@@ -148,31 +145,6 @@ def _validate_ski_area_summaries(value: Any) -> list[dict[str, Any]]:
     ]
 
 
-class OpenSkiMapSource(PublicDataModel):
-    """Provenance for one OpenSkiMap input dataset."""
-
-    name: Annotated[
-        Literal["ski_areas", "runs", "lifts"],
-        Field(description="Name of the OpenSkiMap source dataset."),
-    ]
-    url: Annotated[str, Field(description="Canonical URL of the source dataset.")]
-    last_modified: Annotated[
-        AwareDatetime,
-        Field(description="Time the source dataset was last modified."),
-    ]
-    retrieved_at: Annotated[
-        AwareDatetime,
-        Field(description="Time OpenSkiStats retrieved the source dataset."),
-    ]
-    checksum_sha256: Annotated[
-        str,
-        Field(
-            description="SHA-256 checksum of the stored compressed source file.",
-            pattern=r"^[0-9a-f]{64}$",
-        ),
-    ]
-
-
 class SkiAreaSummaryExport(PublicDataModel):
     """Self-describing document containing the public ski-area summary dataset."""
 
@@ -287,18 +259,7 @@ def create_ski_area_summary_export(
 ) -> SkiAreaSummaryExport:
     """Build and validate the self-describing public data document."""
     summary = get_ski_area_summary_frame(ski_areas)
-    download_info = load_openskimap_download_info()
-    sources = [
-        OpenSkiMapSource(
-            name=name,
-            url=info.url,
-            last_modified=datetime.fromisoformat(info.last_modified),
-            retrieved_at=datetime.fromisoformat(info.downloaded),
-            checksum_sha256=info.checksum_sha256,
-        )
-        for name in ("ski_areas", "runs", "lifts")
-        for info in [download_info[name]]
-    ]
+    sources = create_openskimap_sources(("ski_areas", "runs", "lifts"))
     return SkiAreaSummaryExport(
         schema_version=SCHEMA_VERSION,
         data_updated_at=max(source.last_modified for source in sources),
