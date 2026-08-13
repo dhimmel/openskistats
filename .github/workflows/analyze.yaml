@@ -88,8 +88,14 @@ jobs:
         openskistats analyze
         openskistats validate
         openskistats visualize
+    - name: Install frontend dependencies
+      run: pixi run frontend install
     - name: Quarto Render
       run: quarto render website
+    - name: Verify website resources
+      run: |
+        test -f data/webapp/data/ski-areas.json
+        test -f data/webapp/ski-areas/table.bundle.js
     - name: Publish data
       uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4
       if: github.ref == 'refs/heads/main'
