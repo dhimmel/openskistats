@@ -1,0 +1,617 @@
+{
+  "schema_version": "1.0",
+  "data_updated_at": "2025-12-21T23:39:52Z",
+  "license": "ODbL-1.0",
+  "attribution": "OpenSkiStats; source data from OpenSkiMap and OpenStreetMap contributors.",
+  "sources": [
+    {
+      "name": "ski_areas",
+      "url": "https://tiles.openskimap.org/geojson/ski_areas.geojson",
+      "last_modified": "2025-12-21T23:39:50Z",
+      "retrieved_at": "2025-12-22T15:17:34Z",
+      "checksum_sha256": "8c37568035358275c02d403ae02112e743c23a6f8e248b5fa878331042926b7e"
+    },
+    {
+      "name": "runs",
+      "url": "https://tiles.openskimap.org/geojson/runs.geojson",
+      "last_modified": "2025-12-21T23:39:52Z",
+      "retrieved_at": "2025-12-22T15:17:41Z",
+      "checksum_sha256": "2f8eca34cd7f2899bfa20bec987f823b68026cfb2ff50c7c3e51b7a9ff5b2e80"
+    },
+    {
+      "name": "lifts",
+      "url": "https://tiles.openskimap.org/geojson/lifts.geojson",
+      "last_modified": "2025-12-21T23:39:50Z",
+      "retrieved_at": "2025-12-22T15:17:20Z",
+      "checksum_sha256": "cfb7c94efa6fe690831c501b072bf0472a0de43667e47368bae6ce31ad57e362"
+    }
+  ],
+  "record_count": 2,
+  "record_schema": {
+    "$defs": {
+      "OpenSkiMapStatus": {
+        "description": "Operating status of a run, ski area, or lift according to OpenSkiMap.\nNull values can arise for elements without an OSM source. \"\nSee OpenSkiMap processing code at\n<https://github.com/russellporter/openskidata-processor/blob/bc168105f4d90c19817189ebe47e7bee20a2dcbc/src/transforms/Status.ts#L3-L8>.",
+        "enum": [
+          "proposed",
+          "planned",
+          "construction",
+          "operating",
+          "disused",
+          "abandoned",
+          "never_opened"
+        ],
+        "title": "OpenSkiMapStatus",
+        "type": "string"
+      },
+      "RunDifficultyConvention": {
+        "description": "Convention for the ski run difficulty coloring.\nSee <https://github.com/russellporter/openskidata-format/blob/e421ef0a0814437c362611e07cb43c32bac4172c/src/Run.ts#L113>.",
+        "enum": [
+          "north_america",
+          "europe",
+          "japan"
+        ],
+        "title": "RunDifficultyConvention",
+        "type": "string"
+      },
+      "SkiRunUsage": {
+        "enum": [
+          "connection",
+          "downhill",
+          "hike",
+          "nordic",
+          "playground",
+          "skitour",
+          "sled",
+          "snow_park"
+        ],
+        "title": "SkiRunUsage",
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "description": "Curated ski-area properties and metrics for public use.",
+    "properties": {
+      "ski_area_id": {
+        "description": "Unique OpenSkiMap identifier for a ski area.",
+        "examples": [
+          "fe8efce409aa78cfa20a1e6b5dd5e32369dbe687"
+        ],
+        "title": "Ski Area Id",
+        "type": "string"
+      },
+      "ski_area_name": {
+        "description": "Name of the ski area.",
+        "examples": [
+          "Black Mountain"
+        ],
+        "title": "Ski Area Name",
+        "type": "string"
+      },
+      "osm_status": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/OpenSkiMapStatus"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Operating status of the ski area according to OpenSkiMap. Null values arise for ski areas without an OSM source in ski_area_sources. See OpenSkiMap processing code at <https://github.com/russellporter/openskidata-processor/blob/bc168105f4d90c19817189ebe47e7bee20a2dcbc/src/transforms/Status.ts#L3-L8>."
+      },
+      "osm_run_convention": {
+        "$ref": "#/$defs/RunDifficultyConvention",
+        "description": "OpenSkiMap difficulty convention that determines how runs are colored."
+      },
+      "ski_area_uses": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/$defs/SkiRunUsage"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "OpenSkiMap usage types / activities for the ski area.",
+        "examples": [
+          "downhill"
+        ],
+        "title": "Ski Area Uses"
+      },
+      "country": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Country where the ski area is located.",
+        "examples": [
+          "United States"
+        ],
+        "title": "Country"
+      },
+      "country_code": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "ISO 3166-1 alpha-2 two-letter country code.",
+        "examples": [
+          "US",
+          "FR"
+        ],
+        "title": "Country Code"
+      },
+      "country_subdiv_code": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "ISO 3166-2 code for principal subdivision (e.g., province or state) of the country.",
+        "examples": [
+          "US-NH",
+          "JP-01",
+          "FR-ARA"
+        ],
+        "title": "Country Subdiv Code"
+      },
+      "region": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Region/subdivision/province/state where the ski area is located.",
+        "examples": [
+          "New Hampshire"
+        ],
+        "title": "Region"
+      },
+      "locality": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Locality/town/city where the ski area is located.",
+        "examples": [
+          "Jackson"
+        ],
+        "title": "Locality"
+      },
+      "latitude": {
+        "anyOf": [
+          {
+            "maximum": 90,
+            "minimum": -90,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Latitude of the ski area in decimal degrees. Latitude measures the distance north (positive values) or south (negative values) of the equator.",
+        "title": "Latitude"
+      },
+      "longitude": {
+        "anyOf": [
+          {
+            "maximum": 180,
+            "minimum": -180,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Longitude of the ski area in decimal degrees. Longitude measures the distance east (positive values) or west (negative values) of the prime meridian.",
+        "title": "Longitude"
+      },
+      "ski_area_websites": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "List of URLs for the ski area.",
+        "examples": [
+          "https://www.blackmt.com/"
+        ],
+        "title": "Ski Area Websites"
+      },
+      "ski_area_sources": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "List of sources for the ski area from OpenSkiMap.",
+        "examples": [
+          "https://www.openstreetmap.org/relation/2873910",
+          "https://www.openstreetmap.org/way/387976210",
+          "https://skimap.org/skiareas/view/17533"
+        ],
+        "title": "Ski Area Sources"
+      },
+      "wikidata_id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Wikidata identifier for the ski area. See <https://github.com/dhimmel/openskistats/issues/10> and <https://github.com/russellporter/openskimap.org/issues/153>.",
+        "examples": [
+          "Q5225725"
+        ],
+        "title": "Wikidata Id"
+      },
+      "run_count": {
+        "default": 0,
+        "description": "Number of downhill runs in the ski area with supported geometries.",
+        "minimum": 0,
+        "title": "Run Count",
+        "type": "integer"
+      },
+      "lift_count": {
+        "default": 0,
+        "description": "Number of operating lifts.",
+        "minimum": 0,
+        "title": "Lift Count",
+        "type": "integer"
+      },
+      "combined_vertical": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": 0,
+        "description": "Total combined vertical drop of the ski area in meters. If you skied every run in the ski area exactly once, this is the total vertical drop you would accumulate.",
+        "title": "Combined Vertical"
+      },
+      "combined_distance": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": 0,
+        "description": "Total distance of the ski area's runs in meters. If you skied every run in the ski area exactly once, this is the total distance you would accumulate.",
+        "title": "Combined Distance"
+      },
+      "vertical_drop": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": 0,
+        "description": "Vertical drop of the ski area in meters. Vertical drop is the difference in elevation between the highest and lowest points of the ski area's runs.",
+        "title": "Vertical Drop"
+      },
+      "min_elevation": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Base elevation of the ski area in meters computed as the lowest elevation along all runs.",
+        "title": "Min Elevation"
+      },
+      "max_elevation": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Peak elevation of the ski area in meters computed as the highest elevation along all runs.",
+        "title": "Max Elevation"
+      },
+      "solar_irradiation_season": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Average daily solar irradiation received by run segments over the course of a typical 121 day ski season in kilowatt-hours per square meter (kW/m²/day). The average is weighted by the vertical drop of each segment. This value measures solar irradiation by treating each run segment as a plane according to its latitude, longitude, elevation, bearing, and slope. Solar irradiance is computed using clear sky estimates for diffuse normal irradiance, global horizontal irradiance, and direct horizontal irradiance according to the Ineichen and Perez model with Linke turbidity.",
+        "title": "Solar Irradiation Season"
+      },
+      "bearing_mean": {
+        "anyOf": [
+          {
+            "exclusiveMaximum": 360,
+            "minimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "The mean bearing in degrees.",
+        "title": "Bearing Mean"
+      },
+      "bearing_alignment": {
+        "anyOf": [
+          {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Bearing alignment score, representing the concentration / consistency / cohesion of the bearings.",
+        "title": "Bearing Alignment"
+      },
+      "poleward_affinity": {
+        "anyOf": [
+          {
+            "maximum": 1,
+            "minimum": -1,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "The poleward affinity, representing the tendency of bearings to cluster towards the neatest pole (1.0) or equator (-1.0). Positive values indicate bearings cluster towards the pole of the hemisphere in which the ski area is located. Negative values indicate bearings cluster towards the equator.",
+        "title": "Poleward Affinity"
+      },
+      "eastward_affinity": {
+        "anyOf": [
+          {
+            "maximum": 1,
+            "minimum": -1,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "The eastern affinity, representing the tendency of bearings to cluster towards the east (1.0) or west (-1.0). Positive values indicate bearings cluster towards the east. Negative values indicate bearings cluster towards the west.",
+        "title": "Eastward Affinity"
+      },
+      "run_proportion_4_north": {
+        "anyOf": [
+          {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Proportion of vertical-drop-weighted run segments facing north in a four-cardinal-direction partition.",
+        "title": "Run Proportion 4 North"
+      },
+      "run_proportion_4_east": {
+        "anyOf": [
+          {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Proportion of vertical-drop-weighted run segments facing east in a four-cardinal-direction partition.",
+        "title": "Run Proportion 4 East"
+      },
+      "run_proportion_4_south": {
+        "anyOf": [
+          {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Proportion of vertical-drop-weighted run segments facing south in a four-cardinal-direction partition.",
+        "title": "Run Proportion 4 South"
+      },
+      "run_proportion_4_west": {
+        "anyOf": [
+          {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Proportion of vertical-drop-weighted run segments facing west in a four-cardinal-direction partition.",
+        "title": "Run Proportion 4 West"
+      },
+      "run_proportion_2_north": {
+        "anyOf": [
+          {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Proportion of vertical-drop-weighted run segments facing north rather than south in a two-direction partition.",
+        "title": "Run Proportion 2 North"
+      }
+    },
+    "required": [
+      "ski_area_id",
+      "ski_area_name",
+      "osm_status",
+      "osm_run_convention",
+      "ski_area_uses",
+      "country",
+      "country_code",
+      "country_subdiv_code",
+      "region",
+      "locality",
+      "latitude",
+      "longitude",
+      "ski_area_websites",
+      "ski_area_sources",
+      "wikidata_id",
+      "min_elevation",
+      "max_elevation",
+      "solar_irradiation_season",
+      "bearing_mean",
+      "bearing_alignment",
+      "poleward_affinity",
+      "eastward_affinity",
+      "run_proportion_4_north",
+      "run_proportion_4_east",
+      "run_proportion_4_south",
+      "run_proportion_4_west",
+      "run_proportion_2_north"
+    ],
+    "title": "SkiAreaSummary",
+    "type": "object"
+  },
+  "ski_areas": [
+    {
+      "ski_area_id": "28cb013693827a90d778603d8bb6bc0cfd3999c0",
+      "ski_area_name": "Whaleback Mountain",
+      "osm_status": "operating",
+      "osm_run_convention": "north_america",
+      "ski_area_uses": [
+        "downhill"
+      ],
+      "country": "United States",
+      "country_code": "US",
+      "country_subdiv_code": "US-NH",
+      "region": "New Hampshire",
+      "locality": "Enfield",
+      "latitude": 43.59768,
+      "longitude": -72.18255,
+      "ski_area_websites": [
+        "https://www.whaleback.com/"
+      ],
+      "ski_area_sources": [
+        "https://www.openstreetmap.org/way/252782489",
+        "https://skimap.org/skiareas/view/1078"
+      ],
+      "wikidata_id": "Q7990522",
+      "run_count": 33,
+      "lift_count": 4,
+      "combined_vertical": 1490.2,
+      "combined_distance": 7963.4,
+      "vertical_drop": 204.1,
+      "min_elevation": 344.7,
+      "max_elevation": 548.8,
+      "solar_irradiation_season": 2.338,
+      "bearing_mean": 22.0,
+      "bearing_alignment": 0.7611,
+      "poleward_affinity": 0.7055,
+      "eastward_affinity": 0.2857,
+      "run_proportion_4_north": 0.7016,
+      "run_proportion_4_east": 0.2297,
+      "run_proportion_4_south": 0.014,
+      "run_proportion_4_west": 0.0547,
+      "run_proportion_2_north": 0.9258
+    },
+    {
+      "ski_area_id": "dc24f332f3117625dc09479b5d10cbb31a592be4",
+      "ski_area_name": "Storrs Hill Ski Area",
+      "osm_status": "operating",
+      "osm_run_convention": "north_america",
+      "ski_area_uses": [
+        "downhill"
+      ],
+      "country": "United States",
+      "country_code": "US",
+      "country_subdiv_code": "US-NH",
+      "region": "New Hampshire",
+      "locality": "Lebanon",
+      "latitude": 43.6332,
+      "longitude": -72.25232,
+      "ski_area_websites": [
+        "https://skistorrshill.com/"
+      ],
+      "ski_area_sources": [
+        "https://www.openstreetmap.org/way/1090626629",
+        "https://skimap.org/skiareas/view/4118"
+      ],
+      "wikidata_id": null,
+      "run_count": 4,
+      "lift_count": 1,
+      "combined_vertical": 229.4,
+      "combined_distance": 1175.2,
+      "vertical_drop": 105.8,
+      "min_elevation": 164.1,
+      "max_elevation": 269.9,
+      "solar_irradiation_season": 2.199,
+      "bearing_mean": 7.4,
+      "bearing_alignment": 0.8682,
+      "poleward_affinity": 0.8611,
+      "eastward_affinity": 0.1113,
+      "run_proportion_4_north": 0.8034,
+      "run_proportion_4_east": 0.1417,
+      "run_proportion_4_south": 0.0,
+      "run_proportion_4_west": 0.0549,
+      "run_proportion_2_north": 1.0
+    }
+  ]
+}
