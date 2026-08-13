@@ -1,6 +1,6 @@
 .oss-table {
   color: var(--bs-body-color);
-  font-size: 0.88rem;
+  font-size: 0.78rem;
   min-width: 0;
   width: 100%;
 }
@@ -70,7 +70,7 @@
   border-collapse: separate;
   border-spacing: 0;
   margin: 0;
-  min-width: 2050px;
+  min-width: 1235px;
   table-layout: fixed;
   width: 100%;
 }
@@ -79,22 +79,23 @@
 .oss-table td {
   background: var(--bs-body-bg);
   border-bottom: 1px solid #d6d8db;
-  padding: 0.45rem 0.4rem;
+  line-height: 1.2;
+  padding: 0.3rem 0.25rem;
   text-align: center;
   vertical-align: middle;
 }
 
 .oss-table thead tr:first-child th {
-  background: #f1f3f5;
-  border-bottom: 2px solid #74787c;
-  font-size: 0.82rem;
+  background: var(--bs-body-bg);
+  border-bottom: 1px solid #74787c;
+  font-size: 0.72rem;
   letter-spacing: 0.02em;
-  padding-block: 0.35rem;
+  padding-block: 0.2rem;
 }
 
 .oss-table thead tr:last-child th {
   background: #f8f9fa;
-  padding: 0.35rem;
+  padding: 0.25rem;
 }
 
 .oss-table tbody tr:hover td {
@@ -142,12 +143,22 @@
   border: 1px solid #adb5bd;
   border-radius: 0.2rem;
   display: block;
-  font-size: 0.72rem;
-  margin: 0.3rem auto 0;
+  font-size: 0.66rem;
+  margin: 0.2rem auto 0;
   max-width: 100%;
   min-width: 0;
-  padding: 0.2rem 0.25rem;
+  padding: 0.12rem 0.18rem;
   width: 100%;
+}
+
+.oss-table-filter::placeholder {
+  color: transparent;
+  transition: color 120ms ease-in-out;
+}
+
+.oss-table th:hover .oss-table-filter::placeholder,
+.oss-table th:focus-within .oss-table-filter::placeholder {
+  color: #8b9298;
 }
 
 .oss-table-tooltip-trigger {
@@ -215,10 +226,10 @@
   color: white;
   display: inline-flex;
   flex-direction: column;
-  height: 3.2em;
+  height: 2.8em;
   justify-content: center;
   line-height: 1;
-  width: 3.2em;
+  width: 2.8em;
 }
 
 .oss-table-hemisphere {
@@ -237,15 +248,9 @@
   text-underline-offset: 3px;
 }
 
-.oss-table-percent {
-  display: block;
-  margin: -0.45rem -0.4rem;
-  padding: 0.45rem 0.4rem;
-}
-
 .oss-table-azimuth-arrow {
-  height: 32px;
-  width: 32px;
+  height: 26px;
+  width: 26px;
 }
 
 .oss-table-azimuth > span {
@@ -265,9 +270,9 @@
 }
 
 .oss-table-donut svg {
-  height: 3.5rem;
+  height: 2.75rem;
   transform: rotate(-90deg);
-  width: 3.5rem;
+  width: 2.75rem;
 }
 
 .oss-table-donut circle {
@@ -289,9 +294,9 @@
 
 .oss-table-rose img {
   display: block;
-  height: 58px;
+  height: 46px;
   margin: auto;
-  width: 58px;
+  width: 46px;
 }
 
 .oss-table-rose-tooltip {

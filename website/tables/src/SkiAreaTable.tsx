@@ -50,6 +50,7 @@ import type {
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends unknown, TValue> {
+    cellStyle?: (value: unknown) => CSSProperties;
     className?: string;
     filterPlaceholder?: string;
   }
@@ -325,18 +326,10 @@ function metricCell(
   };
 }
 
-function percentCell(diverging = false) {
+function percentCell() {
   return ({ getValue }: CellContext<SkiAreaSummary, unknown>) => {
     const value = getValue<number | null>();
-    const style =
-      value === null
-        ? undefined
-        : { backgroundColor: diverging ? divergingColor(value) : sequentialColor(value) };
-    return (
-      <span className="oss-table-percent" style={style}>
-        {formatPercent(value)}
-      </span>
-    );
+    return <span>{formatPercent(value)}</span>;
   };
 }
 
@@ -367,7 +360,7 @@ function createColumns(
     accessorKey: field,
     filterFn: numericFilter,
     header: header(label, description(field)),
-    minSize: 70,
+    minSize: 36,
     sortUndefined: "last",
     ...options,
     id: field,
@@ -382,16 +375,24 @@ function createColumns(
     cell: percentCell(),
     filterFn: percentFilter,
     header: header(label, description(field)),
-    minSize: 70,
+    minSize: 36,
     sortUndefined: "last",
     ...options,
     id: field,
-    meta: { filterPlaceholder: "Percent or range", ...options.meta },
+    meta: {
+      cellStyle: (value) =>
+        typeof value === "number"
+          ? { backgroundColor: sequentialColor(value) }
+          : {},
+      filterPlaceholder: "Percent or range",
+      ...options.meta,
+    },
   });
 
   return [
     {
-      header: "Ski Area",
+      header: "",
+      id: "ski-area-group",
       meta: { className: "oss-table-sticky" },
       columns: [
         {
@@ -414,8 +415,8 @@ function createColumns(
             `Distinct: ${formatNumber(aggregatesFrom(context)?.distinctCounts.ski_area_name ?? null)}`,
           header: header("Ski Area", description("ski_area_name")),
           id: "ski_area_name",
-          minSize: 170,
-          size: 190,
+          minSize: 110,
+          size: 130,
           sortDescFirst: false,
         },
         {
@@ -426,6 +427,7 @@ function createColumns(
     },
     {
       header: "Location",
+      meta: { className: "oss-table-border-left" },
       columns: [
         {
           accessorKey: "latitude",
@@ -434,7 +436,8 @@ function createColumns(
           header: header("ℍ φ", description("latitude")),
           id: "latitude",
           meta: { filterPlaceholder: "Latitude or hemisphere" },
-          minSize: 90,
+          minSize: 50,
+          size: 55,
           sortUndefined: "last",
         },
         {
@@ -446,7 +449,8 @@ function createColumns(
           header: header("Country", description("country")),
           id: "country",
           meta: { className: "oss-table-border-left", filterPlaceholder: "Name, code, or flag" },
-          minSize: 110,
+          minSize: 60,
+          size: 70,
           sortDescFirst: false,
           sortUndefined: "last",
         },
@@ -461,7 +465,8 @@ function createColumns(
             `Distinct: ${formatNumber(aggregatesFrom(context)?.distinctCounts.region ?? null)}`,
           header: header("Region", description("region")),
           id: "region",
-          minSize: 110,
+          minSize: 55,
+          size: 65,
           sortDescFirst: false,
           sortUndefined: "last",
         },
@@ -472,7 +477,8 @@ function createColumns(
             `Distinct: ${formatNumber(aggregatesFrom(context)?.distinctCounts.locality ?? null)}`,
           header: header("Locality", description("locality")),
           id: "locality",
-          minSize: 100,
+          minSize: 55,
+          size: 65,
           sortDescFirst: false,
           sortUndefined: "last",
         },
@@ -480,112 +486,148 @@ function createColumns(
     },
     {
       header: "Downhill Runs",
+      meta: { className: "oss-table-border-left" },
       columns: [
         numericColumn("run_count", "Runs", {
           cell: metricCell(fieldMaximum("run_count")),
           footer: (context) =>
             `Sum: ${formatNumber(aggregatesFrom(context)?.sums.run_count ?? null)}`,
           meta: { className: "oss-table-border-left" },
+          size: 40,
         }),
         numericColumn("lift_count", "Lifts", {
           cell: metricCell(fieldMaximum("lift_count")),
           footer: (context) =>
             `Sum: ${formatNumber(aggregatesFrom(context)?.sums.lift_count ?? null)}`,
+          size: 40,
         }),
         numericColumn("combined_vertical", "Vertical", {
           cell: metricCell(fieldMaximum("combined_vertical"), formatMeters),
           footer: (context) =>
             `Sum: ${formatMeters(aggregatesFrom(context)?.sums.combined_vertical ?? null)}`,
-          minSize: 85,
+          minSize: 55,
+          size: 65,
         }),
         numericColumn("min_elevation", "Base Elev", {
           cell: metricCell(fieldMaximum("min_elevation"), formatMeters),
           footer: (context) =>
             `Min: ${formatMeters(aggregatesFrom(context)?.minimumElevation ?? null)}`,
-          minSize: 85,
+          minSize: 50,
+          size: 55,
         }),
         numericColumn("max_elevation", "Peak Elev", {
           cell: metricCell(fieldMaximum("max_elevation"), formatMeters),
           footer: (context) =>
             `Max: ${formatMeters(aggregatesFrom(context)?.maximumElevation ?? null)}`,
-          minSize: 85,
+          minSize: 50,
+          size: 55,
         }),
         numericColumn("vertical_drop", "Drop", {
           cell: metricCell(fieldMaximum("vertical_drop"), formatMeters),
           footer: (context) =>
             `Sum: ${formatMeters(aggregatesFrom(context)?.sums.vertical_drop ?? null)}`,
-          minSize: 80,
+          minSize: 50,
+          size: 55,
         }),
         numericColumn("solar_irradiation_season", "Sunlight", {
           cell: metricCell(fieldMaximum("solar_irradiation_season"), (value) =>
             formatNumber(value, 1),
           ),
-          minSize: 80,
+          minSize: 45,
+          size: 50,
         }),
       ],
     },
     {
       header: "Mean Orientation",
+      meta: { className: "oss-table-border-left" },
       columns: [
         numericColumn("bearing_mean", "Azimuth", {
           cell: AzimuthCell,
           meta: { className: "oss-table-border-left" },
-          minSize: 80,
+          minSize: 45,
+          size: 50,
         }),
         percentColumn("bearing_alignment", "Alignment", {
           cell: DonutCell,
           footer: (context) =>
             `Wtd. Mean: ${formatPercent(aggregatesFrom(context)?.weightedMeans.bearing_alignment ?? null)}`,
-          minSize: 90,
+          meta: { cellStyle: () => ({}) },
+          minSize: 55,
+          size: 65,
         }),
         percentColumn("poleward_affinity", "Poleward", {
-          cell: percentCell(true),
+          cell: percentCell(),
           footer: (context) =>
             `Wtd. Mean: ${formatPercent(aggregatesFrom(context)?.weightedMeans.poleward_affinity ?? null)}`,
-          minSize: 85,
+          meta: {
+            cellStyle: (value) =>
+              typeof value === "number"
+                ? { backgroundColor: divergingColor(value) }
+                : {},
+          },
+          minSize: 55,
+          size: 60,
         }),
         percentColumn("eastward_affinity", "Eastward", {
-          cell: percentCell(true),
+          cell: percentCell(),
           footer: (context) =>
             `Wtd. Mean: ${formatPercent(aggregatesFrom(context)?.weightedMeans.eastward_affinity ?? null)}`,
-          minSize: 85,
+          meta: {
+            cellStyle: (value) =>
+              typeof value === "number"
+                ? { backgroundColor: divergingColor(value) }
+                : {},
+          },
+          minSize: 55,
+          size: 60,
         }),
       ],
     },
     {
       header: "Cardinal Directions",
+      meta: { className: "oss-table-border-left" },
       columns: [
         percentColumn("run_proportion_4_north", "N₄", {
           footer: (context) =>
             `Wtd. Mean: ${formatPercent(aggregatesFrom(context)?.weightedMeans.run_proportion_4_north ?? null)}`,
           meta: { className: "oss-table-border-left" },
+          size: 40,
         }),
         percentColumn("run_proportion_4_east", "E₄", {
           footer: (context) =>
             `Wtd. Mean: ${formatPercent(aggregatesFrom(context)?.weightedMeans.run_proportion_4_east ?? null)}`,
+          size: 40,
         }),
         percentColumn("run_proportion_4_south", "S₄", {
           footer: (context) =>
             `Wtd. Mean: ${formatPercent(aggregatesFrom(context)?.weightedMeans.run_proportion_4_south ?? null)}`,
+          size: 40,
         }),
         percentColumn("run_proportion_4_west", "W₄", {
           footer: (context) =>
             `Wtd. Mean: ${formatPercent(aggregatesFrom(context)?.weightedMeans.run_proportion_4_west ?? null)}`,
+          size: 40,
         }),
       ],
     },
     {
-      header: "North / South",
+      header: "",
+      id: "north-south-group",
+      meta: { className: "oss-table-border-left" },
       columns: [
         percentColumn("run_proportion_2_north", "N₂", {
           footer: (context) =>
             `Wtd. Mean: ${formatPercent(aggregatesFrom(context)?.weightedMeans.run_proportion_2_north ?? null)}`,
           meta: { className: "oss-table-border-left" },
+          size: 40,
         }),
       ],
     },
     {
-      header: "Rose",
+      header: "",
+      id: "rose-group",
+      meta: { className: "oss-table-border-left" },
       columns: [
         {
           cell: RoseCell,
@@ -599,7 +641,8 @@ function createColumns(
           ),
           id: "rose",
           meta: { className: "oss-table-border-left" },
-          minSize: 75,
+          minSize: 50,
+          size: 55,
         },
       ],
     },
@@ -629,9 +672,9 @@ export function SkiAreaTable({ document }: { document: SkiAreaDocument }) {
     columns,
     data: document.ski_areas,
     defaultColumn: {
-      maxSize: 260,
-      minSize: 60,
-      size: 90,
+      maxSize: 190,
+      minSize: 36,
+      size: 55,
     },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -722,6 +765,7 @@ export function SkiAreaTable({ document }: { document: SkiAreaDocument }) {
                     <td
                       className={`${cell.column.columnDef.meta?.className ?? ""} ${cell.column.id === "ski_area_name" ? "oss-table-sticky" : ""}`}
                       key={cell.id}
+                      style={cell.column.columnDef.meta?.cellStyle?.(cell.getValue())}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
