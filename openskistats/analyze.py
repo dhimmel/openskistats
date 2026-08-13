@@ -15,6 +15,7 @@ from openskistats.bearing import (
     get_bearing_summary_stats,
     get_difficulty_color_to_bearing_bin_counts,
 )
+from openskistats.lift_export import export_lift_summary_json
 from openskistats.models import (
     BearingStatsModel,
     OpenSkiMapStatus,
@@ -87,10 +88,21 @@ _aggregate_run_segment_sunlight_exprs = {
 }
 
 
-def process_and_export_lifts() -> None:
-    """
-    Process and export lifts from OpenSkiMap.
-    """
+_aggregate_lift_coordinates_exprs = {
+    "coordinate_count": pl.len(),
+    "segment_count": pl.count("segment_hash"),
+    "horizontal_length": pl.col("distance_horizontal").sum(),
+    "inclined_length": pl.col("distance_3d").sum(),
+    "latitude": pl.col("latitude").mean(),
+    "longitude": pl.col("longitude").mean(),
+    "min_elevation": pl.col("elevation").min(),
+    "max_elevation": pl.col("elevation").max(),
+    "vertical_rise": pl.max("elevation") - pl.min("elevation"),
+}
+
+
+def process_lifts() -> pl.DataFrame:
+    """Process OpenSkiMap lift properties and coordinates."""
     lifts = load_lifts_from_download_pl()
     coords_df = (
         lifts.lazy()
@@ -109,12 +121,12 @@ def process_and_export_lifts() -> None:
         )
         .group_by("lift_id")
         .agg(
-            **_aggregate_run_coordinates_exprs,
+            **_aggregate_lift_coordinates_exprs,
             lift_coordinates=pl.struct(pl.exclude("lift_id")).implode(),
         )
         .collect()
     )
-    lifts = (
+    return (
         lifts.drop("lift_coordinates")
         .join(coords_df, on="lift_id", how="left")
         .with_columns(
@@ -123,9 +135,16 @@ def process_and_export_lifts() -> None:
         )
         .sort("lift_id")
     )
+
+
+def process_and_export_lifts() -> pl.DataFrame:
+    """Process lifts and export the Parquet and public JSON datasets."""
+    lifts = process_lifts()
     lifts_path = get_lifts_parquet_path()
     logging.info(f"Writing {len(lifts):,} lifts to {lifts_path}")
     lifts.write_parquet(lifts_path)
+    export_lift_summary_json(lifts)
+    return lifts
 
 
 def process_and_export_runs() -> None:
