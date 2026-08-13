@@ -3,7 +3,7 @@
 /node_modules/
 **/*.quarto_ipynb
 *.quarto_ipynb
+*.quarto_ipynb_*
 story/index_files
 _extensions
-/ski-areas/table.bundle.js
-/ski-areas/table.bundle.js.map
+/site_libs/

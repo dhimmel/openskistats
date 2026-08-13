@@ -2,9 +2,6 @@ project:
   type: website
   output-dir: ../data/webapp
   pre-render: pixi run frontend build
-  resources:
-    - ski-areas/table.bundle.js
-    - ski-areas/table.bundle.js.map
 website:
   title: "OpenSkiStats"
   search: false
