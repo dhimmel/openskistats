@@ -26,31 +26,31 @@ openskistats = { path = ".", editable = true }
 beautifulsoup4 = "==4.15.0"
 folium = "==0.20.0"
 # https://github.com/machow/reactable-py/issues/29
-great-tables = "==0.22.0" 
+great-tables = "==0.23.0" 
 jupyter = "==1.1.1"
 matplotlib = "==3.11.1"
 mizani = "==0.14.4"
 networkx = "==3.6.1"
-numpy = "==2.4.6"
+numpy = "==2.5.2"
 osmnx = "==2.1.1"
 patito = "==0.8.6"
 plotly = "==6.9.0"
 plotnine = "==0.16.0a11"
-polars= "==1.43.0"
+polars= "==1.43.2"
 pvlib= "==0.15.2"
-pyarrow = "==25.0.0"
+pyarrow = "==25.0.1"
 reactable = "==0.1.6"
 requests = "==2.34.2"
 shapely = "==2.1.2"
 rich= "==15.0.0"
-typer = "==0.27.0"
+typer = "==0.27.1"
 
 [tool.pixi.feature.dev.pypi-dependencies]
 mypy = "==2.3.0"
-prek = "==0.4.11"
+prek = "==0.4.13"
 pytest = "==9.1.1"
 types-PyYAML = "==6.0.12.20260724"
-types-shapely = "==2.1.0.20260630"
+types-shapely = "==2.1.0.20260728"
 
 [tool.pixi.environments]
 default = { features = ["dev"], solve-group = "default" }
