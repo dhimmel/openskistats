@@ -35,9 +35,16 @@ Then run the following commands:
 # install the pixi environment in pixi.lock
 pixi install
 
+# install the JavaScript dependencies for the interactive tables
+pixi run frontend install
+
 # install the pre-commit git hooks
 prek install
 ```
+
+Pixi pins Node and pnpm, while `website/package.json` and `website/pnpm-lock.yaml` pin the JavaScript packages.
+`pixi run frontend install` is required before rendering the website,
+since Quarto builds the table bundle as a pre-render step.
 
 Install the [quarto](https://quarto.org) extensions:
 
@@ -80,10 +87,16 @@ openskistats visualize
 # run python test suite
 pytest
 
+# run the frontend test suite and typechecking
+pixi run frontend test
+pixi run frontend typecheck
+
 # run the full pre-commit suite
 prek run --all-files
 ```
 
+Rendering the website runs `pixi run frontend build` as a Quarto pre-render step,
+which bundles `website/tables/` to `data/webapp/ski-areas/table.bundle.js`.
 To render the website, use either:
 
 ```shell
