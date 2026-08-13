@@ -1,8 +1,7 @@
 ---
-pagetitle: Ski Areas
-title: Ski Areas
-subtitle: Browse an interactive table of the world's ski areas.
-image: https://github.com/dhimmel/openskistats/raw/assets/assets/preview-table.png
+pagetitle: Lifts
+title: Lifts
+subtitle: Browse an interactive table of the world's ski lifts.
 engine: jupyter
 execute:
   echo: false
@@ -11,9 +10,9 @@ format:
     code-fold: true
 ---
 
-Explore statistics on all named ski areas in the world.
-The table initially shows ski areas with at least 3 runs and 50 meters of cumulative vertical drop across their runs.
-Clear the initial filters to inspect the complete named-ski-area dataset.
+Explore statistics on all named ski lifts in the world.
+The table initially shows lifts that OpenSkiMap records as operating.
+Clear the initial filter to inspect abandoned, proposed, and other lifts.
 The underlying data is provided by [OpenSkiMap](https://openskimap.org) and [OpenStreetMap](https://www.openstreetmap.org) with statistics computed by <https://github.com/dhimmel/openskistats>.
 
 ::: {.callout-caution}
@@ -24,8 +23,8 @@ Feedback is welcome via [GitHub issues](https://github.com/dhimmel/openskistats/
 
 ::: {.column-screen-inset}
 <div
-  data-oss-table="ski-areas"
-  data-source="/data/ski-areas.json"
+  data-oss-table="lifts"
+  data-source="/data/lifts.json"
   aria-live="polite"
 ></div>
 <script type="module" src="/common/table.bundle.js"></script>
@@ -40,25 +39,20 @@ Numeric columns support these filters:
 - `[10, 20]` for 10 ≤ value ≤ 20
 - `(10, 20)` for 10 < value < 20
 - `(, 5]` for value ≤ 5
-- `80` (not 0.8) for a percent value ≥ 80%.
 
-Ski run difficulty is collapsed and colored as follows:
+Text columns match any row containing what you type.
+The ski-area filter matches any of the ski areas a lift serves.
 
-```{python}
-#| output: asis
-from IPython.display import Markdown
-from openskistats.models import SkiRunDifficulty
+`Ride` is the typical ride duration in minutes and seconds, and `Capacity` is the transport capacity in people per hour.
+Both are recorded by OpenStreetMap contributors and are missing for many lifts.
 
-Markdown(SkiRunDifficulty.markdown_description(mode="list"))
-```
-
-### Source data 
+### Source data
 
 ```{python}
 from IPython.display import Markdown
 from openskistats.openskimap_utils import load_openskimap_download_info
 
-info = load_openskimap_download_info()["ski_areas"]
+info = load_openskimap_download_info()["lifts"]
 date_str = info.last_modified.split("T")[0]
 Markdown(f"OpenSkiMap data is from {date_str}.")
 ```

@@ -39,6 +39,19 @@ import {
   MISSING_VALUE,
 } from "./formatters";
 import {
+  columnMaximum,
+  CountryCell,
+  DebouncedInput,
+  footerStat,
+  header,
+  HeaderLabel,
+  interpolateColor,
+  LatitudeCell,
+  metricCell,
+  sequentialColor,
+  textCell,
+} from "./table-ui";
+import {
   calculateFilteredAggregates,
   type FilteredAggregates,
 } from "./table-core";
@@ -47,18 +60,6 @@ import type {
   SkiAreaRecordSchema,
   SkiAreaSummary,
 } from "./types";
-
-declare module "@tanstack/react-table" {
-  interface ColumnMeta<TData extends unknown, TValue> {
-    cellStyle?: (value: unknown) => CSSProperties;
-    className?: string;
-    filterPlaceholder?: string;
-  }
-
-  interface TableMeta<TData extends unknown> {
-    aggregates: FilteredAggregates;
-  }
-}
 
 const numericFilter: FilterFn<SkiAreaSummary> = (row, columnId, value) =>
   matchesNumericFilter(row.getValue<number | null>(columnId), value);
@@ -77,132 +78,6 @@ function fieldDescription(
   field: keyof SkiAreaSummary,
 ): string | undefined {
   return schema.properties[field]?.description;
-}
-
-function HeaderLabel({
-  description,
-  focusable = true,
-  label,
-}: {
-  description?: string;
-  focusable?: boolean;
-  label: ReactNode;
-}) {
-  if (!description) {
-    return label;
-  }
-  return (
-    <span className="oss-table-tooltip-trigger" tabIndex={focusable ? 0 : undefined}>
-      {label}
-      <span className="oss-table-tooltip" role="tooltip">
-        {description}
-      </span>
-    </span>
-  );
-}
-
-function header(
-  label: ReactNode,
-  description?: string,
-): (context: HeaderContext<SkiAreaSummary, unknown>) => ReactNode {
-  return ({ column }) => (
-    <button
-      aria-label={`Sort by ${column.columnDef.id ?? "column"}`}
-      className="oss-table-sort-button"
-      disabled={!column.getCanSort()}
-      onClick={column.getToggleSortingHandler()}
-      type="button"
-    >
-      <HeaderLabel description={description} focusable={false} label={label} />
-      {{ asc: "▲", desc: "▼" }[column.getIsSorted() as string] ?? null}
-    </button>
-  );
-}
-
-function DebouncedInput({
-  ariaLabel,
-  onChange,
-  placeholder,
-  value: externalValue,
-}: {
-  ariaLabel: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  value: unknown;
-}) {
-  const [value, setValue] = useState(String(externalValue ?? ""));
-
-  useEffect(() => {
-    setValue(String(externalValue ?? ""));
-  }, [externalValue]);
-
-  useEffect(() => {
-    const timeout = window.setTimeout(() => onChange(value), 200);
-    return () => window.clearTimeout(timeout);
-  }, [onChange, value]);
-
-  return (
-    <input
-      aria-label={ariaLabel}
-      className="oss-table-filter"
-      onChange={(event: ChangeEvent<HTMLInputElement>) => setValue(event.target.value)}
-      placeholder={placeholder ?? "Filter…"}
-      type="text"
-      value={value}
-    />
-  );
-}
-
-function textCell(value: string | null): ReactNode {
-  return value ?? MISSING_VALUE;
-}
-
-/**
- * Render a footer aggregate as a muted label above its value.
- * Stacking keeps narrow metric columns legible without widening the summary row.
- */
-function footerStat(label: string, value: string): ReactNode {
-  return (
-    <span className="oss-table-footer-stat">
-      <span className="oss-table-footer-label">{label}</span>
-      <span className="oss-table-footer-value">{value}</span>
-    </span>
-  );
-}
-
-function CountryCell({ row }: CellContext<SkiAreaSummary, unknown>) {
-  const country = row.original.country;
-  const flag = countryCodeToFlag(row.original.country_code);
-  if (country === null && flag === null) {
-    return MISSING_VALUE;
-  }
-  return (
-    <span className="oss-table-country">
-      {flag && <span aria-hidden="true">{flag}</span>}
-      {country && <span>{country}</span>}
-    </span>
-  );
-}
-
-function LatitudeCell({ getValue }: CellContext<SkiAreaSummary, unknown>) {
-  const latitude = getValue<number | null>();
-  if (latitude === null) {
-    return MISSING_VALUE;
-  }
-  const intensity = Math.round((Math.abs(latitude) / 90) * 255);
-  const background = `rgb(${255 - intensity}, ${255 - intensity}, ${255 - intensity})`;
-  return (
-    <span
-      aria-label={`${Math.abs(latitude).toFixed(1)} degrees ${latitude >= 0 ? "north" : "south"}`}
-      className="oss-table-latitude"
-      style={{ "--oss-latitude-background": background } as CSSProperties}
-    >
-      <span aria-hidden="true" className="oss-table-hemisphere">
-        {latitude >= 0 ? "ℕ" : "𝕊"}
-      </span>
-      <span>{Math.abs(latitude).toFixed(1)}°</span>
-    </span>
-  );
 }
 
 function AzimuthCell({ getValue }: CellContext<SkiAreaSummary, unknown>) {
@@ -315,37 +190,10 @@ function RoseCell({ row }: CellContext<SkiAreaSummary, unknown>) {
   );
 }
 
-function interpolateColor(start: [number, number, number], end: [number, number, number], value: number) {
-  const amount = Math.min(1, Math.max(0, value));
-  return `rgb(${start.map((channel, index) => Math.round(channel + (end[index] - channel) * amount)).join(", ")})`;
-}
-
-function sequentialColor(value: number) {
-  return interpolateColor([255, 255, 255], [161, 0, 191], value);
-}
-
 function divergingColor(value: number) {
   return value <= 0
     ? interpolateColor([232, 146, 0], [255, 255, 255], value + 1)
     : interpolateColor([255, 255, 255], [0, 125, 191], value);
-}
-
-function metricCell(
-  maximum: number,
-  formatter: (value: number | null) => string = formatNumber,
-) {
-  return ({ getValue }: CellContext<SkiAreaSummary, unknown>) => {
-    const value = getValue<number | null>();
-    const style =
-      value === null || maximum <= 0
-        ? undefined
-        : ({ "--oss-metric-color": sequentialColor(value / maximum) } as CSSProperties);
-    return (
-      <span className="oss-table-metric" style={style}>
-        {formatter(value)}
-      </span>
-    );
-  };
 }
 
 function percentCell() {
@@ -355,17 +203,10 @@ function percentCell() {
   };
 }
 
-function maximum(data: readonly SkiAreaSummary[], field: keyof SkiAreaSummary) {
-  return Math.max(
-    0,
-    ...data.flatMap((row) =>
-      typeof row[field] === "number" ? [row[field] as number] : [],
-    ),
-  );
-}
-
-function aggregatesFrom(context: { table: { options: { meta?: { aggregates: FilteredAggregates } } } }) {
-  return context.table.options.meta?.aggregates;
+function aggregatesFrom(context: {
+  table: { options: { meta?: { aggregates: unknown } } };
+}): FilteredAggregates | undefined {
+  return context.table.options.meta?.aggregates as FilteredAggregates | undefined;
 }
 
 function createColumns(
@@ -373,7 +214,7 @@ function createColumns(
   schema: SkiAreaRecordSchema,
 ): ColumnDef<SkiAreaSummary, unknown>[] {
   const description = (field: keyof SkiAreaSummary) => fieldDescription(schema, field);
-  const fieldMaximum = (field: keyof SkiAreaSummary) => maximum(data, field);
+  const fieldMaximum = (field: keyof SkiAreaSummary) => columnMaximum(data, field);
   const numericColumn = (
     field: keyof SkiAreaSummary,
     label: ReactNode,

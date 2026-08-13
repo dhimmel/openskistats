@@ -387,3 +387,13 @@
     flex-direction: column;
   }
 }
+
+.oss-table-ski-areas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.oss-table-boolean-unknown {
+  color: #adb5bd;
+}
