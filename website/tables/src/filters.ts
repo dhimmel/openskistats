@@ -152,6 +152,22 @@ export function meetsInitialInclusionFilters(
 }
 
 /**
+ * Selections are looked up once per filtered row, so a large one is indexed
+ * rather than scanned. The array identity is stable while the filter is
+ * unchanged, which makes it a sound cache key.
+ */
+const selectionSets = new WeakMap<object, Set<unknown>>();
+
+function selectionSet(filterValue: unknown[]): Set<unknown> {
+  let set = selectionSets.get(filterValue);
+  if (set === undefined) {
+    set = new Set(filterValue.map((entry) => entry ?? null));
+    selectionSets.set(filterValue, set);
+  }
+  return set;
+}
+
+/**
  * Match when a value is one of the facet values selected in a value picker.
  *
  * `null` and `undefined` are treated alike so that a column's blank option
@@ -161,6 +177,5 @@ export function matchesSetFilter(value: unknown, filterValue: unknown): boolean 
   if (!Array.isArray(filterValue) || filterValue.length === 0) {
     return true;
   }
-  const target = value === undefined ? null : value;
-  return filterValue.some((entry) => (entry === undefined ? null : entry) === target);
+  return selectionSet(filterValue).has(value ?? null);
 }

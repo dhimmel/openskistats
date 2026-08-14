@@ -17,6 +17,8 @@ declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends unknown, TValue> {
     cellStyle?: (value: unknown) => CSSProperties;
     className?: string;
+    /** Order a value picker's options: by descending count, or by label. */
+    facetSort?: "count" | "label";
     /** Header control to render: a text box by default, or a value picker. */
     filterVariant?: "text" | "faceted";
     filterPlaceholder?: string;
@@ -249,19 +251,26 @@ export function FacetedFilter<TData>({
   const selectedSet = new Set(selected);
   const facets = column.getFacetedUniqueValues();
 
-  // Most frequent first, since that is the useful end of a long tail.
+  // Counts rank a category's long tail usefully, but an identity column such
+  // as a name is easier to scan alphabetically.
+  const byLabel = column.columnDef.meta?.facetSort === "label";
   const options = useMemo(
     () =>
       [...facets.entries()]
         .map(([value, count]) => ({ count, label: facetOptionLabel(value), value }))
-        .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label)),
-    [facets],
+        .sort((a, b) =>
+          byLabel
+            ? a.label.localeCompare(b.label)
+            : b.count - a.count || a.label.localeCompare(b.label),
+        ),
+    [byLabel, facets],
   );
   const needle = query.trim().toLocaleLowerCase();
   const matches = needle
     ? options.filter((option) => option.label.toLocaleLowerCase().includes(needle))
     : options;
   const shown = matches.slice(0, MAX_FACET_OPTIONS);
+  const showCounts = options.some((option) => option.count > 1);
 
   const reposition = () => {
     const rect = triggerRef.current?.getBoundingClientRect();
@@ -381,7 +390,9 @@ export function FacetedFilter<TData>({
                     type="checkbox"
                   />
                   <span className="oss-table-facet-value">{label}</span>
-                  <span className="oss-table-facet-count">{formatNumber(count)}</span>
+                  {showCounts && (
+                    <span className="oss-table-facet-count">{formatNumber(count)}</span>
+                  )}
                 </label>
               ))
             )}

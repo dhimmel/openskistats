@@ -206,7 +206,7 @@ function createColumns(
               {getValue<string>()}
             </a>
           ),
-          filterFn: "includesString",
+          filterFn: setFilter,
           footer: (context) =>
             footerStat(
               "Lifts",
@@ -214,7 +214,7 @@ function createColumns(
             ),
           header: header("Lift", description("lift_name")),
           id: "lift_name",
-          meta: { filterPlaceholder: "Text" },
+          meta: { facetSort: "label", filterVariant: "faceted" },
           minSize: 140,
           size: 165,
           sortDescFirst: false,

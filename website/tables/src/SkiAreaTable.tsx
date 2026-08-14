@@ -1,6 +1,8 @@
 import {
   flexRender,
   getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
@@ -25,12 +27,11 @@ import {
 } from "react";
 
 import {
-  countryCodeToFlag,
   INITIAL_COLUMN_FILTERS,
-  matchesCountryFilter,
   matchesLatitudeFilter,
   matchesNumericFilter,
   matchesPercentFilter,
+  matchesSetFilter,
 } from "./filters";
 import {
   formatMeters,
@@ -42,6 +43,7 @@ import {
   columnMaximum,
   CountryCell,
   DebouncedInput,
+  FacetedFilter,
   footerStat,
   header,
   HeaderLabel,
@@ -67,8 +69,9 @@ const numericFilter: FilterFn<SkiAreaSummary> = (row, columnId, value) =>
 const percentFilter: FilterFn<SkiAreaSummary> = (row, columnId, value) =>
   matchesPercentFilter(row.getValue<number | null>(columnId), value);
 
-const countryFilter: FilterFn<SkiAreaSummary> = (row, _columnId, value) =>
-  matchesCountryFilter(row.original, value);
+/** Keep rows whose value was selected in a column's value picker. */
+const setFilter: FilterFn<SkiAreaSummary> = (row, columnId, value) =>
+  matchesSetFilter(row.getValue(columnId), value);
 
 const latitudeFilter: FilterFn<SkiAreaSummary> = (row, columnId, value) =>
   matchesLatitudeFilter(row.getValue<number | null>(columnId), value);
@@ -279,8 +282,10 @@ function createColumns(
               "Distinct",
               formatNumber(aggregatesFrom(context)?.distinctCounts.ski_area_name ?? null),
             ),
+          filterFn: setFilter,
           header: header("Ski Area", description("ski_area_name")),
           id: "ski_area_name",
+          meta: { facetSort: "label", filterVariant: "faceted" },
           minSize: 140,
           size: 160,
           sortDescFirst: false,
@@ -298,7 +303,7 @@ function createColumns(
         {
           accessorKey: "country",
           cell: CountryCell,
-          filterFn: countryFilter,
+          filterFn: setFilter,
           footer: (context) =>
             footerStat(
               "Distinct",
@@ -306,7 +311,7 @@ function createColumns(
             ),
           header: header("Country", description("country")),
           id: "country",
-          meta: { className: "oss-table-border-left", filterPlaceholder: "Name, code, or flag" },
+          meta: { className: "oss-table-border-left", filterVariant: "faceted" },
           minSize: 70,
           size: 85,
           sortDescFirst: false,
@@ -324,8 +329,10 @@ function createColumns(
               "Distinct",
               formatNumber(aggregatesFrom(context)?.distinctCounts.region ?? null),
             ),
+          filterFn: setFilter,
           header: header("Region", description("region")),
           id: "region",
+          meta: { filterVariant: "faceted" },
           minSize: 65,
           size: 85,
           sortDescFirst: false,
@@ -339,8 +346,10 @@ function createColumns(
               "Distinct",
               formatNumber(aggregatesFrom(context)?.distinctCounts.locality ?? null),
             ),
+          filterFn: setFilter,
           header: header("Locality", description("locality")),
           id: "locality",
+          meta: { filterVariant: "faceted" },
           minSize: 65,
           size: 85,
           sortDescFirst: false,
@@ -601,6 +610,8 @@ export function SkiAreaTable({ document }: { document: SkiAreaDocument }) {
       size: 55,
     },
     getCoreRowModel: getCoreRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -667,14 +678,20 @@ export function SkiAreaTable({ document }: { document: SkiAreaDocument }) {
                         )}
                     {!headerCell.isPlaceholder &&
                       headerCell.colSpan === 1 &&
-                      headerCell.column.getCanFilter() && (
+                      headerCell.column.getCanFilter() &&
+                      (headerCell.column.columnDef.meta?.filterVariant === "faceted" ? (
+                        <FacetedFilter
+                          ariaLabel={`Filter ${headerCell.column.id}`}
+                          column={headerCell.column}
+                        />
+                      ) : (
                         <DebouncedInput
                           ariaLabel={`Filter ${headerCell.column.id}`}
                           onChange={headerCell.column.setFilterValue}
                           placeholder={headerCell.column.columnDef.meta?.filterPlaceholder}
                           value={headerCell.column.getFilterValue()}
                         />
-                      )}
+                      ))}
                   </th>
                 ))}
               </tr>
