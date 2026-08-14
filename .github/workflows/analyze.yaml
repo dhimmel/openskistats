@@ -81,6 +81,17 @@ jobs:
         # overwriting the cache key is not permitted, hence append the run_id on save
         # https://github.com/actions/cache/issues/342#issuecomment-673371329
         key: openskimap-${{ github.run_id }}
+    - name: Cache ski roses
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+      with:
+        path: |
+          data/openskistats/ski-area-rose-fingerprints.json
+          data/webapp/ski-areas/roses-preview
+          data/webapp/ski-areas/roses-full
+          data/webapp/ski-areas/roses-openskimap
+        # Fingerprints decide which restored roses remain reusable.
+        key: ski-roses-${{ github.sha }}-${{ hashFiles('data/openskimap/*.xz') }}
+        restore-keys: ski-roses-
     - name: Python Analysis
       env:
         OPENSKISTATS_SOLAR_SEGMENT_COUNT: ${{ steps.inputs.outputs.solar_segment_count }}

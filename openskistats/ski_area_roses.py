@@ -1,3 +1,5 @@
+import hashlib
+import json
 import logging
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
@@ -17,6 +19,36 @@ from openskistats.plot import (
 )
 from openskistats.utils import get_data_directory
 
+ROSE_RENDER_VERSION = 1
+"""Increment when a renderer change should invalidate local rose fingerprints."""
+
+ROSE_INFO_FIELDS = (
+    "ski_area_id",
+    "ski_area_name",
+    "osm_run_convention",
+    "run_count",
+    "lift_count",
+    "combined_vertical",
+    "poleward_affinity",
+    "eastward_affinity",
+    "min_elevation",
+    "max_elevation",
+    "bearing_mean",
+    "bearing_alignment",
+    "latitude",
+    "longitude",
+)
+
+ROSE_BEARING_FIELDS = (
+    "num_bins",
+    "bin_center",
+    "bin_count",
+    "bin_count_other",
+    "bin_count_easy",
+    "bin_count_intermediate",
+    "bin_count_advanced",
+)
+
 
 def get_display_ski_area_filters() -> list[pl.Expr]:
     """Ski area filters to produce a subset of ski areas for display."""
@@ -27,44 +59,103 @@ def get_display_ski_area_filters() -> list[pl.Expr]:
     ]
 
 
+def _get_ski_area_rose_fingerprint(
+    info: dict[str, Any], bearing_pl: pl.DataFrame
+) -> str:
+    """Fingerprint the inputs that determine all rose variants for a ski area."""
+    payload = {
+        "render_version": ROSE_RENDER_VERSION,
+        "info": {field: info[field] for field in ROSE_INFO_FIELDS},
+        "bearings": bearing_pl.to_dicts(),
+    }
+    serialized = json.dumps(
+        payload,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    )
+    return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
+
+
 def create_ski_area_roses(overwrite: bool = False) -> None:
     """
     Export ski area roses to SVG for display.
     """
-    directory = get_data_directory().joinpath("webapp", "ski-areas")
+    data_directory = get_data_directory()
+    directory = data_directory.joinpath("webapp", "ski-areas")
     directory_preview = directory.joinpath("roses-preview")
     directory_full = directory.joinpath("roses-full")
     directory_openskimap = directory.joinpath("roses-openskimap")
+    fingerprint_path = data_directory.joinpath(
+        "openskistats", "ski-area-rose-fingerprints.json"
+    )
     for _directory in directory_preview, directory_full, directory_openskimap:
         _directory.mkdir(exist_ok=True, parents=True)
+    fingerprint_path.parent.mkdir(exist_ok=True, parents=True)
+    previous_fingerprints: dict[str, str] = {}
+    if fingerprint_path.exists():
+        previous_fingerprints = json.loads(fingerprint_path.read_text(encoding="utf-8"))
     ski_areas_pl = load_ski_areas_pl(
         ski_area_filters=get_display_ski_area_filters()
     ).drop("bearings")
-    bearings_pl = load_bearing_distribution_pl(
-        ski_area_filters=get_display_ski_area_filters()
+    bearings_pl = (
+        load_bearing_distribution_pl(ski_area_filters=get_display_ski_area_filters())
+        .filter(pl.col("num_bins").is_in([8, 32]))
+        .sort("ski_area_id", "num_bins", "bin_center")
+        .select("ski_area_id", *ROSE_BEARING_FIELDS)
     )
+    bearings_by_ski_area = {
+        key[0]: value
+        for key, value in bearings_pl.partition_by(
+            "ski_area_id", as_dict=True, include_key=False
+        ).items()
+    }
     logging.info(
         f"Filtered to {len(ski_areas_pl):,} ski areas. Rose plotting {overwrite=}."
     )
     tasks = []
+    fingerprints: dict[str, str] = {}
     for info in ski_areas_pl.rows(named=True):
         ski_area_id = info["ski_area_id"]
+        bearing_pl = bearings_by_ski_area[ski_area_id]
+        fingerprint = _get_ski_area_rose_fingerprint(info, bearing_pl)
+        fingerprints[ski_area_id] = fingerprint
         preview_path = directory_preview.joinpath(f"{ski_area_id}.svg")
         full_path = directory_full.joinpath(f"{ski_area_id}.svg")
         openskimap_path = directory_openskimap.joinpath(f"{ski_area_id}.svg")
-        if not overwrite and full_path.exists():
+        output_paths = preview_path, full_path, openskimap_path
+        if (
+            not overwrite
+            and previous_fingerprints.get(ski_area_id) == fingerprint
+            and all(path.exists() for path in output_paths)
+        ):
             continue
         tasks.append(
             {
                 "info": info,
-                "bearing_pl": bearings_pl.filter(pl.col("ski_area_id") == ski_area_id),
+                "bearing_pl": bearing_pl,
                 "preview_path": preview_path,
                 "full_path": full_path,
                 "openskimap_path": openskimap_path,
             }
         )
-    logging.info(f"Creating roses for {len(tasks):,} ski areas concurrently...")
+    _create_ski_area_roses_concurrently(tasks)
 
+    for rose_directory in directory_preview, directory_full, directory_openskimap:
+        for path in rose_directory.glob("*.svg"):
+            if path.stem not in fingerprints:
+                path.unlink()
+    fingerprint_path.write_text(
+        json.dumps(fingerprints, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def _create_ski_area_roses_concurrently(tasks: list[dict[str, Any]]) -> None:
+    """Create pending ski-area roses in worker processes."""
+    logging.info(f"Creating roses for {len(tasks):,} ski areas concurrently...")
+    if not tasks:
+        return
     with ProcessPoolExecutor() as executor, Progress() as progress:
         task_progress = progress.add_task("[cyan]Creating roses...", total=len(tasks))
         futures = [executor.submit(_create_ski_area_rose, **task) for task in tasks]
