@@ -76,6 +76,22 @@ def test_rose_fingerprint_changes_with_bearings(rose_inputs: RoseInputs) -> None
     )
 
 
+def test_rose_fingerprint_ignores_float_noise(rose_inputs: RoseInputs) -> None:
+    info = {**rose_inputs.info, "latitude": 45.0}
+    fingerprint = ski_area_roses._get_ski_area_rose_fingerprint(
+        info, rose_inputs.bearings
+    )
+    info["latitude"] += 1e-10
+    noisy_bearings = rose_inputs.bearings.with_columns(
+        pl.col("bin_count") + 1e-10,
+        pl.col("bin_count_other") - 1e-10,
+    )
+    assert (
+        ski_area_roses._get_ski_area_rose_fingerprint(info, noisy_bearings)
+        == fingerprint
+    )
+
+
 def test_create_ski_area_roses_reuses_complete_fingerprint(
     monkeypatch: pytest.MonkeyPatch,
     rose_inputs: RoseInputs,

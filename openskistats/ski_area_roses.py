@@ -22,6 +22,9 @@ from openskistats.utils import get_data_directory
 ROSE_RENDER_VERSION = 1
 """Increment when a renderer change should invalidate local rose fingerprints."""
 
+ROSE_FINGERPRINT_DECIMAL_PLACES = 8
+"""Float precision preserved in rose fingerprints."""
+
 ROSE_INFO_FIELDS = (
     "ski_area_id",
     "ski_area_name",
@@ -50,6 +53,14 @@ ROSE_BEARING_FIELDS = (
 )
 
 
+def _canonicalize_rose_fingerprint_value(value: Any) -> Any:
+    """Remove float noise below the precision relevant to rendered roses."""
+    if not isinstance(value, float):
+        return value
+    rounded = round(value, ROSE_FINGERPRINT_DECIMAL_PLACES)
+    return 0.0 if rounded == 0 else rounded
+
+
 def get_display_ski_area_filters() -> list[pl.Expr]:
     """Ski area filters to produce a subset of ski areas for display."""
     return [
@@ -65,8 +76,17 @@ def _get_ski_area_rose_fingerprint(
     """Fingerprint the inputs that determine all rose variants for a ski area."""
     payload = {
         "render_version": ROSE_RENDER_VERSION,
-        "info": {field: info[field] for field in ROSE_INFO_FIELDS},
-        "bearings": bearing_pl.to_dicts(),
+        "info": {
+            field: _canonicalize_rose_fingerprint_value(info[field])
+            for field in ROSE_INFO_FIELDS
+        },
+        "bearings": [
+            {
+                field: _canonicalize_rose_fingerprint_value(value)
+                for field, value in row.items()
+            }
+            for row in bearing_pl.to_dicts()
+        ],
     }
     serialized = json.dumps(
         payload,
