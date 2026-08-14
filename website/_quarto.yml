@@ -2,6 +2,8 @@ project:
   type: website
   output-dir: ../data/webapp
   pre-render: pixi run frontend build
+  resources:
+    - llms.txt
 website:
   title: "OpenSkiStats"
   search: false
