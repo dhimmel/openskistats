@@ -150,3 +150,17 @@ export function meetsInitialInclusionFilters(
     )
   );
 }
+
+/**
+ * Match when a value is one of the facet values selected in a value picker.
+ *
+ * `null` and `undefined` are treated alike so that a column's blank option
+ * matches rows regardless of how the absence is represented.
+ */
+export function matchesSetFilter(value: unknown, filterValue: unknown): boolean {
+  if (!Array.isArray(filterValue) || filterValue.length === 0) {
+    return true;
+  }
+  const target = value === undefined ? null : value;
+  return filterValue.some((entry) => (entry === undefined ? null : entry) === target);
+}

@@ -397,3 +397,92 @@
 .oss-table-boolean-unknown {
   color: #adb5bd;
 }
+
+.oss-table-facet-trigger {
+  background: var(--bs-body-bg);
+  border: 1px solid #adb5bd;
+  border-radius: 0.2rem;
+  color: var(--bs-body-color);
+  cursor: pointer;
+  display: block;
+  font-size: 0.72rem;
+  margin: 0.3rem auto 0;
+  padding: 0.12rem 0.18rem;
+  width: 100%;
+}
+
+.oss-table-facet-popover {
+  background: var(--bs-body-bg);
+  border: 1px solid #adb5bd;
+  border-radius: 0.35rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+  gap: 0.35rem;
+  max-height: 21rem;
+  padding: 0.5rem;
+  position: fixed;
+  text-align: left;
+  width: 260px;
+  z-index: 1200;
+}
+
+.oss-table-facet-search {
+  border: 1px solid #adb5bd;
+  border-radius: 0.2rem;
+  padding: 0.2rem 0.3rem;
+  width: 100%;
+}
+
+.oss-table-facet-actions {
+  display: flex;
+  gap: 0.35rem;
+  justify-content: space-between;
+}
+
+.oss-table-facet-actions button {
+  background: var(--bs-body-bg);
+  border: 1px solid #adb5bd;
+  border-radius: 0.2rem;
+  cursor: pointer;
+  font-size: 0.72rem;
+  padding: 0.15rem 0.4rem;
+}
+
+.oss-table-facet-list {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.oss-table-facet-option {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.15rem 0.1rem;
+}
+
+.oss-table-facet-option:hover {
+  background: #f1f6fb;
+}
+
+.oss-table-facet-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.oss-table-facet-count {
+  color: #6c757d;
+  font-variant-numeric: tabular-nums;
+  margin-left: auto;
+}
+
+.oss-table-facet-empty,
+.oss-table-facet-more {
+  color: #6c757d;
+  font-size: 0.72rem;
+  margin: 0;
+}

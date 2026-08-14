@@ -1,6 +1,8 @@
 import {
   flexRender,
   getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
@@ -10,14 +12,15 @@ import {
   type FilterFn,
   type PaginationState,
   type SortingState,
+  type Table,
   useReactTable,
 } from "@tanstack/react-table";
 import { type ReactNode, useEffect, useMemo, useState } from "react";
 
 import {
-  matchesCountryFilter,
   matchesLatitudeFilter,
   matchesNumericFilter,
+  matchesSetFilter,
 } from "./filters";
 import { formatMeters, formatNumber, MISSING_VALUE } from "./formatters";
 import { calculateLiftAggregates, type LiftAggregates } from "./lift-core";
@@ -25,6 +28,7 @@ import {
   columnMaximum,
   CountryCell,
   DebouncedInput,
+  FacetedFilter,
   footerStat,
   header,
   LatitudeCell,
@@ -35,44 +39,65 @@ import type { LiftDocument, LiftSummary, TableRecordSchema } from "./types";
 
 /** Lifts recorded as still operating, shown before the visitor clears filters. */
 export const INITIAL_LIFT_FILTERS = [
-  { id: "lift_status", value: "operating" },
+  { id: "lift_status", value: ["operating"] },
 ] as const;
 
 const numericFilter: FilterFn<LiftSummary> = (row, columnId, value) =>
   matchesNumericFilter(row.getValue<number | null>(columnId), value);
 
-const countryFilter: FilterFn<LiftSummary> = (row, _columnId, value) =>
-  matchesCountryFilter(row.original, value);
+/** Keep rows whose value was selected in a column's value picker. */
+const setFilter: FilterFn<LiftSummary> = (row, columnId, value) =>
+  matchesSetFilter(row.getValue(columnId), value);
 
 const latitudeFilter: FilterFn<LiftSummary> = (row, columnId, value) =>
   matchesLatitudeFilter(row.getValue<number | null>(columnId), value);
 
-/** Match any associated ski-area name, since a lift may serve several. */
+/** Keep lifts serving any of the selected ski areas. */
 const skiAreaFilter: FilterFn<LiftSummary> = (row, _columnId, value) => {
-  if (typeof value !== "string" || value.trim() === "") {
+  if (!Array.isArray(value) || value.length === 0) {
     return true;
   }
-  const query = value.trim().toLocaleLowerCase();
+  const selected = new Set(value as string[]);
   return row.original.ski_area_names.some(
-    (name) => name?.toLocaleLowerCase().includes(query) === true,
+    (name) => name !== null && selected.has(name),
   );
 };
 
-/** Match a nullable boolean column against yes/no style input. */
-const booleanFilter: FilterFn<LiftSummary> = (row, columnId, value) => {
-  if (typeof value !== "string" || value.trim() === "") {
-    return true;
-  }
-  const query = value.trim().toLocaleLowerCase();
-  const current = row.getValue<boolean | null>(columnId);
-  if (["yes", "y", "true"].includes(query)) {
-    return current === true;
-  }
-  if (["no", "n", "false"].includes(query)) {
-    return current === false;
-  }
-  return true;
-};
+const skiAreaFacetCache = new WeakMap<object, Map<string, number>>();
+
+/**
+ * Count lifts per ski area.
+ *
+ * The column holds an array of names, so the default value-based facet counter
+ * would key the map on whole arrays instead of individual ski areas.
+ */
+function skiAreaFacetedValues(
+  table: Table<LiftSummary>,
+  columnId: string,
+): () => Map<string, number> {
+  return () => {
+    const rowModel = table.getColumn(columnId)?.getFacetedRowModel();
+    if (!rowModel) {
+      return new Map();
+    }
+    const cached = skiAreaFacetCache.get(rowModel);
+    if (cached) {
+      return cached;
+    }
+    const counts = new Map<string, number>();
+    for (const row of rowModel.flatRows) {
+      for (const name of new Set(row.original.ski_area_names)) {
+        if (name !== null) {
+          counts.set(name, (counts.get(name) ?? 0) + 1);
+        }
+      }
+    }
+    skiAreaFacetCache.set(rowModel, counts);
+    return counts;
+  };
+}
+
+const defaultFacetedValues = getFacetedUniqueValues<LiftSummary>();
 
 /** Format a ride duration in seconds as minutes and seconds. */
 export function formatDuration(value: number | null): string {
@@ -148,20 +173,20 @@ function createColumns(
     id: field,
     meta: { filterPlaceholder: "Number or range", ...options.meta },
   });
-  const textColumn = (
+  const categoricalColumn = (
     field: keyof LiftSummary,
     label: ReactNode,
     options: Partial<ColumnDef<LiftSummary, unknown>> = {},
   ): ColumnDef<LiftSummary, unknown> => ({
     accessorKey: field,
     cell: ({ getValue }) => textCell(getValue<string | null>()),
-    filterFn: "includesString",
+    filterFn: setFilter,
     header: header(label, description(field)),
     sortDescFirst: false,
     sortUndefined: "last",
     ...options,
     id: field,
-    meta: { filterPlaceholder: "Text", ...options.meta },
+    meta: { filterVariant: "faceted", ...options.meta },
   });
 
   return [
@@ -211,7 +236,10 @@ function createColumns(
             ),
           header: header("Ski Area", description("ski_area_names")),
           id: "ski_area_names",
-          meta: { className: "oss-table-border-left", filterPlaceholder: "Text" },
+          meta: {
+            className: "oss-table-border-left",
+            filterVariant: "faceted",
+          },
           minSize: 110,
           size: 135,
           sortDescFirst: false,
@@ -222,19 +250,17 @@ function createColumns(
             ),
           sortUndefined: "last",
         },
-        textColumn("country", "Country", {
+        categoricalColumn("country", "Country", {
           cell: CountryCell,
-          filterFn: countryFilter,
           footer: (context) =>
             footerStat(
               "Distinct",
               formatNumber(aggregatesFrom(context)?.distinctCounts.country ?? null),
             ),
-          meta: { filterPlaceholder: "Name, code, or flag" },
           minSize: 70,
           size: 85,
         }),
-        textColumn("region", "Region", {
+        categoricalColumn("region", "Region", {
           footer: (context) =>
             footerStat(
               "Distinct",
@@ -243,7 +269,7 @@ function createColumns(
           minSize: 65,
           size: 82,
         }),
-        textColumn("locality", "Locality", {
+        categoricalColumn("locality", "Locality", {
           minSize: 65,
           size: 82,
         }),
@@ -264,27 +290,27 @@ function createColumns(
       header: "Lift",
       meta: { className: "oss-table-border-left" },
       columns: [
-        textColumn("lift_type", "Type", {
+        categoricalColumn("lift_type", "Type", {
           footer: (context) =>
             footerStat(
               "Distinct",
               formatNumber(aggregatesFrom(context)?.distinctCounts.lift_type ?? null),
             ),
-          meta: { className: "oss-table-border-left", filterPlaceholder: "Text" },
+          meta: { className: "oss-table-border-left", filterVariant: "faceted" },
           minSize: 70,
           size: 85,
         }),
-        textColumn("lift_status", "Status", {
+        categoricalColumn("lift_status", "Status", {
           minSize: 65,
           size: 78,
         }),
         {
           accessorKey: "lift_detachable",
           cell: BooleanCell,
-          filterFn: booleanFilter,
+          filterFn: setFilter,
           header: header("Detach.", description("lift_detachable")),
           id: "lift_detachable",
-          meta: { filterPlaceholder: "yes or no" },
+          meta: { filterVariant: "faceted" },
           minSize: 50,
           size: 58,
           sortUndefined: "last",
@@ -389,6 +415,11 @@ export function LiftTable({ document }: { document: LiftDocument }) {
     data: document.lifts,
     defaultColumn: { maxSize: 190, minSize: 36, size: 55 },
     getCoreRowModel: getCoreRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: (table, columnId) =>
+      columnId === "ski_area_names"
+        ? skiAreaFacetedValues(table, columnId)
+        : defaultFacetedValues(table, columnId),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -448,14 +479,20 @@ export function LiftTable({ document }: { document: LiftDocument }) {
                         )}
                     {!headerCell.isPlaceholder &&
                       headerCell.colSpan === 1 &&
-                      headerCell.column.getCanFilter() && (
+                      headerCell.column.getCanFilter() &&
+                      (headerCell.column.columnDef.meta?.filterVariant === "faceted" ? (
+                        <FacetedFilter
+                          ariaLabel={`Filter ${headerCell.column.id}`}
+                          column={headerCell.column}
+                        />
+                      ) : (
                         <DebouncedInput
                           ariaLabel={`Filter ${headerCell.column.id}`}
                           onChange={headerCell.column.setFilterValue}
                           placeholder={headerCell.column.columnDef.meta?.filterPlaceholder}
                           value={headerCell.column.getFilterValue()}
                         />
-                      )}
+                      ))}
                   </th>
                 ))}
               </tr>

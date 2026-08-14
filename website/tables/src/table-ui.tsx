@@ -1,10 +1,12 @@
 /** Presentation helpers shared by the ski-area and lift tables. */
-import type { CellContext, HeaderContext } from "@tanstack/react-table";
+import type { CellContext, Column, HeaderContext } from "@tanstack/react-table";
 import {
   type CSSProperties,
   type ChangeEvent,
   type ReactNode,
   useEffect,
+  useMemo,
+  useRef,
   useState,
 } from "react";
 
@@ -15,6 +17,8 @@ declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends unknown, TValue> {
     cellStyle?: (value: unknown) => CSSProperties;
     className?: string;
+    /** Header control to render: a text box by default, or a value picker. */
+    filterVariant?: "text" | "faceted";
     filterPlaceholder?: string;
   }
 
@@ -198,5 +202,198 @@ export function columnMaximum<TData>(
   return Math.max(
     0,
     ...data.flatMap((row) => (typeof row[field] === "number" ? [row[field]] : [])),
+  );
+}
+
+/** Options rendered at once before asking the visitor to narrow the search. */
+const MAX_FACET_OPTIONS = 200;
+
+/** Label a facet value, including the booleans and blanks columns may hold. */
+export function facetOptionLabel(value: unknown): string {
+  if (value === null || value === undefined || value === "") {
+    return "(unknown)";
+  }
+  if (value === true) {
+    return "Yes";
+  }
+  if (value === false) {
+    return "No";
+  }
+  return String(value);
+}
+
+/**
+ * Multi-select filter listing a column's distinct values with their counts.
+ *
+ * TanStack computes the counts from rows passing every *other* column's
+ * filters, so the options always describe what is still reachable.
+ *
+ * The popover is positioned as fixed rather than nested in the scroll
+ * container, which would otherwise clip it and widen the table's scrollable
+ * area.
+ */
+export function FacetedFilter<TData>({
+  ariaLabel,
+  column,
+}: {
+  ariaLabel: string;
+  column: Column<TData, unknown>;
+}) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [anchor, setAnchor] = useState<{ left: number; top: number } | null>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+
+  const selected = (column.getFilterValue() as unknown[] | undefined) ?? [];
+  const selectedSet = new Set(selected);
+  const facets = column.getFacetedUniqueValues();
+
+  // Most frequent first, since that is the useful end of a long tail.
+  const options = useMemo(
+    () =>
+      [...facets.entries()]
+        .map(([value, count]) => ({ count, label: facetOptionLabel(value), value }))
+        .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label)),
+    [facets],
+  );
+  const needle = query.trim().toLocaleLowerCase();
+  const matches = needle
+    ? options.filter((option) => option.label.toLocaleLowerCase().includes(needle))
+    : options;
+  const shown = matches.slice(0, MAX_FACET_OPTIONS);
+
+  const reposition = () => {
+    const rect = triggerRef.current?.getBoundingClientRect();
+    if (rect) {
+      const width = 260;
+      setAnchor({
+        left: Math.min(Math.max(8, rect.left), window.innerWidth - width - 8),
+        top: rect.bottom + 4,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (
+        !popoverRef.current?.contains(target) &&
+        !triggerRef.current?.contains(target)
+      ) {
+        setOpen(false);
+      }
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+        triggerRef.current?.focus();
+      }
+    };
+    const onReposition = () => reposition();
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    window.addEventListener("resize", onReposition);
+    window.addEventListener("scroll", onReposition, true);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("resize", onReposition);
+      window.removeEventListener("scroll", onReposition, true);
+    };
+  }, [open]);
+
+  const setSelection = (values: unknown[]) =>
+    column.setFilterValue(values.length === 0 ? undefined : values);
+
+  return (
+    <>
+      <button
+        aria-expanded={open}
+        aria-haspopup="dialog"
+        aria-label={ariaLabel}
+        className="oss-table-facet-trigger"
+        onClick={() => {
+          reposition();
+          setOpen((value) => !value);
+        }}
+        ref={triggerRef}
+        type="button"
+      >
+        {selected.length === 0 ? "Any" : `${formatNumber(selected.length)} selected`}
+      </button>
+      {open && anchor && (
+        <div
+          className="oss-table-facet-popover"
+          ref={popoverRef}
+          role="dialog"
+          style={{ left: anchor.left, top: anchor.top }}
+        >
+          <input
+            aria-label={`Search ${ariaLabel}`}
+            autoFocus
+            className="oss-table-facet-search"
+            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+              setQuery(event.target.value)
+            }
+            placeholder="Search values…"
+            type="text"
+            value={query}
+          />
+          <div className="oss-table-facet-actions">
+            <button
+              disabled={matches.length === 0}
+              onClick={() =>
+                setSelection([
+                  ...new Set([...selected, ...matches.map((option) => option.value)]),
+                ])
+              }
+              type="button"
+            >
+              Select {formatNumber(matches.length)}
+            </button>
+            <button
+              disabled={selected.length === 0}
+              onClick={() => setSelection([])}
+              type="button"
+            >
+              Clear
+            </button>
+          </div>
+          <div className="oss-table-facet-list">
+            {shown.length === 0 ? (
+              <p className="oss-table-facet-empty">No matching values.</p>
+            ) : (
+              shown.map(({ count, label, value }) => (
+                <label className="oss-table-facet-option" key={label}>
+                  <input
+                    checked={selectedSet.has(value)}
+                    onChange={() =>
+                      setSelection(
+                        selectedSet.has(value)
+                          ? selected.filter((entry) => entry !== value)
+                          : [...selected, value],
+                      )
+                    }
+                    type="checkbox"
+                  />
+                  <span className="oss-table-facet-value">{label}</span>
+                  <span className="oss-table-facet-count">{formatNumber(count)}</span>
+                </label>
+              ))
+            )}
+          </div>
+          {matches.length > shown.length && (
+            <p className="oss-table-facet-more">
+              Showing {formatNumber(shown.length)} of {formatNumber(matches.length)}.
+              Keep typing to narrow.
+            </p>
+          )}
+        </div>
+      )}
+    </>
   );
 }

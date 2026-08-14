@@ -6,6 +6,7 @@ import {
   matchesLatitudeFilter,
   matchesNumericFilter,
   matchesPercentFilter,
+  matchesSetFilter,
   meetsInitialInclusionFilters,
 } from "../src/filters";
 
@@ -73,4 +74,21 @@ it("applies the initial public table inclusion filters", () => {
   expect(meetsInitialInclusionFilters({ run_count: 20, combined_vertical: null })).toBe(
     false,
   );
+});
+
+describe("matchesSetFilter", () => {
+  it.each([
+    { value: "gondola", filter: undefined, expected: true, purpose: "no selection keeps every row" },
+    { value: "gondola", filter: [], expected: true, purpose: "empty selection keeps every row" },
+    { value: "gondola", filter: ["gondola"], expected: true, purpose: "selected value" },
+    { value: "gondola", filter: ["chair_lift"], expected: false, purpose: "unselected value" },
+    { value: "gondola", filter: ["chair_lift", "gondola"], expected: true, purpose: "one of several selected" },
+    { value: true, filter: [true], expected: true, purpose: "boolean value" },
+    { value: false, filter: [true], expected: false, purpose: "opposite boolean" },
+    { value: null, filter: [null], expected: true, purpose: "blank option" },
+    { value: undefined, filter: [null], expected: true, purpose: "undefined matches the blank option" },
+    { value: "gondola", filter: [null], expected: false, purpose: "blank option excludes present values" },
+  ])("$purpose", ({ value, filter, expected }) => {
+    expect(matchesSetFilter(value, filter)).toBe(expected);
+  });
 });

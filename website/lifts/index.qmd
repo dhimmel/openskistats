@@ -40,8 +40,9 @@ Numeric columns support these filters:
 - `(10, 20)` for 10 < value < 20
 - `(, 5]` for value ≤ 5
 
-Text columns match any row containing what you type.
-The ski-area filter matches any of the ski areas a lift serves.
+Ski area, country, region, locality, type, status, and detachable offer a value picker.
+Each option lists how many lifts it still matches given the other filters, and typing searches the options.
+The ski-area picker matches any of the ski areas a lift serves.
 
 `Ride` is the typical ride duration in minutes and seconds, and `Capacity` is the transport capacity in people per hour.
 Both are recorded by OpenStreetMap contributors and are missing for many lifts.
