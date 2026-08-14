@@ -5,7 +5,6 @@ import typer
 
 from openskistats.analyze import (
     analyze_all_ski_areas_polars,
-    create_ski_area_roses,
     load_runs_pl,
     load_ski_areas_pl,
     ski_rose_the_world,
@@ -16,6 +15,7 @@ from openskistats.openskimap_utils import (
     download_openskimap_geojsons,
     generate_openskimap_test_data,
 )
+from openskistats.ski_area_roses import create_ski_area_roses
 from openskistats.skiway_data import (
     download_skiway_context,
     download_skiway_contours,
