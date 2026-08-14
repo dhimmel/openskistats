@@ -223,6 +223,23 @@ export function formatRangeFilter(
   return `${open}${lower}, ${upper}${close}`;
 }
 
+/**
+ * Read one end of a range from a filter box, or `null` when it is not a number.
+ *
+ * An emptied box releases its end rather than restricting it to nothing, and
+ * text that is not a number leaves the bound as it was.
+ */
+export function parseBound(edge: "lower" | "upper", text: string): number | null {
+  const trimmed = text.trim();
+  if (trimmed === "") {
+    return edge === "lower"
+      ? Number.NEGATIVE_INFINITY
+      : Number.POSITIVE_INFINITY;
+  }
+  const parsed = Number(trimmed);
+  return Number.isNaN(parsed) ? null : parsed;
+}
+
 /** Summarise bounds for a collapsed filter control. */
 export function describeBounds(
   bounds: NumericRange,

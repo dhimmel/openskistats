@@ -7,6 +7,7 @@ import {
   buildHistogram,
   describeBounds,
   formatRangeFilter,
+  parseBound,
   roundTo,
   UNBOUNDED,
 } from "../src/range";
@@ -223,5 +224,33 @@ describe("describeBounds", () => {
     },
   ])("summarises $purpose", ({ bounds, expected }) => {
     expect(describeBounds(bounds, format)).toBe(expected);
+  });
+});
+
+describe("parseBound", () => {
+  it.each([
+    { edge: "lower", text: "20", expected: 20, purpose: "a typed number" },
+    { edge: "upper", text: " 1.5 ", expected: 1.5, purpose: "surrounding space" },
+    { edge: "lower", text: "-40", expected: -40, purpose: "a negative bound" },
+    {
+      edge: "lower",
+      text: "",
+      expected: Number.NEGATIVE_INFINITY,
+      purpose: "an emptied lower box, which releases the bound",
+    },
+    {
+      edge: "upper",
+      text: "",
+      expected: Number.POSITIVE_INFINITY,
+      purpose: "an emptied upper box, which releases the bound",
+    },
+    {
+      edge: "lower",
+      text: "1,200",
+      expected: null,
+      purpose: "a grouped number, which Number cannot read",
+    },
+  ] as const)("reads $purpose", ({ edge, text, expected }) => {
+    expect(parseBound(edge, text)).toBe(expected);
   });
 });

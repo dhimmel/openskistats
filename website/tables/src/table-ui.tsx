@@ -30,6 +30,7 @@ import {
   describeBounds,
   formatRangeFilter,
   type Histogram,
+  parseBound,
   type HistogramBin,
   roundTo,
   UNBOUNDED,
@@ -116,22 +117,52 @@ export function DebouncedInput({
   value: unknown;
 }) {
   const [value, setValue] = useState(String(externalValue ?? ""));
+  // Only a value the visitor typed is worth reporting. Reporting on mount, or
+  // whenever `onChange` is rebuilt, made two of these inputs overwrite each
+  // other's bound with a stale one on a loop.
+  const typed = useRef(false);
+  const latest = useRef(onChange);
+  latest.current = onChange;
 
   useEffect(() => {
     setValue(String(externalValue ?? ""));
+    typed.current = false;
   }, [externalValue]);
 
   useEffect(() => {
-    const timeout = window.setTimeout(() => onChange(value), 200);
+    if (!typed.current) {
+      return;
+    }
+    const timeout = window.setTimeout(() => {
+      typed.current = false;
+      latest.current(value);
+    }, 200);
     return () => window.clearTimeout(timeout);
-  }, [onChange, value]);
+  }, [value]);
+
+  /** Report at once, for a visitor who submits rather than pausing. */
+  const flush = () => {
+    if (typed.current) {
+      typed.current = false;
+      latest.current(value);
+    }
+  };
 
   return (
     <input
       aria-label={ariaLabel}
       className={className}
       inputMode={inputMode}
-      onChange={(event: ChangeEvent<HTMLInputElement>) => setValue(event.target.value)}
+      onBlur={flush}
+      onChange={(event: ChangeEvent<HTMLInputElement>) => {
+        typed.current = true;
+        setValue(event.target.value);
+      }}
+      onKeyDown={(event) => {
+        if (event.key === "Enter") {
+          flush();
+        }
+      }}
       placeholder={placeholder ?? "Filter…"}
       type="text"
       value={value}
@@ -682,8 +713,6 @@ function RangeFilterPanel<TData>({
   const [dragged, setDragged] = useState<NumericRange | null>(null);
   const bounds = dragged ?? applied;
 
-  const boundsRef = useRef(bounds);
-  boundsRef.current = bounds;
   const commit = useCallback(
     (next: NumericRange) => {
       setDragged(null);
@@ -695,24 +724,20 @@ function RangeFilterPanel<TData>({
   );
   const commitBound = useCallback(
     (edge: "lower" | "upper", text: string) => {
-      const trimmed = text.trim();
-      const parsed =
-        trimmed === ""
-          ? edge === "lower"
-            ? Number.NEGATIVE_INFINITY
-            : Number.POSITIVE_INFINITY
-          : Number(trimmed);
-      if (Number.isNaN(parsed)) {
+      const parsed = parseBound(edge, text);
+      if (parsed === null) {
         return;
       }
       commit({
-        ...boundsRef.current,
+        // Read the filter as it stands rather than as this render saw it, so
+        // editing one bound cannot revert the other.
+        ...boundsFromFilter(column.getFilterValue()),
         [edge]: parsed,
         // A typed bound reads as inclusive, whatever bracket a brush left.
         [edge === "lower" ? "lowerInclusive" : "upperInclusive"]: true,
       });
     },
-    [commit],
+    [column, commit],
   );
   const commitLower = useCallback(
     (text: string) => commitBound("lower", text),
