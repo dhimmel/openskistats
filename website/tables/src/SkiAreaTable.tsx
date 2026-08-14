@@ -35,6 +35,7 @@ import {
 } from "./filters";
 import {
   formatBound,
+  formatLatitude,
   formatMeters,
   formatNumber,
   formatPercent,
@@ -44,6 +45,7 @@ import {
   ColumnFilter,
   columnMaximum,
   CountryCell,
+  countryFacetKeys,
   footerStat,
   header,
   HeaderLabel,
@@ -230,11 +232,7 @@ function createColumns(
     sortUndefined: "last",
     ...options,
     id: field,
-    meta: {
-      filterPlaceholder: "Number or range",
-      filterVariant: "range",
-      ...options.meta,
-    },
+    meta: { filterVariant: "range", ...options.meta },
   });
   const percentColumn = (
     field: keyof SkiAreaSummary,
@@ -256,7 +254,6 @@ function createColumns(
           : {},
       // Stored as a fraction but filtered in whole percent, matching the cells.
       filterFormat: (value: number) => `${formatBound(value)}%`,
-      filterPlaceholder: "Percent or range",
       filterScale: 100,
       filterVariant: "range",
       ...options.meta,
@@ -319,7 +316,11 @@ function createColumns(
             ),
           header: header("Country", description("country")),
           id: "country",
-          meta: { className: "oss-table-border-left", filterVariant: "faceted" },
+          meta: {
+            className: "oss-table-border-left",
+            facetKeys: countryFacetKeys(data),
+            filterVariant: "faceted",
+          },
           minSize: 70,
           size: 85,
           sortDescFirst: false,
@@ -369,7 +370,9 @@ function createColumns(
           filterFn: latitudeFilter,
           header: header("ℍ φ", description("latitude")),
           id: "latitude",
-          meta: { filterPlaceholder: "Latitude or hemisphere" },
+          // Brushing a lobe of the bimodal distribution says north or south
+          // more directly than the words the filter function still parses.
+          meta: { filterFormat: formatLatitude, filterVariant: "range" },
           minSize: 55,
           size: 62,
           sortUndefined: "last",

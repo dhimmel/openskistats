@@ -110,6 +110,24 @@ export function matchesPercentFilter(
   return matchesNumericFilter(value === null || value === undefined ? value : value * 100, filterValue);
 }
 
+/**
+ * Fold text to the form a value picker searches on.
+ *
+ * Case, accents, and every separator are dropped, so `chairlift`, `chair lift`,
+ * and `chair_lift` all reduce alike, as do `Val d'Isere` and `Val d'Isère`.
+ * Symbols survive, which is what lets a flag emoji stay searchable.
+ *
+ * Combining marks are stripped wholesale, so Japanese dakuten fold away too
+ * and `か` matches `が`. That widens a search rather than misdirecting it.
+ */
+export function searchKey(text: string): string {
+  return text
+    .normalize("NFD")
+    .replace(/\p{M}+/gu, "")
+    .toLocaleLowerCase()
+    .replace(/[\p{P}\p{Z}\p{C}]+/gu, "");
+}
+
 export function countryCodeToFlag(countryCode: string | null): string | null {
   const normalized = countryCode?.trim().toUpperCase();
   if (!normalized || !/^[A-Z]{2}$/.test(normalized)) {
@@ -117,22 +135,6 @@ export function countryCodeToFlag(countryCode: string | null): string | null {
   }
   return String.fromCodePoint(
     ...[...normalized].map((letter) => 0x1f1e6 + letter.charCodeAt(0) - 65),
-  );
-}
-
-export function matchesCountryFilter(
-  skiArea: Pick<SkiAreaSummary, "country" | "country_code">,
-  filterValue: unknown,
-): boolean {
-  if (typeof filterValue !== "string" || filterValue.trim() === "") {
-    return true;
-  }
-  const query = filterValue.trim();
-  const queryLower = query.toLocaleLowerCase();
-  return (
-    skiArea.country?.toLocaleLowerCase().includes(queryLower) === true ||
-    skiArea.country_code?.toLocaleLowerCase() === queryLower ||
-    countryCodeToFlag(skiArea.country_code) === query
   );
 }
 
@@ -152,18 +154,6 @@ export function matchesLatitudeFilter(
   }
   const hemisphere = latitude > 0 ? "north" : latitude < 0 ? "south" : "";
   return hemisphere.includes(query.toLocaleLowerCase());
-}
-
-export function meetsInitialInclusionFilters(
-  skiArea: Pick<SkiAreaSummary, "run_count" | "combined_vertical">,
-): boolean {
-  return (
-    matchesNumericFilter(skiArea.run_count, INITIAL_COLUMN_FILTERS[0].value) &&
-    matchesNumericFilter(
-      skiArea.combined_vertical,
-      INITIAL_COLUMN_FILTERS[1].value,
-    )
-  );
 }
 
 /**

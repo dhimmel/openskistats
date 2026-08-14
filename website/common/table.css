@@ -159,29 +159,6 @@
   outline-offset: 2px;
 }
 
-.oss-table-filter {
-  background: var(--bs-body-bg);
-  border: 1px solid #adb5bd;
-  border-radius: 0.2rem;
-  display: block;
-  font-size: 0.72rem;
-  margin: 0.3rem auto 0;
-  max-width: 100%;
-  min-width: 0;
-  padding: 0.12rem 0.18rem;
-  width: 100%;
-}
-
-.oss-table-filter::placeholder {
-  color: transparent;
-  transition: color 120ms ease-in-out;
-}
-
-.oss-table th:hover .oss-table-filter::placeholder,
-.oss-table th:focus-within .oss-table-filter::placeholder {
-  color: #8b9298;
-}
-
 .oss-table-tooltip-trigger {
   display: inline-block;
   position: relative;

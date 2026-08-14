@@ -22,12 +22,18 @@ import {
   matchesNumericFilter,
   matchesSetFilter,
 } from "./filters";
-import { formatMeters, formatNumber, MISSING_VALUE } from "./formatters";
+import {
+  formatLatitude,
+  formatMeters,
+  formatNumber,
+  MISSING_VALUE,
+} from "./formatters";
 import { calculateLiftAggregates, type LiftAggregates } from "./lift-core";
 import {
   ColumnFilter,
   columnMaximum,
   CountryCell,
+  countryFacetKeys,
   footerStat,
   header,
   LatitudeCell,
@@ -170,11 +176,7 @@ function createColumns(
     sortUndefined: "last",
     ...options,
     id: field,
-    meta: {
-      filterPlaceholder: "Number or range",
-      filterVariant: "range",
-      ...options.meta,
-    },
+    meta: { filterVariant: "range", ...options.meta },
   });
   const categoricalColumn = (
     field: keyof LiftSummary,
@@ -255,6 +257,7 @@ function createColumns(
         },
         categoricalColumn("country", "Country", {
           cell: CountryCell,
+          meta: { facetKeys: countryFacetKeys(data) },
           footer: (context) =>
             footerStat(
               "Distinct",
@@ -282,7 +285,9 @@ function createColumns(
           filterFn: latitudeFilter,
           header: header("ℍ φ", description("latitude")),
           id: "latitude",
-          meta: { filterPlaceholder: "Latitude or hemisphere" },
+          // Brushing a lobe of the bimodal distribution says north or south
+          // more directly than the words the filter function still parses.
+          meta: { filterFormat: formatLatitude, filterVariant: "range" },
           minSize: 55,
           size: 62,
           sortUndefined: "last",
@@ -357,7 +362,7 @@ function createColumns(
               "Sum",
               formatMeters(aggregatesFrom(context)?.sums.inclined_length ?? null),
             ),
-          meta: { className: "oss-table-border-left", filterPlaceholder: "Number or range" },
+          meta: { className: "oss-table-border-left" },
           minSize: 62,
           size: 76,
         }),

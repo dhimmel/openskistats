@@ -37,10 +37,11 @@ Drag across the bars to select a range, or type bounds into the boxes beneath th
 Bars count the lifts the other filters still allow, and the end bars hold any outliers the axis stops short of.
 Lifts with no value for a column drop out once that column is bounded.
 
-`H φ` takes a latitude threshold such as `45`, a range such as `[40, 50]` or `(, 5]`, or the words `north` and `south`.
+`H φ` is a latitude distribution like the others, and its two lobes are the hemispheres: brush the negative bars for the southern one.
 
 Ski area, country, region, locality, type, status, and detachable offer a value picker.
 Each option lists how many lifts it still matches given the other filters, and typing searches the options.
+Search ignores case, accents, and separators, so `chairlift` finds `chair_lift`, and a country also answers to its code or flag.
 The ski-area picker matches any of the ski areas a lift serves.
 
 `Ride` is the typical ride duration in minutes and seconds, and `Capacity` is the transport capacity in people per hour.

@@ -61,7 +61,17 @@ function niceStep(span: number, integral: boolean): number {
   const rough = span / TARGET_BIN_COUNT;
   const magnitude = 10 ** Math.floor(Math.log10(rough));
   const normalized = rough / magnitude;
-  const factor = normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 5 ? 5 : 10;
+  // Geometric thresholds, so the chosen width is the nearest of the three in
+  // proportion rather than always the next one up: rounding up every time
+  // halves the bar count whenever the ideal width falls just past a step.
+  const factor =
+    normalized >= Math.sqrt(50)
+      ? 10
+      : normalized >= Math.sqrt(10)
+        ? 5
+        : normalized >= Math.sqrt(2)
+          ? 2
+          : 1;
   // A power of ten times 1, 2, or 5 is already whole once it reaches 1, so
   // integer columns only need the sub-unit widths lifted.
   return integral ? Math.max(1, factor * magnitude) : factor * magnitude;

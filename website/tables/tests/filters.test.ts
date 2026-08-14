@@ -2,12 +2,11 @@ import { describe, expect, it } from "vitest";
 
 import {
   countryCodeToFlag,
-  matchesCountryFilter,
   matchesLatitudeFilter,
   matchesNumericFilter,
   matchesPercentFilter,
   matchesSetFilter,
-  meetsInitialInclusionFilters,
+  searchKey,
 } from "../src/filters";
 
 describe("matchesNumericFilter", () => {
@@ -36,20 +35,10 @@ it("matches percent filters against displayed values", () => {
   expect(matchesPercentFilter(null, "80")).toBe(false);
 });
 
-describe("country filters", () => {
-  const france = { country: "France", country_code: "FR" };
-
-  it.each(["fran", "FR", "fr", "🇫🇷"])("matches %s", (filter) => {
-    expect(matchesCountryFilter(france, filter)).toBe(true);
-  });
-  it("does not match another country", () => {
-    expect(matchesCountryFilter(france, "US")).toBe(false);
-  });
-  it("creates flags only for valid country codes", () => {
-    expect(countryCodeToFlag("us")).toBe("🇺🇸");
-    expect(countryCodeToFlag(null)).toBeNull();
-    expect(countryCodeToFlag("USA")).toBeNull();
-  });
+it("creates flags only for valid country codes", () => {
+  expect(countryCodeToFlag("us")).toBe("🇺🇸");
+  expect(countryCodeToFlag(null)).toBeNull();
+  expect(countryCodeToFlag("USA")).toBeNull();
 });
 
 describe("latitude filters", () => {
@@ -62,18 +51,6 @@ describe("latitude filters", () => {
   ])("matches $latitude against $filter", ({ latitude, filter, expected }) => {
     expect(matchesLatitudeFilter(latitude, filter)).toBe(expected);
   });
-});
-
-it("applies the initial public table inclusion filters", () => {
-  expect(meetsInitialInclusionFilters({ run_count: 3, combined_vertical: 50 })).toBe(
-    true,
-  );
-  expect(meetsInitialInclusionFilters({ run_count: 2, combined_vertical: 500 })).toBe(
-    false,
-  );
-  expect(meetsInitialInclusionFilters({ run_count: 20, combined_vertical: null })).toBe(
-    false,
-  );
 });
 
 describe("matchesSetFilter", () => {
@@ -90,5 +67,25 @@ describe("matchesSetFilter", () => {
     { value: "gondola", filter: [null], expected: false, purpose: "blank option excludes present values" },
   ])("$purpose", ({ value, filter, expected }) => {
     expect(matchesSetFilter(value, filter)).toBe(expected);
+  });
+});
+
+describe("searchKey", () => {
+  it.each([
+    { query: "chairlift", option: "chair_lift", purpose: "a missing separator" },
+    { query: "chair lift", option: "chair_lift", purpose: "a space for an underscore" },
+    { query: "t bar", option: "t-bar", purpose: "a space for a hyphen" },
+    { query: "val d isere", option: "Val d'Isère", purpose: "dropped accents" },
+    { query: "US", option: "US", purpose: "a country code" },
+  ])("folds $purpose", ({ query, option }) => {
+    expect(searchKey(option).includes(searchKey(query))).toBe(true);
+  });
+
+  it("keeps a flag emoji searchable", () => {
+    expect(searchKey("🇫🇷")).toBe("🇫🇷");
+  });
+
+  it("does not collapse distinct values", () => {
+    expect(searchKey("gondola").includes(searchKey("funicular"))).toBe(false);
   });
 });

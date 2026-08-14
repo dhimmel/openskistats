@@ -20,6 +20,7 @@ import {
   countryCodeToFlag,
   type NumericRange,
   rangeContains,
+  searchKey,
 } from "./filters";
 import { formatBound, formatNumber, MISSING_VALUE } from "./formatters";
 import {
@@ -38,6 +39,8 @@ declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends unknown, TValue> {
     cellStyle?: (value: unknown) => CSSProperties;
     className?: string;
+    /** Extra strings a facet option can be found by, such as a country's code. */
+    facetKeys?: (value: unknown) => readonly string[];
     /** Order a value picker's options: by descending count, or by label. */
     facetSort?: "count" | "label";
     /**
@@ -47,12 +50,8 @@ declare module "@tanstack/react-table" {
     filterScale?: number;
     /** Format a bound for the range popover's labels and summary. */
     filterFormat?: (value: number) => string;
-    /**
-     * Header control to render: a text box by default, a value picker, or a
-     * distribution to brush a range out of.
-     */
-    filterVariant?: "text" | "faceted" | "range";
-    filterPlaceholder?: string;
+    /** Header control to render: a value picker, or a brushable distribution. */
+    filterVariant?: "faceted" | "range";
   }
 
   // Each table supplies its own aggregate shape and narrows it when reading.
@@ -103,14 +102,14 @@ export function header<TData>(
 
 export function DebouncedInput({
   ariaLabel,
-  className = "oss-table-filter",
+  className,
   inputMode,
   onChange,
   placeholder,
   value: externalValue,
 }: {
   ariaLabel: string;
-  className?: string;
+  className: string;
   inputMode?: "decimal";
   onChange: (value: string) => void;
   placeholder?: string;
@@ -177,6 +176,31 @@ export function CountryCell<TData extends CountryFields>({
       {country && <span>{country}</span>}
     </span>
   );
+}
+
+/**
+ * Let a country option be found by its ISO code or flag, not only its name.
+ *
+ * The codes ride along on the rows, so the picker gains `US` and `🇺🇸` for
+ * `United States` without a list anyone has to maintain.
+ */
+export function countryFacetKeys<TData extends CountryFields>(
+  data: readonly TData[],
+): (value: unknown) => string[] {
+  const codes = new Map<string, string>();
+  for (const row of data) {
+    if (row.country !== null && row.country_code !== null) {
+      codes.set(row.country, row.country_code);
+    }
+  }
+  return (value) => {
+    const code = typeof value === "string" ? codes.get(value) : undefined;
+    if (code === undefined) {
+      return [];
+    }
+    const flag = countryCodeToFlag(code);
+    return flag === null ? [code] : [code, flag];
+  };
 }
 
 export function LatitudeCell<TData>({ getValue }: CellContext<TData, unknown>) {
@@ -247,7 +271,7 @@ export function columnMaximum<TData>(
 const MAX_FACET_OPTIONS = 200;
 
 /** Label a facet value, including the booleans and blanks columns may hold. */
-export function facetOptionLabel(value: unknown): string {
+function facetOptionLabel(value: unknown): string {
   if (value === null || value === undefined || value === "") {
     return "(unknown)";
   }
@@ -404,20 +428,29 @@ function FacetedFilterPanel<TData>({
   // Counts rank a category's long tail usefully, but an identity column such
   // as a name is easier to scan alphabetically.
   const byLabel = column.columnDef.meta?.facetSort === "label";
+  const facetKeys = column.columnDef.meta?.facetKeys;
   const options = useMemo(
     () =>
       [...facets.entries()]
-        .map(([value, count]) => ({ count, label: facetOptionLabel(value), value }))
+        .map(([value, count]) => {
+          const label = facetOptionLabel(value);
+          return {
+            count,
+            keys: [label, ...(facetKeys?.(value) ?? [])].map(searchKey),
+            label,
+            value,
+          };
+        })
         .sort((a, b) =>
           byLabel
             ? a.label.localeCompare(b.label)
             : b.count - a.count || a.label.localeCompare(b.label),
         ),
-    [byLabel, facets],
+    [byLabel, facetKeys, facets],
   );
-  const needle = query.trim().toLocaleLowerCase();
+  const needle = searchKey(query);
   const matches = needle
-    ? options.filter((option) => option.label.toLocaleLowerCase().includes(needle))
+    ? options.filter((option) => option.keys.some((key) => key.includes(needle)))
     : options;
   const shown = matches.slice(0, MAX_FACET_OPTIONS);
   const showCounts = options.some((option) => option.count > 1);
@@ -785,19 +818,9 @@ export function RangeFilter<TData>({
 /** The filter control a column's `filterVariant` asks for. */
 export function ColumnFilter<TData>({ column }: { column: Column<TData, unknown> }) {
   const ariaLabel = `Filter ${column.id}`;
-  switch (column.columnDef.meta?.filterVariant) {
-    case "faceted":
-      return <FacetedFilter ariaLabel={ariaLabel} column={column} />;
-    case "range":
-      return <RangeFilter ariaLabel={ariaLabel} column={column} />;
-    default:
-      return (
-        <DebouncedInput
-          ariaLabel={ariaLabel}
-          onChange={column.setFilterValue}
-          placeholder={column.columnDef.meta?.filterPlaceholder}
-          value={column.getFilterValue()}
-        />
-      );
-  }
+  return column.columnDef.meta?.filterVariant === "faceted" ? (
+    <FacetedFilter ariaLabel={ariaLabel} column={column} />
+  ) : (
+    <RangeFilter ariaLabel={ariaLabel} column={column} />
+  );
 }

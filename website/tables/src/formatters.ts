@@ -29,3 +29,11 @@ export function formatMeters(value: number | null): string {
 export function formatPercent(value: number | null): string {
   return value === null ? MISSING_VALUE : `${formatNumber(value * 100)}%`;
 }
+
+/** Name a latitude by hemisphere, as the latitude cells do. */
+export function formatLatitude(value: number): string {
+  if (value === 0) {
+    return "0°";
+  }
+  return `${formatBound(Math.abs(value), 1)}°${value < 0 ? "S" : "N"}`;
+}

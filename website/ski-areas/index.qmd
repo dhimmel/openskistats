@@ -39,7 +39,10 @@ Bars count the ski areas the other filters still allow, and the end bars hold an
 Ski areas with no value for a column drop out once that column is bounded.
 Percent columns are bounded in whole percent, so `80` rather than `0.8`.
 
-`H φ` takes a latitude threshold such as `45`, a range such as `[40, 50]` or `(, 5]`, or the words `north` and `south`.
+`H φ` is a latitude distribution like the others, and its two lobes are the hemispheres: brush the negative bars for the southern one.
+
+Ski area, country, region, and locality offer a value picker listing how many ski areas each value still matches.
+Search ignores case, accents, and separators, and a country also answers to its code or flag, such as `US` or 🇺🇸.
 
 Ski run difficulty is collapsed and colored as follows:
 
