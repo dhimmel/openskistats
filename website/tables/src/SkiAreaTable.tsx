@@ -34,16 +34,16 @@ import {
   matchesSetFilter,
 } from "./filters";
 import {
+  formatBound,
   formatMeters,
   formatNumber,
   formatPercent,
   MISSING_VALUE,
 } from "./formatters";
 import {
+  ColumnFilter,
   columnMaximum,
   CountryCell,
-  DebouncedInput,
-  FacetedFilter,
   footerStat,
   header,
   HeaderLabel,
@@ -230,7 +230,11 @@ function createColumns(
     sortUndefined: "last",
     ...options,
     id: field,
-    meta: { filterPlaceholder: "Number or range", ...options.meta },
+    meta: {
+      filterPlaceholder: "Number or range",
+      filterVariant: "range",
+      ...options.meta,
+    },
   });
   const percentColumn = (
     field: keyof SkiAreaSummary,
@@ -250,7 +254,11 @@ function createColumns(
         typeof value === "number"
           ? { backgroundColor: sequentialColor(value) }
           : {},
+      // Stored as a fraction but filtered in whole percent, matching the cells.
+      filterFormat: (value: number) => `${formatBound(value)}%`,
       filterPlaceholder: "Percent or range",
+      filterScale: 100,
+      filterVariant: "range",
       ...options.meta,
     },
   });
@@ -678,20 +686,9 @@ export function SkiAreaTable({ document }: { document: SkiAreaDocument }) {
                         )}
                     {!headerCell.isPlaceholder &&
                       headerCell.colSpan === 1 &&
-                      headerCell.column.getCanFilter() &&
-                      (headerCell.column.columnDef.meta?.filterVariant === "faceted" ? (
-                        <FacetedFilter
-                          ariaLabel={`Filter ${headerCell.column.id}`}
-                          column={headerCell.column}
-                        />
-                      ) : (
-                        <DebouncedInput
-                          ariaLabel={`Filter ${headerCell.column.id}`}
-                          onChange={headerCell.column.setFilterValue}
-                          placeholder={headerCell.column.columnDef.meta?.filterPlaceholder}
-                          value={headerCell.column.getFilterValue()}
-                        />
-                      ))}
+                      headerCell.column.getCanFilter() && (
+                        <ColumnFilter column={headerCell.column} />
+                      )}
                   </th>
                 ))}
               </tr>

@@ -33,14 +33,13 @@ Feedback is welcome via [GitHub issues](https://github.com/dhimmel/openskistats/
 
 ### Table usage
 
-Numeric columns support these filters:
+Numeric columns open the distribution of their values.
+Drag across the bars to select a range, or type bounds into the boxes beneath the plot.
+Bars count the ski areas the other filters still allow, and the end bars hold any outliers the axis stops short of.
+Ski areas with no value for a column drop out once that column is bounded.
+Percent columns are bounded in whole percent, so `80` rather than `0.8`.
 
-- `15` for value ≥ 15
-- `-20` for value ≤ 20
-- `[10, 20]` for 10 ≤ value ≤ 20
-- `(10, 20)` for 10 < value < 20
-- `(, 5]` for value ≤ 5
-- `80` (not 0.8) for a percent value ≥ 80%.
+`H φ` takes a latitude threshold such as `45`, a range such as `[40, 50]` or `(, 5]`, or the words `north` and `south`.
 
 Ski run difficulty is collapsed and colored as follows:
 

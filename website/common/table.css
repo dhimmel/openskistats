@@ -398,6 +398,8 @@
   color: #adb5bd;
 }
 
+/* A summary such as a bracketed range can outgrow a narrow metric column, and
+   wrapping it would retune every header's height. */
 .oss-table-facet-trigger {
   background: var(--bs-body-bg);
   border: 1px solid #adb5bd;
@@ -407,7 +409,10 @@
   display: block;
   font-size: 0.72rem;
   margin: 0.3rem auto 0;
+  overflow: hidden;
   padding: 0.12rem 0.18rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   width: 100%;
 }
 
@@ -485,4 +490,53 @@
   color: #6c757d;
   font-size: 0.72rem;
   margin: 0;
+}
+
+.oss-table-range-summary {
+  color: #6c757d;
+  font-size: 0.72rem;
+  margin: 0;
+}
+
+/* Stretched to the popover's width, so a bin's screen position matches the
+   fraction of the domain it covers and the brush can map clicks back to it. */
+.oss-table-range-plot {
+  cursor: crosshair;
+  display: block;
+  height: 54px;
+  touch-action: none;
+  width: 100%;
+}
+
+.oss-table-range-bar {
+  fill: #0d6efd;
+}
+
+.oss-table-range-bar-excluded {
+  fill: #ced4da;
+}
+
+.oss-table-range-axis {
+  color: #6c757d;
+  display: flex;
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+  justify-content: space-between;
+}
+
+.oss-table-range-inputs {
+  align-items: center;
+  color: #6c757d;
+  display: flex;
+  font-size: 0.72rem;
+  gap: 0.35rem;
+}
+
+.oss-table-range-input {
+  border: 1px solid #adb5bd;
+  border-radius: 0.2rem;
+  min-width: 0;
+  padding: 0.15rem 0.25rem;
+  text-align: right;
+  width: 100%;
 }

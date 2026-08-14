@@ -25,10 +25,9 @@ import {
 import { formatMeters, formatNumber, MISSING_VALUE } from "./formatters";
 import { calculateLiftAggregates, type LiftAggregates } from "./lift-core";
 import {
+  ColumnFilter,
   columnMaximum,
   CountryCell,
-  DebouncedInput,
-  FacetedFilter,
   footerStat,
   header,
   LatitudeCell,
@@ -171,7 +170,11 @@ function createColumns(
     sortUndefined: "last",
     ...options,
     id: field,
-    meta: { filterPlaceholder: "Number or range", ...options.meta },
+    meta: {
+      filterPlaceholder: "Number or range",
+      filterVariant: "range",
+      ...options.meta,
+    },
   });
   const categoricalColumn = (
     field: keyof LiftSummary,
@@ -336,6 +339,8 @@ function createColumns(
               "Median",
               formatDuration(aggregatesFrom(context)?.medianDuration ?? null),
             ),
+          // Bounds are seconds, but a reader recognises them as minutes.
+          meta: { filterFormat: formatDuration },
           minSize: 50,
           size: 60,
         }),
@@ -479,20 +484,9 @@ export function LiftTable({ document }: { document: LiftDocument }) {
                         )}
                     {!headerCell.isPlaceholder &&
                       headerCell.colSpan === 1 &&
-                      headerCell.column.getCanFilter() &&
-                      (headerCell.column.columnDef.meta?.filterVariant === "faceted" ? (
-                        <FacetedFilter
-                          ariaLabel={`Filter ${headerCell.column.id}`}
-                          column={headerCell.column}
-                        />
-                      ) : (
-                        <DebouncedInput
-                          ariaLabel={`Filter ${headerCell.column.id}`}
-                          onChange={headerCell.column.setFilterValue}
-                          placeholder={headerCell.column.columnDef.meta?.filterPlaceholder}
-                          value={headerCell.column.getFilterValue()}
-                        />
-                      ))}
+                      headerCell.column.getCanFilter() && (
+                        <ColumnFilter column={headerCell.column} />
+                      )}
                   </th>
                 ))}
               </tr>

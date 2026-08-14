@@ -32,13 +32,12 @@ Feedback is welcome via [GitHub issues](https://github.com/dhimmel/openskistats/
 
 ### Table usage
 
-Numeric columns support these filters:
+Numeric columns open the distribution of their values.
+Drag across the bars to select a range, or type bounds into the boxes beneath the plot.
+Bars count the lifts the other filters still allow, and the end bars hold any outliers the axis stops short of.
+Lifts with no value for a column drop out once that column is bounded.
 
-- `15` for value ≥ 15
-- `-20` for value ≤ 20
-- `[10, 20]` for 10 ≤ value ≤ 20
-- `(10, 20)` for 10 < value < 20
-- `(, 5]` for value ≤ 5
+`H φ` takes a latitude threshold such as `45`, a range such as `[40, 50]` or `(, 5]`, or the words `north` and `south`.
 
 Ski area, country, region, locality, type, status, and detachable offer a value picker.
 Each option lists how many lifts it still matches given the other filters, and typing searches the options.

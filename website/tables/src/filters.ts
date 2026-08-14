@@ -1,6 +1,10 @@
 import type { SkiAreaSummary } from "./types";
 
-interface NumericRange {
+/**
+ * A half-open or closed interval, as written in the `[lower, upper)` grammar
+ * the numeric filter boxes accept. Either endpoint may be infinite.
+ */
+export interface NumericRange {
   lower: number;
   lowerInclusive: boolean;
   upper: number;
@@ -18,7 +22,13 @@ export const INITIAL_COLUMN_FILTERS = [
   { id: "combined_vertical", value: "50" },
 ] as const;
 
-function parseNumericRange(filterValue: string): NumericRange | null {
+/**
+ * Read a filter box's text as an interval, or `null` when it is not one.
+ *
+ * The range popovers parse the filter they are about to replace so that a
+ * typed bound and a dragged bound are the same piece of state.
+ */
+export function parseNumericRange(filterValue: string): NumericRange | null {
   const expression = filterValue.trim();
   if (expression === "-" || expression === "-0") {
     return {
@@ -65,6 +75,17 @@ function parseNumericRange(filterValue: string): NumericRange | null {
   };
 }
 
+/** Whether `value` falls inside the interval, honouring each end's bracket. */
+export function rangeContains(range: NumericRange, value: number): boolean {
+  const aboveLower = range.lowerInclusive
+    ? value >= range.lower
+    : value > range.lower;
+  const belowUpper = range.upperInclusive
+    ? value <= range.upper
+    : value < range.upper;
+  return aboveLower && belowUpper;
+}
+
 export function matchesNumericFilter(
   value: number | null | undefined,
   filterValue: unknown,
@@ -79,13 +100,7 @@ export function matchesNumericFilter(
   if (typeof value !== "number" || !Number.isFinite(value)) {
     return false;
   }
-  const aboveLower = range.lowerInclusive
-    ? value >= range.lower
-    : value > range.lower;
-  const belowUpper = range.upperInclusive
-    ? value <= range.upper
-    : value < range.upper;
-  return aboveLower && belowUpper;
+  return rangeContains(range, value);
 }
 
 export function matchesPercentFilter(
