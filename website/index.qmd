@@ -38,4 +38,4 @@ an open resource for geospatial metrics of downhill ski areas
 :::{#pages}
 :::
 
-<script src="index/snowflake.js"></script>
+<script type="module" src="index/snowflake.js"></script>

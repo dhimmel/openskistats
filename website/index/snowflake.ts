@@ -1,14 +1,14 @@
 // Snowflake generator
-const snowContainer = document.getElementById('snow-container');
-let snowflakeInterval;
+const snowContainer = document.getElementById("snow-container")!;
+let snowflakeInterval: number | undefined;
 
 function createSnowflake() {
-  const snowflake = document.createElement('div');
-  snowflake.classList.add('snowflake');
-  snowflake.textContent = '❄';
+  const snowflake = document.createElement("div");
+  snowflake.classList.add("snowflake");
+  snowflake.textContent = "❄";
   snowflake.style.left = `${Math.random() * 100}vw`;
   const baseSize = Math.random() * 0.7;
-  const fontSize = baseSize * Math.sqrt(window.innerWidth) + 1
+  const fontSize = baseSize * Math.sqrt(window.innerWidth) + 1;
   snowflake.style.fontSize = `${fontSize}px`;
   snowflake.style.animationDuration = `${Math.random() * 30 + 3}s`;
   // snowflake.style.animationDelay = `${Math.random() * 2}s`;
@@ -41,4 +41,4 @@ function adjustSnowflakeFrequency() {
 adjustSnowflakeFrequency();
 
 // Adjust frequency on window resize
-window.addEventListener('resize', adjustSnowflakeFrequency);
+window.addEventListener("resize", adjustSnowflakeFrequency);
