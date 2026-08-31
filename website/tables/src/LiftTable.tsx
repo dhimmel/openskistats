@@ -1,19 +1,12 @@
 import {
   flexRender,
-  getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   type CellContext,
   type ColumnDef,
   type ColumnFiltersState,
   type FilterFn,
   type PaginationState,
   type SortingState,
-  type Table,
-  useReactTable,
+  useTable,
 } from "@tanstack/react-table";
 import { type ReactNode, useEffect, useMemo, useState } from "react";
 
@@ -29,6 +22,7 @@ import {
   MISSING_VALUE,
 } from "./formatters";
 import { calculateLiftAggregates, type LiftAggregates } from "./lift-core";
+import { TABLE_FEATURES, type TableFeatures } from "./table-features";
 import {
   ColumnFilter,
   columnMaximum,
@@ -47,18 +41,26 @@ export const INITIAL_LIFT_FILTERS = [
   { id: "lift_status", value: ["operating"] },
 ] as const;
 
-const numericFilter: FilterFn<LiftSummary> = (row, columnId, value) =>
+const numericFilter: FilterFn<TableFeatures, LiftSummary> = (row, columnId, value) =>
   matchesNumericFilter(row.getValue<number | null>(columnId), value);
 
 /** Keep rows whose value was selected in a column's value picker. */
-const setFilter: FilterFn<LiftSummary> = (row, columnId, value) =>
+const setFilter: FilterFn<TableFeatures, LiftSummary> = (row, columnId, value) =>
   matchesSetFilter(row.getValue(columnId), value);
 
-const latitudeFilter: FilterFn<LiftSummary> = (row, columnId, value) =>
+const latitudeFilter: FilterFn<TableFeatures, LiftSummary> = (
+  row,
+  columnId,
+  value,
+) =>
   matchesLatitudeFilter(row.getValue<number | null>(columnId), value);
 
 /** Keep lifts serving any of the selected ski areas. */
-const skiAreaFilter: FilterFn<LiftSummary> = (row, _columnId, value) => {
+const skiAreaFilter: FilterFn<TableFeatures, LiftSummary> = (
+  row,
+  _columnId,
+  value,
+) => {
   if (!Array.isArray(value) || value.length === 0) {
     return true;
   }
@@ -67,42 +69,6 @@ const skiAreaFilter: FilterFn<LiftSummary> = (row, _columnId, value) => {
     (name) => name !== null && selected.has(name),
   );
 };
-
-const skiAreaFacetCache = new WeakMap<object, Map<string, number>>();
-
-/**
- * Count lifts per ski area.
- *
- * The column holds an array of names, so the default value-based facet counter
- * would key the map on whole arrays instead of individual ski areas.
- */
-function skiAreaFacetedValues(
-  table: Table<LiftSummary>,
-  columnId: string,
-): () => Map<string, number> {
-  return () => {
-    const rowModel = table.getColumn(columnId)?.getFacetedRowModel();
-    if (!rowModel) {
-      return new Map();
-    }
-    const cached = skiAreaFacetCache.get(rowModel);
-    if (cached) {
-      return cached;
-    }
-    const counts = new Map<string, number>();
-    for (const row of rowModel.flatRows) {
-      for (const name of new Set(row.original.ski_area_names)) {
-        if (name !== null) {
-          counts.set(name, (counts.get(name) ?? 0) + 1);
-        }
-      }
-    }
-    skiAreaFacetCache.set(rowModel, counts);
-    return counts;
-  };
-}
-
-const defaultFacetedValues = getFacetedUniqueValues<LiftSummary>();
 
 /** Format a ride duration in seconds as minutes and seconds. */
 export function formatDuration(value: number | null): string {
@@ -121,7 +87,7 @@ function fieldDescription(
   return schema.properties[field]?.description;
 }
 
-function SkiAreaCell({ row }: CellContext<LiftSummary, unknown>) {
+function SkiAreaCell({ row }: CellContext<TableFeatures, LiftSummary, unknown>) {
   const { ski_area_ids, ski_area_names } = row.original;
   const named = ski_area_names.flatMap((name, index) =>
     name === null ? [] : [{ id: ski_area_ids[index], name }],
@@ -146,7 +112,9 @@ function SkiAreaCell({ row }: CellContext<LiftSummary, unknown>) {
 }
 
 /** Render a nullable boolean as a check, a dash, or a missing marker. */
-function BooleanCell({ getValue }: CellContext<LiftSummary, unknown>) {
+function BooleanCell({
+  getValue,
+}: CellContext<TableFeatures, LiftSummary, unknown>) {
   const value = getValue<boolean | null>();
   if (value === null) {
     return <span className="oss-table-boolean-unknown">{MISSING_VALUE}</span>;
@@ -163,13 +131,13 @@ function aggregatesFrom(context: {
 function createColumns(
   data: readonly LiftSummary[],
   schema: TableRecordSchema,
-): ColumnDef<LiftSummary, unknown>[] {
+): ColumnDef<TableFeatures, LiftSummary, unknown>[] {
   const description = (field: keyof LiftSummary) => fieldDescription(schema, field);
   const numericColumn = (
     field: keyof LiftSummary,
     label: ReactNode,
-    options: Partial<ColumnDef<LiftSummary, unknown>> = {},
-  ): ColumnDef<LiftSummary, unknown> => ({
+    options: Partial<ColumnDef<TableFeatures, LiftSummary, unknown>> = {},
+  ): ColumnDef<TableFeatures, LiftSummary, unknown> => ({
     accessorKey: field,
     filterFn: numericFilter,
     header: header(label, description(field)),
@@ -181,8 +149,8 @@ function createColumns(
   const categoricalColumn = (
     field: keyof LiftSummary,
     label: ReactNode,
-    options: Partial<ColumnDef<LiftSummary, unknown>> = {},
-  ): ColumnDef<LiftSummary, unknown> => ({
+    options: Partial<ColumnDef<TableFeatures, LiftSummary, unknown>> = {},
+  ): ColumnDef<TableFeatures, LiftSummary, unknown> => ({
     accessorKey: field,
     cell: ({ getValue }) => textCell(getValue<string | null>()),
     filterFn: setFilter,
@@ -241,6 +209,10 @@ function createColumns(
             ),
           header: header("Ski Area", description("ski_area_names")),
           id: "ski_area_names",
+          getUniqueValues: (lift) =>
+            [...new Set(lift.ski_area_names)].filter(
+              (name): name is string => name !== null,
+            ),
           meta: {
             className: "oss-table-border-left",
             filterVariant: "faceted",
@@ -249,7 +221,7 @@ function createColumns(
           size: 135,
           sortDescFirst: false,
           // Sort by the first associated ski area, since a lift may serve several.
-          sortingFn: (rowA, rowB) =>
+          sortFn: (rowA, rowB) =>
             (rowA.original.ski_area_names[0] ?? "").localeCompare(
               rowB.original.ski_area_names[0] ?? "",
             ),
@@ -420,19 +392,11 @@ export function LiftTable({ document }: { document: LiftDocument }) {
     () => createColumns(document.lifts, document.record_schema),
     [document],
   );
-  const table = useReactTable({
+  const table = useTable({
+    features: TABLE_FEATURES,
     columns,
     data: document.lifts,
     defaultColumn: { maxSize: 190, minSize: 36, size: 55 },
-    getCoreRowModel: getCoreRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: (table, columnId) =>
-      columnId === "ski_area_names"
-        ? skiAreaFacetedValues(table, columnId)
-        : defaultFacetedValues(table, columnId),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     meta: { aggregates },
     onColumnFiltersChange: setColumnFilters,
     onPaginationChange: setPagination,
