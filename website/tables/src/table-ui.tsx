@@ -4,6 +4,7 @@ import type {
   Column,
   HeaderContext,
   Row,
+  RowData,
 } from "@tanstack/react-table";
 import {
   type CSSProperties,
@@ -35,31 +36,7 @@ import {
   roundTo,
   UNBOUNDED,
 } from "./range";
-
-declare module "@tanstack/react-table" {
-  interface ColumnMeta<TData extends unknown, TValue> {
-    cellStyle?: (value: unknown) => CSSProperties;
-    className?: string;
-    /** Extra strings a facet option can be found by, such as a country's code. */
-    facetKeys?: (value: unknown) => readonly string[];
-    /** Order a value picker's options: by descending count, or by label. */
-    facetSort?: "count" | "label";
-    /**
-     * Multiply values by this before binning and filtering, so a column stored
-     * as a fraction filters in the whole percent its cells display.
-     */
-    filterScale?: number;
-    /** Format a bound for the range popover's labels and summary. */
-    filterFormat?: (value: number) => string;
-    /** Header control to render: a value picker, or a brushable distribution. */
-    filterVariant?: "faceted" | "range";
-  }
-
-  // Each table supplies its own aggregate shape and narrows it when reading.
-  interface TableMeta<TData extends unknown> {
-    aggregates: unknown;
-  }
-}
+import type { TableFeatures } from "./table-features";
 
 export function HeaderLabel({
   description,
@@ -83,10 +60,10 @@ export function HeaderLabel({
   );
 }
 
-export function header<TData>(
+export function header<TData extends RowData>(
   label: ReactNode,
   description?: string,
-): (context: HeaderContext<TData, unknown>) => ReactNode {
+): (context: HeaderContext<TableFeatures, TData, unknown>) => ReactNode {
   return ({ column }) => (
     <button
       aria-label={`Sort by ${column.columnDef.id ?? "column"}`}
@@ -195,7 +172,7 @@ export interface CountryFields {
 
 export function CountryCell<TData extends CountryFields>({
   row,
-}: CellContext<TData, unknown>) {
+}: CellContext<TableFeatures, TData, unknown>) {
   const country = row.original.country;
   const flag = countryCodeToFlag(row.original.country_code);
   if (country === null && flag === null) {
@@ -234,7 +211,9 @@ export function countryFacetKeys<TData extends CountryFields>(
   };
 }
 
-export function LatitudeCell<TData>({ getValue }: CellContext<TData, unknown>) {
+export function LatitudeCell<TData extends RowData>({
+  getValue,
+}: CellContext<TableFeatures, TData, unknown>) {
   const latitude = getValue<number | null>();
   if (latitude === null) {
     return MISSING_VALUE;
@@ -269,11 +248,11 @@ export function sequentialColor(value: number) {
 }
 
 /** Underline a numeric cell proportionally to its share of the column maximum. */
-export function metricCell<TData>(
+export function metricCell<TData extends RowData>(
   maximum: number,
   formatter: (value: number | null) => string = formatNumber,
 ) {
-  return ({ getValue }: CellContext<TData, unknown>) => {
+  return ({ getValue }: CellContext<TableFeatures, TData, unknown>) => {
     const value = getValue<number | null>();
     const style =
       value === null || maximum <= 0
@@ -423,12 +402,12 @@ export function FilterPopover({
  * TanStack computes the counts from rows passing every *other* column's
  * filters, so the options always describe what is still reachable.
  */
-export function FacetedFilter<TData>({
+export function FacetedFilter<TData extends RowData>({
   ariaLabel,
   column,
 }: {
   ariaLabel: string;
-  column: Column<TData, unknown>;
+  column: Column<TableFeatures, TData, unknown>;
 }) {
   const selected = (column.getFilterValue() as unknown[] | undefined) ?? [];
   return (
@@ -443,12 +422,12 @@ export function FacetedFilter<TData>({
   );
 }
 
-function FacetedFilterPanel<TData>({
+function FacetedFilterPanel<TData extends RowData>({
   ariaLabel,
   column,
 }: {
   ariaLabel: string;
-  column: Column<TData, unknown>;
+  column: Column<TableFeatures, TData, unknown>;
 }) {
   const [query, setQuery] = useState("");
 
@@ -566,9 +545,9 @@ const HISTOGRAM_HEIGHT = 54;
  * distribution describes what is still reachable and holds still while its own
  * bounds are dragged.
  */
-function filterValues<TData>(
-  column: Column<TData, unknown>,
-  rows: readonly Row<TData>[],
+function filterValues<TData extends RowData>(
+  column: Column<TableFeatures, TData, unknown>,
+  rows: readonly Row<TableFeatures, TData>[],
 ): (number | null)[] {
   const scale = column.columnDef.meta?.filterScale ?? 1;
   return rows.map((row) => {
@@ -696,12 +675,12 @@ function RangeHistogram({
   );
 }
 
-function RangeFilterPanel<TData>({
+function RangeFilterPanel<TData extends RowData>({
   ariaLabel,
   column,
 }: {
   ariaLabel: string;
-  column: Column<TData, unknown>;
+  column: Column<TableFeatures, TData, unknown>;
 }) {
   const rows = column.getFacetedRowModel().flatRows;
   const values = useMemo(() => filterValues(column, rows), [column, rows]);
@@ -824,12 +803,12 @@ function RangeFilterPanel<TData>({
 }
 
 /** Filter a numeric column by brushing or typing bounds over its distribution. */
-export function RangeFilter<TData>({
+export function RangeFilter<TData extends RowData>({
   ariaLabel,
   column,
 }: {
   ariaLabel: string;
-  column: Column<TData, unknown>;
+  column: Column<TableFeatures, TData, unknown>;
 }) {
   const bounds = boundsFromFilter(column.getFilterValue());
   const format = column.columnDef.meta?.filterFormat ?? formatBound;
@@ -841,7 +820,11 @@ export function RangeFilter<TData>({
 }
 
 /** The filter control a column's `filterVariant` asks for. */
-export function ColumnFilter<TData>({ column }: { column: Column<TData, unknown> }) {
+export function ColumnFilter<TData extends RowData>({
+  column,
+}: {
+  column: Column<TableFeatures, TData, unknown>;
+}) {
   const ariaLabel = `Filter ${column.id}`;
   return column.columnDef.meta?.filterVariant === "faceted" ? (
     <FacetedFilter ariaLabel={ariaLabel} column={column} />
