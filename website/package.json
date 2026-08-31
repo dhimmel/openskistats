@@ -3,8 +3,8 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": "24.x",
-    "pnpm": "11.x"
+    "node": "26.x",
+    "pnpm": "12.x"
   },
   "scripts": {
     "build": "node esbuild.mjs",
