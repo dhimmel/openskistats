@@ -257,6 +257,10 @@ class ZenodoClient:
         # https://github.com/cthoyt/zenodo-client/issues/16
         # httpx2's built-in `retries` covers only connection establishment
         # (ConnectError/ConnectTimeout), never a request that fails mid-body.
+        # If whole-file retries prove insufficient, the escalation is InvenioRDM's
+        # multipart transfer (verified available on Zenodo): register the file with
+        # `transfer: {type: "M", parts, part_size}`, PUT each part to its own link
+        # with per-part retries, then commit, so a stall costs one part, not the file.
         attempts = 4
         for attempt in range(1, attempts + 1):
             try:
