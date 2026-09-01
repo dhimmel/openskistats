@@ -13,6 +13,7 @@ description = "OpenSkiStats: Shredding Data Like Powder"
 authors = [
     {name = "Daniel Himmelstein"},
     {name = "Trang Le"},
+    {name = "Joshua Himmelstein"},
 ]
 readme = "README.md"
 license = {file = "LICENSE.md"}
@@ -37,6 +38,8 @@ args = [
 openskistats = { path = ".", editable = true }
 beautifulsoup4 = "==4.15.0"
 folium = "==0.20.0"
+httpx2 = "==2.12.0"
+markdown-it-py = "==4.2.0"
 jupyter = "==1.1.1"
 matplotlib = "==3.11.1"
 mizani = "==0.14.4"
@@ -48,6 +51,7 @@ plotly = "==7.0.0"
 plotnine = "==0.16.0a12"
 polars= "==1.43.2"
 pydantic = "==2.13.5"
+python-dotenv = "==1.2.3"
 pvlib= "==0.15.2"
 pyarrow = "==25.0.1"
 requests = "==2.34.2"

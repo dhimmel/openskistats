@@ -20,6 +20,7 @@ from openskistats.skiway_data import (
     download_skiway_context,
     download_skiway_contours,
 )
+from openskistats.zenodo import deposit_snapshot
 
 cli = typer.Typer(pretty_exceptions_show_locals=False)
 
@@ -82,6 +83,20 @@ class Commands:
         """Perform ski area aggregations and export visualizations."""
         ski_rose_the_world()
         create_ski_area_roses(overwrite=overwrite)
+
+    @staticmethod
+    @cli.command(name="zenodo")
+    def zenodo(
+        record_id: Annotated[str | None, typer.Option("--record-id")] = None,
+        publish: Annotated[bool, typer.Option("--publish")] = False,
+    ) -> None:
+        """
+        Deposit a snapshot to the Zenodo.
+        Omit `--record-id` to create a new record;
+        provide one to create a new version of that record.
+        Drafts remain unpublished unless `--publish` is set.
+        """
+        deposit_snapshot(record_id=record_id, publish=publish, sandbox=True)
 
     @staticmethod
     @cli.command(name="generate_test_data")

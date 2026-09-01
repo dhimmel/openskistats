@@ -1,5 +1,7 @@
 /data
 
+.env
+
 # Python
 .mypy_cache/
 .ruff_cache/

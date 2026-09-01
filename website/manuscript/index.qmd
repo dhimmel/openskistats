@@ -1,6 +1,20 @@
 ---
 pagetitle: Manuscript
 title: "OpenSkiStats: a global webapp of geospatial ski area metrics reveals the orientation of alpine skiing"
+# Zenodo deposit creators also derive from this list.
+author:
+  - name:
+      given: Daniel
+      family: Himmelstein
+    orcid: 0000-0002-3012-7446
+  - name:
+      given: Trang
+      family: Le
+    orcid: 0000-0003-3737-6565
+  - name:
+      given: Joshua
+      family: Himmelstein
+    orcid: 0000-0002-4201-2611
 image: "../images/bearing_by_latitude_eye.svg"
 engine: jupyter
 execute:
