@@ -279,6 +279,8 @@ Questions the section should consider:
 - How are runs and lifts associated with ski areas?
   When OpenStreetMap lacks an explicit ski area, does OpenSkiMap infer one, e.g. by spatially clustering nearby runs and lifts?
   Can a run belong to multiple ski areas?
+  How are overlapping ski areas handled, e.g. an interconnected mega-area like Dolomiti Superski whose runs also belong to member resorts like Alta Badia?
+  Why are these associations unstable over time, e.g. entire federations appearing as new ski areas and Park City's run count halving within months?
 - How are run coordinates enriched with elevation:
   which terrain sources at which resolutions, how values are sampled along a line,
   and what failure modes remain (e.g. elevation voids)?
