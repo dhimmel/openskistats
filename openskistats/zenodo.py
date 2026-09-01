@@ -8,12 +8,14 @@ which unlike the legacy deposit API supports multiple licenses per record.
 
 import dataclasses
 import logging
+import math
 import os
 import subprocess
 import tempfile
 import time
 import zipfile
 from datetime import date
+from operator import itemgetter
 from pathlib import Path
 from typing import Any
 
@@ -29,6 +31,20 @@ from openskistats.utils import (
 )
 
 DEPOSIT_TITLE = "OpenSkiStats snapshot"
+
+MULTIPART_PART_SIZE = 25 * 2**20
+"""
+Files spanning multiple parts of this size upload
+via InvenioRDM's multipart transfer, making retries cheap.
+"""
+
+MULTIPART_ENABLED = False
+"""
+As of 2026-09-01 Zenodo accepts multipart file registration
+but returns 403 Permission denied on every part upload
+(with or without authentication), so the transfer is unusable.
+Flip once https://github.com/zenodo/zenodo-rdm/issues/1443 is resolved.
+"""
 
 
 def get_deposit_readme_markdown(commit_sha: str) -> str:
@@ -203,7 +219,8 @@ class ZenodoClient:
     def _request(self, method: str, path: str, **kwargs: Any) -> httpx2.Response:
         response = httpx2.request(
             method=method,
-            url=f"{self.base_url}{path}",
+            # Multipart part links arrive as absolute URLs.
+            url=path if path.startswith("https://") else f"{self.base_url}{path}",
             headers={"Authorization": f"Bearer {self.access_token}"},
             timeout=300,
             **kwargs,
@@ -234,51 +251,77 @@ class ZenodoClient:
         result: dict[str, Any] = response.json()
         return result
 
-    def upload_file(self, record_id: str, path: Path, key: str | None = None) -> None:
+    def _upload_content_with_retry(
+        self, url: str, content: bytes, description: str
+    ) -> None:
         """
-        Register, upload, and commit one file to a draft record.
-        `key` names the file on the record and may contain `/` to convey directories;
-        it defaults to the file's basename.
+        PUT bytes with retries: uploads to production Zenodo occasionally
+        hit transport timeouts, and the content PUT is idempotent.
+        Zenodo's flakiness here is longstanding, as chronicled by zenodo-client:
+        https://github.com/cthoyt/zenodo-client/issues/10
+        https://github.com/cthoyt/zenodo-client/issues/16
+        httpx2's built-in `retries` covers only connection establishment
+        (ConnectError/ConnectTimeout), never a request that fails mid-body.
         """
-        key = key or path.name
-        self._request(
-            "POST",
-            f"/api/records/{record_id}/draft/files",
-            json=[{"key": key}],
-        )
-        # Read fully into memory to send a Content-Length header:
-        # generator content triggers chunked transfer encoding,
-        # which Zenodo's file endpoint silently stores as zero bytes.
-        content = path.read_bytes()
-        # Retry stalled uploads: large PUTs to production Zenodo occasionally
-        # hit transport timeouts, and the content PUT is idempotent.
-        # Zenodo's flakiness here is longstanding, as chronicled by zenodo-client:
-        # https://github.com/cthoyt/zenodo-client/issues/10
-        # https://github.com/cthoyt/zenodo-client/issues/16
-        # httpx2's built-in `retries` covers only connection establishment
-        # (ConnectError/ConnectTimeout), never a request that fails mid-body.
-        # If whole-file retries prove insufficient, the escalation is InvenioRDM's
-        # multipart transfer (verified available on Zenodo): register the file with
-        # `transfer: {type: "M", parts, part_size}`, PUT each part to its own link
-        # with per-part retries, then commit, so a stall costs one part, not the file.
         attempts = 4
         for attempt in range(1, attempts + 1):
             try:
-                self._request(
-                    "PUT",
-                    f"/api/records/{record_id}/draft/files/{key}/content",
-                    content=content,
-                )
+                self._request("PUT", url, content=content)
                 break
             except httpx2.TransportError as error:
                 if attempt == attempts:
                     raise
                 delay = 30 * attempt
                 logging.warning(
-                    f"Upload attempt {attempt} of {key} failed with {error!r};"
+                    f"Upload attempt {attempt} of {description} failed with {error!r};"
                     f" retrying in {delay}s."
                 )
                 time.sleep(delay)
+
+    def upload_file(self, record_id: str, path: Path, key: str | None = None) -> None:
+        """
+        Register, upload, and commit one file to a draft record.
+        `key` names the file on the record and may contain `/` to convey directories;
+        it defaults to the file's basename.
+        Files spanning multiple parts of `MULTIPART_PART_SIZE` upload via InvenioRDM's multipart transfer,
+        so a stalled request costs one part rather than the whole file.
+        """
+        key = key or path.name
+        size = path.stat().st_size
+        parts = math.ceil(size / MULTIPART_PART_SIZE)
+        registration: dict[str, Any] = {"key": key}
+        if multipart := MULTIPART_ENABLED and parts > 1:
+            registration.update(
+                size=size,
+                transfer={
+                    "type": "M",
+                    "parts": parts,
+                    "part_size": MULTIPART_PART_SIZE,
+                },
+            )
+        response = self._request(
+            "POST", f"/api/records/{record_id}/draft/files", json=[registration]
+        )
+        if multipart:
+            entry = next(e for e in response.json()["entries"] if e["key"] == key)
+            with path.open("rb") as stream:
+                for part_link in sorted(
+                    entry["links"]["parts"], key=itemgetter("part")
+                ):
+                    self._upload_content_with_retry(
+                        url=part_link["url"],
+                        content=stream.read(MULTIPART_PART_SIZE),
+                        description=f"{key} part {part_link['part']}/{parts}",
+                    )
+        else:
+            # Read fully into memory to send a Content-Length header:
+            # generator content triggers chunked transfer encoding,
+            # which Zenodo's file endpoint silently stores as zero bytes.
+            self._upload_content_with_retry(
+                url=f"/api/records/{record_id}/draft/files/{key}/content",
+                content=path.read_bytes(),
+                description=key,
+            )
         self._request("POST", f"/api/records/{record_id}/draft/files/{key}/commit")
 
     def publish_draft(self, record_id: str) -> dict[str, Any]:
