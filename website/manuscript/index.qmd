@@ -218,22 +218,6 @@ Downhill skiing is remarkably concentrated in both the northern hemisphere and a
 Deduplication of effort: OpenStreetMap used by Strava, mapy.cz, mapbox, komoot, REGRID etc.
 Single place to curate the world's ski areas
 
-We extract all segments comprising ski runs
-
-Orientation versus aspect
-
-Aspect applies to polygons and lines.
-Most polygon runs also have a line run Orientation only applies to lines In the absence of trees, aspect would be a better indicator of sun exposure.
-However, with shading of trees, orientation could be a better indicator of sun exposure Weighting by vertical drop along a segment, likely brings orientation closer to aspect under the assumption that steeper trails are more likely to descend along the fall line.
-Orientation was more readily available because it just requires the coordinates of the run (latitude, longitude, elevation), which OpenSkiMap includes, and does not require computation on adjacent terrain.
-Ski trails that traverse the fall line are often graded, would the resolution of aspect measurements be sufficient Orientation might be more relevant for skiers ???
-
-Weighting segments by vertical drop.
-Downhill skiing is the art of descent.
-On flat terrain, there is no terrain shading based on topography
-
-Topographic shadowing versus vegetative shadowing
-
 From https://www.bromley.com/about/:
 
 > Bromley is the only major ski area in New England with a southern exposure, giving our guests sun-drenched smiles!
@@ -327,12 +311,65 @@ We count each ski area's lifts from the lifts dataset, considering only operatin
 Downstream analyses apply further filters as their comparisons demand,
 e.g. restricting to operating ski areas, those equipped with at least one lift, or resorts with at least five lifts.
 
+### Orientation
+
+A segment's bearing is the compass direction a skier travels while descending it, where 0° is due north and 90° is due east.
+We refer to the distribution of bearings across a group of segments, e.g. a run, a ski area, or all of France, as its orientation.
+
+Downhill skiing is the art of descent.
+Accordingly, when aggregating bearings, we weight each segment by its vertical drop,
+such that a steep pitch counts for more than a flat traverse of the same length.
+Weighting by vertical drop also suits our sunlight estimates,
+since a level segment receives the same solar irradiance regardless of its bearing.
+
+We tabulate the weighted bearings of a group of segments into a polar histogram that we call a ski rose,
+adapting the street network roses of Boeing [@street-orientation; @osmnx].
+@fig-skiway-trail-segments illustrates the tabulation, highlighting the segments of the Dartmouth Skiway that fill a single petal.
+By default, roses use 32 bins, one per wind of the traditional 32-wind compass rose.
+Bins center on their wind, such that a common bearing like due north bisects a petal rather than splitting across two.
+We draw petals with area, rather than radius, proportional to their weight,
+avoiding the perceptual exaggeration of dominant directions that plagues many wind roses [@wind-rose-bias].
+Petals can be subdivided by run difficulty, colored according to the locale's difficulty coloring convention.
+
 ::: {#fig-skiway-trail-segments}
 ![](../images/dartmouth_skiway_trail_segments_and_rose.svg)
 
 A map of the Dartmouth Skiway showing which run segments belong to the NNE petal of the rose.
 Orienting features include ski lifts, their two upper terminals, the lodge, and the road through the base area.
 :::
+
+To summarize a group of segments beyond the rose, we treat each bearing as a vector whose magnitude is the segment's vertical drop and take the vector sum.
+The direction of the resultant vector gives the mean bearing,
+while its length relative to the summed magnitudes gives the alignment,
+a 0--1 measure of how tightly the segments concentrate around the mean bearing.
+Decomposing the resultant vector likewise yields two signed metrics ranging from −1 to 1:
+poleward affinity, the component toward the pole of the segments' hemisphere,
+and eastward affinity, the component toward due east.
+
+Analyses that pool or compare segments across hemispheres first convert each quantity to a hemisphere-neutral form.
+Latitude becomes _absolute latitude_, e.g. Cerro Castor at 54.7°S is treated like a ski area at 54.7°N.
+Bearings undergo a _hemispherical flip_, mirroring southern bearings across the east--west axis such that due south becomes due north while due west remains due west.
+The flip expresses orientation relative to the pole and equator rather than the compass,
+and accordingly flipped figures label their orientation axes poleward and equatorward in place of north and south.
+
+### Orientation versus aspect
+
+Aspect is the downhill direction of the terrain surface itself, i.e. the compass direction of the fall line,
+whereas orientation follows the skier's path of travel.
+The two coincide on a trail that descends straight down the fall line and diverge on a trail that traverses across it.
+We chose orientation first for its availability:
+it derives from the run coordinates that OpenSkiMap already provides,
+while aspect requires computation over adjacent terrain from an elevation model.
+Resolution compounds the difficulty, as trails that traverse the fall line are often graded during construction,
+so their surface can tilt differently than the surrounding slope.
+Aspect does hold one clear advantage: it applies to any terrain, including the polygon runs that orientation cannot serve.
+
+The better proxy for sun exposure depends on the setting.
+On an open slope, aspect governs how directly sunlight strikes the snow.
+However, many ski trails are corridors cut through forest,
+and we speculate that the corridor's orientation better captures the shade cast by its tree walls.
+Note that weighting segments by vertical drop likely draws orientation toward aspect,
+under the assumption that steeper segments more closely follow the fall line.
 
 ### Run Difficulty
 
