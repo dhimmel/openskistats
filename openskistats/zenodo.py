@@ -11,6 +11,7 @@ import logging
 import os
 import subprocess
 import tempfile
+import time
 import zipfile
 from datetime import date
 from pathlib import Path
@@ -248,11 +249,32 @@ class ZenodoClient:
         # Read fully into memory to send a Content-Length header:
         # generator content triggers chunked transfer encoding,
         # which Zenodo's file endpoint silently stores as zero bytes.
-        self._request(
-            "PUT",
-            f"/api/records/{record_id}/draft/files/{key}/content",
-            content=path.read_bytes(),
-        )
+        content = path.read_bytes()
+        # Retry stalled uploads: large PUTs to production Zenodo occasionally
+        # hit transport timeouts, and the content PUT is idempotent.
+        # Zenodo's flakiness here is longstanding, as chronicled by zenodo-client:
+        # https://github.com/cthoyt/zenodo-client/issues/10
+        # https://github.com/cthoyt/zenodo-client/issues/16
+        # httpx2's built-in `retries` covers only connection establishment
+        # (ConnectError/ConnectTimeout), never a request that fails mid-body.
+        attempts = 4
+        for attempt in range(1, attempts + 1):
+            try:
+                self._request(
+                    "PUT",
+                    f"/api/records/{record_id}/draft/files/{key}/content",
+                    content=content,
+                )
+                break
+            except httpx2.TransportError as error:
+                if attempt == attempts:
+                    raise
+                delay = 30 * attempt
+                logging.warning(
+                    f"Upload attempt {attempt} of {key} failed with {error!r};"
+                    f" retrying in {delay}s."
+                )
+                time.sleep(delay)
         self._request("POST", f"/api/records/{record_id}/draft/files/{key}/commit")
 
     def publish_draft(self, record_id: str) -> dict[str, Any]:
