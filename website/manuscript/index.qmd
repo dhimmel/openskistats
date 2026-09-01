@@ -156,7 +156,26 @@ Skiing is further concentrated in the northern hemisphere within a narrow latitu
 `{python} var("latitude__between_40_50__combined_vertical_prop", ".1%")` of the world's skiable vert is located between 40--50°N and 
 `{python} var("latitude__between_45_48__combined_vertical_prop", ".1%")` is between 45--48°N.
 
-## Ski area influence
+## Ski area concentration
+
+Ski areas vary enormously in extent, from a single backyard rope tow to sprawling interconnected resorts.
+We quantify this disparity with Lorenz curves and Gini coefficients for several ski area metrics (@fig-ski-area-metric-dists).
+A Lorenz curve orders ski areas from smallest to largest and plots their cumulative share of the world total,
+while the Gini coefficient summarizes the curve's departure from equality,
+ranging from 0% if every ski area were identical to 100% if a single ski area held everything.
+Skiing infrastructure is remarkably concentrated:
+the top decile of ski areas accounts for `{python} var("ski_areas__combined_vertical__top_decile_share", ".1%")` of the world's combined vertical and the top percentile alone for `{python} var("ski_areas__combined_vertical__top_percentile_share", ".1%")`.
+
+Concentration varies by metric in an instructive order.
+Metrics that sum over a ski area's runs concentrate the most,
+e.g. Gini coefficients of `{python} var("ski_areas__gini__segment_count", ".1%")` for segment count and `{python} var("ski_areas__gini__combined_vertical", ".1%")` for combined vertical.
+Vertical drop, at `{python} var("ski_areas__gini__vertical_drop", ".1%")`, spreads more evenly,
+since the elevation difference between a ski area's highest and lowest points is bounded by its mountain,
+whereas a resort can always cut more runs.
+Lift count is the most egalitarian metric at `{python} var("ski_areas__gini__lift_count", ".1%")`,
+since even resorts with hundreds of runs operate only dozens of lifts.
+Note that these distributions span all downhill ski areas, including those without any mapped runs or lifts,
+so the observed concentration reflects mapping completeness in addition to true differences in size.
 
 ![**Concentration of ski area metrics.**
 **(A)** Lorenz curves show each ski area's share of the total for a variety of metrics.

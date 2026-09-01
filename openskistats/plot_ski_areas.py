@@ -7,6 +7,7 @@ from plotnine.composition import Compose, plot_layout
 from openskistats.analyze import load_ski_areas_pl
 from openskistats.plot import subplot_orientations
 from openskistats.utils import gini_coefficient, running_in_test
+from openskistats.variables import set_variables
 
 
 def get_ski_area_metric_ecdfs(
@@ -59,6 +60,25 @@ def plot_ski_area_metric_ecdfs(
     )
     metrics_enum = pl.Enum(gini_df["variable"])
     gini_df = gini_df.with_columns(variable=gini_df["variable"].cast(metrics_enum))
+    if ski_area_filters is None:
+        # unfiltered metrics feed manuscript variables
+        vertical_ecdf = ecdf_df.filter(pl.col("variable") == "combined_vertical")
+        set_variables(
+            **{
+                f"ski_areas__gini__{row['variable']}": round(row["gini"], 4)
+                for row in gini_df.iter_rows(named=True)
+            },
+            **{
+                f"ski_areas__combined_vertical__top_{label}_share": round(
+                    1
+                    - vertical_ecdf.filter(pl.col("value_rank_pctl") <= 1 - share)[
+                        "value_cdf"
+                    ].max(),
+                    4,
+                )
+                for label, share in [("decile", 0.10), ("percentile", 0.01)]
+            },
+        )
     lorenz_plot = (
         pn.ggplot(
             data=ecdf_df.with_columns(variable=pl.col("variable").cast(metrics_enum)),
