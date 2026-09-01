@@ -41,11 +41,16 @@ def get_deposit_readme_markdown(commit_sha: str) -> str:
     openskimap_date = max(
         info.last_modified for info in load_openskimap_download_info().values()
     ).split("T")[0]
+    run_sentence = (
+        f"\nDeposited by GitHub Actions workflow run [{run_url.rsplit('/', 1)[-1]}]({run_url})."
+        if (run_url := get_github_run_url())
+        else ""
+    )
     return f"""\
 # {DEPOSIT_TITLE}
 
 Archival snapshot of [OpenSkiStats](https://openskistats.org), deposited {date.today().isoformat()},
-produced by [`dhimmel/openskistats@{commit_sha[:7]}`](https://github.com/dhimmel/openskistats/tree/{commit_sha}).
+produced by [`dhimmel/openskistats@{commit_sha[:7]}`](https://github.com/dhimmel/openskistats/tree/{commit_sha}).{run_sentence}
 
 OpenSkiStats generates statistics on downhill ski slopes and areas worldwide
 from OpenSkiMap/OpenStreetMap data.
@@ -65,6 +70,19 @@ is released under the [Open Database License](https://opendatacommons.org/licens
 code is BSD-2-Clause-Patent;
 produced works such as the website and figures are CC-BY-4.0.
 """
+
+
+def get_github_run_url() -> str | None:
+    """
+    URL of the GitHub Actions run performing this deposit, or None outside CI.
+    GitHub exposes no single variable holding the run URL,
+    so compose it from the documented components.
+    """
+    if run_id := os.environ.get("GITHUB_RUN_ID"):
+        server_url = os.environ["GITHUB_SERVER_URL"]
+        repository = os.environ["GITHUB_REPOSITORY"]
+        return f"{server_url}/{repository}/actions/runs/{run_id}"
+    return None
 
 
 def get_deposit_creators() -> list[dict[str, Any]]:
@@ -111,6 +129,34 @@ def get_deposit_custom_fields() -> dict[str, Any]:
 
 def get_deposit_metadata(commit_sha: str) -> dict[str, Any]:
     """Record-level metadata for a snapshot deposit in InvenioRDM format."""
+    # Relation ids from the /api/vocabularies/relationtypes vocabulary.
+    # `issupplementto` for the repository matches Zenodo's own GitHub integration.
+    related_identifiers = [
+        {
+            "identifier": f"https://github.com/dhimmel/openskistats/tree/{commit_sha}",
+            "scheme": "url",
+            "relation_type": {"id": "issupplementto"},
+            "resource_type": {"id": "software"},
+        },
+        {
+            "identifier": "https://openskistats.org",
+            "scheme": "url",
+            "relation_type": {"id": "issourceof"},
+        },
+        {
+            "identifier": "https://openskimap.org",
+            "scheme": "url",
+            "relation_type": {"id": "isderivedfrom"},
+        },
+    ]
+    if run_url := get_github_run_url():
+        related_identifiers.append(
+            {
+                "identifier": run_url,
+                "scheme": "url",
+                "relation_type": {"id": "iscompiledby"},
+            }
+        )
     return {
         "resource_type": {"id": "dataset"},
         "title": DEPOSIT_TITLE,
@@ -131,26 +177,7 @@ def get_deposit_metadata(commit_sha: str) -> dict[str, Any]:
             {"id": "bsd-2-clause-patent"},
             {"id": "cc-by-4.0"},
         ],
-        # Relation ids from the /api/vocabularies/relationtypes vocabulary.
-        # `issupplementto` for the repository matches Zenodo's own GitHub integration.
-        "related_identifiers": [
-            {
-                "identifier": f"https://github.com/dhimmel/openskistats/tree/{commit_sha}",
-                "scheme": "url",
-                "relation_type": {"id": "issupplementto"},
-                "resource_type": {"id": "software"},
-            },
-            {
-                "identifier": "https://openskistats.org",
-                "scheme": "url",
-                "relation_type": {"id": "issourceof"},
-            },
-            {
-                "identifier": "https://openskimap.org",
-                "scheme": "url",
-                "relation_type": {"id": "isderivedfrom"},
-            },
-        ],
+        "related_identifiers": related_identifiers,
     }
 
 
