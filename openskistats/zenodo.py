@@ -38,11 +38,9 @@ def get_deposit_readme_markdown(commit_sha: str) -> str:
     while the record page shows its HTML rendering as the description
     (the InvenioRDM description field accepts only sanitized HTML).
     """
-    download_lines = "\n".join(
-        f"  - `openskimap/{Path(info.relative_path).name}`"
-        f" retrieved {info.downloaded} (upstream last modified {info.last_modified})"
-        for info in load_openskimap_download_info().values()
-    )
+    openskimap_date = max(
+        info.last_modified for info in load_openskimap_download_info().values()
+    ).split("T")[0]
     return f"""\
 # {DEPOSIT_TITLE}
 
@@ -54,9 +52,8 @@ from OpenSkiMap/OpenStreetMap data.
 This deposit contains the exact inputs, source code, and outputs of one analysis run:
 
 - `code.zip`: repository source code at the producing commit
-- `openskimap/`: GeoJSON inputs downloaded from [OpenSkiMap](https://openskimap.org),
-  with download provenance in `openskimap/info.json`:
-{download_lines}
+- `openskimap/`: GeoJSON inputs from [OpenSkiMap](https://openskimap.org) data of {openskimap_date},
+  with download provenance in `openskimap/info.json`
 - `*.parquet`: derived outputs for runs, lifts, and ski areas
 - `_variables.yaml`: computed statistics interpolated into the website and manuscript
 - `webapp.zip`: the rendered website served at [openskistats.org](https://openskistats.org)
