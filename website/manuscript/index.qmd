@@ -44,7 +44,7 @@ We present OpenSkiStats, the first open, global, and continuously updating resou
 The initial focus of OpenSkiStats is to provide spatial statistics of ski areas and their runs, in particular, the orientation of ski runs.
 Data is sourced from OpenSkiMap, a project to extract and visualize skiing related features from the crowd-sourced OpenStreetMap.
 <!-- FIXME: should we switch to only showing equipped operating ski areas and in bounds runs? -->
-OpenSkiMap provides a resource of `{python} var("openskimap__ski_areas__counts__02_downhill", ",")` downhill ski areas in `{python} var("openskimap__countries__counts__ski_areas_04_downhill_operating_1_lift", ",")` countries and `{python} var("openskimap__runs__counts__03_downhill", ",")` downhill ski runs comprised of XX segments.
+OpenSkiMap provides a resource of `{python} var("openskimap__ski_areas__counts__02_downhill", ",")` downhill ski areas in `{python} var("openskimap__countries__counts__ski_areas_04_downhill_operating_1_lift", ",")` countries and `{python} var("openskimap__runs__counts__03_downhill", ",")` downhill ski runs comprised of `{python} var("openskimap__runs__segments__counts__04_downhill_clean", ",")` segments.
 
 ## Introduction
 
@@ -124,24 +124,6 @@ Boeing's street roses take inspiration from wind roses, which summarize the dire
 Wind roses themselves take inspiration from the compass rose,
 an ancient visualization steeped in tradition and symbolism [@compass-rose; @compass-rose-symbolism].
 <!-- 32-wind compass rose -->
-
-## Main text
-
-Run counts: (with segments and points)
-
-- geometry filter
-- downhill filter
-- coordinate filter (remove elevation voids)
-- vertical drop filter
-- downhill ski area
-- ski resort
-
-Ski area counts (potentially lifts as well?)
-
-- downhill in uses
-- operating
-- named filter
-- resort filter
 
 ## Data completeness
 
@@ -275,6 +257,75 @@ _collecting examples of ski infrastructure that have been lost_
 
 
 ## Methods
+
+### Data acquisition
+
+We source data from OpenSkiMap, which refines OpenStreetMap into three GeoJSON datasets of ski areas, ski runs, and ski lifts.
+OpenSkiMap regenerates these datasets daily, and OpenSkiStats in turn reprocesses them weekly, such that the statistics in this study update continuously rather than describing a single frozen snapshot.
+The results herein derive from OpenSkiMap data generated on `{python} var("openskimap__runs__download__last_modified")[:10]`.
+
+### OpenSkiMap processing
+
+::: {.callout-note}
+This placeholder section awaits a description of OpenSkiMap's data model and processing.
+Questions the section should consider:
+
+- History of OpenSkiMap: Who created and maintains it? Why? When?
+- Which OpenStreetMap elements and tags become OpenSkiMap ski areas, runs, and lifts,
+  and what does a single run, lift, or ski area represent after processing (e.g. are multiple OpenStreetMap elements ever merged into one run)?
+- How are runs and lifts associated with ski areas?
+  When OpenStreetMap lacks an explicit ski area, does OpenSkiMap infer one, e.g. by spatially clustering nearby runs and lifts?
+  Can a run belong to multiple ski areas?
+- How are run coordinates enriched with elevation:
+  which terrain sources at which resolutions, how values are sampled along a line,
+  and what failure modes remain (e.g. elevation voids)?
+- How are metadata fields derived, including operating status, difficulty, and the regional difficulty coloring convention?
+- How does location metadata (country, region, locality) get attached to ski areas?
+- What cleanup or normalization does OpenSkiMap itself perform,
+  so readers know which data defects are handled upstream versus by OpenSkiStats?
+- What is the relationship between OpenSkiMap and Skimap.org as sources?
+:::
+
+### Run filtering and segmentation
+
+OpenSkiMap provides `{python} var("openskimap__runs__counts__01_raw", ",")` runs, which we filter in several steps to the downhill terrain that our spatial metrics require.
+
+A run's geometry is either a line or a polygon,
+a distinction that originates with how OpenStreetMap contributors trace the trail and that OpenSkiMap preserves.
+A line follows a skier's path as an ordered sequence of points,
+to which OpenSkiMap adds an elevation for each longitude and latitude.
+A polygon instead outlines the boundary of a cleared trail area.
+We retain the `{python} var("openskimap__runs__counts__02_linestring", ",")` line runs and discard the `{python} var("openskimap__runs__counts__01_raw_by_geometry__Polygon", ",")` (`{python} f"{var('openskimap__runs__counts__01_raw_by_geometry__Polygon') / var('openskimap__runs__counts__01_raw'):.1%}"`) polygon runs.
+A descending sequence of points defines the direction of travel, from which orientation and slope follow directly,
+whereas inferring a skier's trajectory within a polygon would require modeling the enclosed terrain.
+In addition, wide trails are often mapped as both a polygon and a line down the middle,
+so excluding polygons forfeits less terrain than their count suggests.
+
+OpenStreetMap tags each run with its supported uses.
+We retain the `{python} var("openskimap__runs__counts__03_downhill", ",")` line runs (`{python} f"{var('openskimap__runs__counts__03_downhill') / var('openskimap__runs__counts__02_linestring'):.1%}"`) designated for downhill skiing,
+setting aside nordic, ski touring, hiking, sledding, and other uses.
+
+We then [sanitize](https://github.com/dhimmel/openskistats/blob/0193b6f86ddaf53166137df93b710e24139dd401/openskistats/openskimap_utils.py#L411-L453 "openskistats source code for the _clean_coordinates function") each run's coordinates by dropping points with [missing](https://github.com/russellporter/openskimap.org/issues/160 "OpenSkiMap issue 160: Some lift coordinates are (lon, lat) instead of (lon, lat, ele)") or [implausible](https://github.com/russellporter/openskimap.org/issues/141 "OpenSkiMap issue 141: Extreme negative elevation values in some run coordinates") elevations and collapsing repeated points.
+Upstream data defects motivated these safeguards, several of which OpenSkiMap has since fixed in response to our reports:
+the current snapshot loses only `{python} f"{var('openskimap__runs__coordinates__counts__03_downhill_raw') - var('openskimap__runs__coordinates__counts__04_downhill_clean'):,}"` of `{python} var("openskimap__runs__coordinates__counts__03_downhill_raw", ",")` downhill run coordinates to cleaning.
+Finally, we orient every run downhill, reversing any whose coordinates ascend.
+Note that direction matters:
+a run traced bottom-to-top would report a bearing opposite to the direction a skier travels.
+
+We decompose each run into segments, i.e. the straight paths connecting consecutive coordinates.
+For each segment, we compute the horizontal great-circle distance, the vertical drop, the 3D distance combining the two, the slope, and the compass bearing.
+Segments are the atomic unit of our analyses:
+metrics for a run, a ski area, or any other grouping (e.g. all runs in New Hampshire) aggregate over constituent segments, typically weighted by vertical drop.
+In total, the downhill runs comprise `{python} var("openskimap__runs__segments__counts__04_downhill_clean", ",")` segments,
+descending `{python} f"{var('openskimap__runs__distance__vertical__04_downhill_clean') / 1000:,.0f}"` km of combined vertical drop over `{python} f"{var('openskimap__runs__distance__3d__04_downhill_clean') / 1000:,.0f}"` km of combined 3D distance.
+
+### Ski area filtering
+
+OpenSkiMap provides `{python} var("openskimap__ski_areas__counts__01_raw", ",")` ski areas, of which we retain the `{python} var("openskimap__ski_areas__counts__02_downhill", ",")` (`{python} f"{var('openskimap__ski_areas__counts__02_downhill') / var('openskimap__ski_areas__counts__01_raw'):.1%}"`) that support downhill skiing.
+Since ski area metrics aggregate over member runs, a ski area's own geometry does not require filtering.
+We count each ski area's lifts from the lifts dataset, considering only operating lifts.
+Downstream analyses apply further filters as their comparisons demand,
+e.g. restricting to operating ski areas, those equipped with at least one lift, or resorts with at least five lifts.
 
 ::: {#fig-skiway-trail-segments}
 ![](../images/dartmouth_skiway_trail_segments_and_rose.svg)
