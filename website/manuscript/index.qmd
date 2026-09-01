@@ -429,6 +429,33 @@ The latitude-varying plots illustrate the effect of non-linear turbidity variati
 The radial coordinate spans the complete theoretical range from 0--90° (only showing the northern hemisphere in the case of latitude), even though skiing rarely occurs on sustained slopes exceeding 35° and outside of the 30--70°N latitude band.
 :::
 
+### Software and data availability
+
+OpenSkiStats is developed openly on GitHub at <https://github.com/dhimmel/openskistats>.
+A GitHub Actions workflow reruns the analysis weekly:
+it refreshes the OpenSkiMap downloads, recomputes every metric and figure, renders the website, and deploys the result to <https://openskistats.org>.
+This automation is the sole deployment route,
+making OpenSkiStats an example of continuous analysis,
+whereby a study's computations rerun automatically so that its results always reflect the current code and data [@continuous-analysis].
+Even the manuscript rebuilds each run, interpolating its statistics from computed variables,
+such that the numbers throughout this study describe the latest data rather than a stale draft.
+
+Quarterly, the workflow archives a snapshot of the analysis to Zenodo.
+Each snapshot deposits the exact inputs, source code, and outputs of a single run:
+the OpenSkiMap GeoJSON inputs with their download provenance,
+the repository source at the producing commit,
+the derived datasets of runs, lifts, and ski areas in Parquet format,
+the computed statistics,
+and the rendered website and figures.
+Zenodo mints a DOI for each snapshot as a new version of a shared record,
+providing citable, preserved releases independent of the continuously updating website.
+Deposit metadata links each snapshot to its producing commit and workflow run for provenance.
+<!-- FIXME: cite the Zenodo concept DOI once the first production deposit is published. -->
+
+Licensing varies by component.
+Data derived from OpenSkiMap and OpenStreetMap is released under the Open Database License (ODbL),
+source code under the BSD-2-Clause Plus Patent License,
+and produced works such as the website, figures, and this manuscript under the CC BY 4.0 license.
 
 ## References
 

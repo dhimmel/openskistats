@@ -692,3 +692,28 @@ references:
         - 24
   DOI: 10.5194/isprs-archives-XLIII-B4-2020-183-2020
   URL: https://doi.org/qdsj
+- id: continuous-analysis
+  type: article-journal
+  title: Reproducibility of computational workflows is automated using continuous analysis
+  publisher: Springer Science and Business Media LLC
+  issue: '4'
+  DOI: 10.1038/nbt.3780
+  page: 342-346
+  source: Crossref
+  volume: '35'
+  author:
+  - given: Brett K
+    family: Beaulieu-Jones
+  - given: Casey S
+    family: Greene
+  container-title: Nature Biotechnology
+  language: en
+  issued:
+    date-parts:
+    - - 2017
+      - 3
+      - 13
+  URL: https://doi.org/f9ttx6
+  container-title-short: Nat Biotechnol
+  note: |-
+    standard_id: doi:10.1038/nbt.3780
