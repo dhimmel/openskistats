@@ -1,8 +1,5 @@
 """
 Deposit OpenSkiStats snapshots to Zenodo for long-term archival with DOIs.
-Phase 0 scope per `local/zenodo-deposit-plan.md`:
-a minimal deposit of `ski_area_metrics.parquet` plus a stub README
-to the Zenodo sandbox to exercise the create/draft/publish/version lifecycle.
 
 Uses Zenodo's InvenioRDM REST API directly
 (<https://inveniordm.docs.cern.ch/reference/rest_api_drafts_records/>),
@@ -12,7 +9,9 @@ which unlike the legacy deposit API supports multiple licenses per record.
 import dataclasses
 import logging
 import os
+import subprocess
 import tempfile
+import zipfile
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -22,38 +21,52 @@ import yaml
 from dotenv import load_dotenv
 from markdown_it import MarkdownIt
 
+from openskistats.openskimap_utils import load_openskimap_download_info
 from openskistats.utils import (
     get_data_directory,
     get_repo_directory,
     get_website_source_directory,
 )
 
-DEPOSIT_TITLE = "OpenSkiStats snapshot (development test)"
+DEPOSIT_TITLE = "OpenSkiStats snapshot"
 
 
-def get_deposit_readme_markdown() -> str:
+def get_deposit_readme_markdown(commit_sha: str) -> str:
     """
     Markdown that single-sources the deposit README and the record description:
     the README travels with the downloaded files,
     while the record page shows its HTML rendering as the description
     (the InvenioRDM description field accepts only sanitized HTML).
     """
+    download_lines = "\n".join(
+        f"  - `openskimap/{Path(info.relative_path).name}`"
+        f" retrieved {info.downloaded} (upstream last modified {info.last_modified})"
+        for info in load_openskimap_download_info().values()
+    )
     return f"""\
 # {DEPOSIT_TITLE}
 
-Test deposit for developing the OpenSkiStats archival pipeline, deposited {date.today().isoformat()}.
-Do not cite: this record exercises deposit automation and will be superseded.
+Archival snapshot of [OpenSkiStats](https://openskistats.org), deposited {date.today().isoformat()},
+produced by [`dhimmel/openskistats@{commit_sha[:7]}`](https://github.com/dhimmel/openskistats/tree/{commit_sha}).
 
 OpenSkiStats generates statistics on downhill ski slopes and areas worldwide
 from OpenSkiMap/OpenStreetMap data.
-See [openskistats.org](https://openskistats.org)
-and [github.com/dhimmel/openskistats](https://github.com/dhimmel/openskistats).
+This deposit contains the exact inputs, source code, and outputs of one analysis run:
+
+- `code.zip`: repository source code at the producing commit
+- `openskimap/`: GeoJSON inputs downloaded from [OpenSkiMap](https://openskimap.org),
+  with download provenance in `openskimap/info.json`:
+{download_lines}
+- `*.parquet`: derived outputs for runs, lifts, and ski areas
+- `_variables.yaml`: computed statistics interpolated into the website and manuscript
+- `webapp.zip`: the rendered website served at [openskistats.org](https://openskistats.org)
+- `images.zip`: figures
 
 Licensing varies by component:
-
-- `ski_area_metrics.parquet`: per-ski-area metrics derived from OpenSkiMap/OpenStreetMap (ODbL)
-- code: BSD-2-Clause-Patent
-- produced works such as figures: CC-BY-4.0
+data derived from OpenSkiMap/OpenStreetMap (`openskimap/`, `*.parquet`, `_variables.yaml`)
+is released under the [Open Database License](https://opendatacommons.org/licenses/odbl/) (ODbL);
+code is BSD-2-Clause-Patent;
+produced works such as the website and figures are CC-BY-4.0.
 """
 
 
@@ -79,10 +92,10 @@ def get_deposit_creators() -> list[dict[str, Any]]:
     return creators
 
 
-def get_deposit_payload() -> dict[str, Any]:
+def get_deposit_payload(commit_sha: str) -> dict[str, Any]:
     """Full draft payload: record metadata plus Zenodo custom fields."""
     return {
-        "metadata": get_deposit_metadata(),
+        "metadata": get_deposit_metadata(commit_sha=commit_sha),
         "custom_fields": get_deposit_custom_fields(),
     }
 
@@ -99,15 +112,18 @@ def get_deposit_custom_fields() -> dict[str, Any]:
     }
 
 
-def get_deposit_metadata() -> dict[str, Any]:
+def get_deposit_metadata(commit_sha: str) -> dict[str, Any]:
     """Record-level metadata for a snapshot deposit in InvenioRDM format."""
     return {
         "resource_type": {"id": "dataset"},
         "title": DEPOSIT_TITLE,
         "publication_date": date.today().isoformat(),
+        "version": date.today().isoformat(),
         # Strip the README's title heading since the record page shows the title itself.
         "description": MarkdownIt().render(
-            get_deposit_readme_markdown().removeprefix(f"# {DEPOSIT_TITLE}\n\n")
+            get_deposit_readme_markdown(commit_sha=commit_sha).removeprefix(
+                f"# {DEPOSIT_TITLE}\n\n"
+            )
         ),
         # Required for DOI registration.
         "publisher": "Zenodo",
@@ -122,7 +138,7 @@ def get_deposit_metadata() -> dict[str, Any]:
         # `issupplementto` for the repository matches Zenodo's own GitHub integration.
         "related_identifiers": [
             {
-                "identifier": "https://github.com/dhimmel/openskistats",
+                "identifier": f"https://github.com/dhimmel/openskistats/tree/{commit_sha}",
                 "scheme": "url",
                 "relation_type": {"id": "issupplementto"},
                 "resource_type": {"id": "software"},
@@ -198,24 +214,27 @@ class ZenodoClient:
         result: dict[str, Any] = response.json()
         return result
 
-    def upload_file(self, record_id: str, path: Path) -> None:
-        """Register, upload, and commit one file to a draft record."""
+    def upload_file(self, record_id: str, path: Path, key: str | None = None) -> None:
+        """
+        Register, upload, and commit one file to a draft record.
+        `key` names the file on the record and may contain `/` to convey directories;
+        it defaults to the file's basename.
+        """
+        key = key or path.name
         self._request(
             "POST",
             f"/api/records/{record_id}/draft/files",
-            json=[{"key": path.name}],
+            json=[{"key": key}],
         )
         # Read fully into memory to send a Content-Length header:
         # generator content triggers chunked transfer encoding,
         # which Zenodo's file endpoint silently stores as zero bytes.
         self._request(
             "PUT",
-            f"/api/records/{record_id}/draft/files/{path.name}/content",
+            f"/api/records/{record_id}/draft/files/{key}/content",
             content=path.read_bytes(),
         )
-        self._request(
-            "POST", f"/api/records/{record_id}/draft/files/{path.name}/commit"
-        )
+        self._request("POST", f"/api/records/{record_id}/draft/files/{key}/commit")
 
     def publish_draft(self, record_id: str) -> dict[str, Any]:
         """Publish a draft record and return the published record JSON."""
@@ -226,11 +245,78 @@ class ZenodoClient:
         return result
 
 
-def write_deposit_readme(directory: Path) -> Path:
+def write_deposit_readme(directory: Path, commit_sha: str) -> Path:
     """Write the deposit README."""
     path = directory.joinpath("README.md")
-    path.write_text(get_deposit_readme_markdown())
+    path.write_text(get_deposit_readme_markdown(commit_sha=commit_sha))
     return path
+
+
+def get_commit_sha() -> str:
+    """Return the commit hash of the repository HEAD."""
+    return subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], cwd=get_repo_directory(), text=True
+    ).strip()
+
+
+def build_code_zip(directory: Path, commit_sha: str) -> Path:
+    """
+    Archive the repository source at `commit_sha` via `git archive`.
+    Contains only the files tracked at that commit:
+    no git history, no untracked or gitignored files (`.env`, `data/`, caches),
+    minus any paths marked `export-ignore` in `.gitattributes`.
+    Git history is archived separately by Software Heritage.
+    """
+    path = directory.joinpath("code.zip")
+    subprocess.run(
+        ["git", "archive", "--format=zip", f"--output={path}", commit_sha],
+        cwd=get_repo_directory(),
+        check=True,
+    )
+    return path
+
+
+def build_directory_zip(source: Path, destination: Path) -> Path:
+    """
+    Zip a directory's files with deflate, nested under the directory's name.
+    Deflate over zstd for archival compatibility:
+    stock extractors like Info-ZIP unzip skip zstd entries.
+    """
+    with zipfile.ZipFile(
+        file=destination, mode="w", compression=zipfile.ZIP_DEFLATED
+    ) as zip_file:
+        for file in sorted(source.rglob("*")):
+            if file.is_file():
+                arcname = f"{source.name}/{file.relative_to(source).as_posix()}"
+                zip_file.write(file, arcname=arcname)
+    return destination
+
+
+def gather_deposit_files(temp_dir: Path, commit_sha: str) -> dict[str, Path]:
+    """
+    Collect the deposit contents as a mapping of record file key to local path:
+    all of `data/openskimap/`, all root-level `data/` files,
+    and a zip per bundled directory.
+    Record keys mirror the `data/` directory layout.
+    """
+    data_dir = get_data_directory()
+    files = {
+        "README.md": write_deposit_readme(temp_dir, commit_sha=commit_sha),
+    }
+    code_zip = build_code_zip(temp_dir, commit_sha=commit_sha)
+    files[code_zip.name] = code_zip
+    for path in sorted(data_dir.joinpath("openskimap").iterdir()):
+        if path.is_file():
+            files[f"openskimap/{path.name}"] = path
+    for path in sorted(data_dir.iterdir()):
+        if path.is_file():
+            files[path.name] = path
+    for name in ["webapp", "images"]:
+        files[f"{name}.zip"] = build_directory_zip(
+            source=data_dir.joinpath(name),
+            destination=temp_dir.joinpath(f"{name}.zip"),
+        )
+    return files
 
 
 def deposit_snapshot(
@@ -245,18 +331,19 @@ def deposit_snapshot(
     Deposits remain unpublished drafts unless `publish` is set.
     """
     client = ZenodoClient.from_environment(sandbox=sandbox)
+    commit_sha = get_commit_sha()
+    payload = get_deposit_payload(commit_sha=commit_sha)
     if record_id is None:
-        draft = client.create_draft(payload=get_deposit_payload())
+        draft = client.create_draft(payload=payload)
     else:
         draft = client.create_version_draft(record_id=record_id)
-        draft = client.update_draft_metadata(
-            record_id=draft["id"], payload=get_deposit_payload()
-        )
+        draft = client.update_draft_metadata(record_id=draft["id"], payload=payload)
     draft_id = draft["id"]
-    metrics_path = get_data_directory().joinpath("ski_area_metrics.parquet")
     with tempfile.TemporaryDirectory() as temp_dir:
-        for path in [write_deposit_readme(Path(temp_dir)), metrics_path]:
-            client.upload_file(record_id=draft_id, path=path)
+        files = gather_deposit_files(Path(temp_dir), commit_sha=commit_sha)
+        for key, path in files.items():
+            logging.info(f"Uploading {key} ({path.stat().st_size / 1024**2:.1f} MB)")
+            client.upload_file(record_id=draft_id, path=path, key=key)
     record = client.publish_draft(record_id=draft_id) if publish else draft
     links = record.get("links", {})
     logging.info(f"Record {record['id']} status={record.get('status')}")
