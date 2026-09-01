@@ -18,7 +18,6 @@ from typing import Any
 
 import httpx2
 import yaml
-from dotenv import load_dotenv
 from markdown_it import MarkdownIt
 
 from openskistats.openskimap_utils import load_openskimap_download_info
@@ -191,16 +190,12 @@ class ZenodoClient:
     @classmethod
     def from_environment(cls, sandbox: bool = True) -> ZenodoClient:
         """
-        Authenticate from `ZENODO_SANDBOX_API_TOKEN` (or `ZENODO_API_TOKEN` when `sandbox=False`),
-        loading the repository `.env` file if present.
+        Authenticate from `ZENODO_SANDBOX_API_TOKEN` (or `ZENODO_API_TOKEN` when `sandbox=False`).
         """
-        load_dotenv(dotenv_path=get_repo_directory().joinpath(".env"))
         variable = "ZENODO_SANDBOX_API_TOKEN" if sandbox else "ZENODO_API_TOKEN"
         access_token = os.environ.get(variable)
         if not access_token:
-            raise RuntimeError(
-                f"Set {variable} in the environment or the repository .env file."
-            )
+            raise RuntimeError(f"Set the {variable} environment variable.")
         base_url = "https://sandbox.zenodo.org" if sandbox else "https://zenodo.org"
         return cls(access_token=access_token, base_url=base_url)
 

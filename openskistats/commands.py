@@ -89,14 +89,15 @@ class Commands:
     def zenodo(
         record_id: Annotated[str | None, typer.Option("--record-id")] = None,
         publish: Annotated[bool, typer.Option("--publish")] = False,
+        sandbox: Annotated[bool, typer.Option("--sandbox/--production")] = True,
     ) -> None:
         """
-        Deposit a snapshot to the Zenodo.
+        Deposit a snapshot to the Zenodo sandbox (default), or to production with `--production`.
         Omit `--record-id` to create a new record;
         provide one to create a new version of that record.
         Drafts remain unpublished unless `--publish` is set.
         """
-        deposit_snapshot(record_id=record_id, publish=publish, sandbox=True)
+        deposit_snapshot(record_id=record_id, publish=publish, sandbox=sandbox)
 
     @staticmethod
     @cli.command(name="generate_test_data")

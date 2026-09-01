@@ -17,6 +17,11 @@ on:
         type: boolean
         required: false
         default: false
+      sandbox:
+        description: Deposit to the Zenodo sandbox instead of production
+        type: boolean
+        required: false
+        default: false
   schedule:
     - cron: "0 10 * * SAT"  # https://crontab.guru/#0_10_*_*_SAT
 jobs:
@@ -146,14 +151,18 @@ jobs:
       # Runs last so a published snapshot always corresponds to a deployed website.
       if: github.ref == 'refs/heads/main'
       env:
+        ZENODO_API_TOKEN: ${{ secrets.ZENODO_API_TOKEN }}
         ZENODO_SANDBOX_API_TOKEN: ${{ secrets.ZENODO_SANDBOX_API_TOKEN }}
-        # Any published version of the sandbox concept record https://sandbox.zenodo.org/records/595307.
-        # Leave empty to create and publish a brand-new concept record (the initial publish),
-        # then pin the printed record id here so later runs version it.
-        ZENODO_RECORD_ID: "595742"
+        # Record ids of any published version of each concept record,
+        # set as variables on the zenodo GitHub environment.
+        # An empty id creates and publishes a brand-new concept record (the initial publish);
+        # pin the printed record id in the environment variable so later runs version it.
+        ZENODO_RECORD_ID: ${{ vars.ZENODO_RECORD_ID }}
+        ZENODO_SANDBOX_RECORD_ID: ${{ vars.ZENODO_SANDBOX_RECORD_ID }}
         # Expand expressions into env rather than script text to avoid template injection.
         EVENT_NAME: ${{ github.event_name }}
         DEPOSIT_INPUT: ${{ github.event.inputs.deposit }}
+        SANDBOX_INPUT: ${{ github.event.inputs.sandbox }}
       run: |
         if [ "$EVENT_NAME" = "schedule" ]; then
           case "$(date --utc +%-m)" in
@@ -169,4 +178,8 @@ jobs:
           echo "Dispatched without deposit=true: skipping deposit."
           exit 0
         fi
-        openskistats zenodo ${ZENODO_RECORD_ID:+--record-id="$ZENODO_RECORD_ID"} --publish
+        if [ "$SANDBOX_INPUT" = "true" ]; then
+          openskistats zenodo --sandbox ${ZENODO_SANDBOX_RECORD_ID:+--record-id="$ZENODO_SANDBOX_RECORD_ID"} --publish
+        else
+          openskistats zenodo --production ${ZENODO_RECORD_ID:+--record-id="$ZENODO_RECORD_ID"} --publish
+        fi
