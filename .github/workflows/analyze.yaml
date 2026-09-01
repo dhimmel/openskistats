@@ -62,8 +62,10 @@ jobs:
       uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
       with:
         path: data/openskimap
-        key: openskimap
-        restore-keys: openskimap-
+        # The -zst namespace prevents restoring pre-switch caches of .xz files,
+        # which would linger in data/openskimap and leak into Zenodo deposits.
+        key: openskimap-zst
+        restore-keys: openskimap-zst-
     - name: Download OpenSkiMap
       id: download-openskimap
       # confusing behavior where inputs.refresh_cache acts like a string not a boolean
@@ -75,7 +77,7 @@ jobs:
       # https://github.com/actions/cache/blob/36f1e144e1c8edb0a652766b484448563d8baf46/restore/README.md#L22
       if: steps.inputs.outputs.refresh_cache == 'true' || steps.restore-openskimap.outputs.cache-hit != 'true'
       run: |
-        if [ ! -f "data/openskimap/runs.geojson.xz" ]; then
+        if [ ! -f "data/openskimap/runs.geojson.zst" ]; then
           openskistats download
           echo "downloaded=true" >> "$GITHUB_OUTPUT"
         fi
@@ -87,7 +89,7 @@ jobs:
         path: data/openskimap
         # overwriting the cache key is not permitted, hence append the run_id on save
         # https://github.com/actions/cache/issues/342#issuecomment-673371329
-        key: openskimap-${{ github.run_id }}
+        key: openskimap-zst-${{ github.run_id }}
     - name: Cache ski roses
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
       with:
@@ -97,7 +99,7 @@ jobs:
           data/webapp/ski-areas/roses-full
           data/webapp/ski-areas/roses-openskimap
         # Fingerprints decide which restored roses remain reusable.
-        key: ski-roses-${{ github.sha }}-${{ hashFiles('data/openskimap/*.xz') }}
+        key: ski-roses-${{ github.sha }}-${{ hashFiles('data/openskimap/*.zst') }}
         restore-keys: ski-roses-
     - name: Python Analysis
       env:
@@ -134,7 +136,7 @@ jobs:
         publish_branch: gh-pages
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./data/webapp
-        exclude_assets: "**.xz,**.parquet"
+        exclude_assets: "**.xz,**.zst,**.parquet"
         force_orphan: true
         cname: openskistats.org
     - name: Zenodo deposit

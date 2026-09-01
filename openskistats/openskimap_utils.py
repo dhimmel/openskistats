@@ -1,9 +1,9 @@
 import hashlib
 import json
 import logging
-import lzma
 import shutil
 from collections import Counter
+from compression import zstd
 from dataclasses import asdict as dataclass_to_dict
 from dataclasses import dataclass
 from email.utils import parsedate_to_datetime
@@ -36,7 +36,7 @@ def get_openskimap_path(
     elif testing:
         filename = f"{name}.geojson"
     else:
-        filename = f"{name}.geojson.xz"
+        filename = f"{name}.geojson.zst"
     return directory.joinpath(filename)
 
 
@@ -77,7 +77,7 @@ def download_openskimap_geojson(
     # Generous timeout since these are large files from a sometimes-slow server.
     response = httpx2.get(url, follow_redirects=True, headers=headers, timeout=600)
     response.raise_for_status()
-    with lzma.open(path, "wb") as write_file:
+    with zstd.open(path, "wb", level=19) as write_file:
         write_file.write(response.content)
     info = OsmDownloadInfo(
         url=url,
@@ -109,8 +109,7 @@ def load_openskimap_geojson(
 ) -> list[dict[str, Any]]:
     path = get_openskimap_path(name)
     logging.info(f"Loading {name} from {path}")
-    # polars cannot decompress xz: https://github.com/pola-rs/polars/pull/18536
-    opener = lzma.open if path.suffix == ".xz" else open
+    opener = zstd.open if path.suffix == ".zst" else open
     with opener(path) as read_file:
         data = json.load(read_file)
     assert data["type"] == "FeatureCollection"
