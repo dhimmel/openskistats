@@ -18,10 +18,10 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, ClassVar, Literal
 
+import httpx2
 import numpy as np
 import plotnine as pn
 import polars as pl
-import requests
 from bs4 import BeautifulSoup
 
 from openskistats.analyze import load_ski_areas_pl
@@ -68,8 +68,12 @@ class NewEnglandSkiHistoryTimelineScraper:
         """Get the HTML content of the page."""
         url = f"{self.NESH_URL}/timeline/{self.moment}dates.php"
         time.sleep(1)
-        response = requests.get(
-            url=url, params={"season": self.season_str}, headers=get_request_headers()
+        response = httpx2.get(
+            url=url,
+            params={"season": self.season_str},
+            headers=get_request_headers(),
+            follow_redirects=True,
+            timeout=30,
         )
         logging.info(
             f"Request to {response.url} returned status code {response.status_code}."

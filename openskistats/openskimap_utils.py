@@ -11,8 +11,8 @@ from functools import cache
 from pathlib import Path
 from typing import Any, Literal
 
+import httpx2
 import polars as pl
-import requests
 
 from openskistats.models import OpenSkiMapStatus, RunCoordinateModel, SkiRunUsage
 from openskistats.utils import (
@@ -74,7 +74,8 @@ def download_openskimap_geojson(
     path.parent.mkdir(exist_ok=True)
     logging.info(f"Downloading {url} to {path}")
     headers = get_request_headers()
-    response = requests.get(url, allow_redirects=True, headers=headers)
+    # Generous timeout since these are large files from a sometimes-slow server.
+    response = httpx2.get(url, follow_redirects=True, headers=headers, timeout=600)
     response.raise_for_status()
     with lzma.open(path, "wb") as write_file:
         write_file.write(response.content)

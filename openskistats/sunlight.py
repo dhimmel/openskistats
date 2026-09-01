@@ -9,13 +9,13 @@ from pathlib import Path
 from time import perf_counter
 from typing import Any, Literal
 
+import httpx2
 import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
 import polars as pl
 import pvlib
-import requests
 from matplotlib.collections import QuadMesh
 from matplotlib.colorbar import Colorbar
 from matplotlib.figure import Figure
@@ -312,7 +312,13 @@ def _get_runs_cache_path(skip_cache: bool = False) -> str | None | Path:
         return None
     if running_in_ci():
         url = "https://github.com/dhimmel/openskistats/raw/data/runs.parquet"
-        return url if requests.head(url).ok else None
+        # Follow the redirect to raw.githubusercontent.com to confirm the file exists:
+        # without following, the 302 itself would count as success.
+        return (
+            url
+            if httpx2.head(url, follow_redirects=True, timeout=30).is_success
+            else None
+        )
     local_path = get_runs_parquet_path()
     if not local_path.exists():
         return None

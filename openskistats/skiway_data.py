@@ -9,8 +9,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, cast
 
+import httpx2
 import numpy as np
-import requests
 
 from openskistats.geometry import (
     GeographicBounds,
@@ -175,18 +175,20 @@ def download_skiway_context() -> Path:
     """
     features = []
     for osm_id in SKIWAY_CONTEXT_OSM_WAY_IDS:
-        response = requests.get(
+        response = httpx2.get(
             f"https://api.openstreetmap.org/api/0.6/way/{osm_id}/full.json",
             headers={"User-Agent": USER_AGENT},
             timeout=60,
+            follow_redirects=True,
         )
         response.raise_for_status()
         features.append(_osm_way_to_geojson_feature(response.json()))
     for osm_id in SKIWAY_CONTEXT_OSM_RELATION_IDS:
-        response = requests.get(
+        response = httpx2.get(
             f"https://api.openstreetmap.org/api/0.6/relation/{osm_id}/full.json",
             headers={"User-Agent": USER_AGENT},
             timeout=60,
+            follow_redirects=True,
         )
         response.raise_for_status()
         features.append(
@@ -393,20 +395,22 @@ def download_skiway_contours(
         "adjustAspectRatio": "false",
         "f": "json",
     }
-    export_response = requests.get(
+    export_response = httpx2.get(
         f"{SKIWAY_ELEVATION_SERVICE_URL}/exportImage",
         params=export_parameters,
         headers={"User-Agent": USER_AGENT},
         timeout=60,
+        follow_redirects=True,
     )
     export_response.raise_for_status()
     export = export_response.json()
     if "error" in export:
         raise RuntimeError(f"USGS elevation export failed: {export['error']}")
-    raster_response = requests.get(
+    raster_response = httpx2.get(
         export["href"],
         headers={"User-Agent": USER_AGENT},
         timeout=60,
+        follow_redirects=True,
     )
     raster_response.raise_for_status()
     with Image.open(io.BytesIO(raster_response.content)) as image:
