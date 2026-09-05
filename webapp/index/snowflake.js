@@ -1,0 +1,2 @@
+var i=document.getElementById("snow-container"),t;function s(){let e=document.createElement("div");e.classList.add("snowflake"),e.textContent="\u2744",e.style.left=`${Math.random()*100}vw`;let o=Math.random()*.7*Math.sqrt(window.innerWidth)+1;e.style.fontSize=`${o}px`,e.style.animationDuration=`${Math.random()*30+3}s`,i.appendChild(e),setTimeout(()=>e.remove(),1e4)}function a(){let e=window.innerWidth;t&&clearInterval(t);let n;e>800?n=400:n=600,t=setInterval(s,n)}a();window.addEventListener("resize",a);
+//# sourceMappingURL=snowflake.js.map

@@ -1,0 +1,519 @@
+.oss-table {
+  color: var(--bs-body-color);
+  font-size: 0.85rem;
+  min-width: 0;
+  width: 100%;
+}
+
+#ski-area-table,
+.column-screen-inset:has(#ski-area-table) {
+  min-width: 0;
+  width: 100%;
+}
+
+.oss-table button,
+.oss-table input,
+.oss-table select {
+  font: inherit;
+}
+
+.oss-table-status,
+.oss-table-pagination {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: space-between;
+  padding: 0.55rem 0;
+}
+
+.oss-table-status {
+  font-size: 0.95rem;
+}
+
+.oss-table-clear,
+.oss-table-pagination button,
+.oss-table-pagination select,
+.oss-table-error button {
+  background: var(--bs-body-bg);
+  border: 1px solid #adb5bd;
+  border-radius: 0.25rem;
+  color: var(--bs-body-color);
+  padding: 0.25rem 0.55rem;
+}
+
+.oss-table-clear:not(:disabled):hover,
+.oss-table-pagination button:not(:disabled):hover,
+.oss-table-error button:hover {
+  background: #e9ecef;
+}
+
+.oss-table button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+/* Fill the available width and scroll only once the columns no longer fit,
+   without leaving an empty tail after the final column. */
+.oss-table-scroll {
+  max-width: 100%;
+  min-width: 0;
+  overflow: auto;
+  width: 100%;
+}
+
+.oss-table-scroll:focus-visible {
+  outline: 3px solid rgba(13, 110, 253, 0.35);
+  outline-offset: 2px;
+}
+
+.oss-table table {
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 0;
+  table-layout: fixed;
+}
+
+.oss-table th,
+.oss-table td {
+  background: var(--bs-body-bg);
+  border-bottom: 1px solid #d6d8db;
+  line-height: 1.25;
+  padding: 0.45rem 0.35rem;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.oss-table thead tr:first-child th {
+  background: var(--bs-body-bg);
+  border-bottom: 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  padding-block: 0.25rem;
+}
+
+.oss-table thead tr:last-child th {
+  border-bottom: 1px solid #74787c;
+  padding-block: 0.35rem;
+  vertical-align: bottom;
+}
+
+.oss-table tbody tr:hover td {
+  background: #f1f6fb;
+}
+
+.oss-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.oss-table tfoot td {
+  border-bottom: 0;
+  border-top: 1px solid #74787c;
+  color: #343a40;
+  line-height: 1.2;
+  padding-block: 0.5rem;
+  padding-inline: 0.2rem;
+}
+
+.oss-table-footer-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.oss-table-footer-label {
+  color: #6c757d;
+  font-size: 0.62rem;
+  font-weight: 400;
+}
+
+/* `anywhere` only splits a value that cannot fit at all, so sums break at the
+   unit space first rather than mid-number. */
+.oss-table-footer-value {
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.oss-table-sort-button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  display: inline-flex;
+  font-weight: 600;
+  gap: 0.25rem;
+  justify-content: center;
+  line-height: 1.15;
+  padding: 0.15rem;
+}
+
+.oss-table-sort-button:not(:disabled) {
+  cursor: pointer;
+}
+
+.oss-table-sort-button:focus-visible,
+.oss-table-tooltip-trigger:focus-visible {
+  outline: 2px solid #0d6efd;
+  outline-offset: 2px;
+}
+
+.oss-table-tooltip-trigger {
+  display: inline-block;
+  position: relative;
+}
+
+/* Hidden tooltips must not occupy layout: `visibility: hidden` still counts
+   toward the scroll container's width, which added an empty scrollable tail
+   past the final column. */
+/* Anchored below the header rather than above it: the scroll container clips
+   its own overflow, so an upward tooltip loses its top edge. */
+.oss-table-tooltip {
+  background: #212529;
+  border-radius: 0.3rem;
+  color: white;
+  display: none;
+  top: calc(100% + 0.4rem);
+  font-size: 0.78rem;
+  font-weight: 400;
+  left: 50%;
+  line-height: 1.3;
+  max-width: min(25rem, 80vw);
+  padding: 0.5rem 0.65rem;
+  pointer-events: none;
+  position: absolute;
+  text-align: left;
+  transform: translateX(-50%);
+  width: max-content;
+  z-index: 1100;
+}
+
+.oss-table-tooltip-trigger:hover .oss-table-tooltip,
+.oss-table-tooltip-trigger:focus .oss-table-tooltip,
+.oss-table-sort-button:focus .oss-table-tooltip {
+  display: block;
+}
+
+.oss-table-sticky {
+  box-shadow: 2px 0 3px rgba(0, 0, 0, 0.1);
+  left: 0;
+  position: sticky;
+  text-align: left !important;
+  z-index: 2;
+}
+
+.oss-table thead .oss-table-sticky,
+.oss-table tfoot .oss-table-sticky {
+  z-index: 3;
+}
+
+.oss-table-border-left {
+  border-left: 2px solid #3f3e3e;
+}
+
+.oss-table-country,
+.oss-table-azimuth {
+  align-items: center;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.oss-table-latitude {
+  align-items: center;
+  background: var(--oss-latitude-background, #666);
+  border-radius: 50%;
+  color: white;
+  display: inline-flex;
+  flex-direction: column;
+  height: 2.8em;
+  justify-content: center;
+  line-height: 1;
+  width: 2.8em;
+}
+
+.oss-table-hemisphere {
+  font-size: 1.05em;
+  margin-bottom: 0.15em;
+}
+
+.oss-table-latitude > span:last-child {
+  font-size: 0.7em;
+}
+
+.oss-table-metric {
+  text-decoration-color: var(--oss-metric-color, transparent);
+  text-decoration-line: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 3px;
+}
+
+.oss-table-azimuth-arrow {
+  height: 26px;
+  width: 26px;
+}
+
+.oss-table-azimuth > span {
+  color: #343a40;
+  font-size: 0.75rem;
+}
+
+.oss-table-donut {
+  display: inline-grid;
+  place-items: center;
+  position: relative;
+}
+
+.oss-table-donut svg,
+.oss-table-donut > span {
+  grid-area: 1 / 1;
+}
+
+.oss-table-donut svg {
+  height: 2.75rem;
+  transform: rotate(-90deg);
+  width: 2.75rem;
+}
+
+.oss-table-donut circle {
+  fill: none;
+  stroke-width: 5;
+}
+
+.oss-table-donut-track {
+  stroke: rgba(0, 0, 0, 0.1);
+}
+
+.oss-table-donut-value {
+  stroke: #a100bf;
+}
+
+.oss-table-donut > span {
+  font-size: 0.75rem;
+}
+
+.oss-table-rose img {
+  display: block;
+  height: 46px;
+  margin: auto;
+  width: 46px;
+}
+
+.oss-table-rose-missing {
+  color: #adb5bd;
+}
+
+.oss-table-rose-tooltip {
+  background: white;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  height: 300px;
+  pointer-events: none;
+  position: fixed;
+  width: 300px;
+  z-index: 1200;
+}
+
+.oss-table-rose-tooltip img {
+  height: 100%;
+  width: 100%;
+}
+
+.oss-table-empty {
+  padding: 2rem !important;
+  text-align: left !important;
+}
+
+.oss-table-pagination label,
+.oss-table-page-buttons {
+  align-items: center;
+  display: flex;
+  gap: 0.4rem;
+}
+
+.oss-table-loading,
+.oss-table-error {
+  border: 1px solid #d6d8db;
+  border-radius: 0.25rem;
+  padding: 1rem;
+}
+
+.oss-table-loading {
+  color: #495057;
+}
+
+.oss-table-error {
+  background: #fff3cd;
+  border-color: #ffecb5;
+}
+
+.oss-table-error p {
+  margin-block: 0.5rem;
+}
+
+@media (max-width: 600px) {
+  .oss-table {
+    font-size: 0.82rem;
+  }
+
+  .oss-table-status,
+  .oss-table-pagination {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+.oss-table-ski-areas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.oss-table-boolean-unknown {
+  color: #adb5bd;
+}
+
+/* A summary such as a bracketed range can outgrow a narrow metric column, and
+   wrapping it would retune every header's height. */
+.oss-table-facet-trigger {
+  background: var(--bs-body-bg);
+  border: 1px solid #adb5bd;
+  border-radius: 0.2rem;
+  color: var(--bs-body-color);
+  cursor: pointer;
+  display: block;
+  font-size: 0.72rem;
+  margin: 0.3rem auto 0;
+  overflow: hidden;
+  padding: 0.12rem 0.18rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.oss-table-facet-popover {
+  background: var(--bs-body-bg);
+  border: 1px solid #adb5bd;
+  border-radius: 0.35rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+  gap: 0.35rem;
+  max-height: 21rem;
+  padding: 0.5rem;
+  position: fixed;
+  text-align: left;
+  width: 260px;
+  z-index: 1200;
+}
+
+.oss-table-facet-search {
+  border: 1px solid #adb5bd;
+  border-radius: 0.2rem;
+  padding: 0.2rem 0.3rem;
+  width: 100%;
+}
+
+.oss-table-facet-actions {
+  display: flex;
+  gap: 0.35rem;
+  justify-content: space-between;
+}
+
+.oss-table-facet-actions button {
+  background: var(--bs-body-bg);
+  border: 1px solid #adb5bd;
+  border-radius: 0.2rem;
+  cursor: pointer;
+  font-size: 0.72rem;
+  padding: 0.15rem 0.4rem;
+}
+
+.oss-table-facet-list {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.oss-table-facet-option {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.15rem 0.1rem;
+}
+
+.oss-table-facet-option:hover {
+  background: #f1f6fb;
+}
+
+.oss-table-facet-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.oss-table-facet-count {
+  color: #6c757d;
+  font-variant-numeric: tabular-nums;
+  margin-left: auto;
+}
+
+.oss-table-facet-empty,
+.oss-table-facet-more {
+  color: #6c757d;
+  font-size: 0.72rem;
+  margin: 0;
+}
+
+.oss-table-range-summary {
+  color: #6c757d;
+  font-size: 0.72rem;
+  margin: 0;
+}
+
+/* Stretched to the popover's width, so a bin's screen position matches the
+   fraction of the domain it covers and the brush can map clicks back to it. */
+.oss-table-range-plot {
+  cursor: crosshair;
+  display: block;
+  height: 54px;
+  touch-action: none;
+  width: 100%;
+}
+
+.oss-table-range-bar {
+  fill: #0d6efd;
+}
+
+.oss-table-range-bar-excluded {
+  fill: #ced4da;
+}
+
+.oss-table-range-axis {
+  color: #6c757d;
+  display: flex;
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+  justify-content: space-between;
+}
+
+.oss-table-range-inputs {
+  align-items: center;
+  color: #6c757d;
+  display: flex;
+  font-size: 0.72rem;
+  gap: 0.35rem;
+}
+
+.oss-table-range-input {
+  border: 1px solid #adb5bd;
+  border-radius: 0.2rem;
+  min-width: 0;
+  padding: 0.15rem 0.25rem;
+  text-align: right;
+  width: 100%;
+}
