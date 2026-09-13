@@ -34,7 +34,6 @@ import {
   overlapsBin,
   parseBound,
   restricts,
-  roundTo,
   UNBOUNDED,
   withBound,
 } from "./range";
@@ -208,32 +207,29 @@ function countryCodes<TData extends CountryFields>(
 }
 
 /**
- * Let a country option be found by its ISO code or flag, not only its name,
- * so the picker gains `US` and `🇺🇸` for `United States`.
+ * Column meta letting a country be searched and shared by its code.
+ *
+ * The picker gains `US` and `🇺🇸` for `United States`, and the URL writes
+ * `country=US` and reads it back.
  */
-export function countryFacetKeys<TData extends CountryFields>(
+export function countryColumnMeta<TData extends CountryFields>(
   data: readonly TData[],
-): (value: unknown) => string[] {
-  const codes = countryCodes(data);
-  return (value) => {
-    const code = typeof value === "string" ? codes.get(value) : undefined;
-    if (code === undefined) {
-      return [];
-    }
-    const flag = countryCodeToFlag(code);
-    return flag === null ? [code] : [code, flag];
-  };
-}
-
-/** Write a country to the URL as its code, `country=AT`, and read it back. */
-export function countryUrlValue<TData extends CountryFields>(
-  data: readonly TData[],
-): UrlValueCodec {
+): { facetKeys: (value: unknown) => string[]; urlValue: UrlValueCodec } {
   const codes = countryCodes(data);
   const names = new Map([...codes].map(([name, code]) => [code, name]));
   return {
-    decode: (text) => names.get(text.toUpperCase()),
-    encode: (value) => codes.get(String(value)) ?? String(value),
+    facetKeys: (value) => {
+      const code = typeof value === "string" ? codes.get(value) : undefined;
+      if (code === undefined) {
+        return [];
+      }
+      const flag = countryCodeToFlag(code);
+      return flag === null ? [code] : [code, flag];
+    },
+    urlValue: {
+      decode: (text) => names.get(text.toUpperCase()),
+      encode: (value) => codes.get(String(value)) ?? String(value),
+    },
   };
 }
 
@@ -736,8 +732,9 @@ function RangeFilterPanel<TData extends RowData>({
     column.columnDef.meta?.filterFormat?.(value) ??
     formatBound(value, histogram.precision);
   const integer = column.columnDef.meta?.integer ?? false;
-  const boundText = (value: number) =>
-    Number.isFinite(value) ? String(roundTo(value, histogram.precision)) : "";
+  // The boxes show a bound exactly as it is applied, however it was typed;
+  // only the axis labels round to the bin precision.
+  const boundText = (value: number) => (Number.isFinite(value) ? String(value) : "");
   const keptCount = values.filter(
     (value) => value !== null && rangeContains(bounds, value),
   ).length;

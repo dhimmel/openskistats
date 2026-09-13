@@ -21,8 +21,7 @@ import {
   ColumnFilter,
   columnMaximum,
   CountryCell,
-  countryFacetKeys,
-  countryUrlValue,
+  countryColumnMeta,
   footerStat,
   header,
   LatitudeCell,
@@ -238,10 +237,7 @@ function createColumns(
         },
         categoricalColumn("country", "Country", {
           cell: CountryCell,
-          meta: {
-            facetKeys: countryFacetKeys(data),
-            urlValue: countryUrlValue(data),
-          },
+          meta: countryColumnMeta(data),
           footer: (context) =>
             footerStat(
               "Distinct",
