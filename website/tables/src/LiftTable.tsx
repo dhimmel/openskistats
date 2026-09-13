@@ -6,11 +6,12 @@ import {
   type PaginationState,
   useTable,
 } from "@tanstack/react-table";
-import { type ReactNode, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { matchesNumericFilter, matchesSetFilter } from "./filters";
 import {
   formatLatitude,
+  formatLongitude,
   formatMeters,
   formatNumber,
   MISSING_VALUE,
@@ -19,13 +20,16 @@ import { calculateLiftAggregates, type LiftAggregates } from "./lift-core";
 import { TABLE_FEATURES, type TableFeatures } from "./table-features";
 import {
   ColumnFilter,
+  ColumnVisibilityPicker,
   columnMaximum,
   CountryCell,
   countryColumnMeta,
   footerStat,
-  header,
+  HiddenColumnNotices,
   LatitudeCell,
+  LongitudeCell,
   metricCell,
+  renderColumnHeader,
   textCell,
 } from "./table-ui";
 import {
@@ -39,6 +43,7 @@ import {
   type TableUrlState,
   urlColumnsFrom,
   useUrlTableState,
+  visibilityColumnsFrom,
 } from "./url-state";
 
 /** Lifts recorded as still operating, shown before the visitor clears filters. */
@@ -50,6 +55,7 @@ export const INITIAL_LIFT_FILTERS = [
 const DEFAULT_STATE: TableUrlState = {
   columnFilters: [...INITIAL_LIFT_FILTERS],
   sorting: [{ desc: true, id: "vertical_rise" }],
+  columnVisibility: { longitude: false },
 };
 
 const numericFilter: FilterFn<TableFeatures, LiftSummary> = (row, columnId, value) =>
@@ -82,13 +88,6 @@ export function formatDuration(value: number | null): string {
   const minutes = Math.floor(value / 60);
   const seconds = Math.round(value % 60);
   return `${minutes}:${String(seconds).padStart(2, "0")}`;
-}
-
-function fieldDescription(
-  schema: TableRecordSchema,
-  field: keyof LiftSummary,
-): string | undefined {
-  return schema.properties[field]?.description;
 }
 
 function SkiAreaCell({ row }: CellContext<TableFeatures, LiftSummary, unknown>) {
@@ -136,15 +135,14 @@ function createColumns(
   data: readonly LiftSummary[],
   schema: TableRecordSchema,
 ): ColumnDef<TableFeatures, LiftSummary, unknown>[] {
-  const description = (field: keyof LiftSummary) => fieldDescription(schema, field);
   const numericColumn = (
     field: keyof LiftSummary,
-    label: ReactNode,
+    label: string,
     options: Partial<ColumnDef<TableFeatures, LiftSummary, unknown>> = {},
   ): ColumnDef<TableFeatures, LiftSummary, unknown> => ({
     accessorKey: field,
     filterFn: numericFilter,
-    header: header(label, description(field)),
+    header: label,
     sortUndefined: "last",
     ...options,
     id: field,
@@ -156,13 +154,13 @@ function createColumns(
   });
   const categoricalColumn = (
     field: keyof LiftSummary,
-    label: ReactNode,
+    label: string,
     options: Partial<ColumnDef<TableFeatures, LiftSummary, unknown>> = {},
   ): ColumnDef<TableFeatures, LiftSummary, unknown> => ({
     accessorKey: field,
     cell: ({ getValue }) => textCell(getValue<string | null>()),
     filterFn: setFilter,
-    header: header(label, description(field)),
+    header: label,
     sortDescFirst: false,
     sortUndefined: "last",
     ...options,
@@ -178,6 +176,7 @@ function createColumns(
       columns: [
         {
           accessorKey: "lift_name",
+          enableHiding: false,
           cell: ({ getValue, row }) => (
             <a
               href={`https://openskimap.org/?obj=${row.original.lift_id}`}
@@ -193,7 +192,7 @@ function createColumns(
               "Lifts",
               formatNumber(aggregatesFrom(context)?.rowCount ?? null),
             ),
-          header: header("Lift", description("lift_name")),
+          header: "Lift",
           id: "lift_name",
           meta: { facetSort: "label", filterVariant: "faceted" },
           minSize: 140,
@@ -215,7 +214,7 @@ function createColumns(
               "Distinct",
               formatNumber(aggregatesFrom(context)?.distinctSkiAreas ?? null),
             ),
-          header: header("Ski Area", description("ski_area_names")),
+          header: "Ski Area",
           id: "ski_area_names",
           getUniqueValues: (lift) =>
             [...new Set(lift.ski_area_names)].filter(
@@ -263,13 +262,19 @@ function createColumns(
           accessorKey: "latitude",
           cell: LatitudeCell,
           filterFn: numericFilter,
-          header: header("ℍ φ", description("latitude")),
+          header: "ℍ φ",
           id: "latitude",
           meta: { filterFormat: formatLatitude, filterVariant: "range" },
           minSize: 55,
           size: 62,
           sortUndefined: "last",
         },
+        numericColumn("longitude", "ℍ λ", {
+          cell: LongitudeCell,
+          meta: { filterFormat: formatLongitude },
+          minSize: 55,
+          size: 62,
+        }),
       ],
     },
     {
@@ -294,7 +299,7 @@ function createColumns(
           accessorKey: "lift_detachable",
           cell: BooleanCell,
           filterFn: setFilter,
-          header: header("Detach.", description("lift_detachable")),
+          header: "Detach.",
           id: "lift_detachable",
           meta: { filterVariant: "faceted", urlValue: BOOLEAN_URL_VALUE },
           minSize: 50,
@@ -385,10 +390,10 @@ export function LiftTable({ document }: { document: LiftDocument }) {
     [document],
   );
   const urlSpec = useMemo(
-    () => ({ columns: urlColumnsFrom(columns), defaults: DEFAULT_STATE }),
+    () => ({ columns: urlColumnsFrom(columns), visibilityColumns: visibilityColumnsFrom(columns), defaults: DEFAULT_STATE }),
     [columns],
   );
-  const { columnFilters, setColumnFilters, setSorting, sorting } =
+  const { columnFilters, columnVisibility, setColumnFilters, setColumnVisibility, setSorting, sorting } =
     useUrlTableState(urlSpec);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -403,11 +408,13 @@ export function LiftTable({ document }: { document: LiftDocument }) {
     columns,
     data: document.lifts,
     defaultColumn: { maxSize: 190, minSize: 36, size: 55 },
+    initialState: { columnVisibility: DEFAULT_STATE.columnVisibility },
     meta: { aggregates },
     onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
-    state: { columnFilters, pagination, sorting },
+    state: { columnFilters, columnVisibility, pagination, sorting },
   });
 
   const filteredRows = table.getFilteredRowModel().rows;
@@ -424,15 +431,19 @@ export function LiftTable({ document }: { document: LiftDocument }) {
         <span>
           Showing {formatNumber(filteredRows.length)} of {formatNumber(document.record_count)} named lifts.
         </span>
-        <button
-          className="oss-table-clear"
-          disabled={!hasFilters}
-          onClick={() => setColumnFilters([])}
-          type="button"
-        >
-          Clear all filters
-        </button>
+        <div className="oss-table-actions">
+          <ColumnVisibilityPicker table={table} />
+          <button
+            className="oss-table-clear"
+            disabled={!hasFilters}
+            onClick={() => setColumnFilters([])}
+            type="button"
+          >
+            Clear all filters
+          </button>
+        </div>
       </div>
+      <HiddenColumnNotices table={table} />
       <div className="oss-table-scroll" tabIndex={0}>
         <table style={{ minWidth: table.getTotalSize(), width: "100%" }}>
           <colgroup>
@@ -453,9 +464,9 @@ export function LiftTable({ document }: { document: LiftDocument }) {
                   >
                     {headerCell.isPlaceholder
                       ? null
-                      : flexRender(
-                          headerCell.column.columnDef.header,
+                      : renderColumnHeader(
                           headerCell.getContext(),
+                          document.record_schema.properties[headerCell.column.id]?.description,
                         )}
                     {!headerCell.isPlaceholder &&
                       headerCell.colSpan === 1 &&

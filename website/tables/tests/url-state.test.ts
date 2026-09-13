@@ -8,6 +8,7 @@ import {
   type TableUrlSpec,
   type TableUrlState,
   urlColumnsFrom,
+  visibilityColumnsFrom,
   writeTableState,
 } from "../src/url-state";
 
@@ -293,6 +294,74 @@ describe("urlColumnsFrom", () => {
       { id: "country", urlValue: BOOLEAN_URL_VALUE, variant: "faceted" },
       { id: "run_count", urlValue: undefined, variant: "range" },
     ]);
+  });
+});
+
+describe("column visibility", () => {
+  const visibilitySpec: TableUrlSpec = {
+    ...spec,
+    visibilityColumns: ["country", "latitude", "longitude", "rose"],
+    defaults: {
+      ...spec.defaults,
+      columnVisibility: { ski_area_id: false, longitude: false },
+    },
+  };
+
+  it("keeps the existing view and hides longitude for old links", () => {
+    expect(readTableState("?country=AT", visibilitySpec).columnVisibility).toEqual(
+      visibilitySpec.defaults.columnVisibility,
+    );
+    expect(writeTableState("", visibilitySpec.defaults, visibilitySpec)).toBe("");
+  });
+
+  it("shares selected columns while preserving filters, sorting, and unrelated parameters", () => {
+    const state = readTableState("?columns=longitude,rose&latitude=..0&sort=-latitude&foo=bar", visibilitySpec);
+    expect(state.columnVisibility).toEqual({
+      ski_area_id: false, country: false, latitude: false, longitude: true, rose: true,
+    });
+    expect(state.columnFilters).toContainEqual({ id: "latitude", value: atMost(0) });
+    expect(state.sorting).toEqual([{ id: "latitude", desc: true }]);
+    const search = writeTableState("?foo=bar", state, visibilitySpec);
+    expect(new URLSearchParams(search).get("columns")).toBe("longitude,rose");
+    expect(new URLSearchParams(search).get("foo")).toBe("bar");
+    expect(readTableState(search, visibilitySpec)).toEqual(state);
+  });
+
+  it.each([
+    { text: "bogus", expected: undefined, purpose: "an unknown-only list" },
+    { text: "ski_area_id", expected: undefined, purpose: "an internal field" },
+    { text: "rose,bogus,rose", expected: ["rose"], purpose: "unknown and duplicate entries" },
+    { text: "", expected: [], purpose: "hiding every optional column" },
+  ])("handles $purpose", ({ text, expected }) => {
+    const state = readTableState(`?columns=${text}`, visibilitySpec);
+    if (expected === undefined) {
+      expect(state.columnVisibility).toEqual(visibilitySpec.defaults.columnVisibility);
+    } else {
+      expect(visibilitySpec.visibilityColumns!.filter((id) => state.columnVisibility?.[id])).toEqual(expected);
+    }
+    expect(state.columnVisibility?.ski_area_id).toBe(false);
+  });
+
+  it("resets columns without clearing the current filter or sort", () => {
+    const state = readTableState("?columns=longitude&country=AT&sort=latitude", visibilitySpec);
+    state.columnVisibility = visibilitySpec.defaults.columnVisibility;
+    const search = writeTableState("?columns=longitude", state, visibilitySpec);
+    expect(search).toBe("?country=AT&sort=latitude");
+  });
+
+  it("does not claim the columns parameter for tables without a picker", () => {
+    expect(writeTableState("?columns=custom", spec.defaults, spec)).toBe("?columns=custom");
+  });
+
+  it("offers labeled leaves, including visuals, while excluding fixed and internal fields", () => {
+    expect(visibilityColumnsFrom([
+      { header: "Location", columns: [
+        { id: "ski_area_id" },
+        { id: "ski_area_name", enableHiding: false, header: "Ski Area" },
+        { id: "longitude", header: "ℍ λ", meta: { filterVariant: "range" } },
+      ] },
+      { id: "rose", enableSorting: false, header: "Rose" },
+    ])).toEqual(["longitude", "rose"]);
   });
 });
 

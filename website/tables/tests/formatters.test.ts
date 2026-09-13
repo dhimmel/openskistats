@@ -2,6 +2,7 @@ import { expect, it } from "vitest";
 
 import {
   formatLatitude,
+  formatLongitude,
   formatMeters,
   formatNumber,
   formatPercent,
@@ -30,4 +31,14 @@ it.each([
   { value: 0, expected: "0°", purpose: "the equator, which has no hemisphere" },
 ])("names $purpose", ({ value, expected }) => {
   expect(formatLatitude(value)).toBe(expected);
+});
+
+it.each([
+  { value: 140.25, expected: "140.3°E", purpose: "an eastern longitude" },
+  { value: -72.5, expected: "72.5°W", purpose: "a western longitude" },
+  { value: 0, expected: "0°", purpose: "the prime meridian" },
+  { value: -180, expected: "180°W", purpose: "the western limit" },
+  { value: 180, expected: "180°E", purpose: "the eastern limit" },
+])("names $purpose", ({ value, expected }) => {
+  expect(formatLongitude(value)).toBe(expected);
 });

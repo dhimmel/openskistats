@@ -1,10 +1,12 @@
 /** Presentation helpers shared by the ski-area and lift tables. */
-import type {
-  CellContext,
-  Column,
-  HeaderContext,
-  Row,
-  RowData,
+import {
+  flexRender,
+  type CellContext,
+  type Column,
+  type HeaderContext,
+  type Row,
+  type RowData,
+  type Table,
 } from "@tanstack/react-table";
 import {
   type CSSProperties,
@@ -37,10 +39,10 @@ import {
   UNBOUNDED,
   withBound,
 } from "./range";
-import type { TableFeatures } from "./table-features";
+import { columnLabel, type TableFeatures } from "./table-features";
 import type { UrlValueCodec } from "./url-state";
 
-export function HeaderLabel({
+function HeaderLabel({
   description,
   focusable = true,
   label,
@@ -62,19 +64,33 @@ export function HeaderLabel({
   );
 }
 
-export function header<TData extends RowData>(
-  label: ReactNode,
+/**
+ * Decorate a plain-text leaf heading with sorting and a tooltip at render time.
+ *
+ * Column definitions keep `header` as a string so the column picker and the
+ * URL state can reuse the same label; group and unlabeled headings render as is.
+ */
+export function renderColumnHeader<TData extends RowData>(
+  context: HeaderContext<TableFeatures, TData, unknown>,
   description?: string,
-): (context: HeaderContext<TableFeatures, TData, unknown>) => ReactNode {
-  return ({ column }) => (
+): ReactNode {
+  const { column } = context;
+  const label = columnLabel(column.columnDef);
+  if (label === undefined || column.columns.length > 0) {
+    return flexRender(column.columnDef.header, context);
+  }
+  const tooltip = column.columnDef.meta?.description ?? description;
+  if (!column.getCanSort()) {
+    return <HeaderLabel description={tooltip} label={label} />;
+  }
+  return (
     <button
-      aria-label={`Sort by ${column.columnDef.id ?? "column"}`}
+      aria-label={`Sort by ${column.id}`}
       className="oss-table-sort-button"
-      disabled={!column.getCanSort()}
       onClick={column.getToggleSortingHandler()}
       type="button"
     >
-      <HeaderLabel description={description} focusable={false} label={label} />
+      <HeaderLabel description={tooltip} focusable={false} label={label} />
       {{ asc: "▲", desc: "▼" }[column.getIsSorted() as string] ?? null}
     </button>
   );
@@ -236,22 +252,45 @@ export function countryColumnMeta<TData extends CountryFields>(
 export function LatitudeCell<TData extends RowData>({
   getValue,
 }: CellContext<TableFeatures, TData, unknown>) {
-  const latitude = getValue<number | null>();
-  if (latitude === null) {
+  return <CoordinateBadge axis="latitude" value={getValue<number | null>()} />;
+}
+
+export function LongitudeCell<TData extends RowData>({
+  getValue,
+}: CellContext<TableFeatures, TData, unknown>) {
+  return <CoordinateBadge axis="longitude" value={getValue<number | null>()} />;
+}
+
+/** Share the geographic badges' layout while scaling each axis to its extent. */
+export function CoordinateBadge({ axis, value }: {
+  axis: "latitude" | "longitude";
+  value: number | null;
+}) {
+  if (value === null) {
     return MISSING_VALUE;
   }
-  const intensity = Math.round((Math.abs(latitude) / 90) * 255);
-  const background = `rgb(${255 - intensity}, ${255 - intensity}, ${255 - intensity})`;
+  const latitude = axis === "latitude";
+  const direction = latitude
+    ? (value >= 0 ? "north" : "south")
+    : (value >= 0 ? "east" : "west");
+  const letter = latitude
+    ? (value >= 0 ? "ℕ" : "𝕊")
+    : (value >= 0 ? "𝔼" : "𝕎");
+  const shade = 255 - Math.round((Math.abs(value) / (latitude ? 90 : 180)) * 255);
   return (
     <span
-      aria-label={`${Math.abs(latitude).toFixed(1)} degrees ${latitude >= 0 ? "north" : "south"}`}
-      className="oss-table-latitude"
-      style={{ "--oss-latitude-background": background } as CSSProperties}
+      aria-label={`${Math.abs(value).toFixed(1)} degrees${value === 0 ? "" : ` ${direction}`}`}
+      className="oss-table-coordinate"
+      style={{
+        "--oss-coordinate-background": `rgb(${shade}, ${shade}, ${shade})`,
+        // Preserve white lettering except on near-white backgrounds.
+        color: shade > 224 ? "black" : "white",
+      } as CSSProperties}
     >
       <span aria-hidden="true" className="oss-table-hemisphere">
-        {latitude >= 0 ? "ℕ" : "𝕊"}
+        {value === 0 ? "—" : letter}
       </span>
-      <span>{Math.abs(latitude).toFixed(1)}°</span>
+      <span>{Math.abs(value).toFixed(1)}°</span>
     </span>
   );
 }
@@ -331,10 +370,12 @@ export function FilterPopover({
   ariaLabel,
   children,
   label,
+  buttonClassName = "oss-table-facet-trigger",
 }: {
   ariaLabel: string;
   children: () => ReactNode;
   label: string;
+  buttonClassName?: string;
 }) {
   const [open, setOpen] = useState(false);
   const [anchor, setAnchor] = useState<{ left: number; top: number } | null>(null);
@@ -392,7 +433,7 @@ export function FilterPopover({
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-label={ariaLabel}
-        className="oss-table-facet-trigger"
+        className={buttonClassName}
         onClick={() => {
           reposition();
           setOpen((value) => !value);
@@ -406,6 +447,7 @@ export function FilterPopover({
       </button>
       {open && anchor && (
         <div
+          aria-label={ariaLabel}
           className="oss-table-facet-popover"
           ref={popoverRef}
           role="dialog"
@@ -415,6 +457,66 @@ export function FilterPopover({
         </div>
       )}
     </>
+  );
+}
+
+/** Select visible presentation columns, keeping internal fields out of the picker. */
+export function ColumnVisibilityPicker<TData extends RowData>({ table }: {
+  table: Table<TableFeatures, TData>;
+}) {
+  return (
+    <FilterPopover ariaLabel="Choose visible columns" buttonClassName="oss-table-clear" label="Columns">
+      {() => (
+        <>
+          <div className="oss-table-facet-actions">
+            <strong>Visible columns</strong>
+            <button onClick={() => table.resetColumnVisibility()} type="button">Reset columns</button>
+          </div>
+          <div className="oss-table-column-list">
+            {table.getAllColumns().map((group) => (
+              <fieldset key={group.id}>
+                <legend>{columnLabel(group.columnDef) ??
+                  group.getLeafColumns().map((column) => columnLabel(column.columnDef)).find(Boolean)}</legend>
+                {group.getLeafColumns().filter((column) => columnLabel(column.columnDef)).map((column) => (
+                  <label key={column.id}>
+                    <input
+                      checked={column.getIsVisible()}
+                      disabled={!column.getCanHide()}
+                      onChange={column.getToggleVisibilityHandler()}
+                      type="checkbox"
+                    />
+                    {columnLabel(column.columnDef)}
+                  </label>
+                ))}
+              </fieldset>
+            ))}
+          </div>
+        </>
+      )}
+    </FilterPopover>
+  );
+}
+
+/** Make filters and sorting on hidden columns discoverable without clearing them. */
+export function HiddenColumnNotices<TData extends RowData>({ table }: {
+  table: Table<TableFeatures, TData>;
+}) {
+  const active = table.getAllLeafColumns().filter((column) =>
+    columnLabel(column.columnDef) && !column.getIsVisible() &&
+    (column.getIsFiltered() || column.getIsSorted()),
+  );
+  if (active.length === 0) return null;
+  return (
+    <div className="oss-table-hidden-columns">
+      {active.map((column) => (
+        <button className="oss-table-clear" key={column.id} onClick={() => column.toggleVisibility(true)} type="button">
+          {columnLabel(column.columnDef)} ({[
+            column.getIsFiltered() && "filtered",
+            column.getIsSorted() && "sorted",
+          ].filter(Boolean).join(", ")}) · Show column
+        </button>
+      ))}
+    </div>
   );
 }
 

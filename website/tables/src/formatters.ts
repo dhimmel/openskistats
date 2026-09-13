@@ -32,8 +32,17 @@ export function formatPercent(value: number | null): string {
 
 /** Name a latitude by hemisphere, as the latitude cells do. */
 export function formatLatitude(value: number): string {
+  return formatCoordinate(value, "S", "N");
+}
+
+/** Name a longitude by its direction from the prime meridian. */
+export function formatLongitude(value: number): string {
+  return formatCoordinate(value, "W", "E");
+}
+
+function formatCoordinate(value: number, negative: string, positive: string): string {
   if (value === 0) {
     return "0°";
   }
-  return `${formatBound(Math.abs(value), 1)}°${value < 0 ? "S" : "N"}`;
+  return `${formatBound(Math.abs(value), 1)}°${value < 0 ? negative : positive}`;
 }

@@ -12,6 +12,8 @@
  * `country=AT&country=CH`, with the blank option written as `null`.
  * Sorting follows JSON:API: `sort=-lift_count` descends, `sort=ski_area_name`
  * ascends, and a comma joins several in priority order.
+ * Tables with a column picker store a customized set of optional columns as
+ * `columns=country,longitude,rose`; fixed identity columns remain visible.
  *
  * Reading is lenient so that old or hand-edited links degrade gracefully:
  * a parameter that fails to parse is treated as absent, so the default
@@ -24,12 +26,13 @@ import {
   type OnChangeFn,
   type RowData,
   type SortingState,
+  type ColumnVisibilityState,
 } from "@tanstack/react-table";
 import { useCallback, useMemo, useSyncExternalStore } from "react";
 
 import { isNumericRange, type NumericRange } from "./filters";
 import { restricts } from "./range";
-import type { TableFeatures } from "./table-features";
+import { columnLabel, type TableFeatures } from "./table-features";
 
 /** How a value picker's option is written to and read from the query string. */
 export interface UrlValueCodec {
@@ -51,10 +54,13 @@ export interface UrlColumn {
 export interface TableUrlState {
   columnFilters: ColumnFiltersState;
   sorting: SortingState;
+  columnVisibility?: ColumnVisibilityState;
 }
 
 export interface TableUrlSpec {
   columns: readonly UrlColumn[];
+  /** Presentation columns visitors may hide, including non-filterable visuals. */
+  visibilityColumns?: readonly string[];
   /** The state an untouched table shows, which the URL leaves unwritten. */
   defaults: TableUrlState;
 }
@@ -66,6 +72,7 @@ export const BOOLEAN_URL_VALUE: UrlValueCodec = {
 };
 
 const SORT_KEY = "sort";
+const COLUMNS_KEY = "columns";
 
 /** The blank option of a value picker, which matches rows with no value. */
 const BLANK = "null";
@@ -195,6 +202,17 @@ function filterMap(state: TableUrlState): Map<string, unknown> {
   return new Map(state.columnFilters.map((filter) => [filter.id, filter.value]));
 }
 
+function readVisibility(text: string | null, spec: TableUrlSpec): ColumnVisibilityState {
+  const defaults = spec.defaults.columnVisibility ?? {};
+  if (text === null) return defaults;
+  const selected = new Set(text.split(","));
+  const ids = spec.visibilityColumns ?? [];
+  // An empty list intentionally hides every optional column. Unknown-only
+  // lists fall back to defaults, so stale links remain useful.
+  if (text !== "" && !ids.some((id) => selected.has(id))) return defaults;
+  return { ...defaults, ...Object.fromEntries(ids.map((id) => [id, selected.has(id)])) };
+}
+
 /** The table state a query string describes, with defaults where it is silent. */
 export function readTableState(search: string, spec: TableUrlSpec): TableUrlState {
   const params = new URLSearchParams(search);
@@ -212,7 +230,13 @@ export function readTableState(search: string, spec: TableUrlSpec): TableUrlStat
       columnFilters.push({ id: column.id, value });
     }
   }
-  return { columnFilters, sorting: readSorting(params.get(SORT_KEY), spec) };
+  return {
+    columnFilters,
+    sorting: readSorting(params.get(SORT_KEY), spec),
+    ...(spec.visibilityColumns === undefined ? {} : {
+      columnVisibility: readVisibility(params.get(COLUMNS_KEY), spec),
+    }),
+  };
 }
 
 function sameValues(a: string[] | undefined, b: string[] | undefined): boolean {
@@ -249,6 +273,16 @@ export function writeTableState(
   if (sorting !== formatSorting(spec.defaults.sorting)) {
     params.set(SORT_KEY, sorting);
   }
+  const visibilityColumns = spec.visibilityColumns;
+  if (visibilityColumns !== undefined) {
+    params.delete(COLUMNS_KEY);
+    const visible = (visibility: ColumnVisibilityState | undefined) =>
+      visibilityColumns.filter((id) => visibility?.[id] !== false).join(",");
+    const columns = visible(state.columnVisibility ?? spec.defaults.columnVisibility);
+    if (columns !== visible(spec.defaults.columnVisibility)) {
+      params.set(COLUMNS_KEY, columns);
+    }
+  }
   const text = params.toString();
   return text === "" ? "" : `?${text}`;
 }
@@ -266,6 +300,19 @@ export function urlColumnsFrom<TData extends RowData>(
       return [];
     }
     return [{ id: column.id, urlValue: column.meta?.urlValue, variant }];
+  });
+}
+
+/** Use the same labeled, hideable leaves as the column picker. */
+export function visibilityColumnsFrom<TData extends RowData>(
+  columns: readonly ColumnDef<TableFeatures, TData, unknown>[],
+): string[] {
+  return columns.flatMap((column) => {
+    if ("columns" in column && column.columns !== undefined) {
+      return visibilityColumnsFrom(column.columns);
+    }
+    return column.id !== undefined && columnLabel(column) && column.enableHiding !== false
+      ? [column.id] : [];
   });
 }
 
@@ -310,7 +357,7 @@ export function replaceSearch(search: string): void {
 }
 
 /**
- * Filters and sorting backed by the query string rather than component state.
+ * Filters, sorting, and optional column visibility backed by the query string.
  *
  * The URL is the source of truth: setters write it, and the table re-reads
  * it, so a change made by Back or Forward shows just as a click does.
@@ -318,6 +365,7 @@ export function replaceSearch(search: string): void {
 export function useUrlTableState(spec: TableUrlSpec): TableUrlState & {
   setColumnFilters: OnChangeFn<ColumnFiltersState>;
   setSorting: OnChangeFn<SortingState>;
+  setColumnVisibility: OnChangeFn<ColumnVisibilityState>;
 } {
   const search = useSyncExternalStore(searchStore.subscribe, searchStore.getSnapshot);
   const state = useMemo(() => readTableState(search, spec), [search, spec]);
@@ -347,5 +395,13 @@ export function useUrlTableState(spec: TableUrlSpec): TableUrlState & {
       })),
     [update],
   );
-  return { ...state, setColumnFilters, setSorting };
+  const setColumnVisibility = useCallback<OnChangeFn<ColumnVisibilityState>>(
+    (updater) =>
+      update((current) => ({
+        ...current,
+        columnVisibility: functionalUpdate(updater, current.columnVisibility ?? {}),
+      })),
+    [update],
+  );
+  return { ...state, setColumnFilters, setSorting, setColumnVisibility };
 }

@@ -31,6 +31,52 @@
   font-size: 0.95rem;
 }
 
+.oss-table-actions,
+.oss-table-hidden-columns {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.oss-table-hidden-columns {
+  margin-bottom: 0.5rem;
+}
+
+.oss-table-column-list {
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.oss-table-column-list fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0.4rem 0;
+}
+
+.oss-table-column-list fieldset + fieldset {
+  border-top: 1px solid #adb5bd;
+}
+
+.oss-table-column-list legend {
+  float: none;
+  font-size: inherit;
+  font-weight: 600;
+  margin: 0 0 0.2rem;
+}
+
+.oss-table-column-list label {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.2rem;
+}
+
+.oss-table-column-list label:hover {
+  background: var(--bs-tertiary-bg, #f0f0f0);
+}
+
 .oss-table-clear,
 .oss-table-pagination button,
 .oss-table-pagination select,
@@ -220,9 +266,9 @@
   gap: 0.15rem;
 }
 
-.oss-table-latitude {
+.oss-table-coordinate {
   align-items: center;
-  background: var(--oss-latitude-background, #666);
+  background: var(--oss-coordinate-background, #666);
   border-radius: 50%;
   color: white;
   display: inline-flex;
@@ -238,7 +284,7 @@
   margin-bottom: 0.15em;
 }
 
-.oss-table-latitude > span:last-child {
+.oss-table-coordinate > span:last-child {
   font-size: 0.7em;
 }
 

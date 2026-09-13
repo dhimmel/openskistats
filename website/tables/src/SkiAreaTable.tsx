@@ -11,7 +11,6 @@ import {
   type ChangeEvent,
   type FocusEvent,
   type PointerEvent,
-  type ReactNode,
   useEffect,
   useMemo,
   useState,
@@ -26,6 +25,7 @@ import {
 import {
   formatBound,
   formatLatitude,
+  formatLongitude,
   formatMeters,
   formatNumber,
   formatPercent,
@@ -33,15 +33,17 @@ import {
 } from "./formatters";
 import {
   ColumnFilter,
+  ColumnVisibilityPicker,
   columnMaximum,
   CountryCell,
   countryColumnMeta,
   footerStat,
-  header,
-  HeaderLabel,
+  HiddenColumnNotices,
   interpolateColor,
   LatitudeCell,
+  LongitudeCell,
   metricCell,
+  renderColumnHeader,
   sequentialColor,
   textCell,
 } from "./table-ui";
@@ -56,12 +58,18 @@ import {
   type SkiAreaRecordSchema,
   type SkiAreaSummary,
 } from "./types";
-import { type TableUrlState, urlColumnsFrom, useUrlTableState } from "./url-state";
+import { type TableUrlState, urlColumnsFrom, useUrlTableState, visibilityColumnsFrom } from "./url-state";
 
 /** The view an untouched table shows, which a shared link leaves unwritten. */
 const DEFAULT_STATE: TableUrlState = {
   columnFilters: [...INITIAL_COLUMN_FILTERS],
   sorting: [{ desc: true, id: "combined_vertical" }],
+  columnVisibility: {
+    country_code: false,
+    osm_status: false,
+    ski_area_id: false,
+    longitude: false,
+  },
 };
 
 const numericFilter: FilterFn<TableFeatures, SkiAreaSummary> = (
@@ -81,13 +89,6 @@ const percentFilter: FilterFn<TableFeatures, SkiAreaSummary> = (
 /** Keep rows whose value was selected in a column's value picker. */
 const setFilter: FilterFn<TableFeatures, SkiAreaSummary> = (row, columnId, value) =>
   matchesSetFilter(row.getValue(columnId), value);
-
-function fieldDescription(
-  schema: SkiAreaRecordSchema,
-  field: keyof SkiAreaSummary,
-): string | undefined {
-  return schema.properties[field]?.description;
-}
 
 function AzimuthCell({
   getValue,
@@ -226,16 +227,15 @@ function createColumns(
   data: readonly SkiAreaSummary[],
   schema: SkiAreaRecordSchema,
 ): ColumnDef<TableFeatures, SkiAreaSummary, unknown>[] {
-  const description = (field: keyof SkiAreaSummary) => fieldDescription(schema, field);
   const fieldMaximum = (field: keyof SkiAreaSummary) => columnMaximum(data, field);
   const numericColumn = (
     field: keyof SkiAreaSummary,
-    label: ReactNode,
+    label: string,
     options: Partial<ColumnDef<TableFeatures, SkiAreaSummary, unknown>> = {},
   ): ColumnDef<TableFeatures, SkiAreaSummary, unknown> => ({
     accessorKey: field,
     filterFn: numericFilter,
-    header: header(label, description(field)),
+    header: label,
     minSize: 36,
     sortUndefined: "last",
     ...options,
@@ -248,13 +248,13 @@ function createColumns(
   });
   const percentColumn = (
     field: keyof SkiAreaSummary,
-    label: ReactNode,
+    label: string,
     options: Partial<ColumnDef<TableFeatures, SkiAreaSummary, unknown>> = {},
   ): ColumnDef<TableFeatures, SkiAreaSummary, unknown> => ({
     accessorKey: field,
     cell: percentCell(),
     filterFn: percentFilter,
-    header: header(label, description(field)),
+    header: label,
     minSize: 36,
     sortUndefined: "last",
     ...options,
@@ -285,6 +285,7 @@ function createColumns(
         },
         {
           accessorKey: "ski_area_name",
+          enableHiding: false,
           cell: ({ getValue, row }) => (
             <a
               href={`https://openskimap.org/?obj=${row.original.ski_area_id}`}
@@ -300,7 +301,7 @@ function createColumns(
               formatNumber(aggregatesFrom(context)?.distinctCounts.ski_area_name ?? null),
             ),
           filterFn: setFilter,
-          header: header("Ski Area", description("ski_area_name")),
+          header: "Ski Area",
           id: "ski_area_name",
           meta: { facetSort: "label", filterVariant: "faceted" },
           minSize: 140,
@@ -326,7 +327,7 @@ function createColumns(
               "Distinct",
               formatNumber(aggregatesFrom(context)?.distinctCounts.country ?? null),
             ),
-          header: header("Country", description("country")),
+          header: "Country",
           id: "country",
           meta: {
             className: "oss-table-border-left",
@@ -351,7 +352,7 @@ function createColumns(
               formatNumber(aggregatesFrom(context)?.distinctCounts.region ?? null),
             ),
           filterFn: setFilter,
-          header: header("Region", description("region")),
+          header: "Region",
           id: "region",
           meta: { filterVariant: "faceted" },
           minSize: 65,
@@ -368,7 +369,7 @@ function createColumns(
               formatNumber(aggregatesFrom(context)?.distinctCounts.locality ?? null),
             ),
           filterFn: setFilter,
-          header: header("Locality", description("locality")),
+          header: "Locality",
           id: "locality",
           meta: { filterVariant: "faceted" },
           minSize: 65,
@@ -380,13 +381,19 @@ function createColumns(
           accessorKey: "latitude",
           cell: LatitudeCell,
           filterFn: numericFilter,
-          header: header("ℍ φ", description("latitude")),
+          header: "ℍ φ",
           id: "latitude",
           meta: { filterFormat: formatLatitude, filterVariant: "range" },
           minSize: 55,
           size: 62,
           sortUndefined: "last",
         },
+        numericColumn("longitude", "ℍ λ", {
+          cell: LongitudeCell,
+          meta: { filterFormat: formatLongitude },
+          minSize: 55,
+          size: 62,
+        }),
       ],
     },
     {
@@ -587,14 +594,12 @@ function createColumns(
           cell: RoseCell,
           enableColumnFilter: false,
           enableSorting: false,
-          header: () => (
-            <HeaderLabel
-              description="Preview of the ski area's run-orientation rose. Hover or focus for the full rose, or activate the link to open it."
-              label="Rose"
-            />
-          ),
+          header: "Rose",
           id: "rose",
-          meta: { className: "oss-table-border-left" },
+          meta: {
+            className: "oss-table-border-left",
+            description: "Preview of the ski area's run-orientation rose. Hover or focus for the full rose, or activate the link to open it.",
+          },
           minSize: 54,
           size: 62,
         },
@@ -609,10 +614,10 @@ export function SkiAreaTable({ document }: { document: SkiAreaDocument }) {
     [document],
   );
   const urlSpec = useMemo(
-    () => ({ columns: urlColumnsFrom(columns), defaults: DEFAULT_STATE }),
+    () => ({ columns: urlColumnsFrom(columns), visibilityColumns: visibilityColumnsFrom(columns), defaults: DEFAULT_STATE }),
     [columns],
   );
-  const { columnFilters, setColumnFilters, setSorting, sorting } =
+  const { columnFilters, columnVisibility, setColumnFilters, setColumnVisibility, setSorting, sorting } =
     useUrlTableState(urlSpec);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -632,17 +637,14 @@ export function SkiAreaTable({ document }: { document: SkiAreaDocument }) {
       size: 55,
     },
     initialState: {
-      columnVisibility: {
-        country_code: false,
-        osm_status: false,
-        ski_area_id: false,
-      },
+      columnVisibility: DEFAULT_STATE.columnVisibility,
     },
     meta: { aggregates },
     onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
-    state: { columnFilters, pagination, sorting },
+    state: { columnFilters, columnVisibility, pagination, sorting },
   });
 
   const filteredRows = table.getFilteredRowModel().rows;
@@ -659,6 +661,8 @@ export function SkiAreaTable({ document }: { document: SkiAreaDocument }) {
         <span>
           Showing {formatNumber(filteredRows.length)} of {formatNumber(document.record_count)} named ski areas.
         </span>
+        <div className="oss-table-actions">
+        <ColumnVisibilityPicker table={table} />
         <button
           className="oss-table-clear"
           disabled={!hasFilters}
@@ -667,7 +671,9 @@ export function SkiAreaTable({ document }: { document: SkiAreaDocument }) {
         >
           Clear all filters
         </button>
+        </div>
       </div>
+      <HiddenColumnNotices table={table} />
       <div className="oss-table-scroll" tabIndex={0}>
         <table style={{ minWidth: table.getTotalSize(), width: "100%" }}>
           <colgroup>
@@ -688,9 +694,9 @@ export function SkiAreaTable({ document }: { document: SkiAreaDocument }) {
                   >
                     {headerCell.isPlaceholder
                       ? null
-                      : flexRender(
-                          headerCell.column.columnDef.header,
+                      : renderColumnHeader(
                           headerCell.getContext(),
+                          document.record_schema.properties[headerCell.column.id]?.description,
                         )}
                     {!headerCell.isPlaceholder &&
                       headerCell.colSpan === 1 &&

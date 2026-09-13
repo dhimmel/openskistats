@@ -44,7 +44,9 @@ Percent columns are bounded in whole percent, so `80` rather than `0.8`.
 Ski area, country, region, and locality offer a value picker listing how many ski areas each value still matches.
 Search ignores case, accents, and separators, and a country also answers to its code or flag, such as `US` or 🇺🇸.
 
-Filters and sorting update the page address, so copy it to share the current view.
+Use **Columns** to choose which columns appear.
+
+Filters, sorting, and column visibility update the page address, so copy it to share the current view.
 
 Ski run difficulty is collapsed and colored as follows:
 

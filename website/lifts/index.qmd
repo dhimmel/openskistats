@@ -44,7 +44,9 @@ Each option lists how many lifts it still matches given the other filters, and t
 Search ignores case, accents, and separators, so `chairlift` finds `chair_lift`, and a country also answers to its code or flag.
 The ski-area picker matches any of the ski areas a lift serves.
 
-Filters and sorting update the page address, so copy it to share the current view.
+Use **Columns** to choose which columns appear.
+
+Filters, sorting, and column visibility update the page address, so copy it to share the current view.
 
 `Ride` is the typical ride duration in minutes and seconds, and `Capacity` is the transport capacity in people per hour.
 Both are recorded by OpenStreetMap contributors and are missing for many lifts.

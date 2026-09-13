@@ -3,6 +3,7 @@ import {
   columnFilteringFeature,
   columnSizingFeature,
   columnVisibilityFeature,
+  type ColumnDef,
   createFacetedRowModel,
   createFacetedUniqueValues,
   createFilteredRowModel,
@@ -11,6 +12,7 @@ import {
   metaHelper,
   rowPaginationFeature,
   rowSortingFeature,
+  type RowData,
   tableFeatures,
 } from "@tanstack/react-table";
 import type { CSSProperties } from "react";
@@ -18,6 +20,8 @@ import type { CSSProperties } from "react";
 import type { UrlValueCodec } from "./url-state";
 
 interface TableColumnMeta {
+  /** Tooltip for a presentation column without a data-schema description. */
+  description?: string;
   cellStyle?: (value: unknown) => CSSProperties;
   className?: string;
   /** Extra strings a facet option can be found by, such as a country's code. */
@@ -65,3 +69,11 @@ export const TABLE_FEATURES = tableFeatures({
 });
 
 export type TableFeatures = typeof TABLE_FEATURES;
+
+/** Reuse the table's heading wherever a plain-text column name is needed. */
+export function columnLabel<TData extends RowData>(
+  column: ColumnDef<TableFeatures, TData, unknown>,
+): string | undefined {
+  return typeof column.header === "string" && column.header !== ""
+    ? column.header : undefined;
+}
