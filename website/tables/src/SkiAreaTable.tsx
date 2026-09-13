@@ -20,10 +20,12 @@ import {
   INITIAL_COLUMN_FILTERS,
   matchesNumericFilter,
   matchesPercentFilter,
+  matchesScaledFilter,
   matchesSetFilter,
 } from "./filters";
 import {
   formatBound,
+  formatKilometers,
   formatLatitude,
   formatLongitude,
   formatMeters,
@@ -66,11 +68,15 @@ const DEFAULT_STATE: TableUrlState = {
   sorting: [{ desc: true, id: "combined_vertical" }],
   columnVisibility: {
     country_code: false,
+    country_subdiv_code: false,
     osm_status: false,
     ski_area_id: false,
     longitude: false,
+    min_elevation: false,
   },
 };
+
+const KILOMETERS_PER_METER = 0.001;
 
 const numericFilter: FilterFn<TableFeatures, SkiAreaSummary> = (
   row,
@@ -85,6 +91,10 @@ const percentFilter: FilterFn<TableFeatures, SkiAreaSummary> = (
   value,
 ) =>
   matchesPercentFilter(row.getValue<number | null>(columnId), value);
+
+/** Distances are stored in meters but bounded in kilometers. */
+const kilometerFilter: FilterFn<TableFeatures, SkiAreaSummary> = (row, columnId, value) =>
+  matchesScaledFilter(row.getValue<number | null>(columnId), value, KILOMETERS_PER_METER);
 
 /** Keep rows whose value was selected in a column's value picker. */
 const setFilter: FilterFn<TableFeatures, SkiAreaSummary> = (row, columnId, value) =>
@@ -344,6 +354,23 @@ function createColumns(
           id: "country_code",
         },
         {
+          accessorKey: "country_subdiv_code",
+          cell: ({ getValue }) => textCell(getValue<string | null>()),
+          footer: (context) =>
+            footerStat(
+              "Distinct",
+              formatNumber(aggregatesFrom(context)?.distinctCounts.country_subdiv_code ?? null),
+            ),
+          filterFn: setFilter,
+          header: "Subdivision",
+          id: "country_subdiv_code",
+          meta: { filterVariant: "faceted" },
+          minSize: 65,
+          size: 85,
+          sortDescFirst: false,
+          sortUndefined: "last",
+        },
+        {
           accessorKey: "region",
           cell: ({ getValue }) => textCell(getValue<string | null>()),
           footer: (context) =>
@@ -430,6 +457,21 @@ function createColumns(
             ),
           minSize: 70,
           size: 80,
+        }),
+        numericColumn("combined_distance", "Distance", {
+          cell: metricCell(fieldMaximum("combined_distance"), formatKilometers),
+          filterFn: kilometerFilter,
+          footer: (context) =>
+            footerStat(
+              "Sum",
+              formatKilometers(aggregatesFrom(context)?.sums.combined_distance ?? null),
+            ),
+          meta: {
+            filterFormat: (value: number) => `${formatBound(value, 1)} km`,
+            filterScale: KILOMETERS_PER_METER,
+          },
+          minSize: 60,
+          size: 72,
         }),
         numericColumn("min_elevation", "Base Elev", {
           cell: metricCell(fieldMaximum("min_elevation"), formatMeters),

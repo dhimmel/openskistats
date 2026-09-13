@@ -1,6 +1,7 @@
 import { expect, it } from "vitest";
 
 import {
+  formatKilometers,
   formatLatitude,
   formatLongitude,
   formatMeters,
@@ -21,6 +22,8 @@ it("formats numbers while preserving missing values", () => {
 it("formats meters and percentages", () => {
   expect(formatMeters(1234)).toBe(`${(1234).toLocaleString()}\u202fm`);
   expect(formatMeters(null)).toBe(MISSING_VALUE);
+  expect(formatKilometers(1719.8)).toBe(`${(1.7).toLocaleString(undefined, { minimumFractionDigits: 1 })}\u202fkm`);
+  expect(formatKilometers(null)).toBe(MISSING_VALUE);
   expect(formatPercent(0.761)).toBe("76%");
   expect(formatPercent(null)).toBe(MISSING_VALUE);
 });

@@ -26,6 +26,12 @@ export function formatMeters(value: number | null): string {
   return number === MISSING_VALUE ? number : `${number}${NARROW_NO_BREAK_SPACE}m`;
 }
 
+/** Show a distance stored in meters as kilometers with one decimal. */
+export function formatKilometers(value: number | null): string {
+  const number = formatNumber(value === null ? null : value / 1000, 1);
+  return number === MISSING_VALUE ? number : `${number}${NARROW_NO_BREAK_SPACE}km`;
+}
+
 export function formatPercent(value: number | null): string {
   return value === null ? MISSING_VALUE : `${formatNumber(value * 100)}%`;
 }

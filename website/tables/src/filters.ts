@@ -41,11 +41,20 @@ export function matchesNumericFilter(
   return rangeContains(filterValue, value);
 }
 
+/** Match a value stored in one unit against bounds typed in another, such as meters against kilometers. */
+export function matchesScaledFilter(
+  value: number | null | undefined,
+  filterValue: unknown,
+  scale: number,
+): boolean {
+  return matchesNumericFilter(typeof value === "number" ? value * scale : value, filterValue);
+}
+
 export function matchesPercentFilter(
   value: number | null | undefined,
   filterValue: unknown,
 ): boolean {
-  return matchesNumericFilter(value === null || value === undefined ? value : value * 100, filterValue);
+  return matchesScaledFilter(value, filterValue, 100);
 }
 
 /**

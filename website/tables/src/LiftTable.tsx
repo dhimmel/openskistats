@@ -55,7 +55,7 @@ export const INITIAL_LIFT_FILTERS = [
 const DEFAULT_STATE: TableUrlState = {
   columnFilters: [...INITIAL_LIFT_FILTERS],
   sorting: [{ desc: true, id: "vertical_rise" }],
-  columnVisibility: { longitude: false },
+  columnVisibility: { country_subdiv_code: false, longitude: false },
 };
 
 const numericFilter: FilterFn<TableFeatures, LiftSummary> = (row, columnId, value) =>
@@ -244,6 +244,10 @@ function createColumns(
             ),
           minSize: 70,
           size: 85,
+        }),
+        categoricalColumn("country_subdiv_code", "Subdivision", {
+          minSize: 65,
+          size: 82,
         }),
         categoricalColumn("region", "Region", {
           footer: (context) =>

@@ -5,12 +5,14 @@ export const DISTINCT_FIELDS = [
   "country",
   "region",
   "locality",
+  "country_subdiv_code",
 ] as const satisfies readonly (keyof SkiAreaSummary)[];
 
 export const SUM_FIELDS = [
   "run_count",
   "lift_count",
   "combined_vertical",
+  "combined_distance",
   "vertical_drop",
 ] as const satisfies readonly (keyof SkiAreaSummary)[];
 

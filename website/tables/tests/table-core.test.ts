@@ -106,11 +106,13 @@ describe("calculateFilteredAggregates", () => {
         country: 0,
         region: 0,
         locality: 0,
+        country_subdiv_code: 0,
       },
       sums: {
         run_count: null,
         lift_count: null,
         combined_vertical: null,
+        combined_distance: null,
         vertical_drop: null,
       },
       minimumElevation: null,
