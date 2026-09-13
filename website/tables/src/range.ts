@@ -168,47 +168,102 @@ export function buildHistogram(
   };
 }
 
-/**
- * Bounds spanning two bin edges, inclusive at both.
- *
- * An edge at either end of the axis releases that side, since the end bars
- * absorb the outliers the axis stops short of. An interior upper edge of an
- * integer column steps back to the last whole number its bar holds, so that
- * a bar spanning 50 to 60 runs selects `50..59` rather than a 60-run area too.
+/*
+ * What a bar holds, which brushing, highlighting, and the tooltips all read:
+ * bins are half-open, `[start, end)`, except the last, which is closed so
+ * that the largest value lands somewhere. The end bars also hold the
+ * outliers a clipped axis stops short of. An integer column's bar holds
+ * whole numbers, so its last value sits one below an exclusive edge.
  */
-export function boundsFromEdges(
+
+function isLastBin(histogram: Histogram, index: number): boolean {
+  return index === histogram.bins.length - 1;
+}
+
+/** Whether the first bar also holds outliers below the axis. */
+function clippedBelow(histogram: Histogram): boolean {
+  return histogram.start > histogram.minimum;
+}
+
+/** Whether the last bar also holds outliers above the axis. */
+function clippedAbove(histogram: Histogram): boolean {
+  return histogram.end < histogram.maximum;
+}
+
+/** The largest value a bar names, as its label and a brush over it state it. */
+export function binLast(
+  histogram: Histogram,
+  index: number,
+  integer = false,
+): number {
+  const bin = histogram.bins[index];
+  return integer && !isLastBin(histogram, index) ? bin.end - 1 : bin.end;
+}
+
+/**
+ * Bounds spanning a run of bars, inclusive at both ends.
+ *
+ * A run reaching either end of the axis releases that side, so the outliers
+ * an end bar holds stay selected with it.
+ */
+export function boundsFromBins(
+  histogram: Histogram,
   first: number,
   second: number,
-  histogram: Histogram,
   integer = false,
 ): NumericRange {
-  const lower = Math.min(first, second);
-  const upper = Math.max(first, second);
+  const low = Math.min(first, second);
+  const high = Math.max(first, second);
   return {
-    lower: lower <= histogram.start ? Number.NEGATIVE_INFINITY : lower,
-    upper:
-      upper >= histogram.end
-        ? Number.POSITIVE_INFINITY
-        : integer
-          ? upper - 1
-          : upper,
+    lower: low === 0 ? Number.NEGATIVE_INFINITY : histogram.bins[low].start,
+    upper: isLastBin(histogram, high)
+      ? Number.POSITIVE_INFINITY
+      : binLast(histogram, high, integer),
   };
 }
 
 /**
- * Whether bounds reach into a bar, so that it draws as selected.
+ * Whether bounds reach a value a bar holds, so that it draws as selected.
  *
- * Testing overlap rather than the bar's midpoint keeps a single integer bar
- * selected as `3..3` lit; its inclusive upper bound covers the bar up to the
- * next whole number.
+ * A continuous bar is lit only when the bounds cross into it, since bounds
+ * that merely end on its start share a single value with it. An integer
+ * bar's start is a whole number the bounds can name outright, so `3..3`
+ * lights the bar spanning 3 to 4.
  */
 export function overlapsBin(
   bounds: NumericRange,
-  bin: HistogramBin,
+  histogram: Histogram,
+  index: number,
   integer = false,
 ): boolean {
-  const upper = integer ? bounds.upper + 1 : bounds.upper;
-  return bounds.lower < bin.end && upper > bin.start;
+  const bin = histogram.bins[index];
+  const lowest =
+    index === 0 && clippedBelow(histogram) ? Number.NEGATIVE_INFINITY : bin.start;
+  const reachesDown = integer ? bounds.upper >= lowest : bounds.upper > lowest;
+  const reachesUp = isLastBin(histogram, index)
+    ? clippedAbove(histogram) || bounds.lower <= bin.end
+    : bounds.lower < bin.end;
+  return reachesDown && reachesUp;
+}
+
+/** Name the values a bar holds, including the outliers an end bar absorbs. */
+export function describeBin(
+  histogram: Histogram,
+  index: number,
+  integer: boolean,
+  format: (value: number) => string,
+): string {
+  const bin = histogram.bins[index];
+  const last = binLast(histogram, index, integer);
+  if (index === 0 && clippedBelow(histogram)) {
+    return `${format(last)} and below`;
+  }
+  if (isLastBin(histogram, index) && clippedAbove(histogram)) {
+    return `${format(bin.start)} and above`;
+  }
+  return last === bin.start
+    ? format(bin.start)
+    : `${format(bin.start)} to ${format(last)}`;
 }
 
 /** Whether bounds restrict a column at all, or should clear its filter. */

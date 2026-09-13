@@ -26,13 +26,13 @@ import {
 } from "./filters";
 import { formatBound, formatNumber, MISSING_VALUE } from "./formatters";
 import {
-  boundsFromEdges,
+  boundsFromBins,
   buildHistogram,
+  describeBin,
   describeBounds,
   type Histogram,
   overlapsBin,
   parseBound,
-  type HistogramBin,
   restricts,
   roundTo,
   UNBOUNDED,
@@ -588,31 +588,6 @@ function filterValues<TData extends RowData>(
 }
 
 /**
- * Name the span a bar covers, including the outliers an end bar absorbs.
- *
- * An integer bar is named by the whole numbers it holds, as brushing it
- * bounds them: `50 to 59` for the bar reaching 60, and `3` for a lone value.
- */
-function describeBin(
-  bin: HistogramBin,
-  index: number,
-  histogram: Histogram,
-  integer: boolean,
-  format: (value: number) => string,
-): string {
-  const last = integer ? bin.end - 1 : bin.end;
-  if (index === 0 && histogram.start > histogram.minimum) {
-    return `${format(last)} and below`;
-  }
-  if (index === histogram.bins.length - 1 && histogram.end < histogram.maximum) {
-    return `${format(bin.start)} and above`;
-  }
-  return last === bin.start
-    ? format(bin.start)
-    : `${format(bin.start)} to ${format(last)}`;
-}
-
-/**
  * A column's distribution, with the bars inside the current bounds picked out.
  *
  * Bar heights use a square-root scale: ski-area metrics are long-tailed enough
@@ -652,16 +627,7 @@ function RangeHistogram({
     if (anchor === null) {
       return;
     }
-    const other = binAt(clientX);
-    onSelect(
-      boundsFromEdges(
-        histogram.bins[Math.min(anchor, other)].start,
-        histogram.bins[Math.max(anchor, other)].end,
-        histogram,
-        integer,
-      ),
-      settled,
-    );
+    onSelect(boundsFromBins(histogram, anchor, binAt(clientX), integer), settled);
   };
 
   return (
@@ -695,7 +661,7 @@ function RangeHistogram({
                 1,
                 Math.sqrt(bin.count / histogram.maxCount) * HISTOGRAM_HEIGHT,
               );
-        const selected = overlapsBin(bounds, bin, integer);
+        const selected = overlapsBin(bounds, histogram, index, integer);
         return (
           <rect
             className={
@@ -708,7 +674,7 @@ function RangeHistogram({
             y={HISTOGRAM_HEIGHT - height}
           >
             <title>
-              {describeBin(bin, index, histogram, integer, format)}:{" "}
+              {describeBin(histogram, index, integer, format)}:{" "}
               {formatNumber(bin.count)}
             </title>
           </rect>

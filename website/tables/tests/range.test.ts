@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest";
 
 import { matchesNumericFilter } from "../src/filters";
 import {
-  boundsFromEdges,
+  binLast,
+  boundsFromBins,
   buildHistogram,
+  describeBin,
   describeBounds,
   overlapsBin,
   parseBound,
@@ -75,8 +77,8 @@ describe("buildHistogram", () => {
     });
 
     it("selects the outlier along with the end bar it sits in", () => {
-      const last = clipped!.bins[clipped!.bins.length - 1];
-      const bounds = boundsFromEdges(last.start, last.end, clipped!);
+      const last = clipped!.bins.length - 1;
+      const bounds = boundsFromBins(clipped!, last, last);
       expect(matchesNumericFilter(70_000, bounds)).toBe(true);
     });
 
@@ -94,70 +96,132 @@ describe("buildHistogram", () => {
   });
 });
 
-describe("boundsFromEdges", () => {
+describe("boundsFromBins", () => {
+  // Bars of width 5 from 0 to 100.
   const histogram = histogramOf([0, 100]);
+  const lastIndex = histogram.bins.length - 1;
 
-  it("orders the edges a backwards drag supplies", () => {
-    const bounds = boundsFromEdges(60, 20, histogram);
-    expect([bounds.lower, bounds.upper]).toEqual([20, 60]);
+  it("orders the bars a backwards drag supplies", () => {
+    expect(boundsFromBins(histogram, 12, 4)).toEqual({ lower: 20, upper: 65 });
   });
 
   it("keeps an interior upper edge inclusive, as a typed bound is", () => {
     const values = [3, 3, 7, 12, 48, 90];
     const brushed = histogramOf(values);
-    const bin = brushed.bins.find(
-      (candidate) => candidate.count > 0 && candidate.start > brushed.start,
+    const index = brushed.bins.findIndex(
+      (candidate, position) => candidate.count > 0 && position > 0,
     );
-    const bounds = boundsFromEdges(bin!.start, bin!.end, brushed);
+    const bin = brushed.bins[index];
+    const bounds = boundsFromBins(brushed, index, index);
     expect(values.filter((value) => matchesNumericFilter(value, bounds))).toEqual(
-      values.filter((value) => value >= bin!.start && value <= bin!.end),
+      values.filter((value) => value >= bin.start && value <= bin.end),
     );
   });
 
   it.each([
-    { edges: [20, 100], purpose: "the upper end", lower: 20, upper: Number.POSITIVE_INFINITY },
-    { edges: [0, 60], purpose: "the lower end", lower: Number.NEGATIVE_INFINITY, upper: 60 },
-    { edges: [0, 100], purpose: "both ends", lower: Number.NEGATIVE_INFINITY, upper: Number.POSITIVE_INFINITY },
-  ])("releases a bound that reaches $purpose of the axis", ({ edges, lower, upper }) => {
-    expect(boundsFromEdges(edges[0], edges[1], histogram)).toEqual({ lower, upper });
+    { bars: [4, lastIndex], purpose: "the upper end", lower: 20, upper: Number.POSITIVE_INFINITY },
+    { bars: [0, 11], purpose: "the lower end", lower: Number.NEGATIVE_INFINITY, upper: 60 },
+    { bars: [0, lastIndex], purpose: "both ends", lower: Number.NEGATIVE_INFINITY, upper: Number.POSITIVE_INFINITY },
+  ])("releases a bound that reaches $purpose of the axis", ({ bars, lower, upper }) => {
+    expect(boundsFromBins(histogram, bars[0], bars[1])).toEqual({ lower, upper });
   });
 
   describe("integer columns", () => {
     it("snaps an interior upper edge to the last whole number in the bar", () => {
-      expect(boundsFromEdges(20, 60, histogram, true)).toEqual({ lower: 20, upper: 59 });
+      expect(boundsFromBins(histogram, 4, 11, true)).toEqual({ lower: 20, upper: 59 });
     });
 
     it("selects a single-width bar as one value", () => {
       const narrow = histogramOf([0, 1, 2, 3, 4, 5]);
       expect(narrow.step).toBe(1);
-      expect(boundsFromEdges(3, 4, narrow, true)).toEqual({ lower: 3, upper: 3 });
+      expect(boundsFromBins(narrow, 3, 3, true)).toEqual({ lower: 3, upper: 3 });
     });
 
     it("still releases an edge at the end of the axis", () => {
-      expect(boundsFromEdges(20, histogram.end, histogram, true).upper).toBe(
+      expect(boundsFromBins(histogram, 4, lastIndex, true).upper).toBe(
         Number.POSITIVE_INFINITY,
       );
     });
   });
 });
 
+describe("binLast", () => {
+  const narrow = histogramOf([0, 1, 2, 3, 4, 5]);
+
+  it("names an interior integer bar by its last whole number", () => {
+    expect(binLast(narrow, 3, true)).toBe(3);
+  });
+
+  it("keeps the closed last bar's end, which holds the maximum", () => {
+    expect(binLast(narrow, narrow.bins.length - 1, true)).toBe(5);
+  });
+
+  it("keeps a continuous bar's edge", () => {
+    expect(binLast(narrow, 3)).toBe(4);
+  });
+});
+
 describe("overlapsBin", () => {
-  const bin = { count: 1, end: 4, start: 3 };
+  // Bars of width 1 from 0 to 5; the last, `[4, 5]`, is closed.
+  const narrow = histogramOf([0, 1, 2, 3, 4, 5]);
+  const last = narrow.bins.length - 1;
 
   it.each([
-    { bounds: UNBOUNDED, expected: true, purpose: "no bounds" },
-    { bounds: { lower: 3, upper: 4 }, expected: true, purpose: "bounds matching the bar's edges" },
-    { bounds: { lower: 3.5, upper: 10 }, expected: true, purpose: "bounds starting inside the bar" },
-    { bounds: { lower: 4, upper: 10 }, expected: false, purpose: "bounds starting at the bar's exclusive edge" },
-    { bounds: { lower: 0, upper: 3 }, expected: false, purpose: "continuous bounds ending at the bar's start" },
-  ])("lights a bar for $purpose: $expected", ({ bounds, expected }) => {
-    expect(overlapsBin(bounds, bin)).toBe(expected);
+    { bounds: UNBOUNDED, index: 3, expected: true, purpose: "no bounds" },
+    { bounds: { lower: 3, upper: 4 }, index: 3, expected: true, purpose: "bounds matching the bar's edges" },
+    { bounds: { lower: 3.5, upper: 10 }, index: 3, expected: true, purpose: "bounds starting inside the bar" },
+    { bounds: { lower: 4, upper: 10 }, index: 3, expected: false, purpose: "bounds starting at the bar's exclusive edge" },
+    { bounds: { lower: 0, upper: 3 }, index: 3, expected: false, purpose: "continuous bounds ending at the bar's start" },
+    { bounds: { lower: 5, upper: 10 }, index: last, expected: true, purpose: "bounds starting at the closed last bar's end" },
+    { bounds: { lower: 5.5, upper: 10 }, index: last, expected: false, purpose: "bounds past the closed last bar" },
+  ])("lights a bar for $purpose: $expected", ({ bounds, index, expected }) => {
+    expect(overlapsBin(bounds, narrow, index)).toBe(expected);
   });
 
   it("lights an integer bar selected as its single value", () => {
-    expect(overlapsBin({ lower: 3, upper: 3 }, bin, true)).toBe(true);
-    expect(overlapsBin({ lower: 3, upper: 3 }, { count: 1, end: 5, start: 4 }, true)).toBe(false);
-    expect(overlapsBin({ lower: 3, upper: 3 }, { count: 1, end: 3, start: 2 }, true)).toBe(false);
+    expect(overlapsBin({ lower: 3, upper: 3 }, narrow, 3, true)).toBe(true);
+    expect(overlapsBin({ lower: 3, upper: 3 }, narrow, 4, true)).toBe(false);
+    expect(overlapsBin({ lower: 3, upper: 3 }, narrow, 2, true)).toBe(false);
+  });
+
+  it("lights the closed last bar for the maximum it holds", () => {
+    expect(overlapsBin({ lower: 5, upper: 5 }, narrow, last, true)).toBe(true);
+  });
+
+  it("lights an end bar for typed bounds beyond a clipped axis", () => {
+    const ordinary = Array.from({ length: 400 }, (_unused, index) => index % 40);
+    const above = histogramOf([...ordinary, 70_000]);
+    expect(overlapsBin({ lower: 1_000, upper: Number.POSITIVE_INFINITY }, above, above.bins.length - 1)).toBe(true);
+    const below = histogramOf([...ordinary, -70_000]);
+    expect(overlapsBin({ lower: Number.NEGATIVE_INFINITY, upper: -1_000 }, below, 0)).toBe(true);
+    expect(overlapsBin({ lower: Number.NEGATIVE_INFINITY, upper: -1_000 }, below, 1)).toBe(false);
+  });
+});
+
+describe("describeBin", () => {
+  const format = (value: number) => String(value);
+  const narrow = histogramOf([0, 1, 2, 3, 4, 5]);
+  const last = narrow.bins.length - 1;
+
+  it.each([
+    { index: 1, integer: false, expected: "1 to 2", purpose: "a continuous bar" },
+    { index: 1, integer: true, expected: "1", purpose: "an integer bar of one value" },
+    { index: last, integer: true, expected: "4 to 5", purpose: "the closed last integer bar" },
+  ])("names $purpose", ({ index, integer, expected }) => {
+    expect(describeBin(narrow, index, integer, format)).toBe(expected);
+  });
+
+  it("names the whole numbers a wide integer bar holds", () => {
+    const wide = histogramOf([0, 100]);
+    expect(describeBin(wide, 1, true, format)).toBe("5 to 9");
+  });
+
+  it("names the outliers an end bar absorbs", () => {
+    const ordinary = Array.from({ length: 400 }, (_unused, index) => index % 40);
+    const above = histogramOf([...ordinary, 70_000]);
+    expect(describeBin(above, above.bins.length - 1, true, format)).toMatch(/ and above$/);
+    const below = histogramOf([...ordinary, -70_000]);
+    expect(describeBin(below, 0, true, format)).toMatch(/ and below$/);
   });
 });
 
