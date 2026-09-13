@@ -62,7 +62,7 @@ export interface TableUrlSpec {
 /** Facet values that are booleans, as the lift table's detachable column holds. */
 export const BOOLEAN_URL_VALUE: UrlValueCodec = {
   encode: String,
-  decode: (text) => ({ true: true, false: false })[text],
+  decode: (text) => (text === "true" ? true : text === "false" ? false : undefined),
 };
 
 const SORT_KEY = "sort";
@@ -72,13 +72,21 @@ const BLANK = "null";
 
 const RANGE_SEPARATOR = "..";
 
-const NUMBER = /^-?(?:\d+(?:\.\d*)?|\.\d+)$/;
+/**
+ * A decimal number as `String` writes one, exponent included, so that every
+ * bound the writer produces reads back.
+ */
+const NUMBER = /^-?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i;
 
 function parseEnd(text: string, open: number): number | undefined {
   if (text === "") {
     return open;
   }
-  return NUMBER.test(text) ? Number(text) : undefined;
+  if (!NUMBER.test(text)) {
+    return undefined;
+  }
+  const value = Number(text);
+  return Number.isFinite(value) ? value : undefined;
 }
 
 /** Read `lower..upper`, or `undefined` when the text is not a usable range. */
