@@ -44,6 +44,13 @@ Each option lists how many lifts it still matches given the other filters, and t
 Search ignores case, accents, and separators, so `chairlift` finds `chair_lift`, and a country also answers to its code or flag.
 The ski-area picker matches any of the ski areas a lift serves.
 
+Filters and sorting live in the page address, so copying it shares the current view.
+Numeric bounds are inclusive ranges with either side optional, as in `vertical_rise=500..1200`;
+value pickers repeat their key, as in `lift_type=gondola&lift_type=chair_lift`;
+and `sort=-lift_capacity` sorts descending.
+Only what differs from the initial view is written, and an empty value such as `lift_status=` clears an initial filter:
+<https://openskistats.org/lifts/?lift_status=&lift_type=gondola&vertical_rise=500..1200>.
+
 `Ride` is the typical ride duration in minutes and seconds, and `Capacity` is the transport capacity in people per hour.
 Both are recorded by OpenStreetMap contributors and are missing for many lifts.
 

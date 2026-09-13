@@ -44,6 +44,13 @@ Percent columns are bounded in whole percent, so `80` rather than `0.8`.
 Ski area, country, region, and locality offer a value picker listing how many ski areas each value still matches.
 Search ignores case, accents, and separators, and a country also answers to its code or flag, such as `US` or 🇺🇸.
 
+Filters and sorting live in the page address, so copying it shares the current view.
+Numeric bounds are inclusive ranges with either side optional, as in `run_count=3..` or `latitude=..0`;
+value pickers repeat their key, as in `country=AT&country=CH`;
+and `sort=-lift_count` sorts descending.
+Only what differs from the initial view is written, and an empty value such as `run_count=` clears an initial filter:
+<https://openskistats.org/ski-areas/?country=AT&country=CH&run_count=&lift_count=20..&sort=-lift_count>.
+
 Ski run difficulty is collapsed and colored as follows:
 
 ```{python}
