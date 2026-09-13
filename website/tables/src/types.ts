@@ -59,6 +59,23 @@ export interface SkiAreaDocument {
 /** Retained name for the ski-area table's schema type. */
 export type SkiAreaRecordSchema = TableRecordSchema;
 
+/**
+ * Whether the data contract types a field as a whole number.
+ *
+ * Pydantic writes a required field as `type: integer` and an optional one as
+ * `anyOf` over `integer` and `null`, so both shapes are read.
+ */
+export function isIntegerField(schema: TableRecordSchema, field: string): boolean {
+  const property = schema.properties[field];
+  if (property === undefined) {
+    return false;
+  }
+  const variants = Array.isArray(property.anyOf) ? property.anyOf : [property];
+  return variants.some(
+    (variant) => isObject(variant) && variant.type === "integer",
+  );
+}
+
 export interface LiftSummary {
   lift_id: string;
   lift_name: string;

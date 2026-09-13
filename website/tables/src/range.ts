@@ -172,19 +172,43 @@ export function buildHistogram(
  * Bounds spanning two bin edges, inclusive at both.
  *
  * An edge at either end of the axis releases that side, since the end bars
- * absorb the outliers the axis stops short of.
+ * absorb the outliers the axis stops short of. An interior upper edge of an
+ * integer column steps back to the last whole number its bar holds, so that
+ * a bar spanning 50 to 60 runs selects `50..59` rather than a 60-run area too.
  */
 export function boundsFromEdges(
   first: number,
   second: number,
   histogram: Histogram,
+  integer = false,
 ): NumericRange {
   const lower = Math.min(first, second);
   const upper = Math.max(first, second);
   return {
     lower: lower <= histogram.start ? Number.NEGATIVE_INFINITY : lower,
-    upper: upper >= histogram.end ? Number.POSITIVE_INFINITY : upper,
+    upper:
+      upper >= histogram.end
+        ? Number.POSITIVE_INFINITY
+        : integer
+          ? upper - 1
+          : upper,
   };
+}
+
+/**
+ * Whether bounds reach into a bar, so that it draws as selected.
+ *
+ * Testing overlap rather than the bar's midpoint keeps a single integer bar
+ * selected as `3..3` lit; its inclusive upper bound covers the bar up to the
+ * next whole number.
+ */
+export function overlapsBin(
+  bounds: NumericRange,
+  bin: HistogramBin,
+  integer = false,
+): boolean {
+  const upper = integer ? bounds.upper + 1 : bounds.upper;
+  return bounds.lower < bin.end && upper > bin.start;
 }
 
 /** Whether bounds restrict a column at all, or should clear its filter. */
