@@ -19,6 +19,7 @@ import {
 
 import {
   countryCodeToFlag,
+  isNumericRange,
   type NumericRange,
   rangeContains,
   searchKey,
@@ -26,13 +27,12 @@ import {
 import { formatBound, formatNumber, MISSING_VALUE } from "./formatters";
 import {
   boundsFromEdges,
-  boundsFromFilter,
   buildHistogram,
   describeBounds,
-  formatRangeFilter,
   type Histogram,
   parseBound,
   type HistogramBin,
+  restricts,
   roundTo,
   UNBOUNDED,
 } from "./range";
@@ -534,6 +534,11 @@ function FacetedFilterPanel<TData extends RowData>({
   );
 }
 
+/** The bounds a range column's filter holds, or none. */
+function boundsOf(filterValue: unknown): NumericRange {
+  return isNumericRange(filterValue) ? filterValue : UNBOUNDED;
+}
+
 /** Drawn size of a distribution, in the histogram's own coordinate space. */
 const HISTOGRAM_WIDTH = 236;
 const HISTOGRAM_HEIGHT = 54;
@@ -685,21 +690,18 @@ function RangeFilterPanel<TData extends RowData>({
   const rows = column.getFacetedRowModel().flatRows;
   const values = useMemo(() => filterValues(column, rows), [column, rows]);
   const histogram = useMemo(() => buildHistogram(values), [values]);
-  // Bounds are re-derived only when the filter text changes, so the debounced
-  // boxes below see a callback identity that settles instead of churning.
   const filterValue = column.getFilterValue();
-  const applied = useMemo(() => boundsFromFilter(filterValue), [filterValue]);
   const [dragged, setDragged] = useState<NumericRange | null>(null);
-  const bounds = dragged ?? applied;
+  const bounds = dragged ?? boundsOf(filterValue);
 
+  // The callbacks depend on the column alone, so the debounced boxes below see
+  // an identity that settles instead of churning.
   const commit = useCallback(
     (next: NumericRange) => {
       setDragged(null);
-      column.setFilterValue(
-        histogram === null ? undefined : formatRangeFilter(next, histogram),
-      );
+      column.setFilterValue(restricts(next) ? next : undefined);
     },
-    [column, histogram],
+    [column],
   );
   const commitBound = useCallback(
     (edge: "lower" | "upper", text: string) => {
@@ -710,10 +712,8 @@ function RangeFilterPanel<TData extends RowData>({
       commit({
         // Read the filter as it stands rather than as this render saw it, so
         // editing one bound cannot revert the other.
-        ...boundsFromFilter(column.getFilterValue()),
+        ...boundsOf(column.getFilterValue()),
         [edge]: parsed,
-        // A typed bound reads as inclusive, whatever bracket a brush left.
-        [edge === "lower" ? "lowerInclusive" : "upperInclusive"]: true,
       });
     },
     [column, commit],
@@ -810,7 +810,7 @@ export function RangeFilter<TData extends RowData>({
   ariaLabel: string;
   column: Column<TableFeatures, TData, unknown>;
 }) {
-  const bounds = boundsFromFilter(column.getFilterValue());
+  const bounds = boundsOf(column.getFilterValue());
   const format = column.columnDef.meta?.filterFormat ?? formatBound;
   return (
     <FilterPopover ariaLabel={ariaLabel} label={describeBounds(bounds, format)}>

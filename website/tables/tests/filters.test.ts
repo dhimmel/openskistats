@@ -2,55 +2,52 @@ import { describe, expect, it } from "vitest";
 
 import {
   countryCodeToFlag,
-  matchesLatitudeFilter,
+  isNumericRange,
   matchesNumericFilter,
   matchesPercentFilter,
   matchesSetFilter,
   searchKey,
 } from "../src/filters";
 
+const atLeast = (lower: number) => ({ lower, upper: Number.POSITIVE_INFINITY });
+const atMost = (upper: number) => ({ lower: Number.NEGATIVE_INFINITY, upper });
+
 describe("matchesNumericFilter", () => {
   it.each([
-    { value: 15, filter: "15", expected: true, purpose: "positive threshold" },
-    { value: 14, filter: "15", expected: false, purpose: "below positive threshold" },
-    { value: -20, filter: "-20", expected: true, purpose: "negative threshold" },
-    { value: -19, filter: "-20", expected: false, purpose: "above negative threshold" },
-    { value: 10, filter: "[10, 20]", expected: true, purpose: "inclusive range" },
-    { value: 10, filter: "(10, 20)", expected: false, purpose: "exclusive range" },
-    { value: 5, filter: "(, 5]", expected: true, purpose: "open lower bound" },
-    { value: 20, filter: "[10, )", expected: true, purpose: "open upper bound" },
-    { value: 1.5, filter: "1.5", expected: true, purpose: "decimal threshold" },
-    { value: 0, filter: "-", expected: true, purpose: "zero shorthand" },
-    { value: null, filter: "15", expected: false, purpose: "missing value" },
-    { value: null, filter: "", expected: true, purpose: "empty filter" },
-    { value: 1, filter: "nonsense", expected: true, purpose: "invalid filter" },
+    { value: 15, filter: atLeast(15), expected: true, purpose: "a lower bound, inclusive" },
+    { value: 14, filter: atLeast(15), expected: false, purpose: "below the lower bound" },
+    { value: -20, filter: atMost(-20), expected: true, purpose: "a negative upper bound, inclusive" },
+    { value: -19, filter: atMost(-20), expected: false, purpose: "above the upper bound" },
+    { value: 10, filter: { lower: 10, upper: 20 }, expected: true, purpose: "the lower edge of a closed range" },
+    { value: 20, filter: { lower: 10, upper: 20 }, expected: true, purpose: "the upper edge of a closed range" },
+    { value: 20.5, filter: { lower: 10, upper: 20 }, expected: false, purpose: "past a closed range" },
+    { value: 1.5, filter: atLeast(1.5), expected: true, purpose: "a decimal bound" },
+    { value: null, filter: atLeast(15), expected: false, purpose: "a missing value" },
+    { value: null, filter: undefined, expected: true, purpose: "no filter" },
+    { value: 1, filter: "3", expected: true, purpose: "a filter that is not a range" },
   ])("handles $purpose", ({ value, filter, expected }) => {
     expect(matchesNumericFilter(value, filter)).toBe(expected);
   });
 });
 
+it("recognises only objects with two numeric bounds as ranges", () => {
+  expect(isNumericRange({ lower: 1, upper: 2 })).toBe(true);
+  expect(isNumericRange(atLeast(1))).toBe(true);
+  expect(isNumericRange({ lower: 1 })).toBe(false);
+  expect(isNumericRange(["a"])).toBe(false);
+  expect(isNumericRange(null)).toBe(false);
+});
+
 it("matches percent filters against displayed values", () => {
-  expect(matchesPercentFilter(0.8, "80")).toBe(true);
-  expect(matchesPercentFilter(0.79, "80")).toBe(false);
-  expect(matchesPercentFilter(null, "80")).toBe(false);
+  expect(matchesPercentFilter(0.8, atLeast(80))).toBe(true);
+  expect(matchesPercentFilter(0.79, atLeast(80))).toBe(false);
+  expect(matchesPercentFilter(null, atLeast(80))).toBe(false);
 });
 
 it("creates flags only for valid country codes", () => {
   expect(countryCodeToFlag("us")).toBe("🇺🇸");
   expect(countryCodeToFlag(null)).toBeNull();
   expect(countryCodeToFlag("USA")).toBeNull();
-});
-
-describe("latitude filters", () => {
-  it.each([
-    { latitude: 45, filter: "north", expected: true },
-    { latitude: 45, filter: "sou", expected: false },
-    { latitude: -20, filter: "south", expected: true },
-    { latitude: -20, filter: "-20", expected: true },
-    { latitude: null, filter: "north", expected: false },
-  ])("matches $latitude against $filter", ({ latitude, filter, expected }) => {
-    expect(matchesLatitudeFilter(latitude, filter)).toBe(expected);
-  });
 });
 
 describe("matchesSetFilter", () => {

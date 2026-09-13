@@ -1,106 +1,44 @@
-import type { SkiAreaSummary } from "./types";
-
 /**
- * A half-open or closed interval, as written in the `[lower, upper)` grammar
- * the numeric filter boxes accept. Either endpoint may be infinite.
+ * A closed interval, inclusive at both ends. Either endpoint may be infinite.
+ *
+ * The range popovers hand this object to the filter function directly, so a
+ * typed bound and a dragged bound are the same piece of state.
  */
 export interface NumericRange {
   lower: number;
-  lowerInclusive: boolean;
   upper: number;
-  upperInclusive: boolean;
 }
-
-const NUMBER_PATTERN = "-?(?:\\d+(?:\\.\\d*)?|\\.\\d+)";
-const SINGLE_NUMBER = new RegExp(`^(${NUMBER_PATTERN})$`);
-const EXPLICIT_RANGE = new RegExp(
-  `^([\\[(])\\s*(${NUMBER_PATTERN})?\\s*,\\s*(${NUMBER_PATTERN})?\\s*([\\])])$`,
-);
 
 export const INITIAL_COLUMN_FILTERS = [
-  { id: "run_count", value: "3" },
-  { id: "combined_vertical", value: "50" },
+  { id: "run_count", value: { lower: 3, upper: Number.POSITIVE_INFINITY } },
+  { id: "combined_vertical", value: { lower: 50, upper: Number.POSITIVE_INFINITY } },
 ] as const;
 
-/**
- * Read a filter box's text as an interval, or `null` when it is not one.
- *
- * The range popovers parse the filter they are about to replace so that a
- * typed bound and a dragged bound are the same piece of state.
- */
-export function parseNumericRange(filterValue: string): NumericRange | null {
-  const expression = filterValue.trim();
-  if (expression === "-" || expression === "-0") {
-    return {
-      lower: Number.NEGATIVE_INFINITY,
-      lowerInclusive: true,
-      upper: 0,
-      upperInclusive: true,
-    };
-  }
-
-  const singleMatch = expression.match(SINGLE_NUMBER);
-  if (singleMatch) {
-    const threshold = Number(singleMatch[1]);
-    return threshold >= 0
-      ? {
-          lower: threshold,
-          lowerInclusive: true,
-          upper: Number.POSITIVE_INFINITY,
-          upperInclusive: true,
-        }
-      : {
-          lower: Number.NEGATIVE_INFINITY,
-          lowerInclusive: true,
-          upper: threshold,
-          upperInclusive: true,
-        };
-  }
-
-  const rangeMatch = expression.match(EXPLICIT_RANGE);
-  if (!rangeMatch || (rangeMatch[2] === undefined && rangeMatch[3] === undefined)) {
-    return null;
-  }
-  return {
-    lower:
-      rangeMatch[2] === undefined
-        ? Number.NEGATIVE_INFINITY
-        : Number(rangeMatch[2]),
-    lowerInclusive: rangeMatch[1] === "[",
-    upper:
-      rangeMatch[3] === undefined
-        ? Number.POSITIVE_INFINITY
-        : Number(rangeMatch[3]),
-    upperInclusive: rangeMatch[4] === "]",
-  };
+export function isNumericRange(value: unknown): value is NumericRange {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    typeof (value as NumericRange).lower === "number" &&
+    typeof (value as NumericRange).upper === "number"
+  );
 }
 
-/** Whether `value` falls inside the interval, honouring each end's bracket. */
+/** Whether `value` falls inside the interval. */
 export function rangeContains(range: NumericRange, value: number): boolean {
-  const aboveLower = range.lowerInclusive
-    ? value >= range.lower
-    : value > range.lower;
-  const belowUpper = range.upperInclusive
-    ? value <= range.upper
-    : value < range.upper;
-  return aboveLower && belowUpper;
+  return value >= range.lower && value <= range.upper;
 }
 
 export function matchesNumericFilter(
   value: number | null | undefined,
   filterValue: unknown,
 ): boolean {
-  if (typeof filterValue !== "string" || filterValue.trim() === "") {
-    return true;
-  }
-  const range = parseNumericRange(filterValue);
-  if (range === null) {
+  if (!isNumericRange(filterValue)) {
     return true;
   }
   if (typeof value !== "number" || !Number.isFinite(value)) {
     return false;
   }
-  return rangeContains(range, value);
+  return rangeContains(filterValue, value);
 }
 
 export function matchesPercentFilter(
@@ -136,24 +74,6 @@ export function countryCodeToFlag(countryCode: string | null): string | null {
   return String.fromCodePoint(
     ...[...normalized].map((letter) => 0x1f1e6 + letter.charCodeAt(0) - 65),
   );
-}
-
-export function matchesLatitudeFilter(
-  latitude: number | null,
-  filterValue: unknown,
-): boolean {
-  if (typeof filterValue !== "string" || filterValue.trim() === "") {
-    return true;
-  }
-  const query = filterValue.trim();
-  if (!/^[a-z]+$/i.test(query)) {
-    return matchesNumericFilter(latitude, query);
-  }
-  if (latitude === null) {
-    return false;
-  }
-  const hemisphere = latitude > 0 ? "north" : latitude < 0 ? "south" : "";
-  return hemisphere.includes(query.toLocaleLowerCase());
 }
 
 /**

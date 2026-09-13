@@ -10,11 +10,7 @@ import {
 } from "@tanstack/react-table";
 import { type ReactNode, useEffect, useMemo, useState } from "react";
 
-import {
-  matchesLatitudeFilter,
-  matchesNumericFilter,
-  matchesSetFilter,
-} from "./filters";
+import { matchesNumericFilter, matchesSetFilter } from "./filters";
 import {
   formatLatitude,
   formatMeters,
@@ -47,13 +43,6 @@ const numericFilter: FilterFn<TableFeatures, LiftSummary> = (row, columnId, valu
 /** Keep rows whose value was selected in a column's value picker. */
 const setFilter: FilterFn<TableFeatures, LiftSummary> = (row, columnId, value) =>
   matchesSetFilter(row.getValue(columnId), value);
-
-const latitudeFilter: FilterFn<TableFeatures, LiftSummary> = (
-  row,
-  columnId,
-  value,
-) =>
-  matchesLatitudeFilter(row.getValue<number | null>(columnId), value);
 
 /** Keep lifts serving any of the selected ski areas. */
 const skiAreaFilter: FilterFn<TableFeatures, LiftSummary> = (
@@ -254,11 +243,9 @@ function createColumns(
         {
           accessorKey: "latitude",
           cell: LatitudeCell,
-          filterFn: latitudeFilter,
+          filterFn: numericFilter,
           header: header("ℍ φ", description("latitude")),
           id: "latitude",
-          // Brushing a lobe of the bimodal distribution says north or south
-          // more directly than the words the filter function still parses.
           meta: { filterFormat: formatLatitude, filterVariant: "range" },
           minSize: 55,
           size: 62,

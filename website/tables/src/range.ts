@@ -2,17 +2,15 @@
  * Binning and bound arithmetic behind the numeric range filters.
  *
  * Kept apart from the components that draw them so the arithmetic can be
- * tested without a DOM, and expressed in the same `[lower, upper)` grammar the
- * filter boxes accept, so a typed bound and a dragged bound are one state.
+ * tested without a DOM. Bounds are inclusive at both ends, whether typed into
+ * the boxes or brushed across the bars, so the two are one state.
  */
-import { type NumericRange, parseNumericRange } from "./filters";
+import type { NumericRange } from "./filters";
 
 /** An unrestricted interval: the state of a column with no range filter. */
 export const UNBOUNDED: NumericRange = {
   lower: Number.NEGATIVE_INFINITY,
-  lowerInclusive: true,
   upper: Number.POSITIVE_INFINITY,
-  upperInclusive: true,
 };
 
 /** Bins to aim for; the nice-number rounding lands somewhat either side. */
@@ -170,20 +168,11 @@ export function buildHistogram(
   };
 }
 
-/** The interval a column's current filter text describes. */
-export function boundsFromFilter(filterValue: unknown): NumericRange {
-  if (typeof filterValue !== "string") {
-    return UNBOUNDED;
-  }
-  return parseNumericRange(filterValue) ?? UNBOUNDED;
-}
-
 /**
- * Bounds spanning two bin edges.
+ * Bounds spanning two bin edges, inclusive at both.
  *
- * The upper edge is exclusive unless it is the end of the distribution, so
- * that brushing one bar selects that bar rather than also the first value of
- * the next one.
+ * An edge at either end of the axis releases that side, since the end bars
+ * absorb the outliers the axis stops short of.
  */
 export function boundsFromEdges(
   first: number,
@@ -193,34 +182,14 @@ export function boundsFromEdges(
   const lower = Math.min(first, second);
   const upper = Math.max(first, second);
   return {
-    lower,
-    lowerInclusive: true,
-    upper,
-    upperInclusive: upper >= histogram.end,
+    lower: lower <= histogram.start ? Number.NEGATIVE_INFINITY : lower,
+    upper: upper >= histogram.end ? Number.POSITIVE_INFINITY : upper,
   };
 }
 
-/**
- * Write bounds back as filter text, or `undefined` when they no longer
- * restrict the column.
- *
- * Bounds are always bracketed rather than written as a bare threshold, since a
- * bare negative number reads as an upper bound in this grammar.
- */
-export function formatRangeFilter(
-  bounds: NumericRange,
-  histogram: Histogram,
-): string | undefined {
-  const restrictsLower = bounds.lower > histogram.start;
-  const restrictsUpper = bounds.upper < histogram.end;
-  if (!restrictsLower && !restrictsUpper) {
-    return undefined;
-  }
-  const lower = restrictsLower ? roundTo(bounds.lower, histogram.precision) : "";
-  const upper = restrictsUpper ? roundTo(bounds.upper, histogram.precision) : "";
-  const open = bounds.lowerInclusive || !restrictsLower ? "[" : "(";
-  const close = bounds.upperInclusive || !restrictsUpper ? "]" : ")";
-  return `${open}${lower}, ${upper}${close}`;
+/** Whether bounds restrict a column at all, or should clear its filter. */
+export function restricts(bounds: NumericRange): boolean {
+  return Number.isFinite(bounds.lower) || Number.isFinite(bounds.upper);
 }
 
 /**
@@ -251,10 +220,10 @@ export function describeBounds(
     return `${format(bounds.lower)}–${format(bounds.upper)}`;
   }
   if (restrictsLower) {
-    return `${bounds.lowerInclusive ? "≥" : ">"} ${format(bounds.lower)}`;
+    return `≥ ${format(bounds.lower)}`;
   }
   if (restrictsUpper) {
-    return `${bounds.upperInclusive ? "≤" : "<"} ${format(bounds.upper)}`;
+    return `≤ ${format(bounds.upper)}`;
   }
   return "Any";
 }
