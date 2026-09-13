@@ -20,8 +20,8 @@ license = {file = "LICENSE.md"}
 requires-python = "==3.14.7"
 
 [tool.pixi.dependencies]
-nodejs = "==26.6.0"
-pnpm = "==12.0.0"
+nodejs = "==26.8.1"
+pnpm = "==12.4.0"
 quarto = "==1.9.38"
 
 [tool.pixi.tasks.frontend]
@@ -42,14 +42,14 @@ httpx2 = "==2.12.0"
 markdown-it-py = "==4.2.0"
 jupyter = "==1.1.1"
 matplotlib = "==3.11.1"
-mizani = "==0.14.4"
+mizani = "==0.14.6"
 networkx = "==3.6.1"
-numpy = "==2.5.2"
+numpy = "==2.5.3"
 osmnx = "==2.1.1"
 patito = "==0.8.6"
 plotly = "==7.0.0"
-plotnine = "==0.16.0a12"
-polars= "==1.43.2"
+plotnine = "==0.16.0a13"
+polars= "==1.44.2"
 pydantic = "==2.13.5"
 pvlib= "==0.15.2"
 pyarrow = "==25.0.1"
@@ -59,9 +59,9 @@ typer = "==0.27.2"
 
 [tool.pixi.feature.dev.pypi-dependencies]
 mypy = "==2.3.1"
-prek = "==0.4.13"
+prek = "==0.5.2"
 pytest = "==9.1.1"
-types-PyYAML = "==6.0.12.20260815"
+types-PyYAML = "==6.0.12.20260906"
 types-shapely = "==2.1.0.20260728"
 
 [tool.pixi.environments]
