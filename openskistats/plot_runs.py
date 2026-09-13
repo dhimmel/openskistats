@@ -172,6 +172,35 @@ class RunLatitudeBearingHistogram:
             )
         )
 
+    def get_orientation_by_latitude_band(self, band_width: int) -> pl.DataFrame:
+        """
+        Poleward and eastward affinity of segments by absolute latitude band,
+        pooling hemispheres via the hemispherical flip and weighting by vertical drop.
+        Bands are `band_width` degrees wide and closed on their lower bound,
+        so a `band_width` of 90 yields a single global band.
+        `poleward_share` is the proportion of combined vertical on segments
+        whose bearing has a poleward component.
+        """
+        weight = pl.col("distance_vertical_drop")
+        bearing_rad = pl.col("bearing_poleward").radians()
+        return (
+            self.load_and_filter_runs_pl()
+            .group_by(
+                latitude_abs_band_lower=pl.col("latitude_abs")
+                .floordiv(band_width)
+                .mul(band_width)
+                .cast(pl.Int32)
+            )
+            .agg(
+                poleward_affinity=weight.mul(bearing_rad.cos()).sum() / weight.sum(),
+                eastward_affinity=weight.mul(bearing_rad.sin()).sum() / weight.sum(),
+                poleward_share=weight.filter(bearing_rad.cos() > 0).sum()
+                / weight.sum(),
+            )
+            .sort("latitude_abs_band_lower")
+            .collect()
+        )
+
     def get_latitude_bearing_histogram(self) -> pl.DataFrame:
         histogram = (
             self.load_and_filter_runs_pl()

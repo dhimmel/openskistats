@@ -184,16 +184,27 @@ so the observed concentration reflects mapping completeness in addition to true 
 
 ## Orientation findings
 
-Downhill skiing is overwhelmingly favors a poleward orientation.
-In the northern hemisphere, `{python} var("orientation__north__poleward_share", ".1%")` of skiable vert descends on a bearing with a northward component,
-yielding a poleward affinity of `{python} var("orientation__north__poleward_affinity", ".2f")` and a mean bearing of `{python} var("orientation__north__bearing_mean", ".1f")`° (@fig-hemisphere-roses).
-The southern hemisphere favors the pole even more strongly:
-`{python} var("orientation__south__poleward_share", ".1%")` of its vert descends southward, for a poleward affinity of `{python} var("orientation__south__poleward_affinity", ".2f")` and a mean bearing of `{python} var("orientation__south__bearing_mean", ".1f")`°.
+Downhill skiing overwhelmingly favors a poleward orientation.
+Across all ski areas, `{python} var("orientation__poleward_share", ".1%")` of skiable vert descends on a bearing with a poleward component,
+i.e. northward in the northern hemisphere and southward in the southern hemisphere,
+for a poleward affinity of `{python} var("orientation__poleward_affinity", ".2f")` (@fig-hemisphere-roses).
 Poleward slopes receive the least direct sunlight, preserving snow through the season.
 
-Both hemispheres also face east, with eastward affinities of `{python} var("orientation__north__eastward_affinity", ".2f")` in the north and `{python} var("orientation__south__eastward_affinity", ".2f")` in the south.
+Ski trails also faces east, with an eastward affinity of `{python} var("orientation__eastward_affinity", ".2f")`.
 East-facing slopes receive their sun in the morning, when air temperatures are lower, and are shaded by afternoon, when the warmer air compounds melt.
 The same daily dose of sunlight therefore costs east-facing snow less than west-facing snow.
+
+Poleward affinity declines with distance from the equator (@fig-latitude-panel).
+Runs between 30--40° absolute latitude have a poleward affinity of `{python} var("latitude__between_30_40__poleward_affinity", ".2f")`,
+which falls to `{python} var("latitude__between_40_50__poleward_affinity", ".2f")` between 40--50°, the band holding the majority of the world's skiable vert,
+to `{python} var("latitude__between_50_60__poleward_affinity", ".2f")` between 50--60°,
+and to `{python} var("latitude__between_60_70__poleward_affinity", ".2f")` between 60--70°.
+Near the equator, the winter sun stays high and intense, so snow survives only where the terrain shades it.
+At high latitudes, the winter sun barely clears the horizon and delivers little irradiance to any slope,
+so orientation matters less to snow preservation and terrain, access, and wind can dictate where runs are cut.
+Cold air compounds the effect:
+melt requires the snow surface to reach 0°C, so irradiation that would melt snow in a mild climate merely warms it in a frigid one.
+Hence, ski areas face the pole in proportion to the solar irradiation their latitude would otherwise impose.
 
 ::: {#fig-ski-area-roses}
 ![](../images/select_ski_area_roses.svg)

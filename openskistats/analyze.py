@@ -509,6 +509,23 @@ def set_latitude_metrics() -> None:
             45, 48
         ),
     )
+    # a single 90 degree band summarizes all runs
+    (global_row,) = rlbh.get_orientation_by_latitude_band(band_width=90).to_dicts()
+    set_variables(
+        orientation__poleward_share=round(global_row["poleward_share"], 4),
+        orientation__poleward_affinity=round(global_row["poleward_affinity"], 4),
+        orientation__eastward_affinity=round(global_row["eastward_affinity"], 4),
+    )
+    band_width = 10
+    for row in rlbh.get_orientation_by_latitude_band(band_width=band_width).to_dicts():
+        lower = row["latitude_abs_band_lower"]
+        set_variables(
+            **{
+                f"latitude__between_{lower}_{lower + band_width}__poleward_affinity": round(
+                    row["poleward_affinity"], 4
+                )
+            }
+        )
 
 
 def bearing_dists_by_status() -> pl.DataFrame:
