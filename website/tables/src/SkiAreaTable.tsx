@@ -52,10 +52,11 @@ import {
   type FilteredAggregates,
 } from "./table-core";
 import { TABLE_FEATURES, type TableFeatures } from "./table-features";
-import type {
-  SkiAreaDocument,
-  SkiAreaRecordSchema,
-  SkiAreaSummary,
+import {
+  isIntegerField,
+  type SkiAreaDocument,
+  type SkiAreaRecordSchema,
+  type SkiAreaSummary,
 } from "./types";
 
 const numericFilter: FilterFn<TableFeatures, SkiAreaSummary> = (
@@ -234,7 +235,11 @@ function createColumns(
     sortUndefined: "last",
     ...options,
     id: field,
-    meta: { filterVariant: "range", ...options.meta },
+    meta: {
+      filterVariant: "range",
+      integer: isIntegerField(schema, field),
+      ...options.meta,
+    },
   });
   const percentColumn = (
     field: keyof SkiAreaSummary,

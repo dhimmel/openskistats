@@ -30,6 +30,7 @@ import {
   buildHistogram,
   describeBounds,
   type Histogram,
+  overlapsBin,
   parseBound,
   type HistogramBin,
   restricts,
@@ -561,20 +562,29 @@ function filterValues<TData extends RowData>(
   });
 }
 
-/** Name the span a bar covers, including the outliers an end bar absorbs. */
+/**
+ * Name the span a bar covers, including the outliers an end bar absorbs.
+ *
+ * An integer bar is named by the whole numbers it holds, as brushing it
+ * bounds them: `50 to 59` for the bar reaching 60, and `3` for a lone value.
+ */
 function describeBin(
   bin: HistogramBin,
   index: number,
   histogram: Histogram,
+  integer: boolean,
   format: (value: number) => string,
 ): string {
+  const last = integer ? bin.end - 1 : bin.end;
   if (index === 0 && histogram.start > histogram.minimum) {
-    return `${format(bin.end)} and below`;
+    return `${format(last)} and below`;
   }
   if (index === histogram.bins.length - 1 && histogram.end < histogram.maximum) {
     return `${format(bin.start)} and above`;
   }
-  return `${format(bin.start)} to ${format(bin.end)}`;
+  return last === bin.start
+    ? format(bin.start)
+    : `${format(bin.start)} to ${format(last)}`;
 }
 
 /**
@@ -587,11 +597,13 @@ function RangeHistogram({
   bounds,
   format,
   histogram,
+  integer,
   onSelect,
 }: {
   bounds: NumericRange;
   format: (value: number) => string;
   histogram: Histogram;
+  integer: boolean;
   onSelect: (bounds: NumericRange, settled: boolean) => void;
 }) {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -621,6 +633,7 @@ function RangeHistogram({
         histogram.bins[Math.min(anchor, other)].start,
         histogram.bins[Math.max(anchor, other)].end,
         histogram,
+        integer,
       ),
       settled,
     );
@@ -657,7 +670,7 @@ function RangeHistogram({
                 1,
                 Math.sqrt(bin.count / histogram.maxCount) * HISTOGRAM_HEIGHT,
               );
-        const selected = rangeContains(bounds, (bin.start + bin.end) / 2);
+        const selected = overlapsBin(bounds, bin, integer);
         return (
           <rect
             className={
@@ -670,7 +683,7 @@ function RangeHistogram({
             y={HISTOGRAM_HEIGHT - height}
           >
             <title>
-              {describeBin(bin, index, histogram, format)}:{" "}
+              {describeBin(bin, index, histogram, integer, format)}:{" "}
               {formatNumber(bin.count)}
             </title>
           </rect>
@@ -734,6 +747,7 @@ function RangeFilterPanel<TData extends RowData>({
   const format = (value: number) =>
     column.columnDef.meta?.filterFormat?.(value) ??
     formatBound(value, histogram.precision);
+  const integer = column.columnDef.meta?.integer ?? false;
   const boundText = (value: number) =>
     Number.isFinite(value) ? String(roundTo(value, histogram.precision)) : "";
   const keptCount = values.filter(
@@ -760,6 +774,7 @@ function RangeFilterPanel<TData extends RowData>({
         bounds={bounds}
         format={format}
         histogram={histogram}
+        integer={integer}
         onSelect={(next, settled) => (settled ? commit(next) : setDragged(next))}
       />
       <div className="oss-table-range-axis">

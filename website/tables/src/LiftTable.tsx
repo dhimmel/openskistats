@@ -30,7 +30,12 @@ import {
   metricCell,
   textCell,
 } from "./table-ui";
-import type { LiftDocument, LiftSummary, TableRecordSchema } from "./types";
+import {
+  isIntegerField,
+  type LiftDocument,
+  type LiftSummary,
+  type TableRecordSchema,
+} from "./types";
 
 /** Lifts recorded as still operating, shown before the visitor clears filters. */
 export const INITIAL_LIFT_FILTERS = [
@@ -133,7 +138,11 @@ function createColumns(
     sortUndefined: "last",
     ...options,
     id: field,
-    meta: { filterVariant: "range", ...options.meta },
+    meta: {
+      filterVariant: "range",
+      integer: isIntegerField(schema, field),
+      ...options.meta,
+    },
   });
   const categoricalColumn = (
     field: keyof LiftSummary,

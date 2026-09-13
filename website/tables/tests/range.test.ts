@@ -5,6 +5,7 @@ import {
   boundsFromEdges,
   buildHistogram,
   describeBounds,
+  overlapsBin,
   parseBound,
   restricts,
   roundTo,
@@ -118,6 +119,44 @@ describe("boundsFromEdges", () => {
     { edges: [0, 100], purpose: "both ends", lower: Number.NEGATIVE_INFINITY, upper: Number.POSITIVE_INFINITY },
   ])("releases a bound that reaches $purpose of the axis", ({ edges, lower, upper }) => {
     expect(boundsFromEdges(edges[0], edges[1], histogram)).toEqual({ lower, upper });
+  });
+
+  describe("integer columns", () => {
+    it("snaps an interior upper edge to the last whole number in the bar", () => {
+      expect(boundsFromEdges(20, 60, histogram, true)).toEqual({ lower: 20, upper: 59 });
+    });
+
+    it("selects a single-width bar as one value", () => {
+      const narrow = histogramOf([0, 1, 2, 3, 4, 5]);
+      expect(narrow.step).toBe(1);
+      expect(boundsFromEdges(3, 4, narrow, true)).toEqual({ lower: 3, upper: 3 });
+    });
+
+    it("still releases an edge at the end of the axis", () => {
+      expect(boundsFromEdges(20, histogram.end, histogram, true).upper).toBe(
+        Number.POSITIVE_INFINITY,
+      );
+    });
+  });
+});
+
+describe("overlapsBin", () => {
+  const bin = { count: 1, end: 4, start: 3 };
+
+  it.each([
+    { bounds: UNBOUNDED, expected: true, purpose: "no bounds" },
+    { bounds: { lower: 3, upper: 4 }, expected: true, purpose: "bounds matching the bar's edges" },
+    { bounds: { lower: 3.5, upper: 10 }, expected: true, purpose: "bounds starting inside the bar" },
+    { bounds: { lower: 4, upper: 10 }, expected: false, purpose: "bounds starting at the bar's exclusive edge" },
+    { bounds: { lower: 0, upper: 3 }, expected: false, purpose: "continuous bounds ending at the bar's start" },
+  ])("lights a bar for $purpose: $expected", ({ bounds, expected }) => {
+    expect(overlapsBin(bounds, bin)).toBe(expected);
+  });
+
+  it("lights an integer bar selected as its single value", () => {
+    expect(overlapsBin({ lower: 3, upper: 3 }, bin, true)).toBe(true);
+    expect(overlapsBin({ lower: 3, upper: 3 }, { count: 1, end: 5, start: 4 }, true)).toBe(false);
+    expect(overlapsBin({ lower: 3, upper: 3 }, { count: 1, end: 3, start: 2 }, true)).toBe(false);
   });
 });
 

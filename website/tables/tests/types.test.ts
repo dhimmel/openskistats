@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  isIntegerField,
   readSkiAreaDocument,
   SkiAreaContractError,
   type SkiAreaDocument,
@@ -60,5 +61,26 @@ describe("readSkiAreaDocument", () => {
 
   it("uses a dedicated error type", () => {
     expect(() => readSkiAreaDocument(null)).toThrow(SkiAreaContractError);
+  });
+});
+
+describe("isIntegerField", () => {
+  const schema = {
+    properties: {
+      run_count: { type: "integer" },
+      lift_occupancy: { anyOf: [{ type: "integer" }, { type: "null" }] },
+      combined_vertical: { anyOf: [{ type: "number" }, { type: "null" }] },
+      latitude: { type: "number" },
+    },
+  };
+
+  it.each([
+    { field: "run_count", expected: true, purpose: "a required integer" },
+    { field: "lift_occupancy", expected: true, purpose: "an optional integer" },
+    { field: "combined_vertical", expected: false, purpose: "an optional number" },
+    { field: "latitude", expected: false, purpose: "a required number" },
+    { field: "missing", expected: false, purpose: "a field the schema lacks" },
+  ])("reads $purpose", ({ field, expected }) => {
+    expect(isIntegerField(schema, field)).toBe(expected);
   });
 });

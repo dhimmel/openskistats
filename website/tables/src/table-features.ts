@@ -31,6 +31,11 @@ interface TableColumnMeta {
   filterFormat?: (value: number) => string;
   /** Header control to render: a value picker, or a brushable distribution. */
   filterVariant?: "faceted" | "range";
+  /**
+   * The column holds whole numbers by contract, so a brushed upper bound
+   * snaps to the last value a bar holds rather than to its exclusive edge.
+   */
+  integer?: boolean;
 }
 
 interface TableMeta {
