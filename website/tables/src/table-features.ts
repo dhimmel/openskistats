@@ -15,6 +15,8 @@ import {
 } from "@tanstack/react-table";
 import type { CSSProperties } from "react";
 
+import type { UrlValueCodec } from "./url-state";
+
 interface TableColumnMeta {
   cellStyle?: (value: unknown) => CSSProperties;
   className?: string;
@@ -36,6 +38,8 @@ interface TableColumnMeta {
    * snaps to the last value a bar holds rather than to its exclusive edge.
    */
   integer?: boolean;
+  /** How a value picker's option is written in the URL, when not as its own text. */
+  urlValue?: UrlValueCodec;
 }
 
 interface TableMeta {
