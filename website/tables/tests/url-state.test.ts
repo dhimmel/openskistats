@@ -73,6 +73,8 @@ describe("readTableState", () => {
     { text: "..0", expected: atMost(0), purpose: "the southern hemisphere" },
     { text: ".5..1.5", expected: { lower: 0.5, upper: 1.5 }, purpose: "decimal bounds" },
     { text: "60..", expected: atLeast(60), purpose: "a percent column in displayed units" },
+    { text: "1e-7..", expected: atLeast(1e-7), purpose: "a bound written in exponent notation" },
+    { text: "-1.5E2..", expected: atLeast(-150), purpose: "an upper-case exponent" },
   ])("reads $purpose", ({ text, expected }) => {
     expect(filterOf(`?latitude=${text}`, "latitude")).toEqual(expected);
   });
@@ -82,8 +84,10 @@ describe("readTableState", () => {
     { text: "3", purpose: "a bare number" },
     { text: "10..3", purpose: "a lower bound above the upper one" },
     { text: "..", purpose: "no bounds at all" },
-    { text: "1e3..", purpose: "exponent notation" },
     { text: "Infinity..", purpose: "a non-finite bound" },
+    { text: "1e400..", purpose: "an exponent that overflows" },
+    { text: `1${"0".repeat(400)}..`, purpose: "a decimal that overflows" },
+    { text: "0x10..", purpose: "a hexadecimal bound" },
     { text: "3..ten", purpose: "one unreadable bound" },
   ])("falls back to the default for $purpose", ({ text }) => {
     expect(filterOf(`?run_count=${text}`, "run_count")).toEqual(atLeast(3));
@@ -124,6 +128,23 @@ describe("readTableState", () => {
       [true, null],
     );
     expect(filterOf("?lift_detachable=maybe", "lift_detachable")).toBeUndefined();
+  });
+
+  it.each(["constructor", "toString", "__proto__", "TRUE"])(
+    "does not read %s as a boolean",
+    (text) => {
+      expect(filterOf(`?lift_detachable=${text}`, "lift_detachable")).toBeUndefined();
+    },
+  );
+
+  it("round-trips a bound typed with more precision than the axis", () => {
+    const state = {
+      columnFilters: [{ id: "latitude", value: atLeast(0.0000001) }],
+      sorting: defaults().sorting,
+    };
+    const search = writeTableState("", { ...defaults(), ...state, columnFilters: [...defaults().columnFilters, ...state.columnFilters] }, spec);
+    expect(search).toBe("?latitude=1e-7..");
+    expect(filterOf(search, "latitude")).toEqual(atLeast(1e-7));
   });
 
   it.each([
