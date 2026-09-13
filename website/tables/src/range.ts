@@ -230,7 +230,27 @@ export function parseBound(edge: "lower" | "upper", text: string): number | null
       : Number.POSITIVE_INFINITY;
   }
   const parsed = Number(trimmed);
-  return Number.isNaN(parsed) ? null : parsed;
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+/**
+ * Bounds with one end replaced by a typed value.
+ *
+ * A bound typed past the other one wins and releases it, so a minimum above
+ * the maximum becomes a minimum alone rather than a range holding nothing.
+ */
+export function withBound(
+  bounds: NumericRange,
+  edge: "lower" | "upper",
+  value: number,
+): NumericRange {
+  const next = { ...bounds, [edge]: value };
+  if (next.lower > next.upper) {
+    return edge === "lower"
+      ? { lower: value, upper: Number.POSITIVE_INFINITY }
+      : { lower: Number.NEGATIVE_INFINITY, upper: value };
+  }
+  return next;
 }
 
 /** Summarise bounds for a collapsed filter control. */

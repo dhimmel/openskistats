@@ -2,10 +2,8 @@ import {
   flexRender,
   type CellContext,
   type ColumnDef,
-  type ColumnFiltersState,
   type FilterFn,
   type PaginationState,
-  type SortingState,
   useTable,
 } from "@tanstack/react-table";
 import { type ReactNode, useEffect, useMemo, useState } from "react";
@@ -24,6 +22,7 @@ import {
   columnMaximum,
   CountryCell,
   countryFacetKeys,
+  countryUrlValue,
   footerStat,
   header,
   LatitudeCell,
@@ -36,11 +35,23 @@ import {
   type LiftSummary,
   type TableRecordSchema,
 } from "./types";
+import {
+  BOOLEAN_URL_VALUE,
+  type TableUrlState,
+  urlColumnsFrom,
+  useUrlTableState,
+} from "./url-state";
 
 /** Lifts recorded as still operating, shown before the visitor clears filters. */
 export const INITIAL_LIFT_FILTERS = [
   { id: "lift_status", value: ["operating"] },
 ] as const;
+
+/** The view an untouched table shows, which a shared link leaves unwritten. */
+const DEFAULT_STATE: TableUrlState = {
+  columnFilters: [...INITIAL_LIFT_FILTERS],
+  sorting: [{ desc: true, id: "vertical_rise" }],
+};
 
 const numericFilter: FilterFn<TableFeatures, LiftSummary> = (row, columnId, value) =>
   matchesNumericFilter(row.getValue<number | null>(columnId), value);
@@ -227,7 +238,10 @@ function createColumns(
         },
         categoricalColumn("country", "Country", {
           cell: CountryCell,
-          meta: { facetKeys: countryFacetKeys(data) },
+          meta: {
+            facetKeys: countryFacetKeys(data),
+            urlValue: countryUrlValue(data),
+          },
           footer: (context) =>
             footerStat(
               "Distinct",
@@ -286,7 +300,7 @@ function createColumns(
           filterFn: setFilter,
           header: header("Detach.", description("lift_detachable")),
           id: "lift_detachable",
-          meta: { filterVariant: "faceted" },
+          meta: { filterVariant: "faceted", urlValue: BOOLEAN_URL_VALUE },
           minSize: 50,
           size: 58,
           sortUndefined: "last",
@@ -370,12 +384,16 @@ function createColumns(
 }
 
 export function LiftTable({ document }: { document: LiftDocument }) {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(() =>
-    INITIAL_LIFT_FILTERS.map((filter) => ({ ...filter })),
+  const columns = useMemo(
+    () => createColumns(document.lifts, document.record_schema),
+    [document],
   );
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: "vertical_rise", desc: true },
-  ]);
+  const urlSpec = useMemo(
+    () => ({ columns: urlColumnsFrom(columns), defaults: DEFAULT_STATE }),
+    [columns],
+  );
+  const { columnFilters, setColumnFilters, setSorting, sorting } =
+    useUrlTableState(urlSpec);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -384,10 +402,6 @@ export function LiftTable({ document }: { document: LiftDocument }) {
     calculateLiftAggregates(document.lifts),
   );
 
-  const columns = useMemo(
-    () => createColumns(document.lifts, document.record_schema),
-    [document],
-  );
   const table = useTable({
     features: TABLE_FEATURES,
     columns,

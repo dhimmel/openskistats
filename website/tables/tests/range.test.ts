@@ -10,6 +10,7 @@ import {
   restricts,
   roundTo,
   UNBOUNDED,
+  withBound,
 } from "../src/range";
 
 /** A histogram is only ever built from values, so tests may assume one. */
@@ -217,7 +218,28 @@ describe("parseBound", () => {
       expected: null,
       purpose: "a grouped number, which Number cannot read",
     },
+    {
+      edge: "lower",
+      text: "Infinity",
+      expected: null,
+      purpose: "a bound that is not finite",
+    },
   ] as const)("reads $purpose", ({ edge, text, expected }) => {
     expect(parseBound(edge, text)).toBe(expected);
+  });
+});
+
+describe("withBound", () => {
+  const bounds = { lower: 20, upper: 60 };
+
+  it.each([
+    { edge: "lower", value: 30, expected: { lower: 30, upper: 60 }, purpose: "a minimum inside the range" },
+    { edge: "upper", value: 50, expected: { lower: 20, upper: 50 }, purpose: "a maximum inside the range" },
+    { edge: "lower", value: Number.NEGATIVE_INFINITY, expected: { lower: Number.NEGATIVE_INFINITY, upper: 60 }, purpose: "an emptied minimum" },
+    { edge: "lower", value: 80, expected: { lower: 80, upper: Number.POSITIVE_INFINITY }, purpose: "a minimum past the maximum, which releases it" },
+    { edge: "upper", value: 10, expected: { lower: Number.NEGATIVE_INFINITY, upper: 10 }, purpose: "a maximum below the minimum, which releases it" },
+    { edge: "upper", value: 20, expected: { lower: 20, upper: 20 }, purpose: "a maximum equal to the minimum" },
+  ] as const)("applies $purpose", ({ edge, value, expected }) => {
+    expect(withBound(bounds, edge, value)).toEqual(expected);
   });
 });

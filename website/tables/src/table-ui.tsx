@@ -36,8 +36,10 @@ import {
   restricts,
   roundTo,
   UNBOUNDED,
+  withBound,
 } from "./range";
 import type { TableFeatures } from "./table-features";
+import type { UrlValueCodec } from "./url-state";
 
 export function HeaderLabel({
   description,
@@ -188,20 +190,31 @@ export function CountryCell<TData extends CountryFields>({
 }
 
 /**
- * Let a country option be found by its ISO code or flag, not only its name.
+ * Each country's ISO 3166-1 alpha-2 code, as the rows carry it.
  *
- * The codes ride along on the rows, so the picker gains `US` and `🇺🇸` for
- * `United States` without a list anyone has to maintain.
+ * The codes ride along on the rows, so nothing needs a list anyone has to
+ * maintain, and the pairing is one-to-one in the data.
  */
-export function countryFacetKeys<TData extends CountryFields>(
+function countryCodes<TData extends CountryFields>(
   data: readonly TData[],
-): (value: unknown) => string[] {
+): Map<string, string> {
   const codes = new Map<string, string>();
   for (const row of data) {
     if (row.country !== null && row.country_code !== null) {
       codes.set(row.country, row.country_code);
     }
   }
+  return codes;
+}
+
+/**
+ * Let a country option be found by its ISO code or flag, not only its name,
+ * so the picker gains `US` and `🇺🇸` for `United States`.
+ */
+export function countryFacetKeys<TData extends CountryFields>(
+  data: readonly TData[],
+): (value: unknown) => string[] {
+  const codes = countryCodes(data);
   return (value) => {
     const code = typeof value === "string" ? codes.get(value) : undefined;
     if (code === undefined) {
@@ -209,6 +222,18 @@ export function countryFacetKeys<TData extends CountryFields>(
     }
     const flag = countryCodeToFlag(code);
     return flag === null ? [code] : [code, flag];
+  };
+}
+
+/** Write a country to the URL as its code, `country=AT`, and read it back. */
+export function countryUrlValue<TData extends CountryFields>(
+  data: readonly TData[],
+): UrlValueCodec {
+  const codes = countryCodes(data);
+  const names = new Map([...codes].map(([name, code]) => [code, name]));
+  return {
+    decode: (text) => names.get(text.toUpperCase()),
+    encode: (value) => codes.get(String(value)) ?? String(value),
   };
 }
 
@@ -722,12 +747,9 @@ function RangeFilterPanel<TData extends RowData>({
       if (parsed === null) {
         return;
       }
-      commit({
-        // Read the filter as it stands rather than as this render saw it, so
-        // editing one bound cannot revert the other.
-        ...boundsOf(column.getFilterValue()),
-        [edge]: parsed,
-      });
+      // Read the filter as it stands rather than as this render saw it, so
+      // editing one bound cannot revert the other.
+      commit(withBound(boundsOf(column.getFilterValue()), edge, parsed));
     },
     [column, commit],
   );

@@ -2,10 +2,8 @@ import {
   flexRender,
   type CellContext,
   type ColumnDef,
-  type ColumnFiltersState,
   type FilterFn,
   type PaginationState,
-  type SortingState,
   useTable,
 } from "@tanstack/react-table";
 import {
@@ -38,6 +36,7 @@ import {
   columnMaximum,
   CountryCell,
   countryFacetKeys,
+  countryUrlValue,
   footerStat,
   header,
   HeaderLabel,
@@ -58,6 +57,13 @@ import {
   type SkiAreaRecordSchema,
   type SkiAreaSummary,
 } from "./types";
+import { type TableUrlState, urlColumnsFrom, useUrlTableState } from "./url-state";
+
+/** The view an untouched table shows, which a shared link leaves unwritten. */
+const DEFAULT_STATE: TableUrlState = {
+  columnFilters: [...INITIAL_COLUMN_FILTERS],
+  sorting: [{ desc: true, id: "combined_vertical" }],
+};
 
 const numericFilter: FilterFn<TableFeatures, SkiAreaSummary> = (
   row,
@@ -327,6 +333,7 @@ function createColumns(
             className: "oss-table-border-left",
             facetKeys: countryFacetKeys(data),
             filterVariant: "faceted",
+            urlValue: countryUrlValue(data),
           },
           minSize: 70,
           size: 85,
@@ -599,12 +606,16 @@ function createColumns(
 }
 
 export function SkiAreaTable({ document }: { document: SkiAreaDocument }) {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(() =>
-    INITIAL_COLUMN_FILTERS.map((filter) => ({ ...filter })),
+  const columns = useMemo(
+    () => createColumns(document.ski_areas, document.record_schema),
+    [document],
   );
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: "combined_vertical", desc: true },
-  ]);
+  const urlSpec = useMemo(
+    () => ({ columns: urlColumnsFrom(columns), defaults: DEFAULT_STATE }),
+    [columns],
+  );
+  const { columnFilters, setColumnFilters, setSorting, sorting } =
+    useUrlTableState(urlSpec);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -613,10 +624,6 @@ export function SkiAreaTable({ document }: { document: SkiAreaDocument }) {
     calculateFilteredAggregates(document.ski_areas),
   );
 
-  const columns = useMemo(
-    () => createColumns(document.ski_areas, document.record_schema),
-    [document],
-  );
   const table = useTable({
     features: TABLE_FEATURES,
     columns,
