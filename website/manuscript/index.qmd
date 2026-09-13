@@ -184,6 +184,17 @@ so the observed concentration reflects mapping completeness in addition to true 
 
 ## Orientation findings
 
+Downhill skiing is overwhelmingly favors a poleward orientation.
+In the northern hemisphere, `{python} var("orientation__north__poleward_share", ".1%")` of skiable vert descends on a bearing with a northward component,
+yielding a poleward affinity of `{python} var("orientation__north__poleward_affinity", ".2f")` and a mean bearing of `{python} var("orientation__north__bearing_mean", ".1f")`° (@fig-hemisphere-roses).
+The southern hemisphere favors the pole even more strongly:
+`{python} var("orientation__south__poleward_share", ".1%")` of its vert descends southward, for a poleward affinity of `{python} var("orientation__south__poleward_affinity", ".2f")` and a mean bearing of `{python} var("orientation__south__bearing_mean", ".1f")`°.
+Poleward slopes receive the least direct sunlight, preserving snow through the season.
+
+Both hemispheres also face east, with eastward affinities of `{python} var("orientation__north__eastward_affinity", ".2f")` in the north and `{python} var("orientation__south__eastward_affinity", ".2f")` in the south.
+East-facing slopes receive their sun in the morning, when air temperatures are lower, and are shaded by afternoon, when the warmer air compounds melt.
+The same daily dose of sunlight therefore costs east-facing snow less than west-facing snow.
+
 ::: {#fig-ski-area-roses}
 ![](../images/select_ski_area_roses.svg)
 
