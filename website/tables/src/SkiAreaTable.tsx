@@ -21,7 +21,6 @@ import {
 
 import {
   INITIAL_COLUMN_FILTERS,
-  matchesLatitudeFilter,
   matchesNumericFilter,
   matchesPercentFilter,
   matchesSetFilter,
@@ -76,13 +75,6 @@ const percentFilter: FilterFn<TableFeatures, SkiAreaSummary> = (
 /** Keep rows whose value was selected in a column's value picker. */
 const setFilter: FilterFn<TableFeatures, SkiAreaSummary> = (row, columnId, value) =>
   matchesSetFilter(row.getValue(columnId), value);
-
-const latitudeFilter: FilterFn<TableFeatures, SkiAreaSummary> = (
-  row,
-  columnId,
-  value,
-) =>
-  matchesLatitudeFilter(row.getValue<number | null>(columnId), value);
 
 function fieldDescription(
   schema: SkiAreaRecordSchema,
@@ -377,11 +369,9 @@ function createColumns(
         {
           accessorKey: "latitude",
           cell: LatitudeCell,
-          filterFn: latitudeFilter,
+          filterFn: numericFilter,
           header: header("ℍ φ", description("latitude")),
           id: "latitude",
-          // Brushing a lobe of the bimodal distribution says north or south
-          // more directly than the words the filter function still parses.
           meta: { filterFormat: formatLatitude, filterVariant: "range" },
           minSize: 55,
           size: 62,

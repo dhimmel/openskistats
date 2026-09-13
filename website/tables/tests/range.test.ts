@@ -3,11 +3,10 @@ import { describe, expect, it } from "vitest";
 import { matchesNumericFilter } from "../src/filters";
 import {
   boundsFromEdges,
-  boundsFromFilter,
   buildHistogram,
   describeBounds,
-  formatRangeFilter,
   parseBound,
+  restricts,
   roundTo,
   UNBOUNDED,
 } from "../src/range";
@@ -75,11 +74,8 @@ describe("buildHistogram", () => {
 
     it("selects the outlier along with the end bar it sits in", () => {
       const last = clipped!.bins[clipped!.bins.length - 1];
-      const filter = formatRangeFilter(
-        boundsFromEdges(last.start, last.end, clipped!),
-        clipped!,
-      );
-      expect(matchesNumericFilter(70_000, filter)).toBe(true);
+      const bounds = boundsFromEdges(last.start, last.end, clipped!);
+      expect(matchesNumericFilter(70_000, bounds)).toBe(true);
     });
 
     it("bins over the full extent when no value dominates it", () => {
@@ -96,69 +92,6 @@ describe("buildHistogram", () => {
   });
 });
 
-describe("formatRangeFilter", () => {
-  const histogram = histogramOf([0, 100]);
-
-  it("clears the filter when the bounds cover the distribution", () => {
-    expect(formatRangeFilter(UNBOUNDED, histogram)).toBeUndefined();
-  });
-
-  it.each([
-    {
-      bounds: { lower: 20, lowerInclusive: true, upper: 60, upperInclusive: true },
-      expected: "[20, 60]",
-      purpose: "a closed range",
-    },
-    {
-      bounds: {
-        lower: 20,
-        lowerInclusive: true,
-        upper: Number.POSITIVE_INFINITY,
-        upperInclusive: true,
-      },
-      expected: "[20, ]",
-      purpose: "a lower bound only",
-    },
-    {
-      bounds: {
-        lower: Number.NEGATIVE_INFINITY,
-        lowerInclusive: true,
-        upper: 60,
-        upperInclusive: false,
-      },
-      expected: "[, 60)",
-      purpose: "an exclusive upper bound only",
-    },
-  ])("writes $purpose", ({ bounds, expected }) => {
-    expect(formatRangeFilter(bounds, histogram)).toBe(expected);
-  });
-
-  it("round-trips through the filter it writes", () => {
-    const values = [3, 3, 7, 12, 48, 90];
-    const brushed = histogramOf(values);
-    // An interior bin, so that both bounds survive into the filter text.
-    const bin = brushed.bins.find(
-      (candidate) => candidate.count > 0 && candidate.start > brushed.start,
-    );
-    const filter = formatRangeFilter(
-      boundsFromEdges(bin!.start, bin!.end, brushed),
-      brushed,
-    );
-    expect(values.filter((value) => matchesNumericFilter(value, filter))).toEqual(
-      values.filter((value) => value >= bin!.start && value < bin!.end),
-    );
-    expect(boundsFromFilter(filter).lower).toBe(bin!.start);
-  });
-
-  it("excludes rows without a value once bounded", () => {
-    const filter = formatRangeFilter(
-      { lower: 20, lowerInclusive: true, upper: 60, upperInclusive: true },
-      histogram,
-    );
-    expect(matchesNumericFilter(null, filter)).toBe(false);
-  });
-});
-
 describe("boundsFromEdges", () => {
   const histogram = histogramOf([0, 100]);
 
@@ -167,28 +100,37 @@ describe("boundsFromEdges", () => {
     expect([bounds.lower, bounds.upper]).toEqual([20, 60]);
   });
 
-  it("leaves an interior upper edge exclusive so adjacent bins do not overlap", () => {
-    expect(boundsFromEdges(20, 60, histogram).upperInclusive).toBe(false);
+  it("keeps an interior upper edge inclusive, as a typed bound is", () => {
+    const values = [3, 3, 7, 12, 48, 90];
+    const brushed = histogramOf(values);
+    const bin = brushed.bins.find(
+      (candidate) => candidate.count > 0 && candidate.start > brushed.start,
+    );
+    const bounds = boundsFromEdges(bin!.start, bin!.end, brushed);
+    expect(values.filter((value) => matchesNumericFilter(value, bounds))).toEqual(
+      values.filter((value) => value >= bin!.start && value <= bin!.end),
+    );
   });
 
-  it("closes the range at the end of the distribution", () => {
-    expect(boundsFromEdges(20, histogram.end, histogram).upperInclusive).toBe(true);
+  it.each([
+    { edges: [20, 100], purpose: "the upper end", lower: 20, upper: Number.POSITIVE_INFINITY },
+    { edges: [0, 60], purpose: "the lower end", lower: Number.NEGATIVE_INFINITY, upper: 60 },
+    { edges: [0, 100], purpose: "both ends", lower: Number.NEGATIVE_INFINITY, upper: Number.POSITIVE_INFINITY },
+  ])("releases a bound that reaches $purpose of the axis", ({ edges, lower, upper }) => {
+    expect(boundsFromEdges(edges[0], edges[1], histogram)).toEqual({ lower, upper });
   });
 });
 
-describe("boundsFromFilter", () => {
-  it.each([
-    { filter: undefined, purpose: "an unset filter" },
-    { filter: ["a", "b"], purpose: "a value picker's selection" },
-    { filter: "nonsense", purpose: "text that is not a range" },
-  ])("falls back to unbounded for $purpose", ({ filter }) => {
-    expect(boundsFromFilter(filter)).toEqual(UNBOUNDED);
+describe("restricts", () => {
+  it("is false for bounds that cover everything, so the filter clears", () => {
+    expect(restricts(UNBOUNDED)).toBe(false);
   });
 
-  it("reads a threshold typed into the filter box", () => {
-    const bounds = boundsFromFilter("3");
-    expect(bounds.lower).toBe(3);
-    expect(bounds.upper).toBe(Number.POSITIVE_INFINITY);
+  it.each([
+    { bounds: { lower: 20, upper: Number.POSITIVE_INFINITY }, purpose: "a lower bound" },
+    { bounds: { lower: Number.NEGATIVE_INFINITY, upper: 60 }, purpose: "an upper bound" },
+  ])("is true for $purpose", ({ bounds }) => {
+    expect(restricts(bounds)).toBe(true);
   });
 });
 
@@ -197,30 +139,16 @@ describe("describeBounds", () => {
 
   it.each([
     { bounds: UNBOUNDED, expected: "Any", purpose: "no bounds" },
+    { bounds: { lower: 3, upper: 10 }, expected: "3–10", purpose: "both bounds" },
     {
-      bounds: { lower: 3, lowerInclusive: true, upper: 10, upperInclusive: false },
-      expected: "3–10",
-      purpose: "both bounds",
-    },
-    {
-      bounds: {
-        lower: 3,
-        lowerInclusive: true,
-        upper: Number.POSITIVE_INFINITY,
-        upperInclusive: true,
-      },
+      bounds: { lower: 3, upper: Number.POSITIVE_INFINITY },
       expected: "≥ 3",
       purpose: "a lower bound",
     },
     {
-      bounds: {
-        lower: Number.NEGATIVE_INFINITY,
-        lowerInclusive: true,
-        upper: 10,
-        upperInclusive: false,
-      },
-      expected: "< 10",
-      purpose: "an exclusive upper bound",
+      bounds: { lower: Number.NEGATIVE_INFINITY, upper: 10 },
+      expected: "≤ 10",
+      purpose: "an upper bound",
     },
   ])("summarises $purpose", ({ bounds, expected }) => {
     expect(describeBounds(bounds, format)).toBe(expected);
