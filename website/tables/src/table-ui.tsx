@@ -465,7 +465,7 @@ export function ColumnVisibilityPicker<TData extends RowData>({ table }: {
   table: Table<TableFeatures, TData>;
 }) {
   return (
-    <FilterPopover ariaLabel="Choose visible columns" buttonClassName="oss-table-clear" label="Columns">
+    <FilterPopover ariaLabel="Choose visible columns" buttonClassName="oss-table-button" label="Columns">
       {() => (
         <>
           <div className="oss-table-facet-actions">
@@ -475,8 +475,7 @@ export function ColumnVisibilityPicker<TData extends RowData>({ table }: {
           <div className="oss-table-column-list">
             {table.getAllColumns().map((group) => (
               <fieldset key={group.id}>
-                <legend>{columnLabel(group.columnDef) ??
-                  group.getLeafColumns().map((column) => columnLabel(column.columnDef)).find(Boolean)}</legend>
+                {columnLabel(group.columnDef) && <legend>{columnLabel(group.columnDef)}</legend>}
                 {group.getLeafColumns().filter((column) => columnLabel(column.columnDef)).map((column) => (
                   <label key={column.id}>
                     <input
@@ -509,7 +508,7 @@ export function HiddenColumnNotices<TData extends RowData>({ table }: {
   return (
     <div className="oss-table-hidden-columns">
       {active.map((column) => (
-        <button className="oss-table-clear" key={column.id} onClick={() => column.toggleVisibility(true)} type="button">
+        <button className="oss-table-button" key={column.id} onClick={() => column.toggleVisibility(true)} type="button">
           {columnLabel(column.columnDef)} ({[
             column.getIsFiltered() && "filtered",
             column.getIsSorted() && "sorted",

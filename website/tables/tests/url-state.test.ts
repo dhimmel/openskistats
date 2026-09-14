@@ -216,6 +216,10 @@ describe("writeTableState", () => {
 
   it.each([
     { sorting: [{ desc: false, id: "latitude" }], expected: "?sort=latitude" },
+    {
+      sorting: [{ desc: true, id: "country" }, { desc: false, id: "latitude" }],
+      expected: "?sort=-country,latitude",
+    },
     { sorting: [], expected: "?sort=" },
   ])("writes sorting $expected", ({ sorting, expected }) => {
     expect(writeTableState("", { ...defaults(), sorting }, spec)).toBe(expected);
@@ -223,7 +227,7 @@ describe("writeTableState", () => {
 
   it.each([
     {
-      purpose: "names with punctuation, spaces, and accents",
+      purpose: "names with punctuation, spaces, accents, and a percent sequence",
       state: {
         columnFilters: [
           {
@@ -231,6 +235,7 @@ describe("writeTableState", () => {
             value: [
               "100% Ski & Board",
               "Alpe d'Huez, Grand Domaine",
+              "Literal %2C stays text",
               "Val d'Isère",
               "Zermatt/Cervinia+",
             ],
@@ -322,7 +327,7 @@ describe("column visibility", () => {
     expect(state.columnFilters).toContainEqual({ id: "latitude", value: atMost(0) });
     expect(state.sorting).toEqual([{ id: "latitude", desc: true }]);
     const search = writeTableState("?foo=bar", state, visibilitySpec);
-    expect(new URLSearchParams(search).get("columns")).toBe("longitude,rose");
+    expect(search).toBe("?foo=bar&latitude=..0&sort=-latitude&columns=longitude,rose");
     expect(new URLSearchParams(search).get("foo")).toBe("bar");
     expect(readTableState(search, visibilitySpec)).toEqual(state);
   });

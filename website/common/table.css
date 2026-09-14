@@ -77,7 +77,7 @@
   background: var(--bs-tertiary-bg, #f0f0f0);
 }
 
-.oss-table-clear,
+.oss-table-button,
 .oss-table-pagination button,
 .oss-table-pagination select,
 .oss-table-error button {
@@ -88,7 +88,7 @@
   padding: 0.25rem 0.55rem;
 }
 
-.oss-table-clear:not(:disabled):hover,
+.oss-table-button:not(:disabled):hover,
 .oss-table-pagination button:not(:disabled):hover,
 .oss-table-error button:hover {
   background: #e9ecef;

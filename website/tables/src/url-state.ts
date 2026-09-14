@@ -10,10 +10,12 @@
  * GitHub search does: `run_count=3..`, `latitude=..0`, `latitude=-45..-30`.
  * Value pickers repeat the key once per selected value in sorted order,
  * `country=AT&country=CH`, with the blank option written as `null`.
- * Sorting follows JSON:API: `sort=-lift_count` descends, `sort=ski_area_name`
- * ascends, and a comma joins several in priority order.
- * Tables with a column picker store a customized set of optional columns as
- * `columns=country,longitude,rose`; fixed identity columns remain visible.
+ * Parameters whose values are column ids take a comma-separated list instead,
+ * since ids never contain commas. Sorting follows JSON:API: `sort=-lift_count`
+ * descends, `sort=ski_area_name` ascends, and a comma joins several in
+ * priority order. Tables with a column picker list the visible optional
+ * columns as `columns=country,longitude,rose`; fixed identity columns remain
+ * visible.
  *
  * Reading is lenient so that old or hand-edited links degrade gracefully:
  * a parameter that fails to parse is treated as absent, so the default
@@ -283,7 +285,9 @@ export function writeTableState(
       params.set(COLUMNS_KEY, columns);
     }
   }
-  const text = params.toString();
+  // A comma is a legal query character that the form serializer needlessly
+  // escapes, and the parser reads either spelling alike.
+  const text = params.toString().replaceAll("%2C", ",");
   return text === "" ? "" : `?${text}`;
 }
 

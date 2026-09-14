@@ -706,7 +706,7 @@ export function SkiAreaTable({ document }: { document: SkiAreaDocument }) {
         <div className="oss-table-actions">
         <ColumnVisibilityPicker table={table} />
         <button
-          className="oss-table-clear"
+          className="oss-table-button"
           disabled={!hasFilters}
           onClick={() => setColumnFilters([])}
           type="button"
