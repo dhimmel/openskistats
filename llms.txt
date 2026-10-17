@@ -1,0 +1,37 @@
+# OpenSkiStats
+
+Statistics on downhill ski slopes and ski areas worldwide, derived from OpenSkiMap and OpenStreetMap data.
+The distinctive analysis is the compass orientation (aspect) of ski runs, summarized per ski area as orientation roses.
+
+## Pages
+
+- [Home](https://openskistats.org/): project overview.
+- [Manuscript](https://openskistats.org/manuscript/): methods, definitions, and the circular statistics behind the metrics.
+- [Ski Areas](https://openskistats.org/ski-areas/): interactive table, one row per ski area, with orientation roses.
+- [Lifts](https://openskistats.org/lifts/): interactive table, one row per named lift.
+- [Story](https://openskistats.org/story/): "Which way do you ski?", a narrative introduction to run orientation.
+
+The ski-area and lift pages build their tables in the browser from the JSON endpoints below.
+The HTML carries no rows, so read the JSON rather than scraping the pages.
+
+## Data
+
+- [ski-areas.json](https://openskistats.org/data/ski-areas.json): ~5,950 named ski areas, 32 fields, ~7 MB.
+  Records sit under `ski_areas`.
+- [lifts.json](https://openskistats.org/data/lifts.json): ~23,974 named lifts, 28 fields, ~24 MB.
+  Records sit under `lifts`.
+  A lift may serve several ski areas, so `ski_area_ids` and `ski_area_names` are arrays.
+
+Both endpoints share an envelope: `schema_version`, `data_updated_at`, `license`, `attribution`, `sources` (upstream URL, timestamps, and SHA-256 per source), `record_count`, `record_schema`, and the records array.
+`record_schema` is a JSON Schema whose `properties` carry a prose description of every field, the authoritative reference for what a column means.
+
+The files are large.
+Fetch and parse them with code, and do not read one into a model context whole.
+
+## Source and terms
+
+- [Source code](https://github.com/dhimmel/openskistats): the `openskistats` Python package that produces these datasets, released under a BSD-2-Clause Plus Patent License.
+- [OpenSkiMap](https://openskimap.org/) and [OpenStreetMap](https://www.openstreetmap.org/): upstream data, from which every record derives.
+- Data is released under [ODbL-1.0](https://opendatacommons.org/licenses/odbl/), inherited from OpenStreetMap, and requires attribution and share-alike.
+  Website prose is [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+- Attribute as: OpenSkiStats; source data from OpenSkiMap and OpenStreetMap contributors.
