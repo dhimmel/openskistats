@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;700&display=swap');
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1.4rem
+}
+
+.img-fluid {
+  border-radius: 18px;
+}
+
+/* Media query for mobile devices */
+@media only screen and (max-width: 600px) {
+  p {
+    font-size: 0.7rem;
+  }
+  /* unordered lists */
+  ul {
+    font-size: 0.6rem; 
+    padding-left: 1em;
+  }
+
+  /* ordered lists */
+  ol {
+    font-size: 0.7rem;
+    padding-left: 1em;
+  }
+
+  /* list items */
+  li {
+    font-size: 0.6rem;
+    line-height: 1.2; 
+  }
+}
+
+.img-fluid {
+  border-radius: 24px;
+}
